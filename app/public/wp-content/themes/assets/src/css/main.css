@@ -1,0 +1,615 @@
+/* ========================================================================
+   BPRS Wakalumi Theme — Main Stylesheet
+   Processed by Tailwind CSS via PostCSS
+   ======================================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================================================
+   BASE LAYER — Global resets & root variables
+   ======================================================================== */
+@layer base {
+  :root {
+    --glow-sm: 0 0 15px rgba(93, 248, 216, 0.2);
+    --glow-md: 0 0 25px rgba(93, 248, 216, 0.3), 0 0 60px rgba(93, 248, 216, 0.1);
+    --glow-lg: 0 0 35px rgba(93, 248, 216, 0.4), 0 0 80px rgba(93, 248, 216, 0.15);
+    --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-sans antialiased transition-colors duration-500;
+    @apply bg-white text-slate-900;
+    @apply dark:bg-dark dark:text-slate-200;
+  }
+
+  /* Smooth scrollbar for dark mode */
+  .dark ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-dark-surface;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border rounded-full;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-primary-500/20 text-primary-900;
+  }
+  .dark ::selection {
+    @apply bg-primary-300/30 text-primary-100;
+  }
+}
+
+/* ========================================================================
+   COMPONENTS LAYER — Reusable UI components
+   ======================================================================== */
+@layer components {
+
+  /* ---- Buttons ---- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl
+           font-semibold text-sm
+           transition-all duration-300 ease-out
+           focus:outline-none focus:ring-2 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn
+           bg-primary-600 text-white
+           hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/25 hover:-translate-y-0.5
+           focus:ring-primary-500
+           active:translate-y-0;
+    @apply dark:bg-primary-500 dark:hover:bg-primary-400
+           dark:hover:shadow-primary-400/30
+           dark:focus:ring-primary-400;
+  }
+
+  .btn-outline {
+    @apply btn
+           border-2 border-primary-600 text-primary-600
+           hover:bg-primary-600 hover:text-white hover:-translate-y-0.5
+           focus:ring-primary-500;
+    @apply dark:border-primary-400 dark:text-primary-400
+           dark:hover:bg-primary-400 dark:hover:text-dark;
+  }
+
+  .btn-ghost {
+    @apply btn
+           text-slate-600 hover:text-primary-600 hover:bg-primary-50
+           focus:ring-primary-500;
+    @apply dark:text-slate-400 dark:hover:text-primary-400
+           dark:hover:bg-primary-400/10;
+  }
+
+  .btn-whatsapp {
+    @apply btn
+           bg-emerald-500 text-white
+           hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/25 hover:-translate-y-0.5
+           focus:ring-emerald-400
+           active:translate-y-0;
+    @apply dark:bg-emerald-500 dark:hover:bg-emerald-400
+           dark:hover:shadow-emerald-400/30;
+  }
+
+  /* ---- Glow Button (dark mode signature) ---- */
+  .btn-glow {
+    @apply btn
+           bg-primary-500 text-white
+           hover:-translate-y-0.5
+           focus:ring-primary-400;
+    box-shadow: var(--glow-md);
+    transition: all var(--transition-base);
+  }
+  .btn-glow:hover {
+    box-shadow: var(--glow-lg);
+    @apply bg-primary-400;
+  }
+
+  /* ---- Glass Morphism ---- */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20;
+    @apply dark:bg-dark-surface/80 dark:border-dark-border/50;
+  }
+
+  .glass-strong {
+    @apply bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 shadow-sm;
+    @apply dark:bg-dark-surface/90 dark:border-dark-border/60 dark:shadow-black/20;
+  }
+
+  /* ---- Cards ---- */
+  .card {
+    @apply bg-white rounded-2xl border border-slate-100 shadow-sm
+           transition-all duration-300 ease-out overflow-hidden;
+    @apply dark:bg-dark-surface dark:border-dark-border;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-xl hover:shadow-primary-600/5 hover:-translate-y-1 hover:border-primary-200;
+    @apply dark:hover:shadow-primary-400/10 dark:hover:border-primary-700/50;
+  }
+
+  .card-glow {
+    @apply card;
+    @apply dark:hover:shadow-[0_0_30px_rgba(93,248,216,0.15)] dark:hover:border-primary-500/30;
+  }
+
+  /* ---- Section Layout ---- */
+  .section {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  .section-sm {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  .container-narrow {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ---- Section Heading ---- */
+  .section-label {
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+           text-xs font-bold uppercase tracking-widest
+           bg-primary-50 text-primary-700 border border-primary-100;
+    @apply dark:bg-primary-400/10 dark:text-primary-300 dark:border-primary-400/20;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight
+           text-slate-900;
+    @apply dark:text-white;
+  }
+
+  .section-subtitle {
+    @apply text-lg md:text-xl text-slate-500 max-w-2xl;
+    @apply dark:text-slate-400;
+  }
+
+  /* ---- Navbar ---- */
+  .nav-link {
+    @apply relative text-[14.5px] font-medium
+           text-slate-600
+           hover:text-primary-600
+           transition-all duration-300 ease-out;
+    @apply dark:text-slate-300 dark:hover:text-primary-300;
+  }
+
+  .nav-link.active {
+    @apply text-primary-600;
+    @apply dark:text-primary-300;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute left-1/2 -translate-x-1/2 -bottom-1 w-0 h-[2px] rounded-full
+           bg-primary-500
+           transition-all duration-300 ease-out;
+    @apply dark:bg-primary-300;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  /* ---- Dropdown Menu (Improved — scale + fade + blur) ---- */
+  .dropdown-menu {
+    @apply absolute top-full left-1/2 mt-3
+           min-w-[240px] py-2.5 rounded-2xl
+           bg-white/95 backdrop-blur-xl
+           border border-slate-100/80
+           shadow-2xl shadow-slate-900/10
+           z-50;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(8px) scale(0.97);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.25s,
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    @apply dark:bg-dark-surface/95 dark:border-dark-border dark:shadow-black/40;
+  }
+
+  .dropdown:hover .dropdown-menu,
+  .dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  .dropdown-item {
+    @apply block px-5 py-2.5 text-sm text-slate-600 font-medium
+           transition-all duration-200;
+    @apply dark:text-slate-300;
+  }
+
+  .dropdown-item:hover {
+    @apply bg-primary-50/80 text-primary-700 pl-6;
+    @apply dark:bg-primary-400/10 dark:text-primary-300;
+  }
+
+  /* Dropdown arrow rotation */
+  .dropdown-trigger svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .dropdown:hover .dropdown-trigger svg,
+  .dropdown.open .dropdown-trigger svg {
+    transform: rotate(180deg);
+  }
+
+  /* ---- Nisbah Table ---- */
+  .nisbah-table {
+    @apply w-full text-left;
+  }
+
+  .nisbah-table thead th {
+    @apply px-6 py-4 text-xs font-bold uppercase tracking-wider
+           text-slate-500 bg-slate-50 border-b border-slate-100;
+    @apply dark:text-slate-400 dark:bg-dark-surface-alt dark:border-dark-border;
+  }
+
+  .nisbah-table tbody td {
+    @apply px-6 py-4 text-sm border-b border-slate-50;
+    @apply dark:border-dark-border/50;
+  }
+
+  .nisbah-table tbody tr {
+    @apply transition-colors duration-150
+           hover:bg-primary-50/50;
+    @apply dark:hover:bg-primary-400/5;
+  }
+
+  /* ---- Announcement Bar ---- */
+  .announcement-bar {
+    @apply relative overflow-hidden;
+    @apply bg-gradient-to-r from-primary-600 via-primary-500 to-primary-600;
+    @apply dark:from-primary-800/80 dark:via-primary-700/80 dark:to-primary-800/80;
+  }
+
+  .announcement-bar.announcement-success {
+    @apply from-emerald-600 via-emerald-500 to-emerald-600;
+    @apply dark:from-emerald-800/80 dark:via-emerald-700/80 dark:to-emerald-800/80;
+  }
+
+  .announcement-bar.announcement-warning {
+    @apply from-amber-500 via-amber-400 to-amber-500;
+    @apply dark:from-amber-700/80 dark:via-amber-600/80 dark:to-amber-700/80;
+  }
+
+  /* ---- Maps Container ---- */
+  .maps-wrapper {
+    @apply relative rounded-xl overflow-hidden border border-slate-700;
+    @apply dark:border-dark-border;
+    padding-bottom: 75%;
+  }
+
+  .maps-wrapper iframe {
+    @apply absolute inset-0 w-full h-full;
+  }
+}
+
+/* ========================================================================
+   UTILITIES LAYER — Single-purpose helpers
+   ======================================================================== */
+@layer utilities {
+
+  /* ---- Text Glow (dark mode signature) ---- */
+  .text-glow {
+    text-shadow: 0 0 30px rgba(93, 248, 216, 0.4),
+                 0 0 60px rgba(93, 248, 216, 0.2);
+  }
+
+  .text-glow-sm {
+    text-shadow: 0 0 15px rgba(93, 248, 216, 0.3);
+  }
+
+  /* ---- Border Glow ---- */
+  .border-glow {
+    box-shadow: 0 0 15px rgba(93, 248, 216, 0.15),
+                inset 0 0 15px rgba(93, 248, 216, 0.05);
+    @apply border-primary-400/30;
+  }
+
+  /* ---- Hide Scrollbar for Horizontal Sliders ---- */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* ---- Gradients ---- */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary-600 to-primary-500;
+  }
+
+  .gradient-primary-dark {
+    @apply bg-gradient-to-r from-primary-500 to-primary-400;
+  }
+
+  .gradient-hero {
+    background: linear-gradient(135deg, #066E7D 0%, #088395 30%, #24B1B1 60%, #066E7D 100%);
+  }
+
+  .gradient-hero-dark {
+    background: linear-gradient(135deg, #121212 0%, #1e1e1e 30%, #066E7D 60%, #121212 100%);
+  }
+
+  /* Slide-specific gradients for hero carousel */
+  .gradient-hero-1 {
+    background: linear-gradient(135deg, #055564 0%, #088395 40%, #24B1B1 70%, #088395 100%);
+  }
+
+  .gradient-hero-2 {
+    background: linear-gradient(135deg, #044350 0%, #066E7D 35%, #088395 65%, #24B1B1 100%);
+  }
+
+  .gradient-hero-3 {
+    background: linear-gradient(145deg, #088395 0%, #24B1B1 50%, #5DF8D8 100%);
+  }
+
+  /* ---- Geometric Pattern Overlay ---- */
+  .pattern-overlay::before {
+    content: '';
+    @apply absolute inset-0 opacity-[0.03];
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23088395' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .dark .pattern-overlay::before {
+    @apply opacity-[0.02];
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235DF8D8' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ---- Mesh Gradient Background ---- */
+  .mesh-gradient {
+    background:
+      radial-gradient(at 20% 20%, rgba(8,131,149,0.15) 0%, transparent 50%),
+      radial-gradient(at 80% 80%, rgba(36,177,177,0.1) 0%, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(93,248,216,0.05) 0%, transparent 70%);
+  }
+
+  .dark .mesh-gradient {
+    background:
+      radial-gradient(at 20% 20%, rgba(93,248,216,0.08) 0%, transparent 50%),
+      radial-gradient(at 80% 80%, rgba(36,177,177,0.05) 0%, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(8,131,149,0.03) 0%, transparent 70%);
+  }
+}
+
+/* ========================================================================
+   HERO SLIDER — Carousel with fade + text animation
+   ======================================================================== */
+.hero-slider {
+  @apply relative min-h-[90vh] md:min-h-screen overflow-hidden;
+}
+
+.hero-slide {
+  @apply absolute inset-0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 1.2s;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Slide background */
+.hero-slide-bg {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.hero-slide-bg img {
+  @apply w-full h-full object-cover;
+  transition: transform 8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-slide.active .hero-slide-bg img {
+  transform: scale(1.08);
+}
+
+/* Slide overlay */
+.hero-slide-overlay {
+  @apply absolute inset-0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+}
+
+.dark .hero-slide-overlay {
+  background: linear-gradient(135deg, rgba(18,18,18,0.92) 0%, rgba(18,18,18,0.7) 50%, rgba(18,18,18,0.5) 100%);
+}
+
+/* Slide content — staggered fade-in-up */
+.hero-slide .slide-badge,
+.hero-slide .slide-headline,
+.hero-slide .slide-subheadline,
+.hero-slide .slide-cta {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-slide.active .slide-badge {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
+
+.hero-slide.active .slide-headline {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.35s;
+}
+
+.hero-slide.active .slide-subheadline {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.5s;
+}
+
+.hero-slide.active .slide-cta {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.65s;
+}
+
+/* Slider dot indicators */
+.slider-dots {
+  @apply absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3;
+}
+
+.slider-dot {
+  @apply w-2.5 h-2.5 rounded-full cursor-pointer transition-all duration-300 ease-out;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.slider-dot:hover {
+  background: rgba(255, 255, 255, 0.7);
+  @apply scale-110;
+}
+
+.slider-dot.active {
+  @apply w-8;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.dark .slider-dot {
+  background: rgba(93, 248, 216, 0.3);
+}
+
+.dark .slider-dot:hover {
+  background: rgba(93, 248, 216, 0.6);
+}
+
+.dark .slider-dot.active {
+  background: rgba(93, 248, 216, 0.9);
+}
+
+/* Slider progress bar */
+.slider-progress {
+  @apply absolute bottom-0 left-0 h-[3px] z-20;
+  background: linear-gradient(90deg, #5DF8D8, #24B1B1);
+  width: 0;
+  transition: width linear;
+}
+
+/* ========================================================================
+   SWUP PAGE TRANSITIONS
+   ======================================================================== */
+.transition-fade {
+  transition: opacity 0.35s ease-in-out;
+  opacity: 1;
+}
+
+html.is-animating .transition-fade {
+  opacity: 0;
+}
+
+/* ========================================================================
+   AOS OVERRIDES — lighter, more subtle
+   ======================================================================== */
+[data-aos] {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ========================================================================
+   HERO DECORATIVE ELEMENTS
+   ======================================================================== */
+.hero-orb {
+  @apply absolute rounded-full blur-3xl opacity-20;
+  animation: float 8s ease-in-out infinite;
+}
+
+.hero-orb-1 {
+  @apply w-96 h-96 bg-primary-400;
+  top: -5%;
+  right: -10%;
+  animation-delay: 0s;
+}
+
+.hero-orb-2 {
+  @apply w-72 h-72 bg-primary-300;
+  bottom: 10%;
+  left: -5%;
+  animation-delay: 3s;
+}
+
+.dark .hero-orb {
+  @apply opacity-10;
+}
+
+/* ========================================================================
+   COUNTER NUMBER ANIMATION
+   ======================================================================== */
+.counter-number {
+  display: inline-block;
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================================================
+   MOBILE MENU ANIMATION
+   ======================================================================== */
+.mobile-menu-overlay {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40
+         opacity-0 invisible transition-all duration-300;
+}
+
+.mobile-menu-overlay.active {
+  @apply opacity-100 visible;
+}
+
+.mobile-menu-panel {
+  @apply fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50
+         bg-white shadow-2xl
+         transform translate-x-full transition-transform duration-300 ease-out;
+  @apply dark:bg-dark-surface;
+}
+
+.mobile-menu-panel.active {
+  @apply translate-x-0;
+}
+
+/* ========================================================================
+   MISC
+   ======================================================================== */
+.aspect-card {
+  aspect-ratio: 16 / 10;
+}
+
+.aspect-hero {
+  aspect-ratio: 16 / 7;
+}
+
+/* Smooth image loading */
+img {
+  @apply transition-opacity duration-500;
+}
+
+img[loading="lazy"] {
+  opacity: 0;
+}
+
+img[loading="lazy"].loaded,
+img:not([loading="lazy"]) {
+  opacity: 1;
+}

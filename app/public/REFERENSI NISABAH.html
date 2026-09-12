@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realisasi Nisbah Bagi Hasil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #0b5e68;
+            --primary-green: #1a7844;
+            --header-blue: #9cd4e6;
+            --cell-blue: #cde6f0;
+            --cyan-header: #96dfe2;
+            --text-dark: #0b5e68;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f8f7; /* Latar belakang abu kehijauan terang */
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ornamen background tipis (opsional) */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(234, 245, 240, 1) 0%, rgba(255, 255, 255, 0) 100%);
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header (Logo & OJK) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 800;
+            font-size: 32px;
+            color: var(--primary-teal);
+            line-height: 1;
+        }
+        
+        .logo i {
+            font-size: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-sub {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: block;
+        }
+
+        .ojk-text {
+            font-size: 10px;
+            font-style: italic;
+            font-weight: 600;
+            color: var(--primary-teal);
+            text-align: right;
+            max-width: 250px;
+        }
+
+        /* Title */
+        .main-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        /* Tabungan Section */
+        .tabungan-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .data-card {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .box-green { background-color: var(--primary-green); color: white; padding: 12px; font-size: 22px; font-weight: 600; }
+        .box-teal { background-color: var(--primary-teal); color: white; padding: 8px; font-style: italic; }
+        .box-blue { background-color: var(--header-blue); padding: 8px; font-style: italic; }
+        .box-light-blue { background-color: var(--cell-blue); padding: 12px; font-size: 20px; }
+        
+        .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+        /* Deposito Section */
+        .deposito-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .deposito-title {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 60px;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 6px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        .header-cell {
+            background-color: var(--header-blue);
+            font-style: italic;
+        }
+
+        .teal-cell {
+            background-color: var(--primary-teal);
+            color: white;
+            font-style: italic;
+        }
+
+        /* Footer Note */
+        .footer-note {
+            background-color: var(--primary-teal);
+            color: white;
+            padding: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            font-style: italic;
+            border: 2px dashed white;
+            outline: 4px solid var(--primary-teal); /* Membuat efek border putih di dalam */
+            margin-bottom: 30px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Social Media Footer */
+        .social-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--primary-teal);
+            flex-wrap: wrap;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .social-item i {
+            font-size: 20px;
+        }
+
+        /* Icon Colors */
+        .fa-whatsapp { color: #25D366; }
+        .fa-instagram { color: #E1306C; }
+        .fa-facebook { color: #1877F2; }
+        .fa-globe { color: var(--primary-teal); }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .tabungan-grid {
+                grid-template-columns: 1fr;
+            }
+            .main-title {
+                font-size: 24px;
+            }
+            .logo {
+                font-size: 24px;
+            }
+            td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            .social-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="content-wrapper">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">
+                <i class="fa-solid fa-droplet"></i> 
+                <div>
+                    BSW
+                    <span class="logo-sub">BANK SYARIAH WAKALUMI<br><span style="font-size:6px;">BPRS</span></span>
+                </div>
+            </div>
+            <div class="ojk-text">
+                *Bank ini Diawasi Otoritas Jasa Keuangan<br>& Merupakan Peserta Penjaminan LPS.
+            </div>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="main-title">
+            REALISASI NISBAH<br>BAGI-HASIL AGUSTUS 2026
+        </h1>
+
+        <!-- Tabungan Section -->
+        <div class="tabungan-grid">
+            <!-- Card Tabungan -->
+            <div class="data-card">
+                <div class="box-green">Tabungan</div>
+                <div class="box-teal">NISBAH</div>
+                <div class="split-row">
+                    <div class="box-blue">BANK</div>
+                    <div class="box-blue">NASABAH</div>
+                </div>
+                <div class="split-row">
+                    <div class="box-light-blue">85</div>
+                    <div class="box-light-blue">15</div>
+                </div>
+                <div class="box-blue">Eq RATE</div>
+                <div class="box-light-blue">1.49</div>
+            </div>
+
+            <!-- Card Tabungan Ukhuwah -->
+            <div class="data-card">
+                <div class="box-green">Tabungan Ukhuwah</div>
+                <div class="box-teal">NISBAH</div>
+                <div class="split-row">
+                    <div class="box-blue">BANK</div>
+                    <div class="box-blue">NASABAH</div>
+                </div>
+                <div class="split-row">
+                    <div class="box-light-blue">90</div>
+                    <div class="box-light-blue">10</div>
+                </div>
+                <div class="box-blue">Eq RATE</div>
+                <div class="box-light-blue">1.00</div>
+            </div>
+        </div>
+
+        <!-- Deposito Section -->
+        <div class="deposito-wrapper">
+            <div class="deposito-title">Deposito</div>
+            <table>
+                <tr>
+                    <td rowspan="2" class="header-cell">JANGKA<br>WAKTU</td>
+                    <td colspan="2" class="teal-cell">NISBAH</td>
+                    <td rowspan="2" class="header-cell">Eq RATE</td>
+                </tr>
+                <tr>
+                    <td class="header-cell">BANK</td>
+                    <td class="header-cell">NASABAH</td>
+                </tr>
+                <!-- Rows -->
+                <tr>
+                    <td style="background-color: var(--cyan-header);">1 BULAN</td>
+                    <td class="box-light-blue">70</td>
+                    <td class="box-light-blue">30</td>
+                    <td style="background-color: var(--cyan-header);">2.99</td>
+                </tr>
+                <tr>
+                    <td style="background-color: var(--cyan-header);">3 BULAN</td>
+                    <td class="box-light-blue">65</td>
+                    <td class="box-light-blue">35</td>
+                    <td style="background-color: var(--cyan-header);">3.48</td>
+                </tr>
+                <tr>
+                    <td style="background-color: var(--cyan-header);">6 BULAN</td>
+                    <td class="box-light-blue">60</td>
+                    <td class="box-light-blue">40</td>
+                    <td style="background-color: var(--cyan-header);">3.98</td>
+                </tr>
+                <tr>
+                    <td style="background-color: var(--cyan-header);">12 BULAN</td>
+                    <td class="box-light-blue">57.5</td>
+                    <td class="box-light-blue">42.5</td>
+                    <td style="background-color: var(--cyan-header);">4.23</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Footer Disclaimer -->
+        <div class="footer-note">
+            * Equivalent rate berdasarkan realisasi pendapatan Bank Bulan Agustus 2026 dan<br>bersifat Fluktuatif setiap Bulannya sesuai dengan pendapatan atau kinerja Bank
+        </div>
+
+        <!-- Social Media Footer -->
+        <div class="social-footer">
+            <div class="social-item">
+                <i class="fa-brands fa-whatsapp"></i> 0815 1738 0388
+            </div>
+            <div class="social-item">
+                <i class="fa-brands fa-instagram"></i> @bprswakalumi
+            </div>
+            <div class="social-item">
+                <i class="fa-brands fa-facebook"></i> BPRS Wakalumi
+            </div>
+            <div class="social-item">
+                <i class="fa-solid fa-globe"></i> www.bprswakalumi.co.id
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

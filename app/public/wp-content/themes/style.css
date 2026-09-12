@@ -1,0 +1,16 @@
+/*
+Theme Name: Wakalumi Theme
+Theme URI: https://bprswakalumi.co.id
+Author: BPRS Wakalumi
+Author URI: https://bprswakalumi.co.id
+Description: Custom WordPress theme untuk BPRS Wakalumi — desain modern, minimalis, dengan dark mode dan animasi interaktif.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: wakalumi
+Requires at least: 6.0
+Requires PHP: 8.0
+*/
+
+/* Styling dihandle oleh Tailwind CSS build → assets/build/css/app.css */
+
