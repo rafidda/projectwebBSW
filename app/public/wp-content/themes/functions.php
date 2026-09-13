@@ -22,6 +22,7 @@ define( 'WAKALUMI_URI', get_template_directory_uri() );
 require_once WAKALUMI_DIR . '/inc/theme-setup.php';
 require_once WAKALUMI_DIR . '/inc/cpt.php';
 require_once WAKALUMI_DIR . '/inc/acf-fields.php';
+require_once WAKALUMI_DIR . '/inc/admin-options.php';
 
 // ────────────────────────────────────────────────
 // ENQUEUE SCRIPTS & STYLES
@@ -77,7 +78,14 @@ add_action( 'wp_enqueue_scripts', 'wakalumi_dequeue_block_styles', 100 );
 // ────────────────────────────────────────────────
 // ADD PRECONNECT HINTS for Google Fonts (performance)
 // ────────────────────────────────────────────────
-function wakalumi_resource_hints( $urls, $relation_type ) {
+/**
+ * Add preconnect hints for Google Fonts.
+ *
+ * @param array  $urls
+ * @param string $relation_type
+ * @return array
+ */
+function wakalumi_resource_hints( array $urls, string $relation_type ): array {
     if ( 'preconnect' === $relation_type ) {
         $urls[] = [
             'href' => 'https://fonts.googleapis.com',
@@ -95,7 +103,14 @@ add_filter( 'wp_resource_hints', 'wakalumi_resource_hints', 10, 2 );
 // ────────────────────────────────────────────────
 // ADD 'type="module"' attribute to Vite-bundled script
 // ────────────────────────────────────────────────
-function wakalumi_script_type_module( $tag, $handle ) {
+/**
+ * Add 'type="module"' attribute to Vite-bundled script.
+ *
+ * @param string $tag
+ * @param string $handle
+ * @return string
+ */
+function wakalumi_script_type_module( string $tag, string $handle ): string {
     if ( 'wakalumi-script' === $handle ) {
         $tag = str_replace( ' src', ' type="module" src', $tag );
     }
@@ -112,4 +127,34 @@ function wakalumi_acf_notice() {
     }
 }
 add_action( 'admin_notices', 'wakalumi_acf_notice' );
+
+// ────────────────────────────────────────────────
+// ADMIN: Load Media Library + Upload Script di halaman Pengaturan Wakalumi
+// ────────────────────────────────────────────────
+function wakalumi_admin_media_scripts( $hook ) {
+    // Hanya load di halaman admin milik tema Wakalumi
+    $screen = get_current_screen();
+    if ( ! $screen ) return;
+
+    $is_wakalumi_page = (
+        strpos( $screen->id, 'wakalumi' ) !== false ||
+        in_array( $screen->post_type, [ 'hero_slide', 'produk', 'berita', 'anggota_tim' ], true )
+    );
+
+    if ( ! $is_wakalumi_page ) return;
+
+    wp_enqueue_media(); // Memuat popup Media Library WordPress (gratis, built-in)
+
+    wp_enqueue_script(
+        'wakalumi-admin-media',
+        WAKALUMI_URI . '/assets/js/admin-media.js',
+        [ 'jquery' ],
+        file_exists( WAKALUMI_DIR . '/assets/js/admin-media.js' )
+            ? filemtime( WAKALUMI_DIR . '/assets/js/admin-media.js' )
+            : WAKALUMI_VERSION,
+        true
+    );
+}
+add_action( 'admin_enqueue_scripts', 'wakalumi_admin_media_scripts' );
+
 

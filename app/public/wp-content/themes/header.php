@@ -51,7 +51,8 @@
 </div>
 
 <?php
-$wa_url = 'https://wa.me/6281517380388';
+$wa_number = get_option( 'options_contact_wa', '6281517380388' );
+$wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 ?>
 
 <!-- ========================================

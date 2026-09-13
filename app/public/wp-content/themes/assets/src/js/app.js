@@ -458,6 +458,75 @@ const SmoothScroll = {
 };
 
 // ========================================================================
+// INSTAGRAM FEED SLIDER
+// ========================================================================
+const InstagramSlider = {
+  init() {
+    const track = document.getElementById('ig-scroll-track');
+    const prevBtn = document.getElementById('ig-scroll-prev');
+    const nextBtn = document.getElementById('ig-scroll-next');
+    if (!track || !prevBtn || !nextBtn) return;
+
+    const scrollAmount = () => (window.innerWidth < 768 ? window.innerWidth * 0.85 + 24 : 374);
+
+    const updateArrowVisibility = () => {
+      const maxScroll = track.scrollWidth - track.clientWidth - 10;
+      if (track.scrollLeft <= 10) {
+        prevBtn.style.opacity = '0.3';
+        prevBtn.style.pointerEvents = 'none';
+      } else {
+        prevBtn.style.opacity = '1';
+        prevBtn.style.pointerEvents = 'auto';
+      }
+
+      if (track.scrollLeft >= maxScroll) {
+        nextBtn.style.opacity = '0.3';
+        nextBtn.style.pointerEvents = 'none';
+      } else {
+        nextBtn.style.opacity = '1';
+        nextBtn.style.pointerEvents = 'auto';
+      }
+    };
+
+    prevBtn.onclick = (e) => {
+      e.preventDefault();
+      track.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+    };
+
+    nextBtn.onclick = (e) => {
+      e.preventDefault();
+      track.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+    };
+
+    track.addEventListener('scroll', updateArrowVisibility, { passive: true });
+    updateArrowVisibility();
+  }
+};
+
+// ========================================================================
+// HERO REGULATORY BADGE (Hide when scrolling past hero)
+// ========================================================================
+const HeroRegulatoryBadge = {
+  init() {
+    const badge = document.getElementById('hero-regulatory-badge');
+    if (!badge) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 120) {
+        badge.style.opacity = '0';
+        badge.style.pointerEvents = 'none';
+      } else {
+        badge.style.opacity = '1';
+        badge.style.pointerEvents = 'auto';
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
+};
+
+// ========================================================================
 // INITIALIZE ALL MODULES
 // ========================================================================
 function initAllModules() {
@@ -465,6 +534,8 @@ function initAllModules() {
   Navbar.init();
   MobileMenu.init();
   HeroSlider.init();
+  InstagramSlider.init();
+  HeroRegulatoryBadge.init();
   AnnouncementBar.init();
   Counter.init();
   LazyImages.init();

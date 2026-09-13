@@ -2,50 +2,14 @@
 /**
  * ACF Field Groups — registered via PHP for portability
  *
- * All front-page content fields + Nisbah options page.
- * Requires ACF (Advanced Custom Fields) plugin to be active.
+ * Front-page content fields + CPT fields.
+ * Fully compatible with ACF (Free) — zero paid plugins required.
+ * Options Pages are handled natively by inc/admin-options.php.
  *
  * @package Wakalumi
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
-
-// ========================================================================
-// ACF OPTIONS PAGE — Informasi Nisbah & Pengaturan Umum
-// ========================================================================
-if ( function_exists( 'acf_add_options_page' ) ) {
-
-    acf_add_options_page( [
-        'page_title' => 'Pengaturan Umum Website',
-        'menu_title' => 'Pengaturan Website',
-        'menu_slug'  => 'wakalumi-settings',
-        'capability' => 'edit_posts',
-        'redirect'   => true,
-        'icon_url'   => 'dashicons-admin-settings',
-        'position'   => 2,
-    ] );
-
-    acf_add_options_sub_page( [
-        'page_title'  => 'Informasi Nisbah',
-        'menu_title'  => 'Informasi Nisbah',
-        'parent_slug' => 'wakalumi-settings',
-        'menu_slug'   => 'wakalumi-nisbah',
-    ] );
-
-    acf_add_options_sub_page( [
-        'page_title'  => 'Kontak & WhatsApp',
-        'menu_title'  => 'Kontak & WhatsApp',
-        'parent_slug' => 'wakalumi-settings',
-        'menu_slug'   => 'wakalumi-contact',
-    ] );
-
-    acf_add_options_sub_page( [
-        'page_title'  => 'Footer & Sosial Media',
-        'menu_title'  => 'Footer & Sosmed',
-        'parent_slug' => 'wakalumi-settings',
-        'menu_slug'   => 'wakalumi-footer',
-    ] );
-}
 
 // ========================================================================
 // REGISTER FIELD GROUPS
@@ -56,177 +20,30 @@ function wakalumi_register_acf_fields() {
     }
 
     // ──────────────────────────────────────
-    // FRONT PAGE — Hero Section
-    // ──────────────────────────────────────
-    acf_add_local_field_group( [
-        'key'      => 'group_hero',
-        'title'    => '🏠 Hero Section',
-        'fields'   => [
-            [
-                'key'          => 'field_hero_headline',
-                'label'        => 'Headline Utama',
-                'name'         => 'hero_headline',
-                'type'         => 'text',
-                'default_value'=> 'Bank Syariah Terpercaya untuk Masa Depan Anda',
-                'instructions' => 'Judul besar yang muncul di hero section.',
-            ],
-            [
-                'key'          => 'field_hero_subheadline',
-                'label'        => 'Sub-Headline',
-                'name'         => 'hero_subheadline',
-                'type'         => 'textarea',
-                'rows'         => 3,
-                'default_value'=> 'Melayani dengan prinsip syariah, memberikan solusi keuangan yang amanah dan berkah bagi seluruh masyarakat.',
-                'instructions' => 'Teks pendukung di bawah judul utama.',
-            ],
-            [
-                'key'          => 'field_hero_cta_text_1',
-                'label'        => 'Tombol CTA 1 — Teks',
-                'name'         => 'hero_cta_text_1',
-                'type'         => 'text',
-                'default_value'=> 'Hubungi Kami',
-            ],
-            [
-                'key'          => 'field_hero_cta_url_1',
-                'label'        => 'Tombol CTA 1 — Link',
-                'name'         => 'hero_cta_url_1',
-                'type'         => 'url',
-                'default_value'=> '#kontak',
-                'instructions' => 'Bisa diisi link WhatsApp (wa.me/62xxx) atau URL halaman.',
-            ],
-            [
-                'key'          => 'field_hero_cta_text_2',
-                'label'        => 'Tombol CTA 2 — Teks',
-                'name'         => 'hero_cta_text_2',
-                'type'         => 'text',
-                'default_value'=> 'Lihat Produk',
-            ],
-            [
-                'key'          => 'field_hero_cta_url_2',
-                'label'        => 'Tombol CTA 2 — Link',
-                'name'         => 'hero_cta_url_2',
-                'type'         => 'url',
-                'default_value'=> '/produk',
-            ],
-            [
-                'key'          => 'field_hero_background',
-                'label'        => 'Gambar Background Hero',
-                'name'         => 'hero_background',
-                'type'         => 'image',
-                'return_format'=> 'array',
-                'preview_size' => 'medium',
-                'instructions' => 'Ukuran ideal: 1920×1080px. Opsional — jika kosong, akan memakai gradient default.',
-            ],
-        ],
-        'location' => [
-            [
-                [
-                    'param'    => 'page_type',
-                    'operator' => '==',
-                    'value'    => 'front_page',
-                ],
-            ],
-        ],
-        'position'      => 'normal',
-        'style'         => 'default',
-        'menu_order'    => 0,
-    ] );
-
-    // ──────────────────────────────────────
-    // FRONT PAGE — Stats Counter
-    // ──────────────────────────────────────
-    acf_add_local_field_group( [
-        'key'      => 'group_stats',
-        'title'    => '📊 Angka/Statistik',
-        'fields'   => [
-            [
-                'key'          => 'field_stats',
-                'label'        => 'Data Statistik',
-                'name'         => 'stats',
-                'type'         => 'repeater',
-                'layout'       => 'table',
-                'min'          => 1,
-                'max'          => 6,
-                'button_label' => 'Tambah Statistik',
-                'sub_fields'   => [
-                    [
-                        'key'   => 'field_stat_number',
-                        'label' => 'Angka',
-                        'name'  => 'stat_number',
-                        'type'  => 'text',
-                        'instructions' => 'Angka saja, misal: 50',
-                        'wrapper' => [ 'width' => '20' ],
-                    ],
-                    [
-                        'key'   => 'field_stat_suffix',
-                        'label' => 'Suffix',
-                        'name'  => 'stat_suffix',
-                        'type'  => 'text',
-                        'instructions' => 'Misal: +, Miliar, Juta, Tahun',
-                        'wrapper' => [ 'width' => '15' ],
-                    ],
-                    [
-                        'key'   => 'field_stat_label',
-                        'label' => 'Label',
-                        'name'  => 'stat_label',
-                        'type'  => 'text',
-                        'instructions' => 'Misal: Kantor Cabang',
-                        'wrapper' => [ 'width' => '30' ],
-                    ],
-                    [
-                        'key'     => 'field_stat_icon',
-                        'label'   => 'Icon',
-                        'name'    => 'stat_icon',
-                        'type'    => 'select',
-                        'choices' => [
-                            'building'  => '🏢 Kantor',
-                            'users'     => '👥 Nasabah',
-                            'chart'     => '📈 Aset',
-                            'calendar'  => '📅 Tahun',
-                            'shield'    => '🛡️ Keamanan',
-                            'handshake' => '🤝 Kerjasama',
-                        ],
-                        'wrapper' => [ 'width' => '20' ],
-                    ],
-                ],
-            ],
-        ],
-        'location' => [
-            [
-                [
-                    'param'    => 'page_type',
-                    'operator' => '==',
-                    'value'    => 'front_page',
-                ],
-            ],
-        ],
-        'menu_order' => 1,
-    ] );
-
-    // ──────────────────────────────────────
-    // FRONT PAGE — About Preview
+    // FRONT PAGE — Tentang Kami (About Preview)
     // ──────────────────────────────────────
     acf_add_local_field_group( [
         'key'      => 'group_about_preview',
-        'title'    => '📝 Tentang Kami (Preview)',
+        'title'    => '🏢 Tentang Kami (Preview Beranda)',
         'fields'   => [
             [
                 'key'          => 'field_about_label',
-                'label'        => 'Label Section',
+                'label'        => 'Label Badge',
                 'name'         => 'about_label',
                 'type'         => 'text',
                 'default_value'=> 'Tentang Kami',
+                'instructions' => 'Teks kecil di atas judul, misal: Tentang Kami',
             ],
             [
                 'key'          => 'field_about_title',
-                'label'        => 'Judul',
+                'label'        => 'Judul Utama',
                 'name'         => 'about_title',
                 'type'         => 'text',
                 'default_value'=> 'Melayani dengan Prinsip Syariah Sejak Hari Pertama',
             ],
             [
                 'key'          => 'field_about_content',
-                'label'        => 'Isi Singkat',
+                'label'        => 'Isi Paragraf Profil',
                 'name'         => 'about_content',
                 'type'         => 'wysiwyg',
                 'media_upload' => false,
@@ -235,26 +52,27 @@ function wakalumi_register_acf_fields() {
             ],
             [
                 'key'          => 'field_about_image',
-                'label'        => 'Foto',
+                'label'        => 'Foto Kantor / Tim',
                 'name'         => 'about_image',
                 'type'         => 'image',
                 'return_format'=> 'array',
                 'preview_size' => 'medium',
-                'instructions' => 'Foto kantor, tim, atau kegiatan. Ukuran ideal: 800×600px.',
+                'instructions' => 'Foto kantor atau tim. Ukuran ideal: 800×600px. Jika kosong, foto default akan ditampilkan.',
             ],
             [
                 'key'          => 'field_about_cta_text',
-                'label'        => 'Teks Tombol',
+                'label'        => 'Teks Tombol Aksi',
                 'name'         => 'about_cta_text',
                 'type'         => 'text',
                 'default_value'=> 'Selengkapnya',
             ],
             [
                 'key'          => 'field_about_cta_url',
-                'label'        => 'Link Tombol',
+                'label'        => 'Link Tombol Aksi',
                 'name'         => 'about_cta_url',
-                'type'         => 'url',
+                'type'         => 'text',
                 'default_value'=> '/profil/tentang-kami',
+                'instructions' => 'Tautan ke halaman profil lengkap, contoh: /profil/tentang-kami',
             ],
         ],
         'location' => [
@@ -265,27 +83,35 @@ function wakalumi_register_acf_fields() {
                     'value'    => 'front_page',
                 ],
             ],
+            [
+                [
+                    'param'    => 'page_template',
+                    'operator' => '==',
+                    'value'    => 'front-page.php',
+                ],
+            ],
         ],
-        'menu_order' => 2,
+        'position'   => 'normal',
+        'menu_order' => 1,
     ] );
 
     // ──────────────────────────────────────
-    // FRONT PAGE — CTA Section
+    // FRONT PAGE — CTA Section (Ajakan Bawah)
     // ──────────────────────────────────────
     acf_add_local_field_group( [
         'key'      => 'group_cta',
-        'title'    => '📣 CTA Section (Ajakan)',
+        'title'    => '📣 CTA Section (Ajakan Bawah)',
         'fields'   => [
             [
                 'key'          => 'field_cta_headline',
-                'label'        => 'Judul CTA',
+                'label'        => 'Judul Utama Ajakan',
                 'name'         => 'cta_headline',
                 'type'         => 'text',
                 'default_value'=> 'Siap Memulai Perjalanan Keuangan Syariah Anda?',
             ],
             [
                 'key'          => 'field_cta_subtext',
-                'label'        => 'Sub-Teks',
+                'label'        => 'Sub-Teks / Penjelasan',
                 'name'         => 'cta_subtext',
                 'type'         => 'textarea',
                 'rows'         => 2,
@@ -293,14 +119,14 @@ function wakalumi_register_acf_fields() {
             ],
             [
                 'key'          => 'field_cta_button_text',
-                'label'        => 'Teks Tombol',
+                'label'        => 'Teks Tombol Utama (WhatsApp)',
                 'name'         => 'cta_button_text',
                 'type'         => 'text',
                 'default_value'=> 'Chat via WhatsApp',
             ],
             [
                 'key'          => 'field_cta_button_secondary_text',
-                'label'        => 'Teks Tombol Kedua (opsional)',
+                'label'        => 'Teks Tombol Kedua (Opsional)',
                 'name'         => 'cta_button_secondary_text',
                 'type'         => 'text',
                 'default_value'=> 'Lihat Jaringan Kantor',
@@ -309,7 +135,7 @@ function wakalumi_register_acf_fields() {
                 'key'          => 'field_cta_button_secondary_url',
                 'label'        => 'Link Tombol Kedua',
                 'name'         => 'cta_button_secondary_url',
-                'type'         => 'url',
+                'type'         => 'text',
                 'default_value'=> '/profil/jaringan-kantor',
             ],
         ],
@@ -321,205 +147,16 @@ function wakalumi_register_acf_fields() {
                     'value'    => 'front_page',
                 ],
             ],
-        ],
-        'menu_order' => 3,
-    ] );
-
-    // ──────────────────────────────────────
-    // OPTIONS — Informasi Nisbah
-    // ──────────────────────────────────────
-    acf_add_local_field_group( [
-        'key'      => 'group_nisbah',
-        'title'    => '📊 Data Nisbah Bulanan',
-        'fields'   => [
-            [
-                'key'          => 'field_nisbah_bulan',
-                'label'        => 'Periode (Bulan & Tahun)',
-                'name'         => 'nisbah_bulan',
-                'type'         => 'text',
-                'instructions' => 'Contoh: September 2026',
-                'default_value'=> 'September 2026',
-            ],
-            [
-                'key'          => 'field_nisbah_data',
-                'label'        => 'Data Nisbah',
-                'name'         => 'nisbah_data',
-                'type'         => 'repeater',
-                'layout'       => 'table',
-                'min'          => 1,
-                'max'          => 20,
-                'button_label' => 'Tambah Produk',
-                'sub_fields'   => [
-                    [
-                        'key'   => 'field_nisbah_produk',
-                        'label' => 'Nama Produk',
-                        'name'  => 'nisbah_produk',
-                        'type'  => 'text',
-                        'instructions' => 'Misal: Tabungan iB Wakalumi',
-                        'wrapper' => [ 'width' => '30' ],
-                    ],
-                    [
-                        'key'   => 'field_nisbah_nasabah',
-                        'label' => 'Nisbah Nasabah (%)',
-                        'name'  => 'nisbah_nasabah',
-                        'type'  => 'text',
-                        'instructions' => 'Misal: 30',
-                        'wrapper' => [ 'width' => '15' ],
-                    ],
-                    [
-                        'key'   => 'field_nisbah_bank',
-                        'label' => 'Nisbah Bank (%)',
-                        'name'  => 'nisbah_bank',
-                        'type'  => 'text',
-                        'instructions' => 'Misal: 70',
-                        'wrapper' => [ 'width' => '15' ],
-                    ],
-                    [
-                        'key'   => 'field_nisbah_equiv',
-                        'label' => 'Equivalen Rate',
-                        'name'  => 'nisbah_equiv',
-                        'type'  => 'text',
-                        'instructions' => 'Misal: 3.50%',
-                        'wrapper' => [ 'width' => '15' ],
-                    ],
-                    [
-                        'key'     => 'field_nisbah_jenis',
-                        'label'   => 'Jenis',
-                        'name'    => 'nisbah_jenis',
-                        'type'    => 'select',
-                        'choices' => [
-                            'tabungan' => 'Tabungan',
-                            'deposito' => 'Deposito',
-                        ],
-                        'wrapper' => [ 'width' => '15' ],
-                    ],
-                ],
-            ],
-        ],
-        'location' => [
             [
                 [
-                    'param'    => 'options_page',
+                    'param'    => 'page_template',
                     'operator' => '==',
-                    'value'    => 'wakalumi-nisbah',
+                    'value'    => 'front-page.php',
                 ],
             ],
         ],
-    ] );
-
-    // ──────────────────────────────────────
-    // OPTIONS — Kontak & WhatsApp
-    // ──────────────────────────────────────
-    acf_add_local_field_group( [
-        'key'      => 'group_contact',
-        'title'    => '📱 Kontak & WhatsApp',
-        'fields'   => [
-            [
-                'key'          => 'field_whatsapp_number',
-                'label'        => 'Nomor WhatsApp',
-                'name'         => 'whatsapp_number',
-                'type'         => 'text',
-                'instructions' => 'Format internasional tanpa +, contoh: 6281234567890',
-                'default_value'=> '6281234567890',
-            ],
-            [
-                'key'          => 'field_whatsapp_message',
-                'label'        => 'Pesan Default WhatsApp',
-                'name'         => 'whatsapp_message',
-                'type'         => 'text',
-                'default_value'=> 'Halo, saya ingin bertanya tentang produk BPRS Wakalumi.',
-                'instructions' => 'Pesan otomatis yang terisi saat pengunjung klik tombol WhatsApp.',
-            ],
-            [
-                'key'          => 'field_phone',
-                'label'        => 'Nomor Telepon Kantor',
-                'name'         => 'phone',
-                'type'         => 'text',
-                'default_value'=> '(021) 1234567',
-            ],
-            [
-                'key'          => 'field_email',
-                'label'        => 'Email',
-                'name'         => 'email',
-                'type'         => 'email',
-                'default_value'=> 'info@bprswakalumi.co.id',
-            ],
-            [
-                'key'          => 'field_address',
-                'label'        => 'Alamat Kantor Pusat',
-                'name'         => 'address',
-                'type'         => 'textarea',
-                'rows'         => 3,
-                'default_value'=> 'Jl. Contoh No. 123, Jakarta',
-            ],
-            [
-                'key'          => 'field_maps_embed',
-                'label'        => 'Google Maps Embed URL',
-                'name'         => 'maps_embed',
-                'type'         => 'url',
-                'instructions' => 'URL embed dari Google Maps.',
-            ],
-        ],
-        'location' => [
-            [
-                [
-                    'param'    => 'options_page',
-                    'operator' => '==',
-                    'value'    => 'wakalumi-contact',
-                ],
-            ],
-        ],
-    ] );
-
-    // ──────────────────────────────────────
-    // OPTIONS — Footer & Social Media
-    // ──────────────────────────────────────
-    acf_add_local_field_group( [
-        'key'      => 'group_footer',
-        'title'    => '🦶 Footer & Sosial Media',
-        'fields'   => [
-            [
-                'key'          => 'field_footer_about',
-                'label'        => 'Deskripsi Singkat (Footer)',
-                'name'         => 'footer_about',
-                'type'         => 'textarea',
-                'rows'         => 3,
-                'default_value'=> 'BPRS Wakalumi adalah bank syariah yang berkomitmen melayani masyarakat dengan prinsip keuangan Islam yang amanah.',
-            ],
-            [
-                'key'          => 'field_social_instagram',
-                'label'        => 'URL Instagram',
-                'name'         => 'social_instagram',
-                'type'         => 'url',
-            ],
-            [
-                'key'          => 'field_social_facebook',
-                'label'        => 'URL Facebook',
-                'name'         => 'social_facebook',
-                'type'         => 'url',
-            ],
-            [
-                'key'          => 'field_social_youtube',
-                'label'        => 'URL YouTube',
-                'name'         => 'social_youtube',
-                'type'         => 'url',
-            ],
-            [
-                'key'          => 'field_social_tiktok',
-                'label'        => 'URL TikTok',
-                'name'         => 'social_tiktok',
-                'type'         => 'url',
-            ],
-        ],
-        'location' => [
-            [
-                [
-                    'param'    => 'options_page',
-                    'operator' => '==',
-                    'value'    => 'wakalumi-footer',
-                ],
-            ],
-        ],
+        'position'   => 'normal',
+        'menu_order' => 2,
     ] );
 
     // ──────────────────────────────────────
@@ -527,7 +164,7 @@ function wakalumi_register_acf_fields() {
     // ──────────────────────────────────────
     acf_add_local_field_group( [
         'key'      => 'group_produk_fields',
-        'title'    => '📦 Detail Produk',
+        'title'    => '📦 Detail & Kategori Produk',
         'fields'   => [
             [
                 'key'          => 'field_produk_icon',
@@ -549,23 +186,23 @@ function wakalumi_register_acf_fields() {
                 'name'         => 'produk_ringkasan',
                 'type'         => 'textarea',
                 'rows'         => 2,
-                'instructions' => 'Ditampilkan di card produk (maks 2 kalimat).',
+                'instructions' => 'Ditampilkan di kartu produk beranda (maks 2 kalimat).',
             ],
             [
                 'key'          => 'field_produk_akad',
-                'label'        => 'Akad',
+                'label'        => 'Akad Syariah',
                 'name'         => 'produk_akad',
                 'type'         => 'text',
-                'instructions' => 'Jenis akad syariah (misal: Mudharabah, Wadiah, Murabahah).',
+                'instructions' => 'Jenis akad syariah (misal: Mudharabah Muthlaqah, Wadiah Yad Dhamanah, Murabahah).',
             ],
             [
                 'key'          => 'field_produk_featured',
-                'label'        => 'Tampilkan di Beranda?',
+                'label'        => 'Tampilkan di Beranda (Homepage)?',
                 'name'         => 'produk_featured',
                 'type'         => 'true_false',
                 'default_value'=> 0,
                 'ui'           => 1,
-                'instructions' => 'Aktifkan untuk menampilkan produk ini di halaman depan.',
+                'instructions' => 'Aktifkan jika produk ini ingin disorot pada 4 kartu produk pilihan di beranda.',
             ],
         ],
         'location' => [
@@ -584,13 +221,14 @@ function wakalumi_register_acf_fields() {
     // ──────────────────────────────────────
     acf_add_local_field_group( [
         'key'      => 'group_tim_fields',
-        'title'    => '👤 Detail Anggota',
+        'title'    => '👤 Detail Anggota Pengurus/Tim',
         'fields'   => [
             [
                 'key'   => 'field_tim_jabatan',
                 'label' => 'Jabatan',
                 'name'  => 'tim_jabatan',
                 'type'  => 'text',
+                'instructions' => 'Contoh: Direktur Utama, Dewan Pengawas Syariah, Komisaris',
             ],
             [
                 'key'     => 'field_tim_urutan',
@@ -598,7 +236,7 @@ function wakalumi_register_acf_fields() {
                 'name'    => 'tim_urutan',
                 'type'    => 'number',
                 'default_value' => 0,
-                'instructions'  => 'Angka kecil tampil duluan.',
+                'instructions'  => 'Angka lebih kecil akan tampil lebih awal.',
             ],
         ],
         'location' => [
@@ -621,11 +259,11 @@ function wakalumi_register_acf_fields() {
         'fields'   => [
             [
                 'key'          => 'field_berita_ringkasan',
-                'label'        => 'Ringkasan',
+                'label'        => 'Ringkasan Berita',
                 'name'         => 'berita_ringkasan',
                 'type'         => 'textarea',
                 'rows'         => 2,
-                'instructions' => 'Ringkasan singkat untuk ditampilkan di card dan daftar berita.',
+                'instructions' => 'Ringkasan singkat untuk kartu berita di beranda dan arsip.',
             ],
         ],
         'location' => [
@@ -640,54 +278,77 @@ function wakalumi_register_acf_fields() {
     ] );
 
     // ──────────────────────────────────────
-    // CPT: Hero Slide
+    // CPT: Slider Hero
     // ──────────────────────────────────────
     acf_add_local_field_group( [
         'key'      => 'group_wakalumi_hero_slide',
-        'title'    => '🖼️ Hero Slide Settings',
+        'title'    => 'Pengaturan Slide Hero',
         'fields'   => [
             [
-                'key'   => 'field_wakalumi_slide_subheadline',
-                'label' => 'Sub-headline',
-                'name'  => 'slide_subheadline',
-                'type'  => 'textarea',
-                'rows'  => 3,
+                'key'           => 'field_wakalumi_slide_image_desktop',
+                'label'         => 'Gambar Latar Desktop (Komputer / Laptop)',
+                'name'          => 'slide_image_desktop',
+                'type'          => 'image',
+                'return_format' => 'array',
+                'preview_size'  => 'medium',
+                'library'       => 'all',
+                'instructions'  => 'Rekomendasi Resolusi: 1920 × 800 piksel (atau 1920 × 1080 piksel, Landscape 16:9 / 16:7). Format: WebP atau JPG. Ukuran file disarankan: < 300 KB agar memuat kilat.',
+            ],
+            [
+                'key'           => 'field_wakalumi_slide_image_mobile',
+                'label'         => 'Gambar Latar Mobile (Ponsel / Smartphone)',
+                'name'          => 'slide_image_mobile',
+                'type'          => 'image',
+                'return_format' => 'array',
+                'preview_size'  => 'medium',
+                'library'       => 'all',
+                'instructions'  => 'Rekomendasi Resolusi: 750 × 1000 piksel (Potret 3:4) atau 800 × 800 piksel (Persegi 1:1). Format: WebP atau JPG. Ukuran file disarankan: < 150 KB. Fokus visual di tengah agar pas di layar smartphone. Jika dikosongkan, otomatis menggunakan gambar versi Desktop.',
+            ],
+            [
+                'key'          => 'field_wakalumi_slide_subheadline',
+                'label'        => 'Sub-headline / Deskripsi Slide',
+                'name'         => 'slide_subheadline',
+                'type'         => 'textarea',
+                'rows'         => 3,
+                'instructions' => 'Kalimat penjelasan di bawah judul slide.',
             ],
             [
                 'key'           => 'field_wakalumi_slide_cta_text',
-                'label'         => 'Teks Tombol CTA',
+                'label'         => 'Teks Tombol 1',
                 'name'          => 'slide_cta_text',
                 'type'          => 'text',
                 'default_value' => 'Hubungi Kami',
             ],
             [
-                'key'   => 'field_wakalumi_slide_cta_url',
-                'label' => 'URL Tombol CTA',
-                'name'  => 'slide_cta_url',
-                'type'  => 'url',
+                'key'          => 'field_wakalumi_slide_cta_url',
+                'label'        => 'Link Tombol 1',
+                'name'         => 'slide_cta_url',
+                'type'         => 'text',
+                'instructions' => 'Bisa diisi link WhatsApp atau tautan halaman lain.',
             ],
             [
                 'key'           => 'field_wakalumi_slide_cta_text_2',
-                'label'         => 'Teks Tombol Kedua',
+                'label'         => 'Teks Tombol 2',
                 'name'          => 'slide_cta_text_2',
                 'type'          => 'text',
                 'default_value' => 'Lihat Produk',
             ],
             [
-                'key'   => 'field_wakalumi_slide_cta_url_2',
-                'label' => 'URL Tombol Kedua',
-                'name'  => 'slide_cta_url_2',
-                'type'  => 'url',
+                'key'          => 'field_wakalumi_slide_cta_url_2',
+                'label'        => 'Link Tombol 2',
+                'name'         => 'slide_cta_url_2',
+                'type'         => 'text',
+                'instructions' => 'Contoh: /produk',
             ],
             [
                 'key'           => 'field_wakalumi_slide_overlay_opacity',
-                'label'         => 'Opacity Overlay Background',
+                'label'         => 'Tingkat Kegelapan Gambar Latar (Overlay Opacity)',
                 'name'          => 'slide_overlay_opacity',
                 'type'          => 'number',
                 'min'           => 0,
                 'max'           => 100,
                 'default_value' => 60,
-                'instructions'  => 'Angka antara 0 hingga 100.',
+                'instructions'  => 'Persentase kegelapan (0 - 100) agar teks tetap terbaca tajam di atas gambar.',
             ],
         ],
         'location' => [
@@ -700,95 +361,26 @@ function wakalumi_register_acf_fields() {
             ],
         ],
     ] );
-
-    // ──────────────────────────────────────
-    // OPTIONS — Announcement
-    // ──────────────────────────────────────
-    acf_add_local_field_group( [
-        'key'      => 'group_wakalumi_announcement',
-        'title'    => '📢 Pengumuman (Announcement)',
-        'fields'   => [
-            [
-                'key'           => 'field_wakalumi_announcement_active',
-                'label'         => 'Aktifkan Pengumuman?',
-                'name'          => 'announcement_active',
-                'type'          => 'true_false',
-                'ui'            => 1,
-                'default_value' => 0,
-            ],
-            [
-                'key'   => 'field_wakalumi_announcement_text',
-                'label' => 'Teks Pengumuman',
-                'name'  => 'announcement_text',
-                'type'  => 'text',
-            ],
-            [
-                'key'   => 'field_wakalumi_announcement_link_text',
-                'label' => 'Teks Link',
-                'name'  => 'announcement_link_text',
-                'type'  => 'text',
-                'instructions'  => 'Contoh: Selengkapnya',
-            ],
-            [
-                'key'   => 'field_wakalumi_announcement_link_url',
-                'label' => 'URL Link',
-                'name'  => 'announcement_link_url',
-                'type'  => 'url',
-            ],
-            [
-                'key'     => 'field_wakalumi_announcement_type',
-                'label'   => 'Tipe Pengumuman',
-                'name'    => 'announcement_type',
-                'type'    => 'select',
-                'choices' => [
-                    'info'    => 'Info (Biru)',
-                    'success' => 'Success (Hijau)',
-                    'warning' => 'Warning (Kuning/Merah)',
-                ],
-                'default_value' => 'info',
-            ],
-        ],
-        'location' => [
-            [
-                [
-                    'param'    => 'options_page',
-                    'operator' => '==',
-                    'value'    => 'wakalumi-settings',
-                ],
-            ],
-        ],
-    ] );
 }
 add_action( 'acf/init', 'wakalumi_register_acf_fields' );
 
 // ========================================================================
-// HELPER: Get WhatsApp URL
+// HELPER: Get WhatsApp URL with Pre-filled Message
 // ========================================================================
 function wakalumi_get_whatsapp_url() {
-    $number  = get_field( 'whatsapp_number', 'option' ) ?: '6281234567890';
-    $message = get_field( 'whatsapp_message', 'option' ) ?: 'Halo, saya ingin bertanya tentang produk BPRS Wakalumi.';
-    return 'https://wa.me/' . $number . '?text=' . rawurlencode( $message );
+    $number  = get_option( 'options_contact_wa', '6281517380388' );
+    $message = get_option( 'options_contact_wa_message', 'Halo CS Bank Syariah Wakalumi, saya ingin bertanya tentang produk perbankan.' );
+    $clean_number = preg_replace( '/[^0-9]/', '', $number );
+    return 'https://wa.me/' . $clean_number . '?text=' . rawurlencode( $message );
 }
 
-// ========================================================================
-// HELPER: Get stat icon SVG
-// ========================================================================
-function wakalumi_get_stat_icon( $icon_key ) {
-    $icons = [
-        'building'  => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></svg>',
-        'users'     => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>',
-        'chart'     => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>',
-        'calendar'  => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>',
-        'shield'    => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>',
-        'handshake' => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.575 1.575 0 10-3.15 0v3.15M10.05 4.575a1.575 1.575 0 013.15 0v3.15M10.05 4.575V2.7c0-.332.15-.65.414-.893A8.97 8.97 0 0112 1.35c.563 0 1.11.06 1.636.172M13.2 7.725V4.575m0 0V2.7c0-.332-.15-.65-.414-.893M13.2 7.725l3.15-3.15m-3.15 3.15H10.05m3.15 0l-3.15-3.15" /></svg>',
-    ];
-    return $icons[ $icon_key ] ?? $icons['building'];
-}
-
-// ========================================================================
-// HELPER: Get produk icon SVG
-// ========================================================================
-function wakalumi_get_produk_icon( $icon_key ) {
+/**
+ * Helper: Get produk icon SVG
+ *
+ * @param string $icon_key
+ * @return string
+ */
+function wakalumi_get_produk_icon( string $icon_key = 'savings' ): string {
     $icons = [
         'savings'    => '<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
         'deposit'    => '<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>',
@@ -799,4 +391,3 @@ function wakalumi_get_produk_icon( $icon_key ) {
     ];
     return $icons[ $icon_key ] ?? $icons['savings'];
 }
-
