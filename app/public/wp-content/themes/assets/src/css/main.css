@@ -23,12 +23,23 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    max-width: 100%;
   }
 
   body {
     @apply font-sans antialiased transition-colors duration-500;
     @apply bg-white text-slate-900;
     @apply dark:bg-dark dark:text-slate-200;
+    overflow-x: clip;
+    max-width: 100%;
+    position: relative;
+  }
+
+  @supports not (overflow-x: clip) {
+    html, body {
+      overflow-x: hidden;
+    }
   }
 
   /* Smooth scrollbar for dark mode */
@@ -208,44 +219,99 @@
     @apply w-full;
   }
 
-  /* ---- Dropdown Menu (Improved — scale + fade + blur) ---- */
+  /* ---- Dropdown Menu (Subtle Frosted Glass, Seamless Hover Bridge & Max Readability) ---- */
+  .dropdown {
+    position: relative;
+  }
+
   .dropdown-menu {
-    @apply absolute top-full left-1/2 mt-3
+    @apply absolute top-full left-1/2 mt-1.5
            min-w-[240px] py-2.5 rounded-2xl
            bg-white/95 backdrop-blur-xl
-           border border-slate-100/80
-           shadow-2xl shadow-slate-900/10
+           border border-slate-200/90
+           shadow-[0_20px_50px_rgba(15,23,42,0.16)]
            z-50;
     opacity: 0;
     visibility: hidden;
-    transform: translateX(-50%) translateY(8px) scale(0.97);
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.25s,
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    @apply dark:bg-dark-surface/95 dark:border-dark-border dark:shadow-black/40;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(6px) scale(0.98);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.2s,
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    @apply dark:bg-slate-900/95 dark:border-slate-700/80 dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)];
+  }
+
+  /* Invisible hover bridge: seamlessly covers the gap between navbar button and dropdown menu */
+  .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    left: 0;
+    right: 0;
+    height: 26px;
+    display: block;
+    background: transparent;
   }
 
   .dropdown:hover .dropdown-menu,
+  .dropdown.hovered .dropdown-menu,
+  .dropdown.is-open .dropdown-menu,
   .dropdown.open .dropdown-menu {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
     transform: translateX(-50%) translateY(0) scale(1);
   }
 
   .dropdown-item {
-    @apply block px-5 py-2.5 text-sm text-slate-600 font-medium
+    @apply block px-5 py-2.5 text-sm text-slate-700 font-medium
            transition-all duration-200;
-    @apply dark:text-slate-300;
+    @apply dark:text-slate-200;
   }
 
   .dropdown-item:hover,
   .dropdown-item.active {
-    @apply bg-primary-50/80 text-primary-700 pl-6;
-    @apply dark:bg-primary-400/10 dark:text-primary-300;
+    @apply bg-primary-50 text-primary-700 pl-6 font-semibold;
+    @apply dark:bg-primary-950/50 dark:text-teal-300;
   }
 
   .dropdown-item.active {
-    @apply font-semibold;
+    @apply font-bold;
+  }
+
+  /* ---- Mega Menu for Produk (Subtle Frosted Glass, Non-Stiff & Crisp) ---- */
+  .dropdown-mega-menu {
+    background-color: rgba(255, 255, 255, 0.97) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(203, 213, 225, 0.9) !important;
+    box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.04) !important;
+    left: 50% !important;
+    max-width: min(820px, calc(100vw - 2rem)) !important;
+    transform: translateX(-42%) translateY(6px) scale(0.98) !important;
+  }
+  .dark .dropdown-mega-menu {
+    background-color: rgba(15, 23, 42, 0.97) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(51, 65, 85, 0.85) !important;
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  }
+  .dropdown:hover .dropdown-mega-menu,
+  .dropdown.hovered .dropdown-mega-menu,
+  .dropdown.is-open .dropdown-mega-menu,
+  .dropdown.open .dropdown-mega-menu {
+    transform: translateX(-42%) translateY(0) scale(1) !important;
+  }
+
+  .mega-link {
+    @apply flex items-start gap-3 p-2.5 rounded-xl transition-all duration-200 cursor-pointer;
+  }
+  .mega-link:hover {
+    @apply bg-slate-100/80 dark:bg-slate-800 -translate-y-0.5 shadow-sm;
+  }
+  .mega-link.active {
+    @apply bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-teal-300 font-bold;
   }
 
   /* Dropdown arrow rotation */
@@ -779,3 +845,192 @@ img:not([loading="lazy"]) {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ══════════════════════════════════════════════════════
+   EXECUTIVE POWERPOINT TRUE MORPH PARALLAX
+   Continuous card layout transformation using CSS coordinates
+   ══════════════════════════════════════════════════════ */
+.exec-morph-stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+}
+
+.exec-morph-card {
+  position: absolute;
+  transition: left 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+              top 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+              width 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+              height 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.6s ease,
+              border-color 0.6s ease,
+              background-color 0.6s ease;
+  will-change: left, top, width, height;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.exec-morph-card:hover {
+  @apply shadow-2xl;
+}
+
+.exec-morph-card[data-card-mode="spotlight"] {
+  @apply shadow-2xl ring-1 ring-primary-500/30 dark:ring-teal-400/30;
+  cursor: default;
+}
+
+.exec-morph-card[data-card-mode="dock"] {
+  cursor: pointer;
+}
+
+.exec-morph-card[data-card-mode="dock"]:hover {
+  @apply ring-2 ring-primary-500/50 dark:ring-teal-400/50;
+  transform: translateX(-4px);
+}
+
+.exec-morph-card[data-card-mode="overview"] {
+  cursor: pointer;
+}
+
+.exec-morph-card[data-card-mode="overview"]:hover {
+  transform: translateY(-4px);
+}
+
+/* Morph Header Transitions */
+#executive-sticky-stage.is-overview .morph-header-overview {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#executive-sticky-stage.is-overview .morph-header-spotlight {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#executive-sticky-stage.is-spotlight .morph-header-overview {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#executive-sticky-stage.is-spotlight .morph-header-spotlight {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Sub-views inside each card */
+.morph-view-overview,
+.morph-view-dock,
+.morph-view-spotlight {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  will-change: opacity, transform;
+}
+
+/* Mode: OVERVIEW */
+[data-card-mode="overview"] .morph-view-overview {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  padding: 1.25rem;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+              transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+              visibility 0.55s;
+}
+[data-card-mode="overview"] .morph-view-dock,
+[data-card-mode="overview"] .morph-view-spotlight {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.95);
+  transition: opacity 0.35s ease 0s, transform 0.35s ease 0s, visibility 0.35s;
+}
+
+/* Mode: DOCK (Compact card on the right) */
+[data-card-mode="dock"] .morph-view-dock {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+              transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+              visibility 0.55s;
+}
+[data-card-mode="dock"] .morph-view-overview,
+[data-card-mode="dock"] .morph-view-spotlight {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.95);
+  transition: opacity 0.35s ease 0s, transform 0.35s ease 0s, visibility 0.35s;
+}
+
+/* Mode: SPOTLIGHT (Large expanded card on the left) */
+[data-card-mode="spotlight"] .morph-view-spotlight {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  padding: 1.75rem 2rem;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+              visibility 0.6s;
+}
+[data-card-mode="spotlight"] .morph-view-overview,
+[data-card-mode="spotlight"] .morph-view-dock {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.95);
+  transition: opacity 0.35s ease 0s, transform 0.35s ease 0s, visibility 0.35s;
+}
+
+/* ========================================================================
+   COPY TOAST NOTIFICATION
+   ======================================================================== */
+.copy-toast {
+  position: fixed;
+  bottom: 2.25rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(24px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+  z-index: 10000;
+}
+.copy-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ========================================================================
+   JARINGAN KANTOR CARDS & LIGHTBOX
+   ======================================================================== */
+.kantor-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              opacity 0.25s ease;
+}
+
+.kantor-card.is-fallback .card-photo-fallback {
+  display: flex !important;
+}
+
+
+

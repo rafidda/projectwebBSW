@@ -121,6 +121,12 @@ $show_orgchart  = get_option( 'options_pengurus_orgchart_show', '1' );
 $orgchart_image = get_option( 'options_pengurus_orgchart_image', '' );
 $orgchart_desc  = get_option( 'options_pengurus_orgchart_desc', 'Struktur hierarki dan tata kelola BPRS Wakalumi yang menghubungkan Rapat Umum Pemegang Saham (RUPS), Dewan Komisaris, Dewan Pengawas Syariah, dan Direksi.' );
 
+// OJK Fit & Proper Test Notice (Admin Manageable)
+$show_ojk_notice  = get_option( 'options_pengurus_ojk_notice_show', '1' );
+$ojk_notice_badge = get_option( 'options_pengurus_ojk_notice_badge', 'Keterbukaan Informasi Regulasi' );
+$ojk_notice_title = get_option( 'options_pengurus_ojk_notice_title', 'Posisi Direktur dalam Proses Penilaian Kemampuan & Kepatutan (Fit & Proper Test) OJK' );
+$ojk_notice_desc  = get_option( 'options_pengurus_ojk_notice_desc', 'Sesuai dengan POJK tentang Penilaian Kemampuan dan Kepatutan bagi Pihak Utama Lembaga Jasa Keuangan, posisi Direktur BPRS Wakalumi saat ini tengah menjalani tahapan proses perizinan resmi di Otoritas Jasa Keuangan (OJK). Seluruh aktivitas operasional dan pelayanan perbankan kepada nasabah tetap berjalan dengan pengawasan penuh dari Dewan Komisaris dan Dewan Pengawas Syariah (DPS).' );
+
 // CTA
 $show_cta      = get_option( 'options_pengurus_cta_show', '1' );
 $cta_badge     = get_option( 'options_pengurus_cta_badge', 'Bergabung Bersama Kami' );
@@ -256,224 +262,300 @@ $total_members = count( $pengurus_list );
      Visible on lg+ screens (>= 1024px)
      ======================================================================== -->
 <?php if ( $total_members > 0 ) : 
-    // Calculate total scroll height based on number of members (100vh base + 75vh per additional member)
-    $scroll_height_vh = 100 + ( ( $total_members - 1 ) * 75 );
+    // Calculate total scroll height based on number of members (160vh base for Overview + 110vh per member for smooth morph spotlight pacing)
+    $scroll_height_vh = 160 + ( ( $total_members - 1 ) * 110 );
 ?>
 <section id="executive-spotlight-section" 
          class="hidden lg:block relative" 
          style="height: <?php echo $scroll_height_vh; ?>vh;"
          data-total-members="<?php echo $total_members; ?>">
 
-    <!-- STICKY VIEWPORT CONTAINER -->
+    <!-- STICKY VIEWPORT CONTAINER (PowerPoint Morph Parallax) -->
     <div id="executive-sticky-stage" 
-         class="sticky top-20 h-[calc(100vh-5rem)] flex items-center overflow-hidden py-4 z-10">
+         class="is-overview sticky top-20 h-[calc(100vh-5rem)] flex flex-col justify-center overflow-hidden py-4 z-10">
 
-        <div class="container-wide w-full h-full flex flex-col justify-center relative z-10">
+        <div class="container-wide w-full max-w-7xl mx-auto px-4 flex flex-col justify-between h-[650px] relative z-10">
 
-            <!-- Top Stage Bar: Category Filter / Jump + Progress -->
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
-                <div class="flex items-center gap-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Sorotan Kepemimpinan:</span>
-                    <div id="exec-category-pills" class="flex items-center gap-2">
-                        <button type="button" class="exec-filter-btn active px-3 py-1 rounded-full text-xs font-semibold transition-all bg-primary-600 text-white shadow-sm" data-filter="all">Semua (<?php echo $total_members; ?>)</button>
-                        <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Komisaris">Komisaris</button>
-                        <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Pengawas Syariah">DPS</button>
+            <!-- ══════════════════════════════════════════════════════════════════════════
+                 TOP STAGE HEADER: OVERVIEW TITLE vs SPOTLIGHT CONTROLS
+                 ══════════════════════════════════════════════════════════════════════════ -->
+            <div class="relative h-14 shrink-0 flex items-center justify-between">
+                <!-- Overview Header (Rest State) -->
+                <div class="morph-header-overview absolute inset-0 flex items-center justify-between transition-all duration-300">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 dark:bg-primary-400/10 border border-primary-500/20 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-teal-300">
+                            <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
+                            Dewan Pengawas Syariah & Dewan Komisaris
+                        </span>
+                        <span class="text-xs text-slate-300 dark:text-slate-700 hidden xl:inline">|</span>
+                        <span class="text-xs font-bold text-slate-600 dark:text-slate-300 hidden xl:inline">Jajaran Pimpinan Berintegritas</span>
+                    </div>
+                    <div class="text-xs font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                        <span>Pilih tokoh atau gulir ke bawah</span>
+                        <svg class="w-3.5 h-3.5 animate-bounce text-primary-500 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
                     </div>
                 </div>
 
-                <!-- Progress Counter & Controls -->
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <span id="exec-current-counter" class="text-base font-extrabold text-primary-600 dark:text-teal-400">01</span>
-                        <span class="text-xs text-slate-400">/</span>
-                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"><?php echo sprintf( '%02d', $total_members ); ?></span>
+                <!-- Spotlight Controls (Morphed State) -->
+                <div class="morph-header-spotlight absolute inset-0 flex items-center justify-between transition-all duration-300">
+                    <div class="flex items-center gap-3">
+                        <button type="button" id="exec-btn-back-overview" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-700 dark:text-slate-200 shadow-sm transition-all hover:scale-105 active:scale-95" title="Kembali ke tampilan semua tokoh">
+                            <svg class="w-3.5 h-3.5 text-primary-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                            <span>Semua Tokoh</span>
+                        </button>
+                        <span class="text-slate-300 dark:text-slate-700">|</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kategori:</span>
+                        <div id="exec-category-pills" class="flex items-center gap-2">
+                            <button type="button" class="exec-filter-btn active px-3 py-1 rounded-full text-xs font-semibold transition-all bg-primary-600 text-white shadow-sm" data-filter="all">Semua (<?php echo $total_members; ?>)</button>
+                            <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Komisaris">Komisaris</button>
+                            <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Pengawas Syariah">DPS</button>
+                        </div>
                     </div>
-                    <!-- Stepper Buttons -->
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" id="exec-btn-prev" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none" aria-label="Sebelumnya">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                        </button>
-                        <button type="button" id="exec-btn-next" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-700 dark:text-slate-300 flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none" aria-label="Selanjutnya">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                        </button>
+
+                    <!-- Progress Counter & Steppers -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            <span id="exec-current-counter" class="text-sm font-extrabold text-primary-600 dark:text-teal-400">01</span>
+                            <span class="text-xs text-slate-400">/</span>
+                            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"><?php echo sprintf( '%02d', $total_members ); ?></span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" id="exec-btn-prev" class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none shadow-sm" aria-label="Sebelumnya">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                            <button type="button" id="exec-btn-next" class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none shadow-sm" aria-label="Selanjutnya">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- MAIN STAGE GRID: LEFT SPOTLIGHT + RIGHT FLOATING DOCK -->
-            <div class="grid grid-cols-12 gap-8 items-center flex-1 max-h-[calc(100vh-12rem)]">
+            <!-- ══════════════════════════════════════════════════════════════════════════
+                 THE POWERPOINT MORPH STAGE CONTAINER (520px)
+                 Holds all persistent .exec-morph-card elements
+                 ══════════════════════════════════════════════════════════════════════════ -->
+            <div id="exec-morph-stage" class="exec-morph-stage">
+                <?php 
+                $gap_pct    = 2.0;
+                $card_w_pct = ( 100.0 - ( $gap_pct * ( $total_members - 1 ) ) ) / $total_members;
+                
+                foreach ( $pengurus_list as $index => $item ) : 
+                    $kategori  = $item['kategori'] ?? 'Dewan Komisaris';
+                    $cfg       = $cat_config[ $kategori ] ?? $cat_config['Dewan Komisaris'];
+                    $init_left = $index * ( $card_w_pct + $gap_pct );
+                ?>
+                <div class="exec-morph-card rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-lg"
+                     id="exec-card-<?php echo $index; ?>"
+                     data-index="<?php echo $index; ?>"
+                     data-kategori="<?php echo esc_attr( $kategori ); ?>"
+                     data-card-mode="overview"
+                     style="left: <?php echo esc_attr( $init_left ); ?>%; top: 0%; width: <?php echo esc_attr( $card_w_pct ); ?>%; height: 100%;">
 
-                <!-- ══════════════════════════════════════════════════════
-                     LEFT COLUMN: ACTIVE EXECUTIVE SPOTLIGHT STAGE (Col 8)
-                     ══════════════════════════════════════════════════════ -->
-                <div class="col-span-8 h-full flex flex-col justify-center">
-                    <div id="exec-spotlight-card" 
-                         class="relative rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-2xl p-6 lg:p-8 flex flex-col justify-between transition-all duration-500">
+                    <!-- Top Gradient Accent Bar for this card -->
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r <?php echo $cfg['accent_bar']; ?> z-10"></div>
 
-                        <!-- Top Gradient Accent Bar -->
-                        <div id="exec-spotlight-bar" class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 to-primary-600 transition-all duration-500"></div>
+                    <!-- SUB-VIEW 1: OVERVIEW CARD (Rest / 4-column lineup) -->
+                    <div class="morph-view-overview flex flex-col justify-between">
+                        <!-- Portrait Photo -->
+                        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 mb-3 group-hover:scale-[1.02] transition-transform duration-500">
+                            <?php if ( ! empty( $item['foto'] ) ) : ?>
+                                <img src="<?php echo esc_url( $item['foto'] ); ?>" 
+                                     alt="<?php echo esc_attr( $item['nama'] ); ?>" 
+                                     class="w-full h-full object-cover">
+                            <?php else : ?>
+                                <div class="w-full h-full flex items-center justify-center text-slate-400 font-bold">
+                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                </div>
+                            <?php endif; ?>
 
-                        <!-- Main Spotlight Content -->
+                            <!-- Category Pill Overlay -->
+                            <div class="absolute top-2.5 left-2.5">
+                                <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full backdrop-blur-md shadow-sm <?php echo $cfg['badge_bg']; ?>">
+                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Text Info -->
+                        <div class="text-center px-1">
+                            <div class="text-[11px] font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wide truncate mb-1">
+                                <?php echo esc_html( $item['jabatan'] ); ?>
+                            </div>
+                            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white line-clamp-1">
+                                <?php echo esc_html( $item['nama'] ); ?>
+                            </h3>
+                        </div>
+
+                        <!-- Hover Prompt -->
+                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                            <span>Lihat Rekam Jejak</span>
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW 2: DOCK CARD (Compact mini-card on the right) -->
+                    <div class="morph-view-dock flex items-center gap-3.5">
+                        <!-- Mini Photo -->
+                        <div class="relative shrink-0 w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 shadow-sm">
+                            <?php if ( ! empty( $item['foto'] ) ) : ?>
+                                <img src="<?php echo esc_url( $item['foto'] ); ?>" 
+                                     alt="<?php echo esc_attr( $item['nama'] ); ?>" 
+                                     class="w-full h-full object-cover">
+                            <?php else : ?>
+                                <div class="w-full h-full flex items-center justify-center text-slate-400 text-xs font-bold">
+                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full <?php echo $cfg['badge_bg']; ?>">
+                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                </span>
+                                <span class="text-[11px] font-semibold text-primary-600 dark:text-teal-300 truncate">
+                                    <?php echo esc_html( $item['jabatan'] ); ?>
+                                </span>
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">
+                                <?php echo esc_html( $item['nama'] ); ?>
+                            </h4>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-500' : 'bg-emerald-500'; ?>"></span>
+                                <span><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
+                            </p>
+                        </div>
+
+                        <!-- Right Chevron -->
+                        <div class="shrink-0 text-slate-300 dark:text-slate-600">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW 3: SPOTLIGHT CARD (Expanded full dossier on the left) -->
+                    <div class="morph-view-spotlight flex flex-col justify-between">
                         <div class="grid grid-cols-12 gap-6 items-start">
                             
-                            <!-- Left: Big Portrait Showcase -->
+                            <!-- Left: Big Portrait Showcase (col-span-4) -->
                             <div class="col-span-4 flex flex-col items-center text-center">
-                                <div class="relative w-44 h-44 xl:w-48 xl:h-48 rounded-3xl p-1 bg-gradient-to-br from-teal-400/40 via-primary-500/20 to-transparent shadow-xl">
+                                <div class="relative w-40 h-40 xl:w-44 xl:h-44 rounded-3xl p-1 bg-gradient-to-br from-teal-400/40 via-primary-500/20 to-transparent shadow-xl">
                                     <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-white/80 dark:border-slate-700">
-                                        <img id="exec-spotlight-img" 
-                                             src="<?php echo esc_url( $pengurus_list[0]['foto'] ?? '' ); ?>" 
-                                             alt="<?php echo esc_attr( $pengurus_list[0]['nama'] ?? '' ); ?>" 
-                                             class="w-full h-full object-cover transition-opacity duration-300">
+                                        <?php if ( ! empty( $item['foto'] ) ) : ?>
+                                            <img src="<?php echo esc_url( $item['foto'] ); ?>" 
+                                                 alt="<?php echo esc_attr( $item['nama'] ); ?>" 
+                                                 class="w-full h-full object-cover">
+                                        <?php else : ?>
+                                            <div class="w-full h-full flex items-center justify-center text-slate-400 text-lg font-bold">
+                                                <?php echo esc_html( $cfg['abbr'] ); ?>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                     <!-- Status Dot Badge -->
-                                    <div id="exec-spotlight-status-dot" class="absolute -bottom-2 -right-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-md flex items-center gap-1.5 border-2 border-white dark:border-slate-900">
+                                    <div class="absolute -bottom-2 -right-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-500' : 'bg-emerald-500'; ?> text-white shadow-md flex items-center gap-1.5 border-2 border-white dark:border-slate-900">
                                         <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                                        <span id="exec-spotlight-status-text">Aktif</span>
+                                        <span><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
                                     </div>
                                 </div>
 
                                 <!-- Category Badge -->
                                 <div class="mt-4">
-                                    <span id="exec-spotlight-category" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary-500/10 text-primary-700 dark:bg-primary-400/10 dark:text-teal-300 border border-primary-500/20">
-                                        <?php echo esc_html( $pengurus_list[0]['kategori'] ?? '' ); ?>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider <?php echo $cfg['badge_bg']; ?> border border-primary-500/20">
+                                        <?php echo esc_html( $item['kategori'] ); ?>
                                     </span>
                                 </div>
                             </div>
 
-                            <!-- Right: Name, Titles, and Rich Dossier -->
+                            <!-- Right: Name, Titles, and Rich Dossier (col-span-8) -->
                             <div class="col-span-8 flex flex-col">
                                 <!-- Role & Full Name -->
-                                <div class="mb-4">
-                                    <div id="exec-spotlight-role" class="text-sm font-bold text-primary-600 dark:text-teal-400 tracking-wide uppercase mb-1">
-                                        <?php echo esc_html( $pengurus_list[0]['jabatan'] ?? '' ); ?>
+                                <div class="mb-3">
+                                    <div class="text-xs font-bold text-primary-600 dark:text-teal-400 tracking-wide uppercase mb-1">
+                                        <?php echo esc_html( $item['jabatan'] ); ?>
                                     </div>
-                                    <h2 id="exec-spotlight-name" class="text-2xl xl:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                                        <?php echo esc_html( $pengurus_list[0]['nama'] ?? '' ); ?>
+                                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+                                        <?php echo esc_html( $item['nama'] ); ?>
                                     </h2>
                                 </div>
 
-                                <!-- Dossier Tabs / Content: Karir, Pendidikan, Sertifikasi -->
-                                <div class="space-y-3 pr-2 overflow-y-auto max-h-[calc(100vh-25rem)] custom-scroll">
+                                <!-- Dossier Scrollable Area -->
+                                <div class="space-y-3 pr-2 overflow-y-auto max-h-[250px] custom-scroll">
                                     <!-- Career Narrative -->
                                     <div>
                                         <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-teal-400 mb-1">
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
                                             Riwayat & Rekam Jejak
                                         </div>
-                                        <p id="exec-spotlight-karir" class="text-sm text-slate-700 dark:text-slate-100 leading-relaxed font-normal">
-                                            <?php echo esc_html( $pengurus_list[0]['riwayat_karir'] ?? '' ); ?>
+                                        <p class="text-xs text-slate-700 dark:text-slate-100 leading-relaxed font-normal">
+                                            <?php echo esc_html( $item['riwayat_karir'] ?? '' ); ?>
                                         </p>
                                     </div>
 
                                     <!-- Education & Certification (2 cols) -->
-                                    <div class="grid grid-cols-2 gap-3 pt-2">
-                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/90 p-3 border border-slate-100 dark:border-slate-700">
-                                            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300 mb-1">
+                                    <div class="grid grid-cols-2 gap-2.5 pt-1">
+                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/90 p-2.5 border border-slate-100 dark:border-slate-700">
+                                            <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300 mb-0.5">
                                                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
                                                 Pendidikan
                                             </div>
-                                            <p id="exec-spotlight-pendidikan" class="text-xs font-semibold text-slate-800 dark:text-white">
-                                                <?php echo esc_html( $pengurus_list[0]['pendidikan'] ?? '' ); ?>
+                                            <p class="text-[11px] font-semibold text-slate-800 dark:text-white">
+                                                <?php echo esc_html( $item['pendidikan'] ?? '—' ); ?>
                                             </p>
                                         </div>
 
-                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/90 p-3 border border-slate-100 dark:border-slate-700">
-                                            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300 mb-1">
+                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/90 p-2.5 border border-slate-100 dark:border-slate-700">
+                                            <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300 mb-0.5">
                                                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
                                                 Sertifikasi
                                             </div>
-                                            <p id="exec-spotlight-sertifikasi" class="text-xs font-semibold text-slate-800 dark:text-white">
-                                                <?php echo esc_html( $pengurus_list[0]['sertifikasi'] ?? '' ); ?>
+                                            <p class="text-[11px] font-semibold text-slate-800 dark:text-white">
+                                                <?php echo esc_html( $item['sertifikasi'] ?? '—' ); ?>
                                             </p>
                                         </div>
                                     </div>
 
                                     <!-- Integrity Quote -->
-                                    <div id="exec-spotlight-quote-wrap" class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                                    <?php if ( ! empty( $item['kutipan'] ) ) : ?>
+                                    <div class="pt-1.5 border-t border-slate-100 dark:border-slate-800">
                                         <blockquote class="relative pl-3 border-l-2 border-primary-400 dark:border-teal-500">
-                                            <p id="exec-spotlight-quote" class="text-xs italic text-slate-600 dark:text-slate-200 leading-relaxed">
-                                                "<?php echo esc_html( $pengurus_list[0]['kutipan'] ?? '' ); ?>"
+                                            <p class="text-[11px] italic text-slate-600 dark:text-slate-200 leading-relaxed">
+                                                "<?php echo esc_html( $item['kutipan'] ); ?>"
                                             </p>
                                         </blockquote>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bottom Progress Bar -->
-                        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden mr-4">
-                                <div id="exec-stage-progress-bar" class="bg-gradient-to-r from-teal-400 to-primary-600 h-full rounded-full transition-all duration-300" style="width: <?php echo ( 1 / $total_members ) * 100; ?>%;"></div>
-                            </div>
-                            <span class="text-[11px] text-slate-400 dark:text-slate-300 whitespace-nowrap">Scroll untuk berpindah tokoh</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- ══════════════════════════════════════════════════════
-                     RIGHT COLUMN: THE FLOATING EXECUTIVE DOCK (Col 4)
-                     All other members in a sleek interactive mini-card stack
-                     ══════════════════════════════════════════════════════ -->
-                <div class="col-span-4 h-full flex flex-col justify-center">
-                    <div id="exec-floating-dock" 
-                         class="rounded-3xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-xl flex flex-col gap-2.5 overflow-y-auto max-h-[calc(100vh-14rem)]">
-                        
-                        <div class="flex items-center justify-between px-2 pb-2 border-b border-slate-200/60 dark:border-slate-700/80">
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">Jajaran Dewan</span>
-                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary-500/10 text-primary-600 dark:text-teal-400">Klik untuk sorot</span>
-                        </div>
-
-                        <!-- Mini Cards List -->
-                        <div id="exec-dock-items" class="space-y-2">
-                            <?php foreach ( $pengurus_list as $index => $item ) : 
-                                $is_first = ( $index === 0 );
-                                $kategori = $item['kategori'] ?? 'Dewan Komisaris';
-                                $cfg      = $cat_config[ $kategori ] ?? $cat_config['Dewan Komisaris'];
-                            ?>
-                            <div class="exec-dock-card group relative p-3 rounded-2xl transition-all duration-300 cursor-pointer flex items-center gap-3.5 
-                                 <?php echo $is_first ? 'active bg-white dark:bg-slate-800 shadow-lg ring-2 ring-primary-500/80 dark:ring-teal-400/80 border-transparent' : 'bg-white/90 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/70 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md opacity-90 hover:opacity-100'; ?>"
-                                 data-index="<?php echo $index; ?>"
-                                 data-kategori="<?php echo esc_attr( $kategori ); ?>">
-                                 
-                                <!-- Mini Thumbnail -->
-                                <div class="relative shrink-0 w-12 h-12 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
-                                    <?php if ( ! empty( $item['foto'] ) ) : ?>
-                                        <img src="<?php echo esc_url( $item['foto'] ); ?>" 
-                                             alt="<?php echo esc_attr( $item['nama'] ); ?>" 
-                                             class="w-full h-full object-cover">
-                                    <?php else : ?>
-                                        <div class="w-full h-full flex items-center justify-center text-slate-400 text-xs font-bold">
-                                            <?php echo esc_html( $cfg['abbr'] ); ?>
-                                        </div>
                                     <?php endif; ?>
                                 </div>
-
-                                <!-- Text Info -->
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center gap-1.5 mb-0.5">
-                                        <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.2 rounded <?php echo $cfg['badge_bg']; ?>">
-                                            <?php echo esc_html( $cfg['abbr'] ); ?>
-                                        </span>
-                                        <span class="text-[11px] font-semibold text-slate-500 dark:text-teal-300 truncate">
-                                            <?php echo esc_html( $item['jabatan'] ); ?>
-                                        </span>
-                                    </div>
-                                    <h4 class="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                        <?php echo esc_html( $item['nama'] ); ?>
-                                    </h4>
-                                </div>
-
-                                <!-- Active Indicator Badge -->
-                                <div class="dock-active-dot shrink-0 <?php echo $is_first ? 'flex' : 'hidden'; ?> items-center">
-                                    <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-ping"></span>
-                                </div>
                             </div>
-                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Bottom Progress Indicator -->
+                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1 overflow-hidden mr-4">
+                                <div class="bg-gradient-to-r from-teal-400 to-primary-600 h-full rounded-full" style="width: <?php echo ( ( $index + 1 ) / $total_members ) * 100; ?>%;"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-400 whitespace-nowrap">Scroll untuk berpindah tokoh</span>
                         </div>
                     </div>
-                </div>
 
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════════════════
+                 BOTTOM FOOTER STATUS HINT
+                 ══════════════════════════════════════════════════════════════════════════ -->
+            <div class="h-8 shrink-0 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200/40 dark:border-slate-800/40 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
+                    <span>Tata Kelola Perusahaan yang Baik (Good Corporate Governance)</span>
+                </div>
+                <div class="flex items-center gap-1 text-[11px]">
+                    <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-mono">Scroll</kbd>
+                    <span>atau</span>
+                    <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-mono">Klik</kbd>
+                    <span>untuk menjelajah</span>
+                </div>
             </div>
 
         </div>
@@ -576,8 +658,9 @@ $total_members = count( $pengurus_list );
 
 <!-- ========================================
      DIREKSI TRANSPARENCY CARD (OJK STATUS)
-     Mandatory governance note on director vacancy
+     Mandatory governance note on director vacancy (Admin manageable & toggleable)
      ======================================== -->
+<?php if ( '1' === $show_ojk_notice ) : ?>
 <section class="py-12 md:py-16 bg-slate-50 dark:bg-dark-surface border-y border-slate-200/60 dark:border-slate-800/60">
     <div class="container-wide">
         <div class="max-w-4xl mx-auto rounded-3xl overflow-hidden border border-amber-200/80 dark:border-amber-800/40 bg-gradient-to-br from-amber-50/90 via-white to-amber-50/40 dark:from-amber-950/20 dark:via-dark-surface dark:to-amber-950/10 shadow-sm p-6 sm:p-8 md:p-10" data-aos="fade-up">
@@ -591,17 +674,16 @@ $total_members = count( $pengurus_list );
                 <div>
                     <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-400/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/40 mb-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                        Keterbukaan Informasi Regulasi
+                        <?php echo esc_html( $ojk_notice_badge ); ?>
                     </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-                        Posisi Direktur dalam Proses Penilaian Kemampuan & Kepatutan (Fit & Proper Test) OJK
+                        <?php echo esc_html( $ojk_notice_title ); ?>
                     </h3>
                 </div>
             </div>
 
             <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6 font-normal">
-                Sesuai dengan POJK tentang Penilaian Kemampuan dan Kepatutan bagi Pihak Utama Lembaga Jasa Keuangan, posisi Direktur BPRS Wakalumi saat ini tengah menjalani tahapan proses perizinan resmi di <strong>Otoritas Jasa Keuangan (OJK)</strong>. 
-                Seluruh aktivitas operasional dan pelayanan perbankan kepada nasabah tetap berjalan dengan pengawasan penuh dari <strong>Dewan Komisaris</strong> dan <strong>Dewan Pengawas Syariah (DPS)</strong>.
+                <?php echo nl2br( esc_html( $ojk_notice_desc ) ); ?>
             </p>
 
             <div class="flex flex-wrap items-center gap-3">
@@ -617,6 +699,7 @@ $total_members = count( $pengurus_list );
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 
 <!-- ========================================

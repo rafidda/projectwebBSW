@@ -509,3 +509,189 @@ Sebagai standar desain visual resmi tema **BPRS Wakalumi**, website menggunakan 
 | **Legalitas** (`page-legalitas.php`) | Section 2: Landasan Izin Usaha Perbankan | Header Banner, Section 1 (NIB/NPWP/NPWZ), Akta Notaris, CTA, Footer |
 | **Susunan Pengurus** (`page-susunan-pengurus.php`) | Section Executive Spotlight Parallax Stage | Header Banner, Bagan Organisasi, CTA, Footer |
 
+---
+
+## 🎭 17. INTERAKSI TRUE POWERPOINT MORPH PARALLAX (HALAMAN PENGURUS)
+
+Halaman **Susunan Pengurus** (`page-susunan-pengurus.php`) menerapkan standar animasi visual modern berkelas dunia bergaya **True PowerPoint Morph Scroll-Driven Parallax**:
+
+### A. Prinsip Kerja & Kesinambungan Objek Fisik (Object Continuity)
+1. **Identitas Kartu Tunggal & Berkelanjutan (Single DOM Entity)**:
+   - Tidak menggunakan dua kontainer terpisah yang saling tumpang-tindih (fade/cross-fade) yang dapat membuat transisi terputus.
+   - Ke-4 figur pengurus diwakili oleh elemen fisik yang persis sama di DOM (`.exec-morph-card` dengan ID `#exec-card-0`, `#exec-card-1`, dst.) di dalam panggung `#exec-morph-stage` setinggi `520px`.
+2. **Transformasi Koordinat CSS Native (`left`, `top`, `width`, `height`)**:
+   - Transisi panggung digerakkan oleh perubahan koordinat posisi dan dimensi kotak menggunakan kurva easing premium `cubic-bezier(0.16, 1, 0.3, 1)` dengan durasi `0.65s`:
+     - **Mode Overview (Scroll 0% - 10%)**: Ke-4 kartu berjejer horizontal dalam rasio simetris (`width: 23.5%`, `height: 100%`, `left: 0%, 25.5%, 51%, 76.5%`). Sub-view `.morph-view-overview` aktif menampilkan foto portrait elegan dan nama tokoh.
+     - **Mode Spotlight (Scroll 10% - 100%)**:
+       - **Tokoh Aktif (Kiri)**: Kartu tokoh yang sedang disorot meluncur dan membesar secara fisik ke sisi kiri (`left: 0%`, `width: 63%`, `height: 100%`, `z-index: 25`). Sub-view `.morph-view-spotlight` aktif menampilkan foto resolusi tinggi, status perizinan OJK, riwayat karir lengkap, pendidikan, sertifikasi, dan kutipan integritas.
+       - **Tokoh Lainnya (Elevator Dock Kanan)**: Tiga kartu lainnya secara fisik meluncur ke sisi kanan (`left: 66%`, `width: 34%`) dan menyusun diri bertingkat secara vertikal (`height: calc((100% - 24px) / 3)`). Sub-view `.morph-view-dock` aktif menjadi kartu navigator ringkas.
+3. **Sequential Handoff yang Sangat Mulus**:
+   - Saat pengguna melanjutkan scroll atau mengklik kartu di dock kanan, kartu lama secara fisik mengecil dan meluncur kembali ke dock kanan, sementara kartu yang dipilih meluncur dari dock ke panggung kiri dan membesar dengan kesinambungan visual sejati (*morph*).
+4. **Header Bar Adaptif & Kontrol Pengguna**:
+   - Di bagian atas panggung:
+     - Saat di Overview: Menampilkan judul baris dan petunjuk eksplorasi.
+     - Saat di Spotlight: Bertransformasi menampilkan tombol *"Semua Tokoh"* (kembali ke overview), filter kategori (Semua, Komisaris, DPS), counter progres (`01 / 04`), serta tombol stepper navigasi (*Prev / Next*).
+5. **Mobile Responsive Standalone**:
+   - Pada layar di bawah 1024px (`< lg`), sistem secara otomatis menggunakan touch swipe carousel yang ringan dan intuitif dengan bottom sheet drawer, tanpa membebani performa perangkat mobile.
+
+---
+
+### B. Pengaturan Dinamis Admin: Keterbukaan Informasi Regulasi OJK & Suksesi Direktur
+
+Di bawah panggung spotlight, terdapat banner **Keterbukaan Informasi Regulasi** yang menerangkan bahwa posisi Direktur tengah menjalani proses *Fit & Proper Test* OJK:
+
+1. **Kendali Penuh di Admin Panel**:
+   - Dikelola melalui menu **WordPress Admin &rarr; Pengaturan Wakalumi &rarr; Profil: Pengurus** (`inc/admin-pengurus.php`) pada kartu **"⚖️ Keterbukaan Informasi Regulasi (Status OJK Direktur)"**.
+   - Admin dapat mengedit Badge, Judul, dan Teks narasi regulasi sewaktu-waktu.
+2. **Cara Menonaktifkan Saat Posisi Direktur Sudah Terisi**:
+   - Ketika calon Direktur telah lulus Fit & Proper Test OJK dan resmi diangkat:
+     1. Masuk ke **Pengaturan Wakalumi &rarr; Profil: Pengurus**.
+     2. Pada bagian **Daftar Pengurus**, klik tombol **"+ Tambah Pengurus Baru"** untuk memasukkan nama Direktur, foto, riwayat karir, dengan memilih Kategori **"Direksi"**.
+     3. Pada bagian **Keterbukaan Informasi Regulasi**, **hilangkan centang (uncheck)** pada kotak *"Tampilkan Banner Regulasi?"*.
+     4. Klik **Simpan Perubahan**.
+   - Seketika banner pengumuman status perizinan Direktur akan menghilang dari halaman frontend secara bersih dan rapi!
+
+---
+
+## 🏢 18. MODUL PROFIL: JARINGAN KANTOR & ANALISIS UI/UX PETA (MAPS)
+
+Modul **Jaringan Kantor** (`page-jaringan-kantor.php` dan `inc/admin-kantor.php`) dirancang untuk mengelola dan menampilkan seluruh kantor operasional, kantor kas, dan kantor layanan BPRS Wakalumi secara 100% dinamis dan modular.
+
+### A. Lokasi Kantor Saat Ini & Kemudahan Modifikasi Admin (No Hardcode)
+Admin dapat sewaktu-waktu memperbarui alamat kantor, nomor telepon, WhatsApp, foto kantor, jam layanan, memindahkan urutan, maupun menambah/menghapus cabang baru tanpa menyentuh kode program.
+
+Data default pre-populated yang otomatis aktif:
+1. **Kantor Pusat Operasional**:
+   - Alamat: *Jl. Dewi Sartika, Komp. Ciputat Mutiara Center Blok B1 - Ciputat 15411*
+   - Wilayah: Tangerang Selatan
+   - Telepon: *(021) 7401667 - 7490874* | WhatsApp: *081517380388*
+2. **Kantor Kas Cikupa**:
+   - Alamat: *Jl. Raya Serang Km 15, Ruko Cikupa Niaga Mas Blok C No. 22 Talagasari, Kec. Cikupa, Kabupaten Tangerang, Banten 15710*
+   - Wilayah: Kabupaten Tangerang
+   - Telepon: *(021) 7401667* | WhatsApp: *081517380388*
+3. **Kantor Layanan Ciledug**:
+   - Alamat: *Plaza Ciledug, Lt. Basement Blok B.4, Kota Tangerang*
+   - Wilayah: Kota Tangerang
+   - Telepon: *(021) 7401667* | WhatsApp: *081517380388*
+
+### B. Analisis UI/UX Peta (Maps): Mengapa Solusi Lightbox On-Demand Lebih Optimal daripada Embed Statis?
+Menjawab pertimbangan apakah menampilkan peta (*embed maps*) akan membuat halaman terlihat **"terlalu ramai"**:
+
+1. **Kelemahan Jika Menampilkan Iframe Peta Statis Terbuka di Setiap Kartu**:
+   - **Scroll Trap (Jebakan Scroll)**: Pada perangkat mobile dan desktop, saat pengguna mengusap layar untuk menggulir ke bawah, jari/kursor yang menyentuh kotak iframe peta akan tertahan (terperangkap), menyebabkan peta ter-zoom atau bergeser secara tidak sengaja alih-alih melanjutkan scroll halaman.
+   - **Visual Noise & Clutter**: Beberapa frame peta kotak-kotak berjejer menciptakan tampilan yang bising dan mengaburkan informasi penting (nomor kontak dan jam kerja).
+   - **Beban Bandwidth**: Memuat 3 atau lebih iframe Google Maps sekaligus secara langsung mendownload ribuan HTTP request dan aset javascript Google Maps (sekitar 3-5 MB) saat halaman baru pertama kali dibuka, memperlambat skor performa Google PageSpeed.
+
+2. **Solusi UI/UX Terbaik yang Diimplementasikan**:
+   - **Tindakan Utama (Aksi Cepat 1-Ketukan)**: Tombol besar **"Buka Rute Maps"** (`gmaps_url`) yang langsung membuka aplikasi Google Maps atau Google Maps browser di tab baru. Ini adalah perilaku yang paling dibutuhkan 90% nasabah saat mencari rute navigasi.
+   - **Tindakan Pratinjau (On-Demand Lightbox Modal)**: Tombol **"Intip Peta"** yang memicu *modal lightbox* interaktif. Peta Google Maps hanya dimuat saat tombol diklik (*lazy on-demand*). Di dalam modal, nasabah dapat melihat peta satelit/jalan secara lapang, jelas, dan tanpa mengganggu alur baca halaman web.
+   - **Salin Cepat Alamat**: Tombol **"Salin Alamat"** dengan notifikasi toast elegan sehingga nasabah dapat langsung menempel (*paste*) alamat kantor ke aplikasi ojek online (Grab/Gojek/Maxim) atau Waze.
+
+### C. Daftar Opsi Database (`wp_options`)
+| Kunci Opsi | Tipe | Deskripsi & Default |
+| :--- | :--- | :--- |
+| `options_kantor_page_badge` | Text | Kicker badge hero (*Jaringan Kantor*) |
+| `options_kantor_page_title` | Text | Judul utama halaman (*Jaringan Kantor & Layanan BPRS Wakalumi*) |
+| `options_kantor_page_subtitle` | Textarea | Subtitle penjelasan komitmen layanan |
+| `options_kantor_stat1_num` & `_label` | Text | Statistik 1 (*3 Kantor* / *Kantor Operasional & Kas*) |
+| `options_kantor_stat2_num` & `_label` | Text | Statistik 2 (*3 Wilayah* / *Tangsel, Kab. Tangerang, & Kota Tangerang*) |
+| `options_kantor_stat3_num` & `_label` | Text | Statistik 3 (*Senin - Jumat* / *Pukul 08.00 - 15.00 WIB*) |
+| `options_kantor_list` | Array | Serialized Repeater: `nama`, `tipe`, `foto`, `alamat`, `kota_kab`, `telepon`, `whatsapp`, `jam_operasional`, `layanan`, `gmaps_url`, `status`, `urutan` |
+| `options_kantor_cta_show` | Boolean (0/1) | Sakelar tampilkan Call to Action banner |
+| `options_kantor_cta_badge` | Text | Badge CTA (*Layanan Nasabah*) |
+| `options_kantor_cta_title` | Text | Judul CTA (*Perlu Bantuan atau Ingin Berkonsultasi Langsung?*) |
+| `options_kantor_cta_desc` | Textarea | Deskripsi CTA |
+| `options_kantor_cta_btn1_text` & `_url` | Text/URL | Tombol 1 CTA (*Chat WhatsApp CS*) |
+| `options_kantor_cta_btn2_text` & `_url` | Text/URL | Tombol 2 CTA (*Jelajahi Produk Simpanan*) |
+
+### D. Fitur Interaktif Frontend
+1. **Filter Kategori Dinamis**: Pilihan filter *Semua*, *Kantor Pusat*, *Kantor Kas*, dan *Kantor Layanan* dengan counter jumlah kantor dan transisi CSS halus.
+2. **Status Indikator**: Dot berdenyut hijau `● Beroperasi Normal` untuk memastikan nasabah bahwa cabang aktif melayani transaksi.
+3. **Kartu Kontak Pintar**: Tautan langsung telepon (`tel:`) dan pesan WhatsApp dengan pesan sapaan otomatis ramah perbankan syariah.
+4. **4 Pilar Kenyamanan Nasabah**: Menegaskan keunggulan lokasi strategis, keramahan syariah, regulasi OJK & DSN-MUI, serta penjaminan simpanan oleh LPS hingga Rp 2 Miliar.
+
+---
+
+## 🏛️ 19. INTERACTIVE BANKING MEGA-MENU & MODUL KATALOG BROSUR RESMI
+
+Untuk mengatasi ketidakseimbangan hierarki pada menu produk sebelumnya, navigasi **Produk** dirombak menggunakan standar **Interactive Banking Mega-Menu (3 Kolom Komprehensif)** dan modul admin **Katalog Brosur** (`inc/admin-brosur.php`).
+
+### A. Struktur Tampilan Mega-Menu (Desktop & Mobile)
+1. **Kolom 1: Penghimpunan Dana (Funding)**
+   - *Tabungan Tawakal (Umum)*: Simpanan investasi syariah bebas biaya bulanan.
+   - *Tabungan Pendidikan*: Simpanan terencana masa depan pelajar.
+   - *Tabungan Haji & Umroh*: Simpanan persiapan ibadah ke Tanah Suci.
+   - *Deposito Mudharabah*: Pilihan tenor 1, 3, 6, 12 Bulan dengan bagi hasil kompetitif.
+2. **Kolom 2: Penyaluran Dana (Lending / Pembiayaan)**
+   - *Program Unggulan*:
+     - **Pembiayaan 1000 Pedagang**: Bantuan modal usaha pedagang & UMKM.
+     - **Pembiayaan 1000 Guru**: Pemenuhan kebutuhan guru & tenaga pendidik.
+   - *Akad Syariah Pilihan*:
+     - **Al-Murabahah**: Jual beli dengan margin keuntungan pasti disepakati.
+     - **Bagi Hasil (Mudharabah & Musyarakah)**: Kemitraan modal & usaha.
+     - **Ijarah & Multijasa**: Sewa manfaat aset tempat usaha & pembiayaan jasa.
+     - **Qardhul Hasan**: Pinjaman kebajikan tanpa biaya tambahan bagi dhuafa.
+3. **Kolom 3: Brosur & Aksi Cepat (Featured Action Card)**
+   - **Download Brosur Resmi**: Kartu unduh dinamis yang terhubung langsung ke file PDF yang diunggah admin di WordPress Admin.
+   - **Pengajuan Online**: Kartu status *"Segera Hadir"* untuk persiapan form digital.
+   - **Hotline WhatsApp CS**: Akses langsung konsultasi syarat produk dan simulasi.
+
+### B. Modul Admin: Pengelolaan Brosur (`inc/admin-brosur.php`)
+Dikelola melalui **WordPress Admin &rarr; Pengaturan Wakalumi &rarr; Katalog Brosur** (`wakalumi-brosur`):
+- **Brosur Utama (`options_brosur_*`)**:
+  - `options_brosur_file_url`: URL file PDF brosur resmi. Menggunakan WordPress Media Uploader yang mendukung file dokumen PDF.
+  - `options_brosur_file_name`: Judul tampilan file (default: *Brosur Resmi BPRS Wakalumi (Edisi 2026).pdf*).
+  - `options_brosur_file_size`: Label edisi atau ukuran file (default: *PDF Resmi • Edisi Terkini*).
+  - `options_brosur_cover`: URL gambar sampul brosur (opsional).
+  - `options_brosur_desc`: Ringkasan materi isi brosur.
+- **Koleksi Brosur Spesifik (`options_brosur_list`)**:
+  - Repeater untuk brosur per produk (Brosur Simpanan, Brosur Pembiayaan Pedagang/Guru, dll.) yang dapat digunakan pada halaman spesifik.
+
+### C. Catatan Evaluasi & Optimasi Estetika Dropdown
+> **Catatan Optimasi Selesai**:
+> Dropdown menu telah disempurnakan dengan efek *frosted glass* halus (`bg-white/95` & `bg-slate-900/95` dengan `backdrop-blur-2xl` dan border lembut). Efek ini menyingkirkan kesan kaku (*stiff*), memberikan kesan modern dan menyatu secara elegan dengan latar halaman, namun tetap menjaga teks 100% kontras dan mudah dibaca tanpa ada kebocoran visual yang mengganggu.
+
+---
+
+## 🏛️ 20. MODUL PRODUK PENGHIMPUNAN DANA (TABUNGAN & DEPOSITO SYARIAH)
+
+Tahap 1 pembangunan halaman produk perbankan berfokus pada **Klaster Penghimpunan Dana (Funding)** sesuai spesifikasi riil di `produkwakalumi.md`, terdiri dari template frontend dan panel admin mandiri:
+
+### A. Template Frontend Tabungan Syariah (`page-tabungan-syariah.php`)
+- **Akses URL**: `/produk/tabungan-syariah` (dengan anchor jump `#tawakal`, `#pendidikan`, `#haji-umroh`, `#komparasi`, `#kalkulator`).
+- **Showcase 3 Tabungan Resmi**:
+  1. **Tabungan Tawakal (Tabungan Umum Wakalumi)**: Akad *Mudharabah Muthlaqah*, simpanan keluarga bagi hasil bersaing, bebas biaya bulanan, setoran awal Rp 50.000.
+  2. **Tabungan Pendidikan**: Akad *Mudharabah / Wadi'ah*, buku tabungan atas nama anak/siswa, perencanaan biaya sekolah/kuliah, setoran awal Rp 20.000.
+  3. **Tabungan Haji & Umroh**: Akad *Mudharabah Muthlaqah*, persiapan porsi haji Kemenag (Rp 25 Juta) dan umroh, setoran awal Rp 100.000.
+- **Tabel Matriks Komparasi**: Perbandingan cepat akad, setoran minimum, biaya admin Rp 0, sasaran, buku tabungan, dan jaminan LPS.
+- **Kalkulator Rencana Menabung Berkah (Interactive Tool)**:
+  - Input: Pilihan Tabungan, Target Dana (Slider Rp 2 Juta - Rp 100 Juta dengan preset Rp 10 Jt, Rp 25 Jt, Rp 35 Jt, Rp 50 Jt), Jangka Waktu (6 - 60 bulan).
+  - Output: Rekomendasi besaran sisihan bulanan secara real-time.
+  - WhatsApp CTA dinamis dengan pesan pre-filled terformat rapi.
+- **FAQ Interaktif & Download Brosur**: Accordion pertanyaan seputar tabungan dan tombol unduh brosur PDF.
+
+### B. Template Frontend Deposito Syariah (`page-deposito-syariah.php`)
+- **Akses URL**: `/produk/deposito-syariah` (dan `#simulasi`).
+- **Deposito Mudharabah**: Akad *Mudharabah Muthlaqah*, bebas riba, pilihan tenor 1, 3, 6, dan 12 bulan dengan fasilitas ARO (*Automatic Roll Over*).
+- **Tabel Nisbah Dinamis**: Terhubung live ke database `options_nisbah_list` (yang dikelola admin di *Informasi Nisbah*).
+- **Kalkulator Simulasi Imbal Hasil Deposito**:
+  - Input: Nominal Penempatan (Slider Rp 5 Juta - Rp 500 Juta + Preset) dan pilihan tombol Tenor (1, 3, 6, 12 Bulan).
+  - Output: Estimasi bagi hasil per bulan dan total akumulasi hasil akhir periode.
+  - Tombol WhatsApp Buka Deposito otomatis.
+- **Persyaratan & Alur Pembukaan (Tabbed)**:
+  - Tab 1: Nasabah Perorangan (Individu)
+  - Tab 2: Badan Usaha / Perusahaan / Yayasan
+- **Perlindungan LPS**: Dijamin Lembaga Penjamin Simpanan (LPS) hingga Rp 2 Miliar.
+
+### C. Panel Admin Pengelolaan Produk Dana (`inc/admin-produk.php`)
+Dikelola melalui **WordPress Admin &rarr; Pengaturan Wakalumi &rarr; Produk: Simpanan & Deposito** (`wakalumi-produk-dana`):
+- Tab 1: Pengaturan Tabungan Syariah (Header Banner, detail nama, tagline, akad, setoran minimal, deskripsi, poin keunggulan, dan syarat untuk Tabungan Tawakal, Pendidikan, dan Haji/Umroh).
+- Tab 2: Pengaturan Deposito Syariah (Header Banner, kutipan resmi, akad, minimal penempatan, tenor, keunggulan, syarat perorangan, dan syarat lembaga).
+- Tab 3: Hotline WhatsApp & Banner CTA.
+
+### D. Routing & Auto-Page Setup (`inc/theme-setup.php`)
+- Otomatis memastikan halaman parent `Produk` dan child pages `tabungan-syariah`, `deposito-syariah`, dan `pembiayaan` terdaftar di database WordPress.
+- Filter `template_include` secara otomatis mengenali dan memuat template yang sesuai.
+
+
+

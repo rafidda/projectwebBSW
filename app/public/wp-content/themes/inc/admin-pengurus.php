@@ -84,6 +84,13 @@ function wakalumi_render_pengurus_page() {
         update_option( 'options_pengurus_orgchart_image', esc_url_raw( wp_unslash( $_POST['options_pengurus_orgchart_image'] ?? '' ) ) );
         update_option( 'options_pengurus_orgchart_desc', sanitize_textarea_field( wp_unslash( $_POST['options_pengurus_orgchart_desc'] ?? '' ) ) );
 
+        // 3.5. Keterbukaan Informasi Regulasi (OJK Direktur)
+        $show_ojk_notice = isset( $_POST['options_pengurus_ojk_notice_show'] ) ? '1' : '0';
+        update_option( 'options_pengurus_ojk_notice_show', $show_ojk_notice );
+        update_option( 'options_pengurus_ojk_notice_badge', sanitize_text_field( wp_unslash( $_POST['options_pengurus_ojk_notice_badge'] ?? '' ) ) );
+        update_option( 'options_pengurus_ojk_notice_title', sanitize_text_field( wp_unslash( $_POST['options_pengurus_ojk_notice_title'] ?? '' ) ) );
+        update_option( 'options_pengurus_ojk_notice_desc', sanitize_textarea_field( wp_unslash( $_POST['options_pengurus_ojk_notice_desc'] ?? '' ) ) );
+
         // 4. CTA Section
         $show_cta = isset( $_POST['options_pengurus_cta_show'] ) ? '1' : '0';
         update_option( 'options_pengurus_cta_show', $show_cta );
@@ -165,6 +172,11 @@ function wakalumi_render_pengurus_page() {
     $org_show       = get_option( 'options_pengurus_orgchart_show', '1' );
     $org_img        = get_option( 'options_pengurus_orgchart_image', '' );
     $org_desc       = get_option( 'options_pengurus_orgchart_desc', '' );
+
+    $ojk_notice_show  = get_option( 'options_pengurus_ojk_notice_show', '1' );
+    $ojk_notice_badge = get_option( 'options_pengurus_ojk_notice_badge', 'Keterbukaan Informasi Regulasi' );
+    $ojk_notice_title = get_option( 'options_pengurus_ojk_notice_title', 'Posisi Direktur dalam Proses Penilaian Kemampuan & Kepatutan (Fit & Proper Test) OJK' );
+    $ojk_notice_desc  = get_option( 'options_pengurus_ojk_notice_desc', 'Sesuai dengan POJK tentang Penilaian Kemampuan dan Kepatutan bagi Pihak Utama Lembaga Jasa Keuangan, posisi Direktur BPRS Wakalumi saat ini tengah menjalani tahapan proses perizinan resmi di Otoritas Jasa Keuangan (OJK). Seluruh aktivitas operasional dan pelayanan perbankan kepada nasabah tetap berjalan dengan pengawasan penuh dari Dewan Komisaris dan Dewan Pengawas Syariah (DPS).' );
 
     $cta_show       = get_option( 'options_pengurus_cta_show', '1' );
     $cta_badge      = get_option( 'options_pengurus_cta_badge', 'Bergabung Bersama Kami' );
@@ -374,7 +386,48 @@ function wakalumi_render_pengurus_page() {
                 </div>
             </div>
 
-            <!-- SECTION 4: CTA Banner Settings -->
+            <!-- SECTION 4: Keterbukaan Informasi Regulasi (OJK Direktur) -->
+            <div class="postbox" style="background: #fff; border-radius: 8px; border: 1px solid #ccd0d4; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
+                <h2 style="border-bottom: 1px solid #eee; padding: 15px; margin: 0; color: #088395; font-size: 16px;">⚖️ Keterbukaan Informasi Regulasi (Status OJK Direktur)</h2>
+                <div class="inside" style="padding: 20px;">
+                    <p class="description" style="margin-bottom: 15px;">
+                        Banner ini menampilkan informasi resmi terkait status proses perizinan Direktur di OJK. 
+                        <strong>Jika di kemudian hari posisi Direktur telah resmi dilantik</strong>, Anda dapat <strong>menonaktifkan (uncheck)</strong> bagian ini agar tidak lagi tampil di website.
+                    </p>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">Tampilkan Banner Regulasi?</th>
+                            <td>
+                                <label style="font-weight: 600;">
+                                    <input type="checkbox" name="options_pengurus_ojk_notice_show" value="1" <?php checked( $ojk_notice_show, '1' ); ?>>
+                                    Aktifkan banner Keterbukaan Informasi Regulasi di halaman Susunan Pengurus
+                                </label>
+                                <p class="description">Hilangkan centang jika posisi Direktur sudah terisi penuh dan pengumuman ini sudah tidak dibutuhkan.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="options_pengurus_ojk_notice_badge">Badge Pengumuman</label></th>
+                            <td>
+                                <input type="text" id="options_pengurus_ojk_notice_badge" name="options_pengurus_ojk_notice_badge" value="<?php echo esc_attr( $ojk_notice_badge ); ?>" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="options_pengurus_ojk_notice_title">Judul Pengumuman</label></th>
+                            <td>
+                                <input type="text" id="options_pengurus_ojk_notice_title" name="options_pengurus_ojk_notice_title" value="<?php echo esc_attr( $ojk_notice_title ); ?>" class="large-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="options_pengurus_ojk_notice_desc">Isi Keterbukaan Regulasi</label></th>
+                            <td>
+                                <textarea id="options_pengurus_ojk_notice_desc" name="options_pengurus_ojk_notice_desc" rows="4" class="large-text"><?php echo esc_textarea( $ojk_notice_desc ); ?></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 5: CTA Banner Settings -->
             <div class="postbox" style="background: #fff; border-radius: 8px; border: 1px solid #ccd0d4; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px;">
                 <h2 style="border-bottom: 1px solid #eee; padding: 15px; margin: 0; color: #088395; font-size: 16px;">🎯 Pengaturan Call to Action (CTA)</h2>
                 <div class="inside" style="padding: 20px;">

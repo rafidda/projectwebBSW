@@ -199,6 +199,20 @@ function wakalumi_render_general_page() {
 
 
 /**
+ * Helper: Clean & extract Google Maps embed URL
+ * Handles raw URL (https://www.google.com/maps/embed?...) or full <iframe ...> embed code
+ */
+function wakalumi_clean_maps_embed_url( $raw ) {
+    if ( empty( $raw ) ) return '';
+    $raw = wp_unslash( trim( $raw ) );
+    $decoded = htmlspecialchars_decode( $raw );
+    if ( preg_match( '/src=["\']([^"\']+)["\']/', $decoded, $m ) ) {
+        return esc_url_raw( $m[1] );
+    }
+    return esc_url_raw( $raw );
+}
+
+/**
  * ─────────────────────────────────────────────────────────────
  * 2. RENDER: KONTAK & PETA MAPS
  * ─────────────────────────────────────────────────────────────
@@ -208,15 +222,22 @@ function wakalumi_render_contact_page() {
         update_option( 'options_contact_phone', sanitize_text_field( $_POST['options_contact_phone'] ?? '' ) );
         update_option( 'options_contact_email', sanitize_email( $_POST['options_contact_email'] ?? '' ) );
         update_option( 'options_contact_address', sanitize_textarea_field( $_POST['options_contact_address'] ?? '' ) );
-        update_option( 'options_maps_embed', wp_kses_post( $_POST['options_maps_embed'] ?? '' ) );
+        
+        if ( isset( $_POST['options_maps_embed'] ) ) {
+            update_option( 'options_maps_embed', wakalumi_clean_maps_embed_url( $_POST['options_maps_embed'] ) );
+        }
+        if ( isset( $_POST['options_footer_maps_title'] ) ) {
+            update_option( 'options_footer_maps_title', sanitize_text_field( $_POST['options_footer_maps_title'] ) );
+        }
 
         echo '<div class="notice notice-success is-dismissible"><p><strong>Data Kontak & Lokasi Peta Maps berhasil disimpan!</strong></p></div>';
     }
 
-    $phone   = get_option( 'options_contact_phone', '(021) 7401667' );
-    $email   = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
-    $address = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
-    $maps    = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5!2d106.74!3d-6.34!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjAnMjQuMCJTIDEwNsKwNDQnMjQuMCJF!5e0!3m2!1sen!2sid!4v1' );
+    $phone      = get_option( 'options_contact_phone', '(021) 7401667' );
+    $email      = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
+    $address    = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
+    $maps       = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5!2d106.74!3d-6.34!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjAnMjQuMCJTIDEwNsKwNDQnMjQuMCJF!5e0!3m2!1sen!2sid!4v1' );
+    $maps_title = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
     ?>
     <div class="wrap" style="max-width: 900px; margin-top: 20px;">
         <h1 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
@@ -257,31 +278,37 @@ function wakalumi_render_contact_page() {
                 </table>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    🗺️ Sematan Google Maps (Footer)
+                    🗺️ Sematan Google Maps (Footer Website)
                 </h2>
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
-                    <p style="margin: 0; font-size: 13px; color: #475569;">
-                        <strong>💡 Cara mendapatkan URL Google Maps:</strong><br>
-                        1. Buka <em>Google Maps</em> di browser dan cari lokasi kantor BPRS Wakalumi.<br>
-                        2. Klik tombol <strong>Bagikan (Share)</strong> lalu pilih tab <strong>Sematkan Peta (Embed a map)</strong>.<br>
-                        3. Salin URL di dalam atribut <code>src="..."</code> (dimulai dengan <code>https://www.google.com/maps/embed?...</code>) lalu tempelkan di bawah ini.
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 13px; color: #166534; line-height: 1.5;">
+                        <strong>💡 Fleksibel & Praktis:</strong> Anda dapat menempelkan <strong>URL embed langsung</strong> (<code>https://www.google.com/maps/embed?...</code>) ATAU langsung menyalin seluruh <strong>kode HTML iframe</strong> dari Google Maps (<code>&lt;iframe src="..." ...&gt;&lt;/iframe&gt;</code>). Sistem otomatis membersihkan dan mengekstrak tautan peta secara sempurna.
                     </p>
                 </div>
 
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><label for="options_maps_embed">URL Embed Google Maps:</label></th>
+                        <th scope="row"><label for="options_footer_maps_title">Judul Kolom di Footer:</label></th>
                         <td>
-                            <input type="text" id="options_maps_embed" name="options_maps_embed" value="<?php echo esc_attr( $maps ); ?>" class="large-text" placeholder="https://www.google.com/maps/embed?...">
-                            <p class="description">URL ini akan memuat peta interaktif secara otomatis di footer website.</p>
+                            <input type="text" id="options_footer_maps_title" name="options_footer_maps_title" value="<?php echo esc_attr( $maps_title ); ?>" class="regular-text" placeholder="Lokasi Kantor">
+                            <p class="description">Judul heading yang tampil di atas peta pada footer (default: <em>Lokasi Kantor</em>).</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_maps_embed">Kode / URL Embed Google Maps:</label></th>
+                        <td>
+                            <textarea id="options_maps_embed" name="options_maps_embed" rows="4" class="large-text" placeholder="Tempel URL embed atau kode <iframe src='...'> dari Google Maps di sini..."><?php echo esc_textarea( $maps ); ?></textarea>
+                            <p class="description">
+                                <strong>Langkah dari Google Maps:</strong> Cari lokasi kantor &rarr; Klik tombol <strong>Bagikan (Share)</strong> &rarr; Pilih tab <strong>Sematkan Peta (Embed a map)</strong> &rarr; Klik <strong>Salin HTML</strong> &rarr; Tempelkan langsung ke kotak di atas.
+                            </p>
                         </td>
                     </tr>
                 </table>
 
                 <?php if ( ! empty( $maps ) ) : ?>
                     <div style="margin-top: 15px;">
-                        <strong>Pratinjau Peta Saat Ini:</strong>
-                        <div style="margin-top: 8px; max-width: 500px; height: 180px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1;">
+                        <strong style="display: block; margin-bottom: 6px;">Pratinjau Peta Saat Ini:</strong>
+                        <div style="max-width: 500px; height: 200px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                             <iframe src="<?php echo esc_url( $maps ); ?>" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
                         </div>
                     </div>
@@ -1069,6 +1096,14 @@ function wakalumi_render_footer_page() {
         update_option( 'options_footer_show_prayer_times', isset( $_POST['options_footer_show_prayer_times'] ) ? '1' : '0' );
         update_option( 'options_footer_prayer_city', sanitize_text_field( $_POST['options_footer_prayer_city'] ?? 'Tangerang Selatan' ) );
 
+        // Google Maps Footer
+        if ( isset( $_POST['options_maps_embed'] ) ) {
+            update_option( 'options_maps_embed', wakalumi_clean_maps_embed_url( $_POST['options_maps_embed'] ) );
+        }
+        if ( isset( $_POST['options_footer_maps_title'] ) ) {
+            update_option( 'options_footer_maps_title', sanitize_text_field( $_POST['options_footer_maps_title'] ) );
+        }
+
         update_option( 'options_social_instagram', esc_url_raw( $_POST['options_social_instagram'] ?? '' ) );
         update_option( 'options_social_facebook', esc_url_raw( $_POST['options_social_facebook'] ?? '' ) );
         update_option( 'options_social_linkedin', esc_url_raw( $_POST['options_social_linkedin'] ?? '' ) );
@@ -1085,6 +1120,9 @@ function wakalumi_render_footer_page() {
 
     $show_prayer= get_option( 'options_footer_show_prayer_times', '1' );
     $prayer_city= get_option( 'options_footer_prayer_city', 'Tangerang Selatan' );
+
+    $maps       = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5!2d106.74!3d-6.34!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjAnMjQuMCJTIDEwNsKwNDQnMjQuMCJF!5e0!3m2!1sen!2sid!4v1' );
+    $maps_title = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
 
     // Logo Regulasi Footer Defaults
     $show_logos = get_option( 'options_footer_show_logos', '1' );
@@ -1154,6 +1192,43 @@ function wakalumi_render_footer_page() {
                         </td>
                     </tr>
                 </table>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🗺️ Sematan Google Maps (Kolom Footer)
+                </h2>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 13px; color: #166534; line-height: 1.5;">
+                        <strong>💡 Fleksibel & Praktis:</strong> Anda dapat menempelkan <strong>URL embed langsung</strong> (<code>https://www.google.com/maps/embed?...</code>) ATAU langsung menyalin seluruh <strong>kode HTML iframe</strong> dari Google Maps. Pengaturan ini otomatis tersinkronisasi juga dengan menu <em>Kontak & Maps</em>.
+                    </p>
+                </div>
+
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="footer_maps_title">Judul Kolom Peta:</label></th>
+                        <td>
+                            <input type="text" id="footer_maps_title" name="options_footer_maps_title" value="<?php echo esc_attr( $maps_title ); ?>" class="regular-text" placeholder="Lokasi Kantor">
+                            <p class="description">Judul heading kolom peta di footer (default: <em>Lokasi Kantor</em>).</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="footer_maps_embed">Kode / URL Embed Google Maps:</label></th>
+                        <td>
+                            <textarea id="footer_maps_embed" name="options_maps_embed" rows="4" class="large-text" placeholder="Tempel URL embed atau kode <iframe src='...'> dari Google Maps di sini..."><?php echo esc_textarea( $maps ); ?></textarea>
+                            <p class="description">
+                                <strong>Langkah dari Google Maps:</strong> Cari lokasi kantor &rarr; Klik tombol <strong>Bagikan (Share)</strong> &rarr; Pilih tab <strong>Sematkan Peta (Embed a map)</strong> &rarr; Klik <strong>Salin HTML</strong> &rarr; Tempelkan langsung ke kotak di atas.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+                <?php if ( ! empty( $maps ) ) : ?>
+                    <div style="margin-top: 15px; margin-bottom: 25px;">
+                        <strong style="display: block; margin-bottom: 6px;">Pratinjau Peta Footer Saat Ini:</strong>
+                        <div style="max-width: 500px; height: 200px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <iframe src="<?php echo esc_url( $maps ); ?>" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
                     🏛️ Logo Regulasi di Footer

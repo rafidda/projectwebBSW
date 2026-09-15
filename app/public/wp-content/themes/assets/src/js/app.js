@@ -374,28 +374,76 @@ const Navbar = {
   },
 
   initDropdowns() {
-    // Close dropdowns on click outside
+    // Smooth hover with grace period (so dropdown does not vanish when moving cursor down)
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+      let closeTimer = null;
+
+      const openDropdown = () => {
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+        document.querySelectorAll('.dropdown.open, .dropdown.is-open').forEach(d => {
+          if (d !== dropdown) {
+            d.classList.remove('open', 'is-open', 'hovered');
+          }
+        });
+        dropdown.classList.add('is-open', 'hovered');
+      };
+
+      const scheduleClose = () => {
+        if (closeTimer) clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+          dropdown.classList.remove('open', 'is-open', 'hovered');
+        }, 220);
+      };
+
+      dropdown.addEventListener('mouseenter', openDropdown);
+      dropdown.addEventListener('mouseleave', scheduleClose);
+
+      // Keyboard accessibility (focus)
+      dropdown.addEventListener('focusin', openDropdown);
+      dropdown.addEventListener('focusout', (e) => {
+        if (!dropdown.contains(e.relatedTarget)) {
+          scheduleClose();
+        }
+      });
+    });
+
+    // Close dropdown immediately when any link inside is clicked
+    document.querySelectorAll('.dropdown-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(d => {
+          d.classList.remove('open', 'is-open', 'hovered');
+        });
+      });
+    });
+
+    // Close dropdown on click outside
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown.open').forEach(d => {
-          d.classList.remove('open');
+        document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(d => {
+          d.classList.remove('open', 'is-open', 'hovered');
         });
       }
     });
 
-    // Toggle dropdown on click (mobile-friendly)
+    // Toggle dropdown on trigger click (touch / click support)
     document.querySelectorAll('.dropdown > .dropdown-trigger').forEach(trigger => {
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         const dropdown = trigger.closest('.dropdown');
-        const isOpen = dropdown.classList.contains('open');
+        const isOpen = dropdown.classList.contains('open') || dropdown.classList.contains('is-open');
 
-        // Close all other dropdowns
-        document.querySelectorAll('.dropdown.open').forEach(d => {
-          if (d !== dropdown) d.classList.remove('open');
+        document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(d => {
+          if (d !== dropdown) d.classList.remove('open', 'is-open', 'hovered');
         });
 
-        dropdown.classList.toggle('open', !isOpen);
+        if (isOpen) {
+          dropdown.classList.remove('open', 'is-open', 'hovered');
+        } else {
+          dropdown.classList.add('open', 'is-open');
+        }
       });
     });
   }
@@ -846,123 +894,129 @@ const ExecutiveParallax = {
   },
 
   initDesktop() {
+    this.stage = document.getElementById('executive-sticky-stage');
+    this.cards = Array.from(document.querySelectorAll('.exec-morph-card'));
     this.currentIndex = 0;
-    this.updateSpotlight(0, false);
+    this.currentMode = 'overview';
+
+    // Apply initial overview state
+    this.applyMorphLayout('overview', 0);
     this.bindDesktopEvents();
   },
 
-  updateSpotlight(index, animate = true) {
-    if (index < 0 || index >= this.members.length) return;
-    this.currentIndex = index;
-    const member = this.members[index];
-
-    const card = document.getElementById('exec-spotlight-card');
-    const img = document.getElementById('exec-spotlight-img');
-    const name = document.getElementById('exec-spotlight-name');
-    const role = document.getElementById('exec-spotlight-role');
-    const category = document.getElementById('exec-spotlight-category');
-    const karir = document.getElementById('exec-spotlight-karir');
-    const pendidikan = document.getElementById('exec-spotlight-pendidikan');
-    const sertifikasi = document.getElementById('exec-spotlight-sertifikasi');
-    const quote = document.getElementById('exec-spotlight-quote');
-    const quoteWrap = document.getElementById('exec-spotlight-quote-wrap');
-    const counter = document.getElementById('exec-current-counter');
-    const progressBar = document.getElementById('exec-stage-progress-bar');
-    const statusText = document.getElementById('exec-spotlight-status-text');
-    const statusDot = document.getElementById('exec-spotlight-status-dot');
-    const bar = document.getElementById('exec-spotlight-bar');
-
-    if (animate && card) {
-      card.classList.add('exec-transitioning');
-      setTimeout(() => card.classList.remove('exec-transitioning'), 300);
+  setStageMode(mode) {
+    if (!this.stage) return;
+    if (mode === 'overview') {
+      this.stage.classList.add('is-overview');
+      this.stage.classList.remove('is-spotlight');
+    } else {
+      this.stage.classList.remove('is-overview');
+      this.stage.classList.add('is-spotlight');
     }
+  },
 
-    if (img) img.src = member.foto || '';
-    if (img) img.alt = member.nama || '';
-    if (name) name.textContent = member.nama || '';
-    if (role) role.textContent = member.jabatan || '';
-    if (category) category.textContent = member.kategori || '';
-    if (karir) karir.textContent = member.riwayat_karir || '';
-    if (pendidikan) pendidikan.textContent = member.pendidikan || '—';
-    if (sertifikasi) sertifikasi.textContent = member.sertifikasi || '—';
+  applyMorphLayout(mode, activeIndex = 0) {
+    if (!this.cards || this.cards.length === 0) return;
+    const n = this.cards.length;
 
-    if (quote && quoteWrap) {
-      if (member.kutipan && member.kutipan.trim() !== '') {
-        quote.textContent = `"${member.kutipan}"`;
-        quoteWrap.style.display = '';
-      } else {
-        quoteWrap.style.display = 'none';
+    if (mode === 'overview') {
+      this.currentMode = 'overview';
+      this.setStageMode('overview');
+
+      const gap = 2; // % gap between cards
+      const w = (100 - gap * (n - 1)) / n;
+
+      this.cards.forEach((card, i) => {
+        card.style.left = `${i * (w + gap)}%`;
+        card.style.top = '0%';
+        card.style.width = `${w}%`;
+        card.style.height = '100%';
+        card.style.zIndex = '10';
+        card.setAttribute('data-card-mode', 'overview');
+      });
+    } else {
+      this.currentMode = 'spotlight';
+      this.currentIndex = activeIndex;
+      this.setStageMode('spotlight');
+
+      const spotW = 63; // 63% width for active card
+      const dockLeft = 66; // 66% left coordinate for dock
+      const dockW = 34; // 34% width for dock cards
+      const totalDock = Math.max(1, n - 1);
+      const gapPx = 12; // 12px vertical gap in dock stack
+
+      let dockIdx = 0;
+      this.cards.forEach((card, i) => {
+        if (i === activeIndex) {
+          card.style.left = '0%';
+          card.style.top = '0%';
+          card.style.width = `${spotW}%`;
+          card.style.height = '100%';
+          card.style.zIndex = '25';
+          card.setAttribute('data-card-mode', 'spotlight');
+        } else {
+          card.style.left = `${dockLeft}%`;
+          card.style.width = `${dockW}%`;
+          card.style.height = `calc((100% - ${(totalDock - 1) * gapPx}px) / ${totalDock})`;
+          card.style.top = `calc((${dockIdx} * ((100% - ${(totalDock - 1) * gapPx}px) / ${totalDock})) + ${dockIdx * gapPx}px)`;
+          card.style.zIndex = '10';
+          card.setAttribute('data-card-mode', 'dock');
+          dockIdx++;
+        }
+      });
+
+      // Update counter
+      const counter = document.getElementById('exec-current-counter');
+      if (counter) {
+        counter.textContent = String(activeIndex + 1).padStart(2, '0');
+      }
+
+      // Update Steppers
+      const btnPrev = document.getElementById('exec-btn-prev');
+      const btnNext = document.getElementById('exec-btn-next');
+      if (btnPrev) btnPrev.disabled = activeIndex === 0;
+      if (btnNext) btnNext.disabled = activeIndex === n - 1;
+
+      // Update category pill active state
+      const member = this.members[activeIndex];
+      if (member) {
+        const filterBtns = document.querySelectorAll('.exec-filter-btn');
+        filterBtns.forEach((btn) => {
+          const filter = btn.getAttribute('data-filter');
+          if (filter === member.kategori) {
+            btn.classList.add('active', 'bg-primary-600', 'text-white', 'shadow-sm');
+            btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+          } else if (filter !== 'all') {
+            btn.classList.remove('active', 'bg-primary-600', 'text-white', 'shadow-sm');
+            btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+          }
+        });
       }
     }
-
-    if (counter) {
-      counter.textContent = String(index + 1).padStart(2, '0');
-    }
-
-    if (progressBar) {
-      const pct = ((index + 1) / this.members.length) * 100;
-      progressBar.style.width = `${pct}%`;
-    }
-
-    if (statusDot && statusText) {
-      const isPending = member.status === 'Proses Perizinan OJK';
-      statusText.textContent = member.status || 'Aktif';
-      if (isPending) {
-        statusDot.className = 'absolute -bottom-2 -right-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-white shadow-md flex items-center gap-1.5 border-2 border-white dark:border-dark-border';
-      } else {
-        statusDot.className = 'absolute -bottom-2 -right-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-md flex items-center gap-1.5 border-2 border-white dark:border-dark-border';
-      }
-    }
-
-    if (bar) {
-      if (member.kategori === 'Dewan Pengawas Syariah') {
-        bar.className = 'absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 to-teal-500 transition-all duration-500';
-      } else if (member.kategori === 'Dewan Komisaris') {
-        bar.className = 'absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 to-primary-600 transition-all duration-500';
-      } else {
-        bar.className = 'absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-500';
-      }
-    }
-
-    const dockCards = document.querySelectorAll('.exec-dock-card');
-    dockCards.forEach((c) => {
-      const cIdx = parseInt(c.getAttribute('data-index'), 10);
-      const dot = c.querySelector('.dock-active-dot');
-      if (cIdx === index) {
-        c.classList.add('active', 'bg-white', 'dark:bg-dark-surface', 'shadow-lg', 'ring-2', 'ring-primary-500/80', 'dark:ring-teal-400/80');
-        c.classList.remove('bg-white/60', 'dark:bg-dark-surface/60', 'opacity-75');
-        if (dot) dot.classList.remove('hidden');
-        if (dot) dot.classList.add('flex');
-        c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } else {
-        c.classList.remove('active', 'bg-white', 'dark:bg-dark-surface', 'shadow-lg', 'ring-2', 'ring-primary-500/80', 'dark:ring-teal-400/80');
-        c.classList.add('bg-white/60', 'dark:bg-dark-surface/60', 'opacity-75');
-        if (dot) dot.classList.remove('flex');
-        if (dot) dot.classList.add('hidden');
-      }
-    });
-
-    const btnPrev = document.getElementById('exec-btn-prev');
-    const btnNext = document.getElementById('exec-btn-next');
-    if (btnPrev) btnPrev.disabled = index === 0;
-    if (btnNext) btnNext.disabled = index === this.members.length - 1;
   },
 
   scrollToMember(index) {
     if (!this.section) return;
     this.isManualScrolling = true;
-    this.updateSpotlight(index, true);
 
     const sectionTop = this.section.getBoundingClientRect().top + window.scrollY;
     const stageHeight = this.section.offsetHeight - window.innerHeight;
-    const targetScroll = sectionTop + (index / (this.members.length - 1 || 1)) * stageHeight;
 
-    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    if (index < 0) {
+      // Return to overview
+      this.applyMorphLayout('overview', 0);
+      window.scrollTo({ top: sectionTop, behavior: 'smooth' });
+    } else {
+      this.applyMorphLayout('spotlight', index);
+      const targetProgress = 0.14 + (index / (this.members.length - 1 || 1)) * 0.82;
+      const targetScroll = sectionTop + targetProgress * stageHeight;
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
 
     clearTimeout(this.scrollTimeout);
     this.scrollTimeout = setTimeout(() => {
       this.isManualScrolling = false;
-    }, 700);
+    }, 1050);
   },
 
   bindDesktopEvents() {
@@ -976,23 +1030,57 @@ const ExecutiveParallax = {
       const scrolled = -rect.top;
       if (scrolled >= 0 && scrolled <= stageHeight) {
         const progress = scrolled / stageHeight;
-        const targetIndex = Math.min(this.members.length - 1, Math.floor(progress * this.members.length));
-        if (targetIndex !== this.currentIndex) {
-          this.updateSpotlight(targetIndex, true);
+
+        // Phase 1: 0% - 12% = Overview Mode (comfortable top runway)
+        if (progress < 0.12) {
+          if (this.currentMode !== 'overview') {
+            this.applyMorphLayout('overview', 0);
+          }
+        } else {
+          // Phase 2: 12% - 100% = Spotlight Mode (Smooth Sequential Handoff)
+          const spotlightProgress = (progress - 0.12) / 0.88;
+          const targetIndex = Math.min(
+            this.members.length - 1,
+            Math.max(0, Math.floor(spotlightProgress * this.members.length))
+          );
+          if (this.currentMode !== 'spotlight' || targetIndex !== this.currentIndex) {
+            this.applyMorphLayout('spotlight', targetIndex);
+          }
+        }
+      } else if (scrolled < 0) {
+        if (this.currentMode !== 'overview') {
+          this.applyMorphLayout('overview', 0);
         }
       }
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    const dockCards = document.querySelectorAll('.exec-dock-card');
-    dockCards.forEach((card) => {
-      card.addEventListener('click', () => {
+    // Morph Cards Click (Works in both Overview and Dock states)
+    this.cards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a, button, input, textarea')) return;
+
         const idx = parseInt(card.getAttribute('data-index'), 10);
-        this.scrollToMember(idx);
+        if (this.currentMode === 'overview') {
+          this.scrollToMember(idx);
+        } else if (this.currentMode === 'spotlight') {
+          if (card.getAttribute('data-card-mode') === 'dock') {
+            this.scrollToMember(idx);
+          }
+        }
       });
     });
 
+    // Back to overview button
+    const btnBackOverview = document.getElementById('exec-btn-back-overview');
+    if (btnBackOverview) {
+      btnBackOverview.addEventListener('click', () => {
+        this.scrollToMember(-1);
+      });
+    }
+
+    // Stepper buttons
     const btnPrev = document.getElementById('exec-btn-prev');
     const btnNext = document.getElementById('exec-btn-next');
     if (btnPrev) {
@@ -1010,6 +1098,7 @@ const ExecutiveParallax = {
       });
     }
 
+    // Category filter pills
     const filterBtns = document.querySelectorAll('.exec-filter-btn');
     filterBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -1265,6 +1354,270 @@ const InstagramSlider = {
 };
 
 // ========================================================================
+// JARINGAN KANTOR INTERACTIONS (Filter, Copy Address, & Map Modal Lightbox)
+// ========================================================================
+const KantorModule = {
+  init() {
+    this.initFilter();
+    this.initCopyAddress();
+    this.initMapModal();
+  },
+
+  initFilter() {
+    const filterGroup = document.getElementById('kantor-filter-group');
+    if (!filterGroup) return;
+
+    const buttons = filterGroup.querySelectorAll('.kantor-filter-btn');
+    const cards = document.querySelectorAll('.kantor-card');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+
+        // Update active buttons styling
+        buttons.forEach(b => {
+          b.classList.remove('active', 'bg-primary-600', 'text-white', 'shadow-sm');
+          b.classList.add('text-slate-600', 'dark:text-slate-300');
+        });
+        btn.classList.add('active', 'bg-primary-600', 'text-white', 'shadow-sm');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300');
+
+        // Filter cards smoothly
+        cards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            card.style.display = 'flex';
+            requestAnimationFrame(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'none';
+            });
+          } else {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.96)';
+            setTimeout(() => {
+              if (card.style.opacity === '0') {
+                card.style.display = 'none';
+              }
+            }, 220);
+          }
+        });
+      });
+    });
+  },
+
+  initCopyAddress() {
+    document.querySelectorAll('.copy-kantor-alamat-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const textToCopy = btn.getAttribute('data-copy');
+        if (!textToCopy) return;
+
+        const label = btn.querySelector('.btn-copy-label');
+        const origText = label ? label.textContent : '';
+
+        const onSuccess = () => {
+          if (label) label.textContent = 'Tersalin!';
+          btn.classList.add('text-teal-600', 'font-extrabold');
+          showCopyToast('Alamat kantor berhasil disalin!');
+          setTimeout(() => {
+            if (label) label.textContent = origText;
+            btn.classList.remove('text-teal-600', 'font-extrabold');
+          }, 2000);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
+            fallbackCopy(textToCopy, onSuccess);
+          });
+        } else {
+          fallbackCopy(textToCopy, onSuccess);
+        }
+      });
+    });
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        cb();
+      } catch (err) {}
+      ta.remove();
+    }
+  },
+
+  initMapModal() {
+    const modal = document.getElementById('kantor-map-modal');
+    if (!modal) return;
+
+    const backdrop = document.getElementById('kantor-map-backdrop');
+    const container = document.getElementById('kantor-map-container');
+    const iframe = document.getElementById('kantor-map-iframe');
+    const loading = document.getElementById('map-modal-loading');
+    const titleEl = document.getElementById('map-modal-title');
+    const tipeEl = document.getElementById('map-modal-tipe');
+    const alamatEl = document.getElementById('map-modal-alamat');
+    const extLink = document.getElementById('map-modal-external-link');
+    const gmapsBtn = document.getElementById('map-modal-gmaps-btn');
+    const closeBtn = document.getElementById('kantor-map-close-btn');
+    const footerClose = document.getElementById('kantor-map-footer-close');
+
+    const openModal = (btn) => {
+      const title = btn.getAttribute('data-title') || 'Peta Kantor';
+      const tipe = btn.getAttribute('data-tipe') || 'Kantor Operasional';
+      const alamat = btn.getAttribute('data-alamat') || '';
+      const gmaps = btn.getAttribute('data-gmaps') || '#';
+      const query = btn.getAttribute('data-query') || encodeURIComponent(title + ' ' + alamat);
+
+      if (titleEl) titleEl.textContent = title;
+      if (tipeEl) tipeEl.textContent = tipe;
+      if (alamatEl) alamatEl.textContent = alamat;
+      if (extLink) extLink.href = gmaps;
+      if (gmapsBtn) gmapsBtn.href = gmaps;
+
+      // Show loader
+      if (loading) {
+        loading.style.display = 'flex';
+        loading.style.opacity = '1';
+      }
+
+      // Set embed src
+      if (iframe) {
+        iframe.onload = () => {
+          if (loading) {
+            loading.style.opacity = '0';
+            setTimeout(() => { loading.style.display = 'none'; }, 300);
+          }
+        };
+        // Standard clean Google Maps Embed without API key
+        iframe.src = `https://maps.google.com/maps?q=${query}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+      }
+
+      // Open Modal Animation
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        if (backdrop) {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+        }
+        if (container) {
+          container.classList.remove('scale-95', 'opacity-0');
+          container.classList.add('scale-100', 'opacity-100');
+        }
+      });
+    };
+
+    const closeModal = () => {
+      if (backdrop) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+      }
+      if (container) {
+        container.classList.remove('scale-100', 'opacity-100');
+        container.classList.add('scale-95', 'opacity-0');
+      }
+
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        if (iframe) iframe.src = 'about:blank';
+      }, 250);
+    };
+
+    // Attach open triggers
+    document.querySelectorAll('.open-map-modal-btn').forEach(btn => {
+      btn.addEventListener('click', () => openModal(btn));
+    });
+
+    // Close triggers
+    closeBtn?.addEventListener('click', closeModal);
+    footerClose?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+  }
+};
+
+// ========================================================================
+// SAVINGS CALCULATOR MODULE (TABUNGAN SYARIAH)
+// ========================================================================
+const SavingsCalculator = {
+  init() {
+    const productSelect = document.getElementById('wkl-calc-product');
+    const targetRange   = document.getElementById('wkl-calc-target-range');
+    const targetDisplay = document.getElementById('wkl-calc-target-display');
+    const monthsRange   = document.getElementById('wkl-calc-months-range');
+    const monthsDisplay = document.getElementById('wkl-calc-months-display');
+    const monthlyResult = document.getElementById('wkl-calc-result-monthly');
+    const waBtn         = document.getElementById('wkl-calc-wa-btn');
+    const presetBtns    = document.querySelectorAll('.wkl-calc-preset-btn');
+
+    if (!targetRange || !monthsRange || !monthlyResult) return;
+
+    const formatRupiah = (num) => {
+      return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const calculateSavings = () => {
+      const targetVal = parseInt(targetRange.value, 10) || 0;
+      const monthsVal = parseInt(monthsRange.value, 10) || 12;
+      const selectedProduct = productSelect ? productSelect.value : 'Tabungan Syariah';
+
+      if (targetDisplay) targetDisplay.textContent = formatRupiah(targetVal);
+
+      const years = (monthsVal / 12);
+      const yearText = years >= 1 ? ` (${years} Tahun)` : '';
+      if (monthsDisplay) monthsDisplay.textContent = `${monthsVal} Bulan${yearText}`;
+
+      const monthlyVal = Math.ceil(targetVal / monthsVal);
+      monthlyResult.textContent = formatRupiah(monthlyVal);
+
+      if (waBtn) {
+        const waNumber = waBtn.getAttribute('data-phone') || '6281517380388';
+        const msg = `Halo BPRS Wakalumi, saya tertarik membuka ${selectedProduct} dengan target ${formatRupiah(targetVal)} selama ${monthsVal} bulan (estimasi sisihan ${formatRupiah(monthlyVal)}/bln). Mohon panduannya.`;
+        waBtn.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+      }
+    };
+
+    targetRange.addEventListener('input', calculateSavings);
+    monthsRange.addEventListener('input', calculateSavings);
+    if (productSelect) productSelect.addEventListener('change', calculateSavings);
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const val = parseInt(this.getAttribute('data-val'), 10);
+        if (targetRange && val) {
+          targetRange.value = val;
+          presetBtns.forEach(b => {
+            b.classList.remove('border-teal-500/50', 'text-teal-300', 'bg-teal-950/60');
+            b.classList.add('border-slate-700', 'text-slate-200');
+          });
+          this.classList.remove('border-slate-700', 'text-slate-200');
+          this.classList.add('border-teal-500/50', 'text-teal-300', 'bg-teal-950/60');
+          calculateSavings();
+        }
+      });
+    });
+
+    calculateSavings();
+  }
+};
+
+// ========================================================================
 // INITIALIZE ALL MODULES
 // ========================================================================
 function initAllModules() {
@@ -1281,6 +1634,8 @@ function initAllModules() {
   SmoothScroll.init();
   OrgChartLightbox.init();
   ExecutiveParallax.init();
+  KantorModule.init();
+  SavingsCalculator.init();
 
   AOS.init({
     duration: 700,
@@ -1317,9 +1672,27 @@ function initSwup() {
 
   // Re-initialize modules and finish preloader after page transition
   swup.hooks.on('page:view', () => {
-    window.scrollTo(0, 0);
     initAllModules();
     Preloader.finishTransition();
+
+    // Check if URL has anchor hash (e.g. #tawakal, #pendidikan, #haji-umroh, #ukhuwah)
+    if (window.location.hash) {
+      setTimeout(() => {
+        try {
+          const targetEl = document.querySelector(window.location.hash);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo(0, 0);
+          }
+        } catch (e) {
+          window.scrollTo(0, 0);
+        }
+      }, 150);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
     setTimeout(() => {
       if (typeof AOS !== 'undefined') {
         AOS.refreshHard();

@@ -100,6 +100,11 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
             $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
+
+            // Brosur Dokumen Dinamis dari Database
+            $brosur_file_url  = get_option( 'options_brosur_file_url', '' );
+            $brosur_file_name = get_option( 'options_brosur_file_name', 'Brosur Resmi BPRS Wakalumi (Edisi 2026).pdf' );
+            $brosur_file_size = get_option( 'options_brosur_file_size', 'PDF Resmi • Edisi Terkini' );
             ?>
 
             <!-- Desktop Menu -->
@@ -113,14 +118,83 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
-                    <div class="dropdown-menu">
-                        <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/tentang-kami' || is_page( 'tentang-kami' ) ) ? 'active' : ''; ?>">Tentang Kami</a>
-                        <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/legalitas' || is_page( 'legalitas' ) ) ? 'active' : ''; ?>">Legalitas Perusahaan</a>
-                        <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/susunan-pengurus' || is_page( 'susunan-pengurus' ) ) ? 'active' : ''; ?>">Susunan Pengurus</a>
-                        <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/jaringan-kantor' || is_page( 'jaringan-kantor' ) ) ? 'active' : ''; ?>">Jaringan Kantor</a>
+                    <div class="dropdown-menu w-[360px] sm:w-[380px] p-4 lg:p-5 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-2xl">
+                        <!-- Header Kicker -->
+                        <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-teal-50 dark:bg-teal-950 text-teal-800 dark:text-teal-300 w-fit mb-3 border border-teal-200/50 dark:border-teal-800/50">
+                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <span class="text-xs font-black uppercase tracking-wider">Profil Bank Wakalumi</span>
+                        </div>
+
+                        <!-- Menu Items List -->
+                        <div class="space-y-1.5">
+                            <!-- 1. Tentang Kami -->
+                            <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="mega-link group/item <?php echo ( $req_uri === '/profil/tentang-kami' || is_page( 'tentang-kami' ) ) ? 'active' : ''; ?>">
+                                <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Tentang Kami</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Visi, misi, sejarah & komitmen syariah</span>
+                                </div>
+                            </a>
+
+                            <!-- 2. Legalitas Perusahaan -->
+                            <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="mega-link group/item <?php echo ( $req_uri === '/profil/legalitas' || is_page( 'legalitas' ) ) ? 'active' : ''; ?>">
+                                <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Legalitas Perusahaan</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Izin OJK, penjaminan LPS & akta resmi</span>
+                                </div>
+                            </a>
+
+                            <!-- 3. Susunan Pengurus -->
+                            <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="mega-link group/item <?php echo ( $req_uri === '/profil/susunan-pengurus' || is_page( 'susunan-pengurus' ) ) ? 'active' : ''; ?>">
+                                <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Susunan Pengurus</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">DPS, Dewan Komisaris & Direksi</span>
+                                </div>
+                            </a>
+
+                            <!-- 4. Jaringan Kantor -->
+                            <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="mega-link group/item <?php echo ( $req_uri === '/profil/jaringan-kantor' || is_page( 'jaringan-kantor' ) ) ? 'active' : ''; ?>">
+                                <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Jaringan Kantor</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Kantor pusat, kas & panduan GPS</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Footer Info Strip -->
+                        <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-2 text-xs text-slate-500 dark:text-slate-400">
+                            <span class="inline-flex items-center gap-1.5 font-semibold text-teal-700 dark:text-teal-300">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Tata Kelola GCG
+                            </span>
+                            <span class="font-bold uppercase tracking-wider text-[11px] text-slate-400 dark:text-slate-500">BPRS Wakalumi</span>
+                        </div>
                     </div>
                 </div>
 
+                <!-- PRODUK: INTERACTIVE 3-COLUMN BANKING MEGA-MENU -->
                 <div class="dropdown relative">
                     <button class="dropdown-trigger nav-link <?php echo $is_page_produk ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Produk
@@ -128,22 +202,187 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
-                    <div class="dropdown-menu min-w-[260px]">
-                        <div class="px-5 py-2 text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Produk Dana</div>
-                        <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'active' : ''; ?> pl-8">Tabungan Syariah</a>
-                        <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'active' : ''; ?> pl-8">Deposito Syariah</a>
-                        
-                        <div class="h-px bg-slate-100 dark:bg-dark-border my-2 mx-5"></div>
-                        
-                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/produk/pembiayaan' ) ? 'active' : ''; ?>">Pembiayaan (Lending)</a>
-                        <a href="#" class="dropdown-item opacity-60 cursor-not-allowed" onclick="event.preventDefault();">Pengajuan Online <span class="ml-2 text-[9px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">Segera</span></a>
-                        
-                        <div class="h-px bg-slate-100 dark:bg-dark-border my-2 mx-5"></div>
-                        
-                        <a href="#" class="dropdown-item flex items-center gap-2">
-                            <svg class="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                            Download Brosur
-                        </a>
+                    
+                    <div class="dropdown-menu dropdown-mega-menu w-[780px] xl:w-[820px] max-w-[94vw] p-5 lg:p-6 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-2xl">
+                        <div class="grid grid-cols-12 gap-5 lg:gap-6">
+                            
+                            <!-- Kolom 1: Penghimpunan Dana (Funding) (4 Cols) -->
+                            <div class="col-span-12 lg:col-span-4 flex flex-col justify-between pr-0 lg:pr-3 lg:border-r border-slate-200/80 dark:border-slate-800">
+                                <div>
+                                    <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-teal-50 dark:bg-teal-950 text-teal-800 dark:text-teal-300 w-fit mb-3 border border-teal-200/50 dark:border-teal-800/50">
+                                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>
+                                        <span class="text-xs font-black uppercase tracking-wider">Penghimpunan Dana</span>
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <?php 
+                                        $header_tabungan_list = function_exists( 'wakalumi_get_tabungan_list' ) ? wakalumi_get_tabungan_list() : [];
+                                        foreach ( $header_tabungan_list as $h_tab ) : 
+                                            $h_slug  = esc_attr( $h_tab['slug'] ?? 'tabungan' );
+                                            $h_color = $h_tab['color'] ?? 'teal';
+
+                                            $h_bg_class = 'bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400';
+                                            if ( $h_color === 'blue' ) {
+                                                $h_bg_class = 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400';
+                                            } elseif ( $h_color === 'amber' ) {
+                                                $h_bg_class = 'bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400';
+                                            } elseif ( $h_color === 'purple' ) {
+                                                $h_bg_class = 'bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400';
+                                            } elseif ( $h_color === 'emerald' ) {
+                                                $h_bg_class = 'bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400';
+                                            } elseif ( $h_color === 'rose' ) {
+                                                $h_bg_class = 'bg-rose-50 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400';
+                                            }
+
+                                            $h_icon_svg = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>';
+                                            if ( $h_slug === 'pendidikan' ) {
+                                                $h_icon_svg = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg>';
+                                            } elseif ( $h_slug === 'haji-umroh' ) {
+                                                $h_icon_svg = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>';
+                                            } elseif ( $h_slug === 'ukhuwah' ) {
+                                                $h_icon_svg = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v3a2 2 0 01-2 2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>';
+                                            }
+                                        ?>
+                                            <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah#' . $h_slug ) ); ?>" class="mega-link group/item">
+                                                <div class="w-8 h-8 rounded-xl <?php echo esc_attr( $h_bg_class ); ?> flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                    <?php echo $h_icon_svg; ?>
+                                                </div>
+                                                <div>
+                                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug"><?php echo esc_html( $h_tab['nama'] ); ?></span>
+                                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug"><?php echo esc_html( $h_tab['tagline'] ); ?></span>
+                                                </div>
+                                            </a>
+                                        <?php endforeach; ?>
+
+                                        <!-- Deposito Mudharabah -->
+                                        <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="mega-link group/item">
+                                            <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Deposito Mudharabah</span>
+                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Tenor 1, 3, 6, 12 Bulan • Nisbah kompetitif</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 px-2">
+                                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="text-xs font-bold text-teal-700 hover:text-teal-800 dark:text-teal-400 inline-flex items-center gap-1">
+                                        Lihat Halaman Simpanan &rarr;
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Kolom 2: Penyaluran Dana (Lending) (4 Cols) -->
+                            <div class="col-span-12 lg:col-span-4 flex flex-col justify-between pr-0 lg:pr-3 lg:border-r border-slate-200/80 dark:border-slate-800">
+                                <div>
+                                    <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-primary-50 dark:bg-primary-950 text-primary-800 dark:text-teal-300 w-fit mb-3 border border-primary-200/50 dark:border-primary-800/50">
+                                        <svg class="w-4 h-4 text-primary-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                        <span class="text-xs font-black uppercase tracking-wider">Penyaluran Dana</span>
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <!-- Pembiayaan 1000 Pedagang -->
+                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#pedagang' ) ); ?>" class="mega-link group/item">
+                                            <div class="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pembiayaan 1000 Pedagang</span>
+                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Bantuan modal usaha & pertumbuhan UMKM</span>
+                                            </div>
+                                        </a>
+
+                                        <!-- Pembiayaan 1000 Guru -->
+                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#guru' ) ); ?>" class="mega-link group/item">
+                                            <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pembiayaan 1000 Guru</span>
+                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Pemenuhan sarana & kebutuhan tenaga pengajar</span>
+                                            </div>
+                                        </a>
+
+                                        <!-- Akad Murabahah (Jual Beli) -->
+                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#murabahah' ) ); ?>" class="mega-link group/item">
+                                            <div class="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-900/50 text-primary-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Al-Murabahah (Jual Beli)</span>
+                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Harga asal + margin pasti disepakati bersama</span>
+                                            </div>
+                                        </a>
+
+                                        <!-- Akad Bagi Hasil & Jasa -->
+                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#akad-lainnya' ) ); ?>" class="mega-link group/item">
+                                            <div class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Bagi Hasil & Multijasa</span>
+                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Mudharabah, Musyarakah, Ijarah & Qardh</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="pt-3 px-2">
+                                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="text-xs font-bold text-primary-700 hover:text-primary-800 dark:text-teal-400 inline-flex items-center gap-1">
+                                        Lihat Halaman Pembiayaan &rarr;
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Kolom 3: Brosur & Aksi Cepat (4 Cols) -->
+                            <div class="col-span-12 lg:col-span-4 flex flex-col justify-between gap-3">
+                                <div>
+                                    <!-- Featured Card: Download Brosur -->
+                                    <div class="p-4 rounded-2xl bg-teal-50 dark:bg-slate-800 border border-teal-200 dark:border-teal-700/60 mb-3 shadow-sm">
+                                        <div class="flex items-center gap-3 mb-2.5">
+                                            <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block"><?php echo esc_html( $brosur_file_size ); ?></span>
+                                                <h5 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-tight line-clamp-1"><?php echo esc_html( $brosur_file_name ); ?></h5>
+                                            </div>
+                                        </div>
+                                        <a 
+                                            href="<?php echo ! empty( $brosur_file_url ) ? esc_url( $brosur_file_url ) : esc_url( $wa_url . '&text=' . urlencode('Halo BPRS Wakalumi, saya ingin meminta brosur resmi produk simpanan dan pembiayaan.') ); ?>" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            <?php echo ! empty( $brosur_file_url ) ? 'download' : ''; ?>
+                                            class="w-full py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+                                        >
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                            <span>Unduh Brosur Lengkap (PDF)</span>
+                                        </a>
+                                    </div>
+
+                                    <!-- Card: Pengajuan Online -->
+                                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-xs font-bold text-slate-900 dark:text-slate-100">Pengajuan Online</span>
+                                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Segera</span>
+                                        </div>
+                                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                            Layanan e-form pembukaan tabungan & pembiayaan daring dalam integrasi digital resmi.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- WhatsApp Hotline Quick Inquiry -->
+                                <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800 text-center">
+                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center justify-center gap-1.5">
+                                        <span>💬 Tanya Syarat & Simulasi via WhatsApp</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
@@ -244,11 +483,31 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <div class="<?php echo $is_page_profil ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
-                    <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/tentang-kami' || is_page( 'tentang-kami' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Tentang Kami</a>
-                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/legalitas' || is_page( 'legalitas' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Legalitas</a>
-                    <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/susunan-pengurus' || is_page( 'susunan-pengurus' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Susunan Pengurus</a>
-                    <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/jaringan-kantor' || is_page( 'jaringan-kantor' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Jaringan Kantor</a>
+                <div class="<?php echo $is_page_profil ? '' : 'hidden'; ?> pl-2 mt-1 space-y-1 mobile-dropdown-content">
+                    <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( $req_uri === '/profil/tentang-kami' || is_page( 'tentang-kami' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Tentang Kami</span>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( $req_uri === '/profil/legalitas' || is_page( 'legalitas' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Legalitas Perusahaan</span>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( $req_uri === '/profil/susunan-pengurus' || is_page( 'susunan-pengurus' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Susunan Pengurus</span>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( $req_uri === '/profil/jaringan-kantor' || is_page( 'jaringan-kantor' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Jaringan Kantor</span>
+                    </a>
                 </div>
             </div>
 
@@ -261,9 +520,38 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     </svg>
                 </button>
                 <div class="<?php echo $is_page_produk ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
-                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Tabungan Syariah</a>
-                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Deposito Syariah</a>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/pembiayaan' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Pembiayaan</a>
+                    <!-- Penghimpunan Dana -->
+                    <div class="px-3 pt-2 pb-1 text-[10px] font-extrabold text-teal-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Penghimpunan Dana
+                    </div>
+                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        Tabungan Syariah (Tawakal, Pendidikan, Haji, Ukhuwah)
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        Deposito Mudharabah (1-12 Bulan)
+                    </a>
+
+                    <!-- Penyaluran Dana -->
+                    <div class="px-3 pt-3 pb-1 text-[10px] font-extrabold text-primary-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Penyaluran Dana (Lending)
+                    </div>
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#pedagang' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                        ⭐ 1000 Pedagang & 1000 Guru
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#akad-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                        ⚖️ Akad Murabahah, Bagi Hasil, Ijarah
+                    </a>
+
+                    <!-- Download Brosur Mobile -->
+                    <div class="pt-2 pb-1 pr-2">
+                        <a href="<?php echo ! empty( $brosur_file_url ) ? esc_url( $brosur_file_url ) : esc_url( $wa_url . '&text=' . urlencode('Halo BPRS Wakalumi, saya ingin meminta brosur resmi produk simpanan dan pembiayaan.') ); ?>" target="_blank" rel="noopener noreferrer" <?php echo ! empty( $brosur_file_url ) ? 'download' : ''; ?> class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-teal-50/80 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 font-bold text-xs border border-teal-200/60 dark:border-teal-800/40">
+                            <span class="inline-flex items-center gap-2">
+                                <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                Download Brosur Resmi
+                            </span>
+                            <span class="text-[9px] uppercase tracking-wider bg-teal-200/70 dark:bg-teal-800/70 px-2 py-0.5 rounded-full">PDF</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -302,7 +590,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 <!-- ========================================
      SWUP CONTENT CONTAINER
      ======================================== -->
-<div id="swup" class="transition-fade flex-1">
+<div id="swup" class="transition-fade flex-1 overflow-x-clip max-w-full">
     <!-- Spacer for fixed navbar -->
     <div class="h-16 md:h-20"></div>
 
@@ -326,5 +614,5 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             </div>
         </div>
 
-        <main class="col-start-1 row-start-1 relative z-10">
+        <main class="col-start-1 row-start-1 relative z-10 overflow-x-clip max-w-full">
 

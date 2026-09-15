@@ -152,24 +152,73 @@ function wakalumi_enforce_template_routing( $template ) {
         if ( $front ) return $front;
     }
 
-    global $post;
+    global $post, $wp_query;
     $slug = isset( $post->post_name ) ? strtolower( $post->post_name ) : '';
+    
+    // Parse cleaned request URI path
+    $raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    $path    = parse_url( $raw_uri, PHP_URL_PATH );
+    $req_uri = rtrim( strtolower( (string) $path ), '/' );
 
     if ( in_array( $slug, [ 'home', 'beranda' ], true ) ) {
         $front = locate_template( [ 'front-page.php' ] );
         if ( $front ) return $front;
     }
 
+    // Helper closure to mark query clean and return template
+    $serve_clean_template = function( $file ) use ( &$wp_query ) {
+        $located = locate_template( [ $file ] );
+        if ( $located ) {
+            if ( is_404() || ( isset( $wp_query ) && $wp_query->is_404 ) ) {
+                $wp_query->is_404  = false;
+                $wp_query->is_page = true;
+                status_header( 200 );
+            }
+            return $located;
+        }
+        return false;
+    };
+
     // 2. Profil: Tentang Kami
-    if ( in_array( $slug, [ 'tentang-kami', 'tentang' ], true ) ) {
-        $about = locate_template( [ 'page-tentang-kami.php' ] );
-        if ( $about ) return $about;
+    if ( in_array( $slug, [ 'tentang-kami', 'tentang' ], true ) || strpos( $req_uri, '/tentang-kami' ) !== false ) {
+        $res = $serve_clean_template( 'page-tentang-kami.php' );
+        if ( $res ) return $res;
     }
 
     // 3. Profil: Legalitas Perusahaan
-    if ( in_array( $slug, [ 'legalitas', 'legalitas-perusahaan' ], true ) ) {
-        $legal = locate_template( [ 'page-legalitas.php' ] );
-        if ( $legal ) return $legal;
+    if ( in_array( $slug, [ 'legalitas', 'legalitas-perusahaan' ], true ) || strpos( $req_uri, '/legalitas' ) !== false ) {
+        $res = $serve_clean_template( 'page-legalitas.php' );
+        if ( $res ) return $res;
+    }
+
+    // 4. Profil: Susunan Pengurus
+    if ( in_array( $slug, [ 'susunan-pengurus', 'pengurus' ], true ) || strpos( $req_uri, '/susunan-pengurus' ) !== false ) {
+        $res = $serve_clean_template( 'page-susunan-pengurus.php' );
+        if ( $res ) return $res;
+    }
+
+    // 5. Profil: Jaringan Kantor
+    if ( in_array( $slug, [ 'jaringan-kantor', 'kantor', 'cabang' ], true ) || strpos( $req_uri, '/jaringan-kantor' ) !== false ) {
+        $res = $serve_clean_template( 'page-jaringan-kantor.php' );
+        if ( $res ) return $res;
+    }
+
+    // 6. Produk: Tabungan Syariah
+    if ( in_array( $slug, [ 'tabungan-syariah', 'tabungan' ], true ) || strpos( $req_uri, '/tabungan-syariah' ) !== false ) {
+        $res = $serve_clean_template( 'page-tabungan-syariah.php' );
+        if ( $res ) return $res;
+    }
+
+    // 7. Produk: Deposito Syariah
+    if ( in_array( $slug, [ 'deposito-syariah', 'deposito', 'deposito-mudharabah' ], true ) || strpos( $req_uri, '/deposito-syariah' ) !== false ) {
+        $res = $serve_clean_template( 'page-deposito-syariah.php' );
+        if ( $res ) return $res;
+    }
+
+    // 8. Produk: Pembiayaan
+    if ( in_array( $slug, [ 'pembiayaan', 'pembiayaan-syariah', 'lending' ], true ) || strpos( $req_uri, '/pembiayaan' ) !== false ) {
+        $res = $serve_clean_template( 'page-pembiayaan.php' );
+        if ( $res ) return $res;
     }
 
     return $template;
@@ -249,8 +298,165 @@ function wakalumi_ensure_profile_pages() {
             update_post_meta( $legal_page->ID, '_wp_page_template', 'page-legalitas.php' );
         }
     }
+
+    // 4. Pastikan Child Page 'Susunan Pengurus' ada
+    $pengurus_page = get_page_by_path( 'profil/susunan-pengurus' ) ?: get_page_by_path( 'susunan-pengurus' );
+    if ( ! $pengurus_page ) {
+        $pengurus_id = wp_insert_post( [
+            'post_title'   => 'Susunan Pengurus',
+            'post_name'    => 'susunan-pengurus',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $pengurus_id && ! is_wp_error( $pengurus_id ) ) {
+            update_post_meta( $pengurus_id, '_wp_page_template', 'page-susunan-pengurus.php' );
+        }
+    } else {
+        if ( (int) $pengurus_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $pengurus_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $pengurus_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-susunan-pengurus.php' ) {
+            update_post_meta( $pengurus_page->ID, '_wp_page_template', 'page-susunan-pengurus.php' );
+        }
+    }
+
+    // 5. Pastikan Child Page 'Jaringan Kantor' ada
+    $kantor_page = get_page_by_path( 'profil/jaringan-kantor' ) ?: get_page_by_path( 'jaringan-kantor' );
+    if ( ! $kantor_page ) {
+        $kantor_id = wp_insert_post( [
+            'post_title'   => 'Jaringan Kantor',
+            'post_name'    => 'jaringan-kantor',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $kantor_id && ! is_wp_error( $kantor_id ) ) {
+            update_post_meta( $kantor_id, '_wp_page_template', 'page-jaringan-kantor.php' );
+        }
+    } else {
+        if ( (int) $kantor_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $kantor_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $kantor_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-jaringan-kantor.php' ) {
+            update_post_meta( $kantor_page->ID, '_wp_page_template', 'page-jaringan-kantor.php' );
+        }
+    }
 }
 add_action( 'init', 'wakalumi_ensure_profile_pages' );
+
+/**
+ * Otomatis pastikan halaman Parent 'Produk' dan Child Pages terdaftar di database
+ * agar URL /produk/tabungan-syariah, /produk/deposito-syariah, /produk/pembiayaan langsung aktif
+ */
+function wakalumi_ensure_product_pages() {
+    // 1. Pastikan Parent Page 'Produk' ada
+    $parent_produk = get_page_by_path( 'produk' );
+    $parent_id     = 0;
+    if ( ! $parent_produk ) {
+        $parent_id = wp_insert_post( [
+            'post_title'   => 'Produk',
+            'post_name'    => 'produk',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+    } else {
+        $parent_id = $parent_produk->ID;
+    }
+
+    // 2. Child Page: Tabungan Syariah
+    $tabungan_page = get_page_by_path( 'produk/tabungan-syariah' ) ?: get_page_by_path( 'tabungan-syariah' );
+    if ( ! $tabungan_page ) {
+        $tab_id = wp_insert_post( [
+            'post_title'   => 'Tabungan Syariah',
+            'post_name'    => 'tabungan-syariah',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $tab_id && ! is_wp_error( $tab_id ) ) {
+            update_post_meta( $tab_id, '_wp_page_template', 'page-tabungan-syariah.php' );
+        }
+    } else {
+        if ( (int) $tabungan_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $tabungan_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $tabungan_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-tabungan-syariah.php' ) {
+            update_post_meta( $tabungan_page->ID, '_wp_page_template', 'page-tabungan-syariah.php' );
+        }
+    }
+
+    // 3. Child Page: Deposito Syariah
+    $deposito_page = get_page_by_path( 'produk/deposito-syariah' ) ?: get_page_by_path( 'deposito-syariah' );
+    if ( ! $deposito_page ) {
+        $dep_id = wp_insert_post( [
+            'post_title'   => 'Deposito Syariah',
+            'post_name'    => 'deposito-syariah',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $dep_id && ! is_wp_error( $dep_id ) ) {
+            update_post_meta( $dep_id, '_wp_page_template', 'page-deposito-syariah.php' );
+        }
+    } else {
+        if ( (int) $deposito_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $deposito_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $deposito_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-deposito-syariah.php' ) {
+            update_post_meta( $deposito_page->ID, '_wp_page_template', 'page-deposito-syariah.php' );
+        }
+    }
+
+    // 4. Child Page: Pembiayaan
+    $pembiayaan_page = get_page_by_path( 'produk/pembiayaan' ) ?: get_page_by_path( 'pembiayaan' );
+    if ( ! $pembiayaan_page ) {
+        $pem_id = wp_insert_post( [
+            'post_title'   => 'Pembiayaan Syariah',
+            'post_name'    => 'pembiayaan',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $pem_id && ! is_wp_error( $pem_id ) ) {
+            update_post_meta( $pem_id, '_wp_page_template', 'page-pembiayaan.php' );
+        }
+    } else {
+        if ( (int) $pembiayaan_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $pembiayaan_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $pembiayaan_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-pembiayaan.php' ) {
+            update_post_meta( $pembiayaan_page->ID, '_wp_page_template', 'page-pembiayaan.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_product_pages' );
 
 /**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
@@ -478,3 +684,15 @@ function wakalumi_admin_bar_quick_links( $wp_admin_bar ) {
     ] );
 }
 add_action( 'admin_bar_menu', 'wakalumi_admin_bar_quick_links', 100 );
+
+/**
+ * Otomatis pastikan rewrite rules ter-flush satu kali untuk rute produk
+ */
+function wakalumi_check_rewrite_flush() {
+    if ( get_option( 'wakalumi_flush_rewrite_v2' ) !== 'yes' ) {
+        flush_rewrite_rules( false );
+        update_option( 'wakalumi_flush_rewrite_v2', 'yes' );
+    }
+}
+add_action( 'init', 'wakalumi_check_rewrite_flush', 99 );
+

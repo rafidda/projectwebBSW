@@ -56,7 +56,7 @@ function wakalumi_register_cpts() {
         ],
         'public'            => true,
         'has_archive'       => true,
-        'rewrite'           => [ 'slug' => 'produk', 'with_front' => false ],
+        'rewrite'           => [ 'slug' => 'katalog-produk', 'with_front' => false ],
         'menu_icon'         => 'dashicons-bank',
         'menu_position'     => 4,
         'supports'          => [ 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ],

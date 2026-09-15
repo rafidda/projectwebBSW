@@ -406,7 +406,7 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
 </section>
 
 <!-- Content wrapper to slide OVER the sticky hero -->
-<div class="relative z-10">
+<div class="relative z-10 overflow-x-clip max-w-full">
 
 <!-- ========================================
      SECTION 2: LAYANAN CEPAT (Glassmorphism Cards)
@@ -480,7 +480,7 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
             case 'report':
                 return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
             case 'savings':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>';
             case 'deposit':
                 return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>';
             case 'transfer':
@@ -533,87 +533,216 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
 
 
 <!-- ========================================
-     SECTION 3: PRODUK PREVIEW
+     SECTION 3: PRODUK PREVIEW (TABUNGAN & SIMPANAN)
      ======================================== -->
 <?php
-$produk_query = new WP_Query( [
-    'post_type'      => 'produk',
-    'posts_per_page' => 4,
-    'meta_query'     => [
-        [
-            'key'   => 'produk_featured',
-            'value' => '1',
-        ],
-    ],
-] );
+// Ambil produk tabungan dinamis dari Admin Panel
+$tabungan_preview_list = function_exists( 'wakalumi_get_tabungan_list' ) ? wakalumi_get_tabungan_list() : [];
 
-// Fallback: if no featured products, get any 4
-if ( ! $produk_query->have_posts() ) {
-    $produk_query = new WP_Query( [
-        'post_type'      => 'produk',
-        'posts_per_page' => 4,
-    ] );
-}
+// Batasi hingga 4 produk pertama untuk layout grid rapi
+$tabungan_preview_list = array_slice( $tabungan_preview_list, 0, 4 );
 
-if ( $produk_query->have_posts() ) :
+if ( ! empty( $tabungan_preview_list ) ) :
 ?>
-<section class="section bg-slate-50 dark:bg-dark-surface relative z-10">
+<section class="section bg-slate-50 dark:bg-dark-surface relative z-10 overflow-hidden">
     <div class="pattern-overlay"></div>
     <div class="container-wide relative z-10">
         <!-- Section Header -->
         <div class="text-center mb-14" data-aos="fade-up">
-            <span class="section-label mb-4 inline-block">Produk Kami</span>
-            <h2 class="section-title mb-4">Solusi Keuangan <span class="text-primary-600 dark:text-primary-300">Syariah</span></h2>
-            <p class="section-subtitle mx-auto">Pilihan produk perbankan syariah yang dirancang untuk memenuhi kebutuhan Anda dengan prinsip amanah.</p>
+            <span class="section-label mb-4 inline-block">Produk Simpanan</span>
+            <h2 class="section-title mb-4">Solusi Tabungan <span class="text-primary-600 dark:text-primary-300">Syariah Amanah</span></h2>
+            <p class="section-subtitle mx-auto">Ragam pilihan produk simpanan murni syariah tanpa riba, aman dijamin LPS, dan dikelola profesional untuk kemaslahatan Anda.</p>
         </div>
 
         <!-- Products Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php
-            if ( $produk_query->have_posts() ) :
-                $delay = 100;
-                while ( $produk_query->have_posts() ) : $produk_query->the_post();
-                    get_template_part( 'template-parts/card-produk', null, [ 'delay' => $delay ] );
-                    $delay += 100;
-                endwhile;
-                wp_reset_postdata();
-            else :
-                // Dummy Data HTML fallback
-                $dummy_products = [
-                    ['title' => 'Tabungan Wadiah', 'desc' => 'Simpanan murni dengan titipan yang bisa diambil kapan saja tanpa potongan bulanan.'],
-                    ['title' => 'Deposito Mudharabah', 'desc' => 'Investasi syariah dengan nisbah bagi hasil yang menguntungkan dan aman.'],
-                    ['title' => 'Pembiayaan Murabahah', 'desc' => 'Solusi kepemilikan rumah atau kendaraan dengan cicilan tetap hingga lunas.'],
-                    ['title' => 'Pembiayaan Porsi Haji', 'desc' => 'Wujudkan niat suci Anda dengan fasilitas talangan dana porsi haji yang mudah.']
-                ];
-                $delay = 100;
-                foreach ( $dummy_products as $prod ) :
+            $delay = 100;
+            $color_styles = [
+                'teal'    => [
+                    'badge'       => 'bg-teal-50 text-teal-700 dark:bg-teal-950/70 dark:text-teal-300 border-teal-200 dark:border-teal-800',
+                    'title_hover' => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                    'accent_bar'  => 'via-teal-500',
+                    'card_hover'  => 'hover:border-teal-300 dark:hover:border-teal-700 hover:shadow-teal-500/10',
+                    'icon_bg'     => 'group-hover:bg-teal-50 group-hover:text-teal-600 dark:group-hover:bg-teal-950/50 dark:group-hover:text-teal-400',
+                    'btn'         => 'text-teal-600 dark:text-teal-400 group-hover:text-teal-700 dark:group-hover:text-teal-300',
+                ],
+                'blue'    => [
+                    'badge'       => 'bg-blue-50 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+                    'title_hover' => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+                    'accent_bar'  => 'via-blue-500',
+                    'card_hover'  => 'hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-blue-500/10',
+                    'icon_bg'     => 'group-hover:bg-blue-50 group-hover:text-blue-600 dark:group-hover:bg-blue-950/50 dark:group-hover:text-blue-400',
+                    'btn'         => 'text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300',
+                ],
+                'amber'   => [
+                    'badge'       => 'bg-amber-50 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+                    'title_hover' => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+                    'accent_bar'  => 'via-amber-500',
+                    'card_hover'  => 'hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-amber-500/10',
+                    'icon_bg'     => 'group-hover:bg-amber-50 group-hover:text-amber-600 dark:group-hover:bg-amber-950/50 dark:group-hover:text-amber-400',
+                    'btn'         => 'text-amber-600 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-300',
+                ],
+                'purple'  => [
+                    'badge'       => 'bg-purple-50 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+                    'title_hover' => 'group-hover:text-purple-600 dark:group-hover:text-purple-400',
+                    'accent_bar'  => 'via-purple-500',
+                    'card_hover'  => 'hover:border-purple-300 dark:hover:border-purple-700 hover:shadow-purple-500/10',
+                    'icon_bg'     => 'group-hover:bg-purple-50 group-hover:text-purple-600 dark:group-hover:bg-purple-950/50 dark:group-hover:text-purple-400',
+                    'btn'         => 'text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300',
+                ],
+                'emerald' => [
+                    'badge'       => 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+                    'title_hover' => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+                    'accent_bar'  => 'via-emerald-500',
+                    'card_hover'  => 'hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-emerald-500/10',
+                    'icon_bg'     => 'group-hover:bg-emerald-50 group-hover:text-emerald-600 dark:group-hover:bg-emerald-950/50 dark:group-hover:text-emerald-400',
+                    'btn'         => 'text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300',
+                ],
+                'indigo'  => [
+                    'badge'       => 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
+                    'title_hover' => 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400',
+                    'accent_bar'  => 'via-indigo-500',
+                    'card_hover'  => 'hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-indigo-500/10',
+                    'icon_bg'     => 'group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:group-hover:bg-indigo-950/50 dark:group-hover:text-indigo-400',
+                    'btn'         => 'text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300',
+                ],
+                'cyan'    => [
+                    'badge'       => 'bg-cyan-50 text-cyan-700 dark:bg-cyan-950/70 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
+                    'title_hover' => 'group-hover:text-cyan-600 dark:group-hover:text-cyan-400',
+                    'accent_bar'  => 'via-cyan-500',
+                    'card_hover'  => 'hover:border-cyan-300 dark:hover:border-cyan-700 hover:shadow-cyan-500/10',
+                    'icon_bg'     => 'group-hover:bg-cyan-50 group-hover:text-cyan-600 dark:group-hover:bg-cyan-950/50 dark:group-hover:text-cyan-400',
+                    'btn'         => 'text-cyan-600 dark:text-cyan-400 group-hover:text-cyan-700 dark:group-hover:text-cyan-300',
+                ],
+                'rose'    => [
+                    'badge'       => 'bg-rose-50 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+                    'title_hover' => 'group-hover:text-rose-600 dark:group-hover:text-rose-400',
+                    'accent_bar'  => 'via-rose-500',
+                    'card_hover'  => 'hover:border-rose-300 dark:hover:border-rose-700 hover:shadow-rose-500/10',
+                    'icon_bg'     => 'group-hover:bg-rose-50 group-hover:text-rose-600 dark:group-hover:bg-rose-950/50 dark:group-hover:text-rose-400',
+                    'btn'         => 'text-rose-600 dark:text-rose-400 group-hover:text-rose-700 dark:group-hover:text-rose-300',
+                ],
+                'orange'  => [
+                    'badge'       => 'bg-orange-50 text-orange-700 dark:bg-orange-950/70 dark:text-orange-300 border-orange-200 dark:border-orange-800',
+                    'title_hover' => 'group-hover:text-orange-600 dark:group-hover:text-orange-400',
+                    'accent_bar'  => 'via-orange-500',
+                    'card_hover'  => 'hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-orange-500/10',
+                    'icon_bg'     => 'group-hover:bg-orange-50 group-hover:text-orange-600 dark:group-hover:bg-orange-950/50 dark:group-hover:text-orange-400',
+                    'btn'         => 'text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300',
+                ],
+                'slate'   => [
+                    'badge'       => 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+                    'title_hover' => 'group-hover:text-slate-800 dark:group-hover:text-white',
+                    'accent_bar'  => 'via-slate-500',
+                    'card_hover'  => 'hover:border-slate-400 dark:hover:border-slate-600 hover:shadow-slate-500/10',
+                    'icon_bg'     => 'group-hover:bg-slate-200 group-hover:text-slate-800 dark:group-hover:bg-slate-700 dark:group-hover:text-white',
+                    'btn'         => 'text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white',
+                ],
+            ];
+
+            foreach ( $tabungan_preview_list as $prod ) :
+                $p_slug     = ! empty( $prod['slug'] ) ? sanitize_title( $prod['slug'] ) : sanitize_title( $prod['nama'] );
+                $p_color    = $prod['color'] ?? 'teal';
+                $c_style    = $color_styles[ $p_color ] ?? $color_styles['teal'];
+                $p_badge    = ! empty( $prod['badge'] ) ? $prod['badge'] : 'Tabungan Syariah';
+                $p_tagline  = ! empty( $prod['tagline'] ) ? $prod['tagline'] : '';
+                $target_url = home_url( '/produk/tabungan-syariah#' . $p_slug );
             ?>
-                <div class="card card-glow group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-100 dark:border-dark-border rounded-2xl overflow-hidden p-6" data-aos="fade-up" data-aos-delay="<?php echo esc_attr($delay); ?>">
-                    <div class="w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-400/10 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2"><?php echo esc_html($prod['title']); ?></h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 flex-grow mb-6"><?php echo esc_html($prod['desc']); ?></p>
-                    <div class="mt-auto pt-4 border-t border-slate-50 dark:border-dark-border/50">
-                        <span class="inline-flex items-center text-sm font-semibold text-primary-600 dark:text-primary-400 group-hover:text-primary-700 dark:group-hover:text-primary-300">
-                            Pelajari Selengkapnya
-                            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                <div class="card group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border rounded-2xl overflow-hidden p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_style['accent_bar'] ); ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 <?php echo esc_attr( $c_style['card_hover'] ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
+                    
+                    <!-- Watermark Logo Background (Subtle) -->
+                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/wm-wkl.png' ); ?>" 
+                         alt="" 
+                         class="absolute -right-6 -bottom-6 w-32 h-32 object-contain opacity-[0.04] dark:opacity-[0.03] pointer-events-none group-hover:scale-115 group-hover:opacity-[0.08] transition-all duration-700" 
+                         aria-hidden="true">
+
+                    <!-- Top Badge & Icon (Sharia Bank / Vault Icon - NO DOLLAR SIGN) -->
+                    <div class="flex items-center justify-between gap-2 mb-4 relative z-10">
+                        <span class="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border <?php echo esc_attr( $c_style['badge'] ); ?>">
+                            <?php echo esc_html( $p_badge ); ?>
                         </span>
+                        <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-dark-border flex items-center justify-center text-slate-500 dark:text-slate-400 <?php echo esc_attr( $c_style['icon_bg'] ); ?> group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
+                            <?php if ( $p_slug === 'pendidikan' ) : ?>
+                                <!-- Topi Edukasi / Pelajar -->
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
+                            <?php elseif ( $p_slug === 'haji-umroh' ) : ?>
+                                <!-- Menara / Bintang Ibadah -->
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+                            <?php elseif ( $p_slug === 'ukhuwah' ) : ?>
+                                <!-- Kado Berkah / Hadiah -->
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                            <?php else : ?>
+                                <!-- Gedung Bank Syariah / Brankas Amanah -->
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 10.5h18" /></svg>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Title & Tagline -->
+                    <div class="mb-3 relative z-10">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white <?php echo esc_attr( $c_style['title_hover'] ); ?> transition-colors duration-200">
+                            <a href="<?php echo esc_url( $target_url ); ?>">
+                                <?php echo esc_html( $prod['nama'] ); ?>
+                            </a>
+                        </h3>
+                        <?php if ( $p_tagline ) : ?>
+                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+                                <?php echo esc_html( $p_tagline ); ?>
+                            </p>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Brief Description -->
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-5 line-clamp-3 relative z-10 flex-grow">
+                        <?php echo esc_html( $prod['desc'] ?? '' ); ?>
+                    </p>
+
+                    <!-- Info Meta: Akad, Biaya Admin & Setoran -->
+                    <div class="pt-3 border-t border-slate-100 dark:border-dark-border/60 mb-4 grid grid-cols-2 gap-2 text-[11px] relative z-10">
+                        <div>
+                            <span class="text-slate-400 block text-[10px]">Akad Syariah</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300 truncate block"><?php echo esc_html( $prod['akad'] ); ?></span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-slate-400 block text-[10px]">Setoran Awal</span>
+                            <span class="font-bold text-primary-600 dark:text-primary-400 truncate block"><?php echo esc_html( $prod['min_setor'] ); ?></span>
+                        </div>
+                        <div class="col-span-2 pt-1.5 flex items-center justify-between text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold border-t border-slate-50 dark:border-dark-border/30">
+                            <span class="text-slate-400 font-normal">Biaya Admin Bulanan:</span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <?php echo esc_html( ! empty( $prod['biaya_admin'] ) ? $prod['biaya_admin'] : 'Gratis / Bebas Biaya' ); ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Link Pelajari Selengkapnya -->
+                    <div class="mt-auto relative z-10 pt-1">
+                        <a href="<?php echo esc_url( $target_url ); ?>" class="inline-flex items-center text-xs font-bold <?php echo esc_attr( $c_style['btn'] ); ?> transition-all group-hover:translate-x-1">
+                            Pelajari Selengkapnya
+                            <svg class="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                        </a>
                     </div>
                 </div>
             <?php 
                 $delay += 100;
-                endforeach;
-            endif; 
+            endforeach; 
             ?>
         </div>
 
-        <!-- View All Link -->
-        <div class="text-center mt-10" data-aos="fade-up">
-            <a href="<?php echo esc_url( home_url( '/produk' ) ); ?>" class="btn-outline text-sm">
-                Lihat Semua Produk
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-12" data-aos="fade-up">
+            <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="btn-primary text-sm px-6 py-3 shadow-md hover:shadow-lg inline-flex items-center gap-2">
+                <span>Lihat Seluruh Tabungan Syariah</span>
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+            </a>
+            <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="btn-outline text-sm px-6 py-3 inline-flex items-center gap-2">
+                <span>Jelajahi Deposito Mudharabah</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
             </a>
         </div>
@@ -718,7 +847,7 @@ if ( empty( $nisbah_data ) ) {
 
 if ( $nisbah_data ) :
 ?>
-<section id="section-nisbah" class="section relative bg-transparent py-24 z-10">
+<section id="section-nisbah" class="section relative bg-transparent py-24 z-10 overflow-hidden">
     <!-- Ornaments -->
     <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-50/50 dark:bg-primary-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
     <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-50/50 dark:bg-teal-900/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
@@ -801,7 +930,7 @@ if ( $nisbah_data ) :
                                             ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/30' 
                                             : 'bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30'; ?>">
                                 <?php if ( $is_tabungan ) : ?>
-                                    <svg class="w-3 h-3 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <svg class="w-3 h-3 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
                                 <?php else : ?>
                                     <svg class="w-3 h-3 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
                                 <?php endif; ?>
@@ -982,7 +1111,7 @@ if ( empty( $ig_posts ) ) {
 }
 $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
 ?>
-<section id="section-sosial-media" class="section bg-transparent relative z-10 py-20">
+<section id="section-sosial-media" class="section bg-transparent relative z-10 py-20 overflow-hidden">
     <div class="container-wide relative z-10">
         <!-- Section Header -->
         <div class="text-center mb-12" data-aos="fade-up">
@@ -995,14 +1124,14 @@ $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.co
         <div class="relative" data-aos="fade-up" data-aos-delay="100">
             <!-- Navigation Arrows -->
             <button id="ig-scroll-prev"
-                    class="absolute -left-2 md:-left-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-dark-surface shadow-xl border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none cursor-pointer"
+                    class="absolute left-1 sm:left-0 md:-left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-dark-surface shadow-xl border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none cursor-pointer"
                     aria-label="Scroll sebelumnya">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
             </button>
             <button id="ig-scroll-next"
-                    class="absolute -right-2 md:-right-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-dark-surface shadow-xl border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none cursor-pointer"
+                    class="absolute right-1 sm:right-0 md:-right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-dark-surface shadow-xl border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none cursor-pointer"
                     aria-label="Scroll berikutnya">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />

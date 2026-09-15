@@ -22,6 +22,13 @@ $prayer_data    = ( $show_prayer && function_exists( 'wakalumi_get_prayer_times'
 
 // Google Maps Embed
 $maps_embed     = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5!2d106.74!3d-6.34!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjAnMjQuMCJTIDEwNsKwNDQnMjQuMCJF!5e0!3m2!1sen!2sid!4v1' );
+if ( ! empty( $maps_embed ) ) {
+    $raw_maps_decoded = htmlspecialchars_decode( wp_unslash( $maps_embed ) );
+    if ( preg_match( '/src=["\']([^"\']+)["\']/', $raw_maps_decoded, $m_match ) ) {
+        $maps_embed = $m_match[1];
+    }
+}
+$maps_title     = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
 
 // Social links
 $social_ig      = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
@@ -240,7 +247,7 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
 
             <!-- Column: Lokasi Maps & Back to top -->
             <div class="flex flex-col h-full">
-                <h4 class="text-sm font-bold text-white mb-6 uppercase tracking-wider">Lokasi Kantor</h4>
+                <h4 class="text-sm font-bold text-white mb-6 uppercase tracking-wider"><?php echo esc_html( $maps_title ); ?></h4>
                 <div class="maps-wrapper rounded-2xl overflow-hidden mb-6 border border-slate-700/50 dark:border-dark-border w-full flex-grow shadow-lg" style="min-height: 200px;">
                     <?php if ( $maps_embed ) : ?>
                         <iframe src="<?php echo esc_url( $maps_embed ); ?>" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
