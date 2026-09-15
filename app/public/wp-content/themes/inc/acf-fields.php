@@ -282,28 +282,8 @@ function wakalumi_register_acf_fields() {
     // ──────────────────────────────────────
     acf_add_local_field_group( [
         'key'      => 'group_wakalumi_hero_slide',
-        'title'    => 'Pengaturan Slide Hero',
+        'title'    => 'Pengaturan Konten & Tombol Slide',
         'fields'   => [
-            [
-                'key'           => 'field_wakalumi_slide_image_desktop',
-                'label'         => 'Gambar Latar Desktop (Komputer / Laptop)',
-                'name'          => 'slide_image_desktop',
-                'type'          => 'image',
-                'return_format' => 'array',
-                'preview_size'  => 'medium',
-                'library'       => 'all',
-                'instructions'  => 'Rekomendasi Resolusi: 1920 × 800 piksel (atau 1920 × 1080 piksel, Landscape 16:9 / 16:7). Format: WebP atau JPG. Ukuran file disarankan: < 300 KB agar memuat kilat.',
-            ],
-            [
-                'key'           => 'field_wakalumi_slide_image_mobile',
-                'label'         => 'Gambar Latar Mobile (Ponsel / Smartphone)',
-                'name'          => 'slide_image_mobile',
-                'type'          => 'image',
-                'return_format' => 'array',
-                'preview_size'  => 'medium',
-                'library'       => 'all',
-                'instructions'  => 'Rekomendasi Resolusi: 750 × 1000 piksel (Potret 3:4) atau 800 × 800 piksel (Persegi 1:1). Format: WebP atau JPG. Ukuran file disarankan: < 150 KB. Fokus visual di tengah agar pas di layar smartphone. Jika dikosongkan, otomatis menggunakan gambar versi Desktop.',
-            ],
             [
                 'key'          => 'field_wakalumi_slide_subheadline',
                 'label'        => 'Sub-headline / Deskripsi Slide',

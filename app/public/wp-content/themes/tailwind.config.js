@@ -31,6 +31,7 @@ module.exports = {
         dark: {
           DEFAULT: '#121212',
           surface: '#1e1e1e',
+          card: '#1e1e1e',
           'surface-alt': '#2a2a2a',
           border: '#333333',
           'border-light': '#444444',

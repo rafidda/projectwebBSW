@@ -1,0 +1,11 @@
+[14-Sep-2026 13:15:36 UTC] PHP Parse error:  Unclosed '{' on line 1041 in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\inc\admin-options.php on line 1265
+[14-Sep-2026 16:02:10 UTC] PHP Warning:  require_once(C:\Users\arifr\Local Sites\wakalumibprscoid\app\public/wp-content/themes/assets/../inc/admin-pengurus.php): Failed to open stream: No such file or directory in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\functions.php on line 28
+[14-Sep-2026 16:02:10 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\Users\arifr\Local Sites\wakalumibprscoid\app\public/wp-content/themes/assets/../inc/admin-pengurus.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\functions.php:28
+Stack trace:
+#0 C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-settings.php(747): include()
+#1 C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-config.php(103): require_once('C:\\Users\\arifr\\...')
+#2 C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-load.php(50): require_once('C:\\Users\\arifr\\...')
+#3 C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-blog-header.php(13): require_once('C:\\Users\\arifr\\...')
+#4 C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\index.php(17): require('C:\\Users\\arifr\\...')
+#5 {main}
+  thrown in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\functions.php on line 28

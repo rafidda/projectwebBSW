@@ -45,6 +45,11 @@ jQuery(document).ready(function($) {
 
             targetInput.val(attachment.url).trigger('change');
 
+            var targetIdField = btn.data('target-id');
+            if ( targetIdField && $('#' + targetIdField).length ) {
+                $('#' + targetIdField).val(attachment.id).trigger('change');
+            }
+
             if ( previewImg.length ) {
                 previewImg.attr('src', url).show();
             }
@@ -67,7 +72,11 @@ jQuery(document).ready(function($) {
         var targetId    = btn.data('target');
         var previewId   = btn.data('preview');
 
-        $('#' + targetId).val('');
+        $('#' + targetId).val('').trigger('change');
+        var targetIdField = btn.data('target-id');
+        if ( targetIdField && $('#' + targetIdField).length ) {
+            $('#' + targetIdField).val('').trigger('change');
+        }
         $('#' + previewId).attr('src', '').hide();
         btn.hide();
         // Show placeholder text if exists

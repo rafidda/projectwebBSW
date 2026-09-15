@@ -171,19 +171,44 @@ add_action( 'add_meta_boxes', 'wakalumi_register_hero_slide_metabox' );
 function wakalumi_render_hero_slide_images_box( $post ) {
     wp_nonce_field( 'wakalumi_hero_slide_nonce', 'hero_slide_nonce' );
 
-    $img_desk = get_post_meta( $post->ID, '_slide_image_desktop', true );
-    if ( empty( $img_desk ) && function_exists( 'get_field' ) ) {
-        $acf_desk = get_field( 'slide_image_desktop', $post->ID );
-        $img_desk = is_array( $acf_desk ) ? ( $acf_desk['url'] ?? '' ) : $acf_desk;
+    // 1. Gambar Desktop
+    $id_desk  = (int) get_post_meta( $post->ID, 'slide_image_desktop_id', true );
+    $img_desk = '';
+    if ( $id_desk > 0 ) {
+        $img_desk = wp_get_attachment_image_url( $id_desk, 'full' ) ?: wp_get_attachment_url( $id_desk );
+    }
+    if ( empty( $img_desk ) ) {
+        $pm_desk = get_post_meta( $post->ID, 'slide_image_desktop', true );
+        if ( ! empty( $pm_desk ) && strpos( $pm_desk, 'field_' ) !== 0 ) {
+            if ( is_numeric( $pm_desk ) && $pm_desk > 0 ) {
+                $id_desk  = (int) $pm_desk;
+                $img_desk = wp_get_attachment_image_url( $id_desk, 'full' ) ?: wp_get_attachment_url( $id_desk );
+            } elseif ( is_string( $pm_desk ) && ( strpos( $pm_desk, 'http' ) === 0 || strpos( $pm_desk, '/' ) === 0 ) ) {
+                $img_desk = $pm_desk;
+            }
+        }
     }
     if ( empty( $img_desk ) && has_post_thumbnail( $post->ID ) ) {
-        $img_desk = get_the_post_thumbnail_url( $post->ID, 'hero-large' );
+        $id_desk  = get_post_thumbnail_id( $post->ID );
+        $img_desk = get_the_post_thumbnail_url( $post->ID, 'full' );
     }
 
-    $img_mob = get_post_meta( $post->ID, '_slide_image_mobile', true );
-    if ( empty( $img_mob ) && function_exists( 'get_field' ) ) {
-        $acf_mob = get_field( 'slide_image_mobile', $post->ID );
-        $img_mob = is_array( $acf_mob ) ? ( $acf_mob['url'] ?? '' ) : $acf_mob;
+    // 2. Gambar Mobile
+    $id_mob  = (int) get_post_meta( $post->ID, 'slide_image_mobile_id', true );
+    $img_mob = '';
+    if ( $id_mob > 0 ) {
+        $img_mob = wp_get_attachment_image_url( $id_mob, 'full' ) ?: wp_get_attachment_url( $id_mob );
+    }
+    if ( empty( $img_mob ) ) {
+        $pm_mob = get_post_meta( $post->ID, 'slide_image_mobile', true );
+        if ( ! empty( $pm_mob ) && strpos( $pm_mob, 'field_' ) !== 0 ) {
+            if ( is_numeric( $pm_mob ) && $pm_mob > 0 ) {
+                $id_mob  = (int) $pm_mob;
+                $img_mob = wp_get_attachment_image_url( $id_mob, 'full' ) ?: wp_get_attachment_url( $id_mob );
+            } elseif ( is_string( $pm_mob ) && ( strpos( $pm_mob, 'http' ) === 0 || strpos( $pm_mob, '/' ) === 0 ) ) {
+                $img_mob = $pm_mob;
+            }
+        }
     }
     ?>
     <div style="padding: 10px 0;">
@@ -200,13 +225,14 @@ function wakalumi_render_hero_slide_images_box( $post ) {
             <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                 <img id="prev_slide_desk" src="<?php echo esc_url( $img_desk ); ?>" style="max-width: 200px; max-height: 100px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; <?php echo empty( $img_desk ) ? 'display:none;' : ''; ?>">
                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="inp_slide_desk" data-preview="prev_slide_desk">
+                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="inp_slide_desk" data-target-id="inp_slide_desk_id" data-preview="prev_slide_desk">
                         <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px; margin-top:2px;"></span> Unggah Gambar Desktop
                     </button>
-                    <button type="button" class="button-link wkl-remove-btn" data-target="inp_slide_desk" data-preview="prev_slide_desk" style="color: #ef4444; font-size: 12px; text-align: left; <?php echo empty( $img_desk ) ? 'display:none;' : ''; ?>">
+                    <button type="button" class="button-link wkl-remove-btn" data-target="inp_slide_desk" data-target-id="inp_slide_desk_id" data-preview="prev_slide_desk" style="color: #ef4444; font-size: 12px; text-align: left; <?php echo empty( $img_desk ) ? 'display:none;' : ''; ?>">
                         ✕ Hapus Gambar
                     </button>
                 </div>
+                <input type="hidden" id="inp_slide_desk_id" name="slide_image_desktop_id" value="<?php echo esc_attr( $id_desk ?: '' ); ?>">
                 <input type="text" id="inp_slide_desk" name="slide_image_desktop" value="<?php echo esc_attr( $img_desk ); ?>" class="large-text" placeholder="...atau tempel URL gambar langsung" style="flex: 1; min-width: 260px;">
             </div>
         </div>
@@ -225,13 +251,14 @@ function wakalumi_render_hero_slide_images_box( $post ) {
             <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                 <img id="prev_slide_mob" src="<?php echo esc_url( $img_mob ); ?>" style="max-width: 120px; max-height: 120px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; <?php echo empty( $img_mob ) ? 'display:none;' : ''; ?>">
                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="inp_slide_mob" data-preview="prev_slide_mob">
+                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="inp_slide_mob" data-target-id="inp_slide_mob_id" data-preview="prev_slide_mob">
                         <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px; margin-top:2px;"></span> Unggah Gambar Mobile
                     </button>
-                    <button type="button" class="button-link wkl-remove-btn" data-target="inp_slide_mob" data-preview="prev_slide_mob" style="color: #ef4444; font-size: 12px; text-align: left; <?php echo empty( $img_mob ) ? 'display:none;' : ''; ?>">
+                    <button type="button" class="button-link wkl-remove-btn" data-target="inp_slide_mob" data-target-id="inp_slide_mob_id" data-preview="prev_slide_mob" style="color: #ef4444; font-size: 12px; text-align: left; <?php echo empty( $img_mob ) ? 'display:none;' : ''; ?>">
                         ✕ Hapus Gambar
                     </button>
                 </div>
+                <input type="hidden" id="inp_slide_mob_id" name="slide_image_mobile_id" value="<?php echo esc_attr( $id_mob ?: '' ); ?>">
                 <input type="text" id="inp_slide_mob" name="slide_image_mobile" value="<?php echo esc_attr( $img_mob ); ?>" class="large-text" placeholder="...atau tempel URL gambar langsung" style="flex: 1; min-width: 260px;">
             </div>
         </div>
@@ -246,11 +273,38 @@ function wakalumi_save_hero_slide_metabox( $post_id ) {
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
     if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
+    // Simpan Gambar Desktop
     if ( isset( $_POST['slide_image_desktop'] ) ) {
-        update_post_meta( $post_id, '_slide_image_desktop', esc_url_raw( $_POST['slide_image_desktop'] ) );
+        $url_desk = esc_url_raw( trim( $_POST['slide_image_desktop'] ) );
+        update_post_meta( $post_id, 'slide_image_desktop', $url_desk );
+        
+        $id_desk = ! empty( $_POST['slide_image_desktop_id'] ) ? (int) $_POST['slide_image_desktop_id'] : 0;
+        if ( ! $id_desk && ! empty( $url_desk ) ) {
+            $id_desk = attachment_url_to_postid( $url_desk );
+        }
+        if ( $id_desk > 0 ) {
+            update_post_meta( $post_id, 'slide_image_desktop_id', $id_desk );
+            set_post_thumbnail( $post_id, $id_desk );
+        } elseif ( empty( $url_desk ) ) {
+            delete_post_meta( $post_id, 'slide_image_desktop_id' );
+            delete_post_thumbnail( $post_id );
+        }
     }
+
+    // Simpan Gambar Mobile
     if ( isset( $_POST['slide_image_mobile'] ) ) {
-        update_post_meta( $post_id, '_slide_image_mobile', esc_url_raw( $_POST['slide_image_mobile'] ) );
+        $url_mob = esc_url_raw( trim( $_POST['slide_image_mobile'] ) );
+        update_post_meta( $post_id, 'slide_image_mobile', $url_mob );
+
+        $id_mob = ! empty( $_POST['slide_image_mobile_id'] ) ? (int) $_POST['slide_image_mobile_id'] : 0;
+        if ( ! $id_mob && ! empty( $url_mob ) ) {
+            $id_mob = attachment_url_to_postid( $url_mob );
+        }
+        if ( $id_mob > 0 ) {
+            update_post_meta( $post_id, 'slide_image_mobile_id', $id_mob );
+        } elseif ( empty( $url_mob ) ) {
+            delete_post_meta( $post_id, 'slide_image_mobile_id' );
+        }
     }
 }
 add_action( 'save_post_hero_slide', 'wakalumi_save_hero_slide_metabox' );

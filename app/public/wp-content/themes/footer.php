@@ -15,6 +15,11 @@ $address        = get_option( 'options_contact_address', "Ruko Ciputat Center Bl
 $jam_weekday    = get_option( 'options_jam_operasional_weekday', '08:00 - 15:00 WIB' );
 $jam_weekend    = get_option( 'options_jam_operasional_weekend', 'Tutup' );
 
+// Prayer Times Data (100% Gratis via inc/prayer-times.php)
+$show_prayer    = get_option( 'options_footer_show_prayer_times', '1' );
+$prayer_city    = get_option( 'options_footer_prayer_city', 'Tangerang Selatan' );
+$prayer_data    = ( $show_prayer && function_exists( 'wakalumi_get_prayer_times' ) ) ? wakalumi_get_prayer_times( $prayer_city ) : null;
+
 // Google Maps Embed
 $maps_embed     = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5!2d106.74!3d-6.34!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjAnMjQuMCJTIDEwNsKwNDQnMjQuMCJF!5e0!3m2!1sen!2sid!4v1' );
 
@@ -30,9 +35,14 @@ $disclaimer_text= get_option( 'options_footer_disclaimer', 'BPRS Wakalumi Berizi
 
 $wa_number      = get_option( 'options_contact_wa', '6281517380388' );
 $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
+
+$footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) ) 
+    ? 'py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-10' 
+    : 'py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12';
 ?>
 
-    </main>
+        </main>
+    </div><!-- /.grid -->
 </div><!-- /#swup -->
 
 <!-- ========================================
@@ -46,7 +56,11 @@ $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 
     <div class="container-wide relative z-10">
         <!-- Main Footer Content -->
-        <div class="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+        <?php
+        $hide_main_footer = apply_filters( 'wakalumi_hide_main_footer', false );
+        if ( ! $hide_main_footer ) :
+        ?>
+        <div class="<?php echo esc_attr( $footer_grid_class ); ?>">
 
             <!-- Column 1: About & Social -->
             <div class="lg:col-span-1">
@@ -148,7 +162,83 @@ $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 </ul>
             </div>
 
-            <!-- Column 3: Lokasi Maps & Back to top -->
+            <!-- Column 3: Jadwal Waktu Sholat -->
+            <?php if ( $show_prayer && ! empty( $prayer_data ) ) : 
+                $now_time = wp_date( 'H:i' );
+                $times_list = [
+                    'Subuh'   => $prayer_data['subuh'],
+                    'Dzuhur'  => $prayer_data['dzuhur'],
+                    'Ashar'   => $prayer_data['ashar'],
+                    'Maghrib' => $prayer_data['maghrib'],
+                    'Isya'    => $prayer_data['isya'],
+                ];
+
+                $next_prayer = '';
+                foreach ( $times_list as $p_name => $p_time ) {
+                    if ( $now_time < $p_time ) {
+                        $next_prayer = $p_name;
+                        break;
+                    }
+                }
+                if ( empty( $next_prayer ) ) {
+                    $next_prayer = 'Subuh';
+                }
+            ?>
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-between gap-2 mb-6">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <svg class="w-4 h-4 text-teal-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+                        </svg>
+                        Jadwal Sholat
+                    </h4>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30">
+                        WIB
+                    </span>
+                </div>
+
+                <div class="mb-4 pb-3 border-b border-slate-800 space-y-1">
+                    <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5 truncate">
+                        <svg class="w-3.5 h-3.5 text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                        <span><?php echo esc_html( $prayer_data['city'] ); ?></span>
+                    </span>
+                    <?php if ( ! empty( $prayer_data['hijri'] ) ) : ?>
+                        <span class="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-teal-400/80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.253 18.75h18a2.25 2.25 0 002.25-2.25V7.5a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 7.5v11.25c0 1.243 1.007 2.25 2.25 2.25z" />
+                            </svg>
+                            <span><?php echo esc_html( $prayer_data['hijri'] ); ?></span>
+                        </span>
+                    <?php endif; ?>
+                </div>
+
+                <div class="space-y-2 flex-grow">
+                    <?php foreach ( $times_list as $p_label => $p_val ) : 
+                        $is_next = ( $p_label === $next_prayer );
+                    ?>
+                        <div class="flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-300 <?php echo $is_next ? 'bg-gradient-to-r from-teal-950/70 via-slate-900 to-slate-900 border border-teal-500/40 shadow-md shadow-teal-950/40' : 'bg-slate-800/50 dark:bg-dark-surface-alt/50 border border-slate-800/80'; ?>">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full <?php echo $is_next ? 'bg-teal-400 animate-pulse shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'bg-slate-600'; ?>"></span>
+                                <span class="text-xs font-semibold <?php echo $is_next ? 'text-teal-300 font-bold' : 'text-slate-300'; ?>">
+                                    <?php echo esc_html( $p_label ); ?>
+                                </span>
+                                <?php if ( $is_next ) : ?>
+                                    <span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-400/30">Berikutnya</span>
+                                <?php endif; ?>
+                            </div>
+                            <span class="text-xs font-mono font-bold <?php echo $is_next ? 'text-teal-200' : 'text-slate-400'; ?>">
+                                <?php echo esc_html( $p_val ); ?>
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Column: Lokasi Maps & Back to top -->
             <div class="flex flex-col h-full">
                 <h4 class="text-sm font-bold text-white mb-6 uppercase tracking-wider">Lokasi Kantor</h4>
                 <div class="maps-wrapper rounded-2xl overflow-hidden mb-6 border border-slate-700/50 dark:border-dark-border w-full flex-grow shadow-lg" style="min-height: 200px;">
@@ -166,6 +256,7 @@ $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 </button>
             </div>
         </div>
+        <?php endif; // wakalumi_hide_main_footer ?>
 
         <!-- Bottom Bar -->
         <?php

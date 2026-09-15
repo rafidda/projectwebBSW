@@ -23,6 +23,10 @@ require_once WAKALUMI_DIR . '/inc/theme-setup.php';
 require_once WAKALUMI_DIR . '/inc/cpt.php';
 require_once WAKALUMI_DIR . '/inc/acf-fields.php';
 require_once WAKALUMI_DIR . '/inc/admin-options.php';
+require_once WAKALUMI_DIR . '/inc/admin-about.php';
+require_once WAKALUMI_DIR . '/inc/admin-legalitas.php';
+require_once WAKALUMI_DIR . '/inc/admin-pengurus.php';
+require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 
 // ────────────────────────────────────────────────
 // ENQUEUE SCRIPTS & STYLES

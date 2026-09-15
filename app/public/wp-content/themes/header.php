@@ -34,10 +34,13 @@
     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png" alt="" class="w-[80vw] max-w-[600px] opacity-[0.03] dark:opacity-[0.02] grayscale mix-blend-multiply dark:mix-blend-screen transform scale-110">
 </div>
 
+<!-- Top Loading Line Indicator -->
+<div id="swup-progress-bar" class="fixed top-0 left-0 right-0 h-[3px] z-[10001] pointer-events-none opacity-0 transition-all duration-300 bg-gradient-to-r from-teal-400 via-primary-500 to-teal-300 shadow-[0_0_12px_rgba(45,212,191,0.9)] w-0"></div>
+
 <!-- ========================================
-     PRELOADER (LIQUID FILL)
+     PRELOADER & PAGE TRANSITION (LIQUID FILL)
      ======================================== -->
-<div id="wakalumi-preloader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-white dark:bg-dark flex-col transition-opacity duration-700">
+<div id="wakalumi-preloader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-white/95 dark:bg-dark/95 backdrop-blur-xl flex-col transition-opacity duration-500">
     <div class="relative w-32 h-32 overflow-hidden mb-4 rounded-3xl shadow-2xl shadow-primary-500/20 bg-slate-50 dark:bg-dark-surface border border-slate-100 dark:border-dark-border">
         <!-- Mask for Liquid Fill -->
         <div class="absolute inset-0 mask-logo" style="-webkit-mask-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/logo-new-1.png'); -webkit-mask-size: 80%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; mask-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/logo-new-1.png'); mask-size: 80%; mask-repeat: no-repeat; mask-position: center; background-color: #e2e8f0;">
@@ -87,27 +90,39 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 </div>
             </a>
 
+            <?php
+            $req_uri = untrailingslashit( wp_parse_url( $_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH ) );
+            if ( empty( $req_uri ) ) {
+                $req_uri = '/';
+            }
+            $is_page_home      = ( is_front_page() || is_home() || $req_uri === '/' );
+            $is_page_profil    = ( ! $is_page_home && ( strpos( $req_uri, '/profil' ) === 0 || is_page( [ 'tentang-kami', 'legalitas', 'susunan-pengurus', 'jaringan-kantor' ] ) ) );
+            $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
+            $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
+            $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
+            ?>
+
             <!-- Desktop Menu -->
             <div class="hidden lg:flex items-center gap-1 xl:gap-2">
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="nav-link active px-4 py-2 rounded-full">Beranda</a>
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="nav-link <?php echo $is_page_home ? 'active' : ''; ?> px-4 py-2 rounded-full">Beranda</a>
                 
                 <div class="dropdown relative">
-                    <button class="dropdown-trigger nav-link px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                    <button class="dropdown-trigger nav-link <?php echo $is_page_profil ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Profil
                         <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
                     <div class="dropdown-menu">
-                        <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="dropdown-item">Tentang Kami</a>
-                        <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="dropdown-item">Legalitas Perusahaan</a>
-                        <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="dropdown-item">Susunan Pengurus</a>
-                        <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="dropdown-item">Jaringan Kantor</a>
+                        <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/tentang-kami' || is_page( 'tentang-kami' ) ) ? 'active' : ''; ?>">Tentang Kami</a>
+                        <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/legalitas' || is_page( 'legalitas' ) ) ? 'active' : ''; ?>">Legalitas Perusahaan</a>
+                        <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/susunan-pengurus' || is_page( 'susunan-pengurus' ) ) ? 'active' : ''; ?>">Susunan Pengurus</a>
+                        <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/profil/jaringan-kantor' || is_page( 'jaringan-kantor' ) ) ? 'active' : ''; ?>">Jaringan Kantor</a>
                     </div>
                 </div>
 
                 <div class="dropdown relative">
-                    <button class="dropdown-trigger nav-link px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                    <button class="dropdown-trigger nav-link <?php echo $is_page_produk ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Produk
                         <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -115,12 +130,12 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     </button>
                     <div class="dropdown-menu min-w-[260px]">
                         <div class="px-5 py-2 text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Produk Dana</div>
-                        <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="dropdown-item pl-8">Tabungan Syariah</a>
-                        <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="dropdown-item pl-8">Deposito Syariah</a>
+                        <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'active' : ''; ?> pl-8">Tabungan Syariah</a>
+                        <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'active' : ''; ?> pl-8">Deposito Syariah</a>
                         
                         <div class="h-px bg-slate-100 dark:bg-dark-border my-2 mx-5"></div>
                         
-                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="dropdown-item">Pembiayaan (Lending)</a>
+                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/produk/pembiayaan' ) ? 'active' : ''; ?>">Pembiayaan (Lending)</a>
                         <a href="#" class="dropdown-item opacity-60 cursor-not-allowed" onclick="event.preventDefault();">Pengajuan Online <span class="ml-2 text-[9px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">Segera</span></a>
                         
                         <div class="h-px bg-slate-100 dark:bg-dark-border my-2 mx-5"></div>
@@ -133,20 +148,20 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 </div>
 
                 <div class="dropdown relative">
-                    <button class="dropdown-trigger nav-link px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                    <button class="dropdown-trigger nav-link <?php echo $is_page_informasi ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Informasi
                         <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
                     <div class="dropdown-menu">
-                        <a href="<?php echo esc_url( home_url( '/informasi/laporan' ) ); ?>" class="dropdown-item">Laporan & Publikasi</a>
-                        <a href="<?php echo esc_url( home_url( '/informasi/nisbah' ) ); ?>" class="dropdown-item">Informasi Nisbah</a>
-                        <a href="<?php echo esc_url( home_url( '/berita' ) ); ?>" class="dropdown-item">Berita & Edukasi</a>
+                        <a href="<?php echo esc_url( home_url( '/informasi/laporan' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/informasi/laporan' ) ? 'active' : ''; ?>">Laporan & Publikasi</a>
+                        <a href="<?php echo esc_url( home_url( '/informasi/nisbah' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/informasi/nisbah' ) ? 'active' : ''; ?>">Informasi Nisbah</a>
+                        <a href="<?php echo esc_url( home_url( '/berita' ) ); ?>" class="dropdown-item <?php echo ( $req_uri === '/berita' || strpos( $req_uri, '/berita' ) === 0 ) ? 'active' : ''; ?>">Berita & Edukasi</a>
                     </div>
                 </div>
 
-                <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="nav-link px-4 py-2 rounded-full">Kontak</a>
+                <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="nav-link <?php echo $is_page_kontak ? 'active' : ''; ?> px-4 py-2 rounded-full">Kontak</a>
             </div>
 
             <!-- Right Actions -->
@@ -215,64 +230,59 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
         </div>
 
         <!-- Nav Links -->
-        <div class="flex-1 overflow-y-auto py-4 px-4 space-y-1">
+        <div class="flex-1 overflow-y-auto py-4 px-4 space-y-1" id="mobile-menu-items">
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>"
-               class="block px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">
+               class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_home ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                 Beranda
             </a>
 
             <!-- Profil -->
-            <div>
-                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">
+            <div class="mobile-nav-group">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_profil ? 'bg-primary-50/70 text-primary-700 font-semibold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                     Profil
-                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_profil ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <div class="hidden pl-4 mt-1 space-y-1">
-                    <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Tentang Kami</a>
-                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Legalitas</a>
-                    <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Susunan Pengurus</a>
-                    <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Jaringan Kantor</a>
+                <div class="<?php echo $is_page_profil ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
+                    <a href="<?php echo esc_url( home_url( '/profil/tentang-kami' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/tentang-kami' || is_page( 'tentang-kami' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Tentang Kami</a>
+                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/legalitas' || is_page( 'legalitas' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Legalitas</a>
+                    <a href="<?php echo esc_url( home_url( '/profil/susunan-pengurus' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/susunan-pengurus' || is_page( 'susunan-pengurus' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Susunan Pengurus</a>
+                    <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/profil/jaringan-kantor' || is_page( 'jaringan-kantor' ) ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Jaringan Kantor</a>
                 </div>
             </div>
 
             <!-- Produk -->
-            <div>
-                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">
+            <div class="mobile-nav-group">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_produk ? 'bg-primary-50/70 text-primary-700 font-semibold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                     Produk
-                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_produk ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <div class="hidden pl-4 mt-1 space-y-1">
-                    <a href="<?php echo esc_url( home_url( '/produk/?kategori=penghimpunan-dana' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Penghimpunan Dana</a>
-                    <a href="<?php echo esc_url( home_url( '/produk/?kategori=penyaluran-dana' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Penyaluran Dana</a>
-                    <a href="<?php echo esc_url( home_url( '/produk' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Semua Produk</a>
+                <div class="<?php echo $is_page_produk ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
+                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Tabungan Syariah</a>
+                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Deposito Syariah</a>
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/pembiayaan' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Pembiayaan</a>
                 </div>
             </div>
 
             <!-- Informasi -->
-            <div>
-                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">
+            <div class="mobile-nav-group">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_informasi ? 'bg-primary-50/70 text-primary-700 font-semibold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                     Informasi
-                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_informasi ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <div class="hidden pl-4 mt-1 space-y-1">
-                    <a href="<?php echo esc_url( home_url( '/informasi/kegiatan' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Kegiatan</a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/nisbah' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Informasi Nisbah</a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/laporan-keuangan' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Laporan Keuangan</a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/literasi' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Literasi & Inklusi</a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/galeri' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Galeri</a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/karir' ) ); ?>" class="block px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors">Karir</a>
+                <div class="<?php echo $is_page_informasi ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
+                    <a href="<?php echo esc_url( home_url( '/informasi/laporan' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/informasi/laporan' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Laporan & Publikasi</a>
+                    <a href="<?php echo esc_url( home_url( '/informasi/nisbah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/informasi/nisbah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Informasi Nisbah</a>
+                    <a href="<?php echo esc_url( home_url( '/berita' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/berita' || strpos( $req_uri, '/berita' ) === 0 ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400'; ?>">Berita & Edukasi</a>
                 </div>
             </div>
 
-            <a href="<?php echo esc_url( home_url( '/berita' ) ); ?>" class="block px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">Berita</a>
-            <a href="<?php echo esc_url( home_url( '/tim-kami' ) ); ?>" class="block px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">Tim Kami</a>
-            <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="block px-4 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400 transition-colors">Kontak</a>
+            <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_kontak ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">Kontak</a>
         </div>
 
         <!-- Footer CTA -->
@@ -296,5 +306,25 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
     <!-- Spacer for fixed navbar -->
     <div class="h-16 md:h-20"></div>
 
-    <main>
+    <!-- Container Grid: Memadukan 1 Sticky Background Emblem Watermark dengan alur scroll <main> -->
+    <div class="grid grid-cols-1 grid-rows-1 relative">
+        <!-- ========================================
+             GLOBAL STICKY BACKGROUND EMBLEM WATERMARK (Single Unified Layer z-[1])
+             Menempel stasioner di tengah layar selama membaca konten halaman,
+             tertutup secara alami oleh section solid (z-10 bg-white/slate-900),
+             terlihat pada section transparan (z-10 bg-transparent),
+             dan ikut tergulung naik menghilang saat scroll memasuki area footer.
+             ======================================== -->
+        <div id="sticky-watermark-track" 
+             class="col-start-1 row-start-1 pointer-events-none z-[1] flex justify-center overflow-visible"
+             aria-hidden="true">
+            <div id="sticky-watermark-emblem" 
+                 class="sticky top-1/2 -translate-y-1/2 w-24 h-24 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-slate-100/90 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/90 dark:border-slate-700/60 shadow-[0_15px_35px_-8px_rgba(0,0,0,0.14),0_6px_16px_-4px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(0,0,0,0.06)] dark:shadow-[0_15px_35px_-8px_rgba(0,0,0,0.7),0_6px_16px_-4px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.08),inset_0_-2px_4px_rgba(0,0,0,0.4)] flex items-center justify-center p-3 md:p-3.5 select-none h-fit">
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-slate-500 dark:bg-slate-300 opacity-35 dark:opacity-30"
+                     style="-webkit-mask-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png'); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; mask-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png'); mask-size: contain; mask-repeat: no-repeat; mask-position: center;">
+                </div>
+            </div>
+        </div>
+
+        <main class="col-start-1 row-start-1 relative z-10">
 

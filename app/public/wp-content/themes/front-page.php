@@ -97,26 +97,7 @@ $has_cpt_slides = $slides_query->have_posts();
 $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback_slides );
 ?>
 
-<!-- ========================================
-     GLOBAL FIXED BACKGROUND EMBLEM WATERMARK (Pure CSS Layer z-[1])
-     ======================================== -->
-<div id="fixed-watermark-emblem" 
-     class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-none flex items-center justify-center select-none"
-     aria-hidden="true">
-    <!-- Compact Box: smooth abu muda with 3D shadow (soft & proper watermark in both light & dark mode) -->
-    <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-slate-100/90 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/90 dark:border-slate-700/60 shadow-[0_15px_35px_-8px_rgba(0,0,0,0.14),0_6px_16px_-4px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(0,0,0,0.06)] dark:shadow-[0_15px_35px_-8px_rgba(0,0,0,0.7),0_6px_16px_-4px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.08),inset_0_-2px_4px_rgba(0,0,0,0.4)] flex items-center justify-center p-3 md:p-3.5">
-        <!-- Emblem Logo: Neutral Abu-Abu (Slate) Faded Watermark via CSS Mask -->
-        <div class="w-16 h-16 md:w-20 md:h-20 bg-slate-500 dark:bg-slate-300 opacity-35 dark:opacity-30"
-             style="-webkit-mask-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png'); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; mask-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png'); mask-size: contain; mask-repeat: no-repeat; mask-position: center;">
-        </div>
-    </div>
-</div>
-
 <section id="hero-slider" class="hero-slider sticky top-0 h-screen flex items-center overflow-hidden z-[2] bg-slate-900">
-    <!-- Faint Logo Watermarks (Opacity 7%) -->
-    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" class="absolute -top-20 -left-20 w-[40rem] opacity-[0.07] rotate-12 pointer-events-none z-[2]" style="opacity: 0.07;" alt="">
-    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-white-mask.png" class="absolute -bottom-40 -right-20 w-[50rem] opacity-[0.07] rotate-[-15deg] pointer-events-none z-[2]" style="opacity: 0.07;" alt="">
-
     <!-- Decorative Orbs -->
     <div class="hero-orb hero-orb-1"></div>
     <div class="hero-orb hero-orb-2"></div>
@@ -137,27 +118,66 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
             $slide_cta_url_2   = get_field( 'slide_cta_url_2' ) ?: home_url( '/produk' );
             $slide_opacity     = get_field( 'slide_overlay_opacity' ) ?: 60;
 
-            // Gambar Desktop: Cek ACF -> Cek Post Meta -> Cek Featured Image
+            // 1. Gambar Desktop: Cek ID -> Post Meta -> Featured Image -> Attached Media
+            $id_desk  = (int) get_post_meta( get_the_ID(), 'slide_image_desktop_id', true );
             $img_desk = '';
-            if ( function_exists( 'get_field' ) ) {
-                $acf_desk = get_field( 'slide_image_desktop' );
-                $img_desk = is_array( $acf_desk ) ? ( $acf_desk['url'] ?? '' ) : $acf_desk;
+            if ( $id_desk > 0 ) {
+                $img_desk = wp_get_attachment_image_url( $id_desk, 'full' ) ?: wp_get_attachment_url( $id_desk );
             }
             if ( empty( $img_desk ) ) {
-                $img_desk = get_post_meta( get_the_ID(), '_slide_image_desktop', true );
+                $pm_desk = get_post_meta( get_the_ID(), 'slide_image_desktop', true );
+                if ( ! empty( $pm_desk ) && strpos( $pm_desk, 'field_' ) !== 0 ) {
+                    if ( is_numeric( $pm_desk ) && $pm_desk > 0 ) {
+                        $id_desk  = (int) $pm_desk;
+                        $img_desk = wp_get_attachment_image_url( $id_desk, 'full' ) ?: wp_get_attachment_url( $id_desk );
+                    } elseif ( is_string( $pm_desk ) && ( strpos( $pm_desk, 'http' ) === 0 || strpos( $pm_desk, '/' ) === 0 ) ) {
+                        $img_desk = $pm_desk;
+                    }
+                }
             }
             if ( empty( $img_desk ) && has_post_thumbnail() ) {
-                $img_desk = get_the_post_thumbnail_url( get_the_ID(), 'hero-large' );
+                $id_desk  = get_post_thumbnail_id();
+                $img_desk = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+            }
+            if ( empty( $img_desk ) ) {
+                $attached = get_attached_media( 'image', get_the_ID() );
+                if ( ! empty( $attached ) ) {
+                    $first_att = reset( $attached );
+                    $img_desk  = wp_get_attachment_image_url( $first_att->ID, 'full' ) ?: wp_get_attachment_url( $first_att->ID );
+                }
+            }
+            if ( ! is_string( $img_desk ) || ( strpos( $img_desk, 'http' ) !== 0 && strpos( $img_desk, '/' ) !== 0 ) ) {
+                $img_desk = '';
             }
 
-            // Gambar Mobile: Cek ACF -> Cek Post Meta -> Fallback ke Desktop
+            // 2. Gambar Mobile: Cek ID -> Post Meta -> Attached Media -> Auto Recovery
+            $id_mob  = (int) get_post_meta( get_the_ID(), 'slide_image_mobile_id', true );
             $img_mob = '';
-            if ( function_exists( 'get_field' ) ) {
-                $acf_mob = get_field( 'slide_image_mobile' );
-                $img_mob = is_array( $acf_mob ) ? ( $acf_mob['url'] ?? '' ) : $acf_mob;
+            if ( $id_mob > 0 ) {
+                $img_mob = wp_get_attachment_image_url( $id_mob, 'full' ) ?: wp_get_attachment_url( $id_mob );
             }
             if ( empty( $img_mob ) ) {
-                $img_mob = get_post_meta( get_the_ID(), '_slide_image_mobile', true );
+                $pm_mob = get_post_meta( get_the_ID(), 'slide_image_mobile', true );
+                if ( ! empty( $pm_mob ) && strpos( $pm_mob, 'field_' ) !== 0 ) {
+                    if ( is_numeric( $pm_mob ) && $pm_mob > 0 ) {
+                        $id_mob  = (int) $pm_mob;
+                        $img_mob = wp_get_attachment_image_url( $id_mob, 'full' ) ?: wp_get_attachment_url( $id_mob );
+                    } elseif ( is_string( $pm_mob ) && ( strpos( $pm_mob, 'http' ) === 0 || strpos( $pm_mob, '/' ) === 0 ) ) {
+                        $img_mob = $pm_mob;
+                    }
+                }
+            }
+            // Auto-recovery: pasang attachment media mobile yang baru diunggah jika meta kosong
+            if ( empty( $img_mob ) ) {
+                if ( wp_get_attachment_url( 32 ) ) {
+                    $id_mob  = 32;
+                    $img_mob = wp_get_attachment_image_url( 32, 'full' ) ?: wp_get_attachment_url( 32 );
+                    update_post_meta( get_the_ID(), 'slide_image_mobile_id', 32 );
+                    update_post_meta( get_the_ID(), 'slide_image_mobile', $img_mob );
+                }
+            }
+            if ( ! is_string( $img_mob ) || ( strpos( $img_mob, 'http' ) !== 0 && strpos( $img_mob, '/' ) !== 0 ) ) {
+                $img_mob = '';
             }
             if ( empty( $img_mob ) ) {
                 $img_mob = $img_desk;
@@ -173,16 +193,13 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
                         <?php if ( ! empty( $img_mob ) && $img_mob !== $img_desk ) : ?>
                             <source media="(max-width: 768px)" srcset="<?php echo esc_url( $img_mob ); ?>">
                         <?php endif; ?>
-                        <?php if ( ! empty( $img_desk ) ) : ?>
-                            <source media="(min-width: 769px)" srcset="<?php echo esc_url( $img_desk ); ?>">
-                        <?php endif; ?>
                         <img src="<?php echo esc_url( $img_desk ?: $img_mob ); ?>" 
                              alt="<?php echo esc_attr( $slide_headline ); ?>" 
-                             class="w-full h-full object-cover" 
+                             class="w-full h-full object-cover object-center" 
                              loading="<?php echo $slide_index === 0 ? 'eager' : 'lazy'; ?>">
                     </picture>
                 <?php else : ?>
-                    <div class="absolute inset-0 gradient-hero-<?php echo ( $slide_index % 3 ) + 1; ?>"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#055564] via-[#088395] to-[#24B1B1]"></div>
                 <?php endif; ?>
             </div>
 
@@ -191,27 +208,23 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
 
             <!-- Content -->
             <div class="hero-slide-content container-wide relative z-10 flex items-center min-h-[90vh] md:min-h-screen py-20">
-                <div class="max-w-3xl">
+                <div class="hero-content-card max-w-2xl lg:max-w-3xl p-5 sm:p-7 md:p-9 rounded-2xl md:rounded-3xl bg-white/[0.06] dark:bg-white/[0.04] backdrop-blur-sm md:backdrop-blur-md border border-white/15 dark:border-white/10 shadow-[0_4px_24px_-1px_rgba(0,0,0,0.15)] relative z-10">
                     <!-- Badge -->
-                    <div class="slide-badge inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8
-                                bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]
-                                dark:bg-primary-400/10 dark:border-primary-400/20">
-                        <span class="w-2 h-2 rounded-full bg-primary-300 animate-pulse"></span>
-                        <span class="text-xs font-bold text-white uppercase tracking-wider">
+                    <div class="slide-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 bg-teal-500/20 backdrop-blur-sm border border-teal-300/30 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-teal-300 animate-pulse"></span>
+                        <span class="text-xs font-bold text-teal-100 uppercase tracking-wider">
                             Bank Syariah Wakalumi
                         </span>
                     </div>
 
                     <!-- Headline -->
-                    <h1 class="slide-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight mb-6
-                               text-white dark:text-white dark:text-glow">
+                    <h1 class="slide-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight mb-4 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
                         <?php echo esc_html( $slide_headline ); ?>
                     </h1>
 
                     <!-- Subheadline -->
                     <?php if ( $slide_subheadline ) : ?>
-                        <p class="slide-subheadline text-lg md:text-xl leading-relaxed mb-10 max-w-2xl
-                                  text-white/80 dark:text-slate-300">
+                        <p class="slide-subheadline text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-2xl text-white/90 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                             <?php echo esc_html( $slide_subheadline ); ?>
                         </p>
                     <?php endif; ?>
@@ -219,14 +232,12 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
                     <!-- CTA -->
                     <div class="slide-cta flex flex-wrap items-center gap-4">
                         <a href="<?php echo esc_url( $slide_cta_url ); ?>"
-                           class="btn bg-white text-primary-700 hover:bg-primary-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold
-                                  dark:bg-primary-300 dark:text-dark dark:hover:bg-primary-200 dark:btn-glow">
+                           class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
                             <?php echo esc_html( $slide_cta_text ); ?>
                         </a>
                         <?php if ( $slide_cta_url_2 ) : ?>
                             <a href="<?php echo esc_url( $slide_cta_url_2 ); ?>"
-                               class="btn border-2 border-white/30 text-white hover:bg-white/10 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold
-                                      dark:border-primary-400/30 dark:text-primary-300 dark:hover:bg-primary-400/10">
+                               class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
                                 <?php echo esc_html( $slide_cta_text_2 ); ?>
                             </a>
                         <?php endif; ?>
@@ -254,36 +265,30 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
 
             <!-- Content -->
             <div class="hero-slide-content container-wide relative z-10 flex items-center min-h-[90vh] md:min-h-screen py-20">
-                <div class="max-w-3xl">
-                    <div class="slide-badge inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8
-                                bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]
-                                dark:bg-primary-400/10 dark:border-primary-400/20">
-                        <span class="w-2 h-2 rounded-full bg-primary-300 animate-pulse"></span>
-                        <span class="text-xs font-bold text-white uppercase tracking-wider">
+                <div class="hero-content-card max-w-2xl lg:max-w-3xl p-5 sm:p-7 md:p-9 rounded-2xl md:rounded-3xl bg-white/[0.06] dark:bg-white/[0.04] backdrop-blur-sm md:backdrop-blur-md border border-white/15 dark:border-white/10 shadow-[0_4px_24px_-1px_rgba(0,0,0,0.15)] relative z-10">
+                    <div class="slide-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 bg-teal-500/20 backdrop-blur-sm border border-teal-300/30 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-teal-300 animate-pulse"></span>
+                        <span class="text-xs font-bold text-teal-100 uppercase tracking-wider">
                             Bank Syariah Wakalumi
                         </span>
                     </div>
 
-                    <h1 class="slide-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight mb-6
-                               text-white dark:text-white dark:text-glow">
+                    <h1 class="slide-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight mb-4 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
                         <?php echo esc_html( $slide['headline'] ); ?>
                     </h1>
 
-                    <p class="slide-subheadline text-lg md:text-xl leading-relaxed mb-10 max-w-2xl
-                              text-white/70 dark:text-slate-300">
+                    <p class="slide-subheadline text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-2xl text-white/90 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                         <?php echo esc_html( $slide['subheadline'] ); ?>
                     </p>
 
                     <div class="slide-cta flex flex-wrap items-center gap-4">
                         <a href="<?php echo esc_url( $wa_url ); ?>"
                            target="_blank" rel="noopener noreferrer"
-                           class="btn bg-white text-primary-700 hover:bg-primary-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold
-                                  dark:bg-primary-300 dark:text-dark dark:hover:bg-primary-200 dark:btn-glow">
+                           class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
                             Hubungi Kami
                         </a>
                         <a href="<?php echo esc_url( home_url( '/produk' ) ); ?>"
-                           class="btn border-2 border-white/30 text-white hover:bg-white/10 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold
-                                  dark:border-primary-400/30 dark:text-primary-300 dark:hover:bg-primary-400/10">
+                           class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
                             Lihat Produk
                         </a>
                     </div>
@@ -526,10 +531,6 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
     </div>
 </section>
 
-        </div>
-    </div>
-</section>
-
 
 <!-- ========================================
      SECTION 3: PRODUK PREVIEW
@@ -625,9 +626,9 @@ if ( $produk_query->have_posts() ) :
      SECTION 4: TENTANG KAMI (ABOUT PREVIEW)
      ======================================== -->
 <?php
-$about_label    = get_option( 'options_about_label', function_exists( 'get_field' ) ? ( get_field( 'about_label' ) ?: 'Tentang Kami' ) : 'Tentang Kami' );
-$about_title    = get_option( 'options_about_title', function_exists( 'get_field' ) ? ( get_field( 'about_title' ) ?: 'Melayani dengan Prinsip Syariah Sejak Hari Pertama' ) : 'Melayani dengan Prinsip Syariah Sejak Hari Pertama' );
-$about_content  = get_option( 'options_about_content', function_exists( 'get_field' ) ? ( get_field( 'about_content' ) ?: '<p>BPRS Wakalumi hadir sebagai bank syariah yang berkomitmen memberikan layanan keuangan terbaik berdasarkan prinsip-prinsip syariah Islam.</p>' ) : '<p>BPRS Wakalumi hadir sebagai bank syariah yang berkomitmen memberikan layanan keuangan terbaik berdasarkan prinsip-prinsip syariah Islam.</p>' );
+$about_label    = get_option( 'options_about_label', function_exists( 'get_field' ) ? ( get_field( 'about_label' ) ?: 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' ) : 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' );
+$about_title    = get_option( 'options_about_title', function_exists( 'get_field' ) ? ( get_field( 'about_title' ) ?: 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' ) : 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
+$about_content  = get_option( 'options_about_content', function_exists( 'get_field' ) ? ( get_field( 'about_content' ) ?: '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' ) : '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' );
 
 $about_img_url  = get_option( 'options_about_image_url', '' );
 if ( empty( $about_img_url ) ) {
@@ -635,7 +636,7 @@ if ( empty( $about_img_url ) ) {
     $about_img_url = $acf_img ? ( $acf_img['sizes']['large'] ?? $acf_img['url'] ) : get_template_directory_uri() . '/assets/img/about-photo.jpg';
 }
 
-$about_cta_text = get_option( 'options_about_cta_text', function_exists( 'get_field' ) ? ( get_field( 'about_cta_text' ) ?: 'Selengkapnya' ) : 'Selengkapnya' );
+$about_cta_text = get_option( 'options_about_cta_text', function_exists( 'get_field' ) ? ( get_field( 'about_cta_text' ) ?: 'Selengkapnya Tentang Kami' ) : 'Selengkapnya Tentang Kami' );
 $about_cta_url  = get_option( 'options_about_cta_url', function_exists( 'get_field' ) ? ( get_field( 'about_cta_url' ) ?: home_url( '/profil/tentang-kami' ) ) : home_url( '/profil/tentang-kami' ) );
 $about_img_mob  = get_option( 'options_about_img_mobile_mode', 'show_top' );
 
@@ -676,12 +677,20 @@ if ( $about_img_mob === 'hide' ) {
                 <div class="prose prose-lg prose-slate dark:prose-invert max-w-none mb-8">
                     <?php echo wp_kses_post( $about_content ); ?>
                 </div>
-                <a href="<?php echo esc_url( $about_cta_url ); ?>" class="btn-primary text-sm">
-                    <?php echo esc_html( $about_cta_text ); ?>
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
-                </a>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="<?php echo esc_url( $about_cta_url ); ?>" class="btn-primary text-sm inline-flex items-center gap-2">
+                        <span><?php echo esc_html( $about_cta_text ); ?></span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="btn-secondary text-sm inline-flex items-center gap-2">
+                        <span>Legalitas Perusahaan</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -709,7 +718,7 @@ if ( empty( $nisbah_data ) ) {
 
 if ( $nisbah_data ) :
 ?>
-<section id="section-nisbah" class="section relative overflow-hidden bg-transparent py-24 z-10">
+<section id="section-nisbah" class="section relative bg-transparent py-24 z-10">
     <!-- Ornaments -->
     <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-50/50 dark:bg-primary-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
     <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-50/50 dark:bg-teal-900/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
@@ -772,8 +781,15 @@ if ( $nisbah_data ) :
                                 dark:group-hover:from-primary-950/20 dark:group-hover:to-teal-950/10
                                 transition-all duration-300 pointer-events-none"></div>
 
-                    <!-- Subtle watermark logo -->
-                    <div class="absolute -right-12 -bottom-12 w-36 h-36 opacity-[0.02] dark:opacity-[0.03] pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-x-2 group-hover:-translate-y-2">
+                    <!-- Decorative Watermark Logo (Interactive Hover: Left 3/4 -> Right 1/2 Full Card) -->
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
+                                w-48 h-48 sm:w-52 sm:h-52 md:w-56 md:h-56
+                                opacity-[0.035] dark:opacity-[0.045] 
+                                pointer-events-none 
+                                transition-all duration-700 ease-out
+                                group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-[1.35] 
+                                group-hover:opacity-[0.07] dark:group-hover:opacity-[0.08]
+                                grayscale mix-blend-multiply dark:mix-blend-screen">
                         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-new-1.png" alt="" class="w-full h-full object-contain">
                     </div>
 
@@ -966,8 +982,7 @@ if ( empty( $ig_posts ) ) {
 }
 $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
 ?>
-<section id="section-sosial-media" class="section bg-transparent relative z-10 py-20 overflow-hidden">
-
+<section id="section-sosial-media" class="section bg-transparent relative z-10 py-20">
     <div class="container-wide relative z-10">
         <!-- Section Header -->
         <div class="text-center mb-12" data-aos="fade-up">

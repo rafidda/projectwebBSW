@@ -94,39 +94,163 @@ function wakalumi_cleanup_head() {
 add_action( 'init', 'wakalumi_cleanup_head' );
 
 /**
- * Otomatis set halaman 'Home' atau 'Beranda' sebagai Front Page jika belum disetel
+ * Otomatis set halaman 'Home' atau 'Beranda' sebagai Front Page dan pasang template front-page.php
  */
 function wakalumi_ensure_front_page() {
-    if ( get_option( 'show_on_front' ) !== 'page' ) {
-        $home_page = get_page_by_path( 'home' ) ?: get_page_by_path( 'beranda' );
-        if ( ! $home_page ) {
+    $home_page = get_page_by_path( 'home' ) ?: get_page_by_path( 'beranda' );
+    if ( ! $home_page ) {
+        $pages = get_posts( [
+            'post_type'   => 'page',
+            'title'       => 'Beranda',
+            'post_status' => 'publish',
+            'numberposts' => 1,
+        ] );
+        if ( empty( $pages ) ) {
             $pages = get_posts( [
                 'post_type'   => 'page',
                 'title'       => 'Home',
                 'post_status' => 'publish',
                 'numberposts' => 1,
             ] );
-            if ( ! empty( $pages ) ) {
-                $home_page = $pages[0];
-            } else {
-                $pages = get_posts( [
-                    'post_type'   => 'page',
-                    'title'       => 'Beranda',
-                    'post_status' => 'publish',
-                    'numberposts' => 1,
-                ] );
-                if ( ! empty( $pages ) ) {
-                    $home_page = $pages[0];
-                }
+        }
+        if ( ! empty( $pages ) ) {
+            $home_page = $pages[0];
+        } else {
+            $home_id = wp_insert_post( [
+                'post_title'   => 'Beranda',
+                'post_name'    => 'beranda',
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+                'post_content' => '',
+            ] );
+            if ( $home_id && ! is_wp_error( $home_id ) ) {
+                $home_page = get_post( $home_id );
             }
         }
-        if ( $home_page ) {
+    }
+
+    if ( $home_page ) {
+        if ( get_option( 'show_on_front' ) !== 'page' || (int) get_option( 'page_on_front' ) !== (int) $home_page->ID ) {
             update_option( 'show_on_front', 'page' );
             update_option( 'page_on_front', $home_page->ID );
+        }
+        $curr_tmpl = get_post_meta( $home_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'front-page.php' ) {
+            update_post_meta( $home_page->ID, '_wp_page_template', 'front-page.php' );
         }
     }
 }
 add_action( 'init', 'wakalumi_ensure_front_page' );
+
+/**
+ * Filter template_include: Mengunci setiap halaman agar 100% memuat template peruntukannya
+ */
+function wakalumi_enforce_template_routing( $template ) {
+    // 1. Beranda / Front Page
+    if ( is_front_page() ) {
+        $front = locate_template( [ 'front-page.php' ] );
+        if ( $front ) return $front;
+    }
+
+    global $post;
+    $slug = isset( $post->post_name ) ? strtolower( $post->post_name ) : '';
+
+    if ( in_array( $slug, [ 'home', 'beranda' ], true ) ) {
+        $front = locate_template( [ 'front-page.php' ] );
+        if ( $front ) return $front;
+    }
+
+    // 2. Profil: Tentang Kami
+    if ( in_array( $slug, [ 'tentang-kami', 'tentang' ], true ) ) {
+        $about = locate_template( [ 'page-tentang-kami.php' ] );
+        if ( $about ) return $about;
+    }
+
+    // 3. Profil: Legalitas Perusahaan
+    if ( in_array( $slug, [ 'legalitas', 'legalitas-perusahaan' ], true ) ) {
+        $legal = locate_template( [ 'page-legalitas.php' ] );
+        if ( $legal ) return $legal;
+    }
+
+    return $template;
+}
+add_filter( 'template_include', 'wakalumi_enforce_template_routing', 99 );
+
+/**
+ * Otomatis pastikan halaman Parent 'Profil' dan Child 'Tentang Kami' terdaftar di database
+ * dengan template page-tentang-kami.php agar tautan /profil/tentang-kami langsung aktif
+ */
+function wakalumi_ensure_profile_pages() {
+    // 1. Pastikan Parent Page 'Profil' ada
+    $parent_profil = get_page_by_path( 'profil' );
+    $parent_id     = 0;
+    if ( ! $parent_profil ) {
+        $parent_id = wp_insert_post( [
+            'post_title'   => 'Profil',
+            'post_name'    => 'profil',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+    } else {
+        $parent_id = $parent_profil->ID;
+    }
+
+    // 2. Pastikan Child Page 'Tentang Kami' ada
+    $about_page = get_page_by_path( 'profil/tentang-kami' ) ?: get_page_by_path( 'tentang-kami' );
+    if ( ! $about_page ) {
+        $about_id = wp_insert_post( [
+            'post_title'   => 'Tentang Kami',
+            'post_name'    => 'tentang-kami',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $about_id && ! is_wp_error( $about_id ) ) {
+            update_post_meta( $about_id, '_wp_page_template', 'page-tentang-kami.php' );
+        }
+    } else {
+        if ( (int) $about_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $about_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $about_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-tentang-kami.php' ) {
+            update_post_meta( $about_page->ID, '_wp_page_template', 'page-tentang-kami.php' );
+        }
+    }
+
+    // 3. Pastikan Child Page 'Legalitas' ada
+    $legal_page = get_page_by_path( 'profil/legalitas' ) ?: get_page_by_path( 'legalitas' );
+    if ( ! $legal_page ) {
+        $legal_id = wp_insert_post( [
+            'post_title'   => 'Legalitas Perusahaan',
+            'post_name'    => 'legalitas',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $legal_id && ! is_wp_error( $legal_id ) ) {
+            update_post_meta( $legal_id, '_wp_page_template', 'page-legalitas.php' );
+        }
+    } else {
+        if ( (int) $legal_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $legal_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $legal_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-legalitas.php' ) {
+            update_post_meta( $legal_page->ID, '_wp_page_template', 'page-legalitas.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_profile_pages' );
 
 /**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
@@ -337,6 +461,13 @@ function wakalumi_admin_bar_quick_links( $wp_admin_bar ) {
         'parent' => 'wakalumi_quick_edit',
         'title'  => '🖼️ Slider Hero Banner',
         'href'   => admin_url( 'edit.php?post_type=hero_slide' ),
+    ] );
+
+    $wp_admin_bar->add_node( [
+        'id'     => 'wakalumi_quick_about',
+        'parent' => 'wakalumi_quick_edit',
+        'title'  => '🏛️ Profil: Tentang Kami & Visi Misi',
+        'href'   => admin_url( 'admin.php?page=wakalumi-about' ),
     ] );
 
     $wp_admin_bar->add_node( [

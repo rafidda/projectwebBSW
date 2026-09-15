@@ -5,6 +5,15 @@
  * @package Wakalumi
  */
 
+// Jika WordPress mengarahkan halaman depan utama ke index.php, wajib panggil front-page.php
+if ( is_front_page() ) {
+    $front_file = WAKALUMI_DIR . '/front-page.php';
+    if ( file_exists( $front_file ) ) {
+        include $front_file;
+        return;
+    }
+}
+
 get_header();
 ?>
 

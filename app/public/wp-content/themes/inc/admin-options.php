@@ -412,11 +412,11 @@ function wakalumi_render_media_page() {
     $lps_mob    = get_option( 'options_lps_badge_mobile', '1' );
 
     // Tentang Kami defaults
-    $abt_label      = get_option( 'options_about_label', 'Tentang Kami' );
-    $abt_title      = get_option( 'options_about_title', 'Melayani dengan Prinsip Syariah Sejak Hari Pertama' );
-    $abt_content    = get_option( 'options_about_content', '<p>BPRS Wakalumi hadir sebagai bank syariah yang berkomitmen memberikan layanan keuangan terbaik berdasarkan prinsip-prinsip syariah Islam.</p>' );
+    $abt_label      = get_option( 'options_about_label', 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' );
+    $abt_title      = get_option( 'options_about_title', 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
+    $abt_content    = get_option( 'options_about_content', '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' );
     $abt_image_url  = get_option( 'options_about_image_url', '' );
-    $abt_cta_text   = get_option( 'options_about_cta_text', 'Selengkapnya' );
+    $abt_cta_text   = get_option( 'options_about_cta_text', 'Selengkapnya Tentang Kami' );
     $abt_cta_url    = get_option( 'options_about_cta_url', home_url( '/profil/tentang-kami' ) );
     $abt_mob_mode   = get_option( 'options_about_img_mobile_mode', 'show_top' );
 
@@ -1065,6 +1065,10 @@ function wakalumi_render_footer_page() {
         }
         update_option( 'options_footer_reg_logos', $footer_logos );
 
+        // Jadwal Sholat Footer
+        update_option( 'options_footer_show_prayer_times', isset( $_POST['options_footer_show_prayer_times'] ) ? '1' : '0' );
+        update_option( 'options_footer_prayer_city', sanitize_text_field( $_POST['options_footer_prayer_city'] ?? 'Tangerang Selatan' ) );
+
         update_option( 'options_social_instagram', esc_url_raw( $_POST['options_social_instagram'] ?? '' ) );
         update_option( 'options_social_facebook', esc_url_raw( $_POST['options_social_facebook'] ?? '' ) );
         update_option( 'options_social_linkedin', esc_url_raw( $_POST['options_social_linkedin'] ?? '' ) );
@@ -1078,6 +1082,9 @@ function wakalumi_render_footer_page() {
     $jam_end    = get_option( 'options_jam_operasional_weekend', 'Tutup' );
     $copyright  = get_option( 'options_footer_copyright', 'Bank Syariah Wakalumi. All Rights Reserved.' );
     $disclaimer = get_option( 'options_footer_disclaimer', 'BPRS Wakalumi Berizin dan Diawasi Oleh Otoritas Jasa Keuangan (OJK) serta merupakan peserta program penjaminan Lembaga Penjamin Simpanan (LPS).' );
+
+    $show_prayer= get_option( 'options_footer_show_prayer_times', '1' );
+    $prayer_city= get_option( 'options_footer_prayer_city', 'Tangerang Selatan' );
 
     // Logo Regulasi Footer Defaults
     $show_logos = get_option( 'options_footer_show_logos', '1' );
@@ -1121,6 +1128,29 @@ function wakalumi_render_footer_page() {
                         <th scope="row"><label for="options_jam_operasional_weekend">Sabtu, Minggu & Libur:</label></th>
                         <td>
                             <input type="text" id="options_jam_operasional_weekend" name="options_jam_operasional_weekend" value="<?php echo esc_attr( $jam_end ); ?>" class="regular-text" placeholder="Tutup">
+                        </td>
+                    </tr>
+                </table>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🕌 Jadwal Waktu Sholat & Penanggalan Hijriyah
+                </h2>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Tampilkan di Footer:</th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="options_footer_show_prayer_times" value="1" <?php checked( $show_prayer, '1' ); ?>>
+                                <strong>Aktifkan Widget Jadwal Sholat & Penanggalan Hijriyah di Footer</strong>
+                            </label>
+                            <p class="description">100% Gratis via API Kemenag / Aladhan. Menampilkan Subuh, Dzuhur, Ashar, Maghrib, Isya dengan indikator waktu sholat berikutnya.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_prayer_city">Kota / Wilayah Acuan:</label></th>
+                        <td>
+                            <input type="text" id="options_footer_prayer_city" name="options_footer_prayer_city" value="<?php echo esc_attr( $prayer_city ); ?>" class="regular-text" placeholder="Tangerang Selatan">
+                            <p class="description">Contoh: <code>Tangerang Selatan</code>, <code>Jakarta</code>, <code>Tangerang</code>.</p>
                         </td>
                     </tr>
                 </table>
