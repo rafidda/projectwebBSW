@@ -693,5 +693,54 @@ Dikelola melalui **WordPress Admin &rarr; Pengaturan Wakalumi &rarr; Produk: Sim
 - Otomatis memastikan halaman parent `Produk` dan child pages `tabungan-syariah`, `deposito-syariah`, dan `pembiayaan` terdaftar di database WordPress.
 - Filter `template_include` secara otomatis mengenali dan memuat template yang sesuai.
 
+---
+
+## 🎨 21. STANDAR DESAIN & STYLING VISUAL (AI DESIGN SYSTEM DIRECTIVES)
+
+Dokumen standar ini wajib dipatuhi oleh seluruh asisten AI dan pengembang agar antarmuka website **PT BPRS Wakalumi** selalu konsisten, mewah (*luxurious banking*), hidup (*lively*), namun tetap super ringan (*zero-lag, 60fps performance*).
+
+### 1. Nol Emoji / Emoticon (Zero Emojis Policy)
+- **Aturan**: DILARANG KERAS menggunakan emoji teks/grafis (seperti 💎, 👤, 🏢, ✨, 🧮, ⚖️, 🛡️, 💰, 👁️, ❓, ➕, 💬, 📌) pada antarmuka web publik, header halaman, badge, tabel, tombol, kalkulator, maupun form admin.
+- **Standar Pengganti**: Gunakan selalu **ikon SVG resmi bergaris tipis profesional** (Heroicons / Lucide style) dengan atribut `stroke-width="1.5"` atau `"2"`, dibungkus dalam kontainer bergradasi lembut (`w-8 h-8` atau `w-10 h-10 rounded-xl bg-...`).
+
+### 2. Standar Finansial & Mata Uang
+- **Rupiah Murni**: Seluruh nominal, simulasi, dan tabel wajib menggunakan format standar Indonesia (misal: `Rp 5.000.000` atau `Rp 50 Jt`).
+- **Pemberantasan Simbol USD**: Dilarang keras memunculkan simbol dollar (`$`) dalam bentuk apa pun.
+
+### 3. Arsitektur Kartu & Animasi Elevasi Halus (`.hub-product-card`)
+- **Kurva Transisi Spring**: Gunakan non-linear transition `transition: all 600ms cubic-bezier(0.16, 1, 0.3, 1)` dengan `will-change: transform, box-shadow`.
+- **Hover State**: Elevasi halus `hover:-translate-y-1.5` hingga `hover:-translate-y-2` disertai bayangan mendalam `hover:shadow-2xl`.
+- **Garis Aksen Atas Dinamis (`before:`)**:
+  - `before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:scale-x-75 group-hover:before:scale-x-100 transition-transform duration-700 ease-out`
+  - Gradasi menyesuaikan tema warna masing-masing produk (teal, emerald, blue, amber, cyan, rose, purple).
+- **Interaksi Tipografi Judul**: Warna font judul kartu otomatis bertransisi halus mengikuti warna tema produk saat kursor mengarah (`group-hover:text-primary-600 dark:group-hover:text-teal-300`).
+
+### 4. Sistem Watermark Emblem Resmi & Animasi Interaktif
+- **A. Global Watermark Sticky Parallax**: Elemen `#sticky-watermark-emblem` tetap menempel di latar tengah layar saat halaman digulir.
+- **B. Watermark Statis/Ambient Kartu (`wm-wkl.png`)**: Disematkan di latar belakang kartu dengan opasitas tipis (`opacity-[0.04]` &rarr; `opacity-[0.08]` saat hover).
+- **C. Watermark Interaktif Dinamis Geser (`untitled4.png`)**:
+  Untuk membuat kartu atau section lebih hidup secara visual tanpa membebani browser:
+  ```html
+  <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-28 h-28 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+      <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+  </div>
+  ```
+
+### 5. Optimasi Performa GPU (Zero Lag & Anti-Jank)
+- Animasi HANYA menggunakan properti yang diakselerasi perangkat keras (GPU): `transform` (`translate`, `scale`, `rotate`) dan `opacity`.
+- Hindari menganimasikan properti layout (*reflow triggers*) seperti `width`, `height`, `margin`, `padding`, atau `top/left` pada elemen non-posisi absolut.
+- Selalu terapkan `mix-blend-multiply` pada tema terang (*light mode*) dan `dark:mix-blend-screen` pada tema gelap (*dark mode*) agar aset grafis menyatu alami tanpa bercak kotak.
+
+### 6. Siklus Hidup SPA & Swup.js (Single Page Application)
+- Seluruh interaksi JavaScript (kalkulator, tab selector, slider, range input, modal) TIDAK BOLEH hanya dieksekusi saat event `DOMContentLoaded`.
+- Wajib dibungkus dalam fungsi initializer (misal: `initDepositoPage()`) yang dipanggil pada:
+  1. `DOMContentLoaded` (saat reload pertama kali).
+  2. `window.swup.hooks.on('page:view', ...)` atau `document.addEventListener('swup:enable', ...)` (saat perpindahan halaman tanpa refresh).
+
+### 7. Harmonisasi Nisbah Bagi Hasil (Single Source of Truth)
+- Seluruh data nisbah tabungan & deposito disimpan pada 1 sumber tunggal: `options_nisbah_data` dan `options_nisbah_bulan`.
+- Digunakan seragam oleh Beranda (`front-page.php`), Halaman Deposito (`page-deposito-syariah.php`), dan tombol kalkulator simulasi.
+
+
 
 

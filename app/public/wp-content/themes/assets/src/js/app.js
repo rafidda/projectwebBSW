@@ -1637,6 +1637,10 @@ function initAllModules() {
   KantorModule.init();
   SavingsCalculator.init();
 
+  if (typeof window.initDepositoPage === 'function') {
+    window.initDepositoPage();
+  }
+
   AOS.init({
     duration: 700,
     offset: 80,

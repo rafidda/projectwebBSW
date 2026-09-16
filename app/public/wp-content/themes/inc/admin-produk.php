@@ -134,16 +134,89 @@ function wakalumi_get_tabungan_faq_list() {
 }
 
 /**
+ * Helper: Ambil Data Realisasi Nisbah Terkini dari Database
+ */
+function wakalumi_get_nisbah_data() {
+    $data = get_option( 'options_nisbah_data', [] );
+    if ( empty( $data ) || ! is_array( $data ) ) {
+        $data = [
+            ['nisbah_produk' => 'Tabungan Reguler', 'nisbah_jenis' => 'tabungan', 'nisbah_nasabah' => '15', 'nisbah_bank' => '85', 'nisbah_equiv' => '1.49%'],
+            ['nisbah_produk' => 'Tabungan Ukhuwah', 'nisbah_jenis' => 'tabungan', 'nisbah_nasabah' => '10', 'nisbah_bank' => '90', 'nisbah_equiv' => '1.00%'],
+            ['nisbah_produk' => 'Deposito 1 Bulan', 'nisbah_jenis' => 'deposito', 'nisbah_nasabah' => '30', 'nisbah_bank' => '70', 'nisbah_equiv' => '2.99%'],
+            ['nisbah_produk' => 'Deposito 3 Bulan', 'nisbah_jenis' => 'deposito', 'nisbah_nasabah' => '35', 'nisbah_bank' => '65', 'nisbah_equiv' => '3.48%'],
+            ['nisbah_produk' => 'Deposito 6 Bulan', 'nisbah_jenis' => 'deposito', 'nisbah_nasabah' => '40', 'nisbah_bank' => '60', 'nisbah_equiv' => '3.98%'],
+            ['nisbah_produk' => 'Deposito 12 Bulan', 'nisbah_jenis' => 'deposito', 'nisbah_nasabah' => '42.5', 'nisbah_bank' => '57.5', 'nisbah_equiv' => '4.23%'],
+        ];
+    }
+    return $data;
+}
+
+/**
+ * Helper: Ambil Periode Bulan Nisbah Terkini
+ */
+function wakalumi_get_nisbah_bulan() {
+    return get_option( 'options_nisbah_bulan', 'Agustus 2026' );
+}
+
+/**
+ * Helper: Ambil Peta Nilai Rate Deposito (Tenor 1, 3, 6, 12 Bulan)
+ */
+function wakalumi_get_deposito_rates() {
+    $nisbah_data = wakalumi_get_nisbah_data();
+    $rates = [
+        1  => [ 'nama' => 'Deposito 1 Bulan',  'nasabah' => '30', 'bank' => '70', 'equiv' => '2.99%', 'rate_val' => 2.99 ],
+        3  => [ 'nama' => 'Deposito 3 Bulan',  'nasabah' => '35', 'bank' => '65', 'equiv' => '3.48%', 'rate_val' => 3.48 ],
+        6  => [ 'nama' => 'Deposito 6 Bulan',  'nasabah' => '40', 'bank' => '60', 'equiv' => '3.98%', 'rate_val' => 3.98 ],
+        12 => [ 'nama' => 'Deposito 12 Bulan', 'nasabah' => '42.5', 'bank' => '57.5', 'equiv' => '4.23%', 'rate_val' => 4.23 ],
+    ];
+
+    foreach ( $nisbah_data as $row ) {
+        if ( ( $row['nisbah_jenis'] ?? '' ) === 'deposito' ) {
+            $name = strtolower( $row['nisbah_produk'] ?? '' );
+            $raw_equiv = $row['nisbah_equiv'] ?? '';
+            $equiv_clean = floatval( str_replace( [ '%', ',', ' ' ], [ '', '.', '' ], $raw_equiv ) );
+            $tenor_key = null;
+            if ( strpos( $name, '12' ) !== false ) {
+                $tenor_key = 12;
+            } elseif ( strpos( $name, '6' ) !== false ) {
+                $tenor_key = 6;
+            } elseif ( strpos( $name, '3' ) !== false ) {
+                $tenor_key = 3;
+            } elseif ( strpos( $name, '1' ) !== false ) {
+                $tenor_key = 1;
+            }
+
+            if ( $tenor_key ) {
+                $rates[ $tenor_key ] = [
+                    'nama'     => $row['nisbah_produk'] ?? ( 'Deposito ' . $tenor_key . ' Bulan' ),
+                    'nasabah'  => $row['nisbah_nasabah'] ?? $rates[ $tenor_key ]['nasabah'],
+                    'bank'     => $row['nisbah_bank'] ?? $rates[ $tenor_key ]['bank'],
+                    'equiv'    => ! empty( $raw_equiv ) ? $raw_equiv : $rates[ $tenor_key ]['equiv'],
+                    'rate_val' => $equiv_clean > 0 ? $equiv_clean : $rates[ $tenor_key ]['rate_val'],
+                ];
+            }
+        }
+    }
+    return $rates;
+}
+
+/**
  * Render Halaman Admin Pengelolaan Produk Dana (Tabungan & Deposito)
  */
 function wakalumi_render_produk_admin_page() {
     // ── PROSES SIMPAN DATA ──────────────────────────────────────────
     if ( isset( $_POST['wakalumi_save_produk_dana'] ) && check_admin_referer( 'wakalumi_produk_dana_nonce' ) ) {
         
-        // 1. Tabungan: Header Banner
+        // 1. Tabungan: Header Banner & LPS Card
         update_option( 'options_tabungan_page_badge', sanitize_text_field( $_POST['options_tabungan_page_badge'] ?? '' ) );
         update_option( 'options_tabungan_page_title', sanitize_text_field( $_POST['options_tabungan_page_title'] ?? '' ) );
         update_option( 'options_tabungan_page_subtitle', sanitize_textarea_field( $_POST['options_tabungan_page_subtitle'] ?? '' ) );
+        update_option( 'options_tabungan_quote', sanitize_textarea_field( $_POST['options_tabungan_quote'] ?? '' ) );
+
+        update_option( 'options_tabungan_lps_tag', sanitize_text_field( $_POST['options_tabungan_lps_tag'] ?? '' ) );
+        update_option( 'options_tabungan_lps_title', sanitize_text_field( $_POST['options_tabungan_lps_title'] ?? '' ) );
+        update_option( 'options_tabungan_lps_desc', sanitize_textarea_field( $_POST['options_tabungan_lps_desc'] ?? '' ) );
+        update_option( 'options_tabungan_lps_btn_text', sanitize_text_field( $_POST['options_tabungan_lps_btn_text'] ?? '' ) );
 
         // 2. Tabungan: Dynamic Repeater
         $tab_names        = $_POST['tab_nama'] ?? [];
@@ -195,10 +268,34 @@ function wakalumi_render_produk_admin_page() {
 
         update_option( 'options_tabungan_list', $clean_tabungan_list );
 
+        // 2b. Tabungan: Tabel Komparasi
+        update_option( 'options_tabungan_komparasi_kicker', sanitize_text_field( $_POST['options_tabungan_komparasi_kicker'] ?? '' ) );
+        update_option( 'options_tabungan_komparasi_title', sanitize_text_field( $_POST['options_tabungan_komparasi_title'] ?? '' ) );
+        update_option( 'options_tabungan_komparasi_desc', sanitize_textarea_field( $_POST['options_tabungan_komparasi_desc'] ?? '' ) );
+        update_option( 'options_tabungan_komparasi_lps_note', sanitize_textarea_field( $_POST['options_tabungan_komparasi_lps_note'] ?? '' ) );
+
+        // 2c. Tabungan: 4 Keunggulan Menabung Syariah
+        update_option( 'options_tabungan_keung_kicker', sanitize_text_field( $_POST['options_tabungan_keung_kicker'] ?? '' ) );
+        update_option( 'options_tabungan_keung_title', sanitize_text_field( $_POST['options_tabungan_keung_title'] ?? '' ) );
+        update_option( 'options_tabungan_keung_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_1_title', sanitize_text_field( $_POST['options_tabungan_keung_1_title'] ?? '' ) );
+        update_option( 'options_tabungan_keung_1_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_1_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_2_title', sanitize_text_field( $_POST['options_tabungan_keung_2_title'] ?? '' ) );
+        update_option( 'options_tabungan_keung_2_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_2_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_3_title', sanitize_text_field( $_POST['options_tabungan_keung_3_title'] ?? '' ) );
+        update_option( 'options_tabungan_keung_3_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_3_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_4_title', sanitize_text_field( $_POST['options_tabungan_keung_4_title'] ?? '' ) );
+        update_option( 'options_tabungan_keung_4_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_4_desc'] ?? '' ) );
+
         // 3. Tabungan: Pengaturan Kalkulator
         update_option( 'options_tabungan_calc_badge', sanitize_text_field( $_POST['options_tabungan_calc_badge'] ?? '' ) );
         update_option( 'options_tabungan_calc_title', sanitize_text_field( $_POST['options_tabungan_calc_title'] ?? '' ) );
         update_option( 'options_tabungan_calc_subtitle', sanitize_textarea_field( $_POST['options_tabungan_calc_subtitle'] ?? '' ) );
+        update_option( 'options_tabungan_calc_target_min', sanitize_text_field( $_POST['options_tabungan_calc_target_min'] ?? '' ) );
+        update_option( 'options_tabungan_calc_target_max', sanitize_text_field( $_POST['options_tabungan_calc_target_max'] ?? '' ) );
+        update_option( 'options_tabungan_calc_target_default', sanitize_text_field( $_POST['options_tabungan_calc_target_default'] ?? '' ) );
+        update_option( 'options_tabungan_calc_note', sanitize_textarea_field( $_POST['options_tabungan_calc_note'] ?? '' ) );
+        update_option( 'options_tabungan_calc_btn_text', sanitize_text_field( $_POST['options_tabungan_calc_btn_text'] ?? '' ) );
 
         // 4. Tabungan: Pengaturan Tanya Jawab (FAQ / QnA)
         update_option( 'options_tabungan_faq_badge', sanitize_text_field( $_POST['options_tabungan_faq_badge'] ?? '' ) );
@@ -217,39 +314,187 @@ function wakalumi_render_produk_admin_page() {
         }
         update_option( 'options_tabungan_faq_list', $clean_faqs );
 
-        // 5. Deposito: Header
+        // 4b. Tabungan: Box Brosur & Box Promo Deposito
+        update_option( 'options_tabungan_brosur_kicker', sanitize_text_field( $_POST['options_tabungan_brosur_kicker'] ?? '' ) );
+        update_option( 'options_tabungan_brosur_title', sanitize_text_field( $_POST['options_tabungan_brosur_title'] ?? '' ) );
+        update_option( 'options_tabungan_brosur_desc', sanitize_textarea_field( $_POST['options_tabungan_brosur_desc'] ?? '' ) );
+        update_option( 'options_tabungan_brosur_btn', sanitize_text_field( $_POST['options_tabungan_brosur_btn'] ?? '' ) );
+
+        update_option( 'options_tabungan_dep_kicker', sanitize_text_field( $_POST['options_tabungan_dep_kicker'] ?? '' ) );
+        update_option( 'options_tabungan_dep_title', sanitize_text_field( $_POST['options_tabungan_dep_title'] ?? '' ) );
+        update_option( 'options_tabungan_dep_desc', sanitize_textarea_field( $_POST['options_tabungan_dep_desc'] ?? '' ) );
+        update_option( 'options_tabungan_dep_btn', sanitize_text_field( $_POST['options_tabungan_dep_btn'] ?? '' ) );
+
+        // 5. Deposito: Header Banner
         update_option( 'options_deposito_page_badge', sanitize_text_field( $_POST['options_deposito_page_badge'] ?? '' ) );
         update_option( 'options_deposito_page_title', sanitize_text_field( $_POST['options_deposito_page_title'] ?? '' ) );
         update_option( 'options_deposito_page_subtitle', sanitize_textarea_field( $_POST['options_deposito_page_subtitle'] ?? '' ) );
         update_option( 'options_deposito_quote', sanitize_textarea_field( $_POST['options_deposito_quote'] ?? '' ) );
 
-        // 6. Deposito: Rincian & Ketentuan
+        // 5b. Deposito: LPS Card
+        update_option( 'options_deposito_lps_tag', sanitize_text_field( $_POST['options_deposito_lps_tag'] ?? '' ) );
+        update_option( 'options_deposito_lps_title', sanitize_text_field( $_POST['options_deposito_lps_title'] ?? '' ) );
+        update_option( 'options_deposito_lps_desc', sanitize_textarea_field( $_POST['options_deposito_lps_desc'] ?? '' ) );
+        update_option( 'options_deposito_lps_btn_text', sanitize_text_field( $_POST['options_deposito_lps_btn_text'] ?? '' ) );
+
+        // 5c. Deposito: Section Tenor & 4 Kartu Tenor
+        update_option( 'options_deposito_tenor_kicker', sanitize_text_field( $_POST['options_deposito_tenor_kicker'] ?? '' ) );
+        update_option( 'options_deposito_tenor_title', sanitize_text_field( $_POST['options_deposito_tenor_title'] ?? '' ) );
+        update_option( 'options_deposito_tenor_desc', sanitize_textarea_field( $_POST['options_deposito_tenor_desc'] ?? '' ) );
+
+        update_option( 'options_deposito_t1_badge', sanitize_text_field( $_POST['options_deposito_t1_badge'] ?? '' ) );
+        update_option( 'options_deposito_t1_desc', sanitize_textarea_field( $_POST['options_deposito_t1_desc'] ?? '' ) );
+        update_option( 'options_deposito_t1_aro', sanitize_text_field( $_POST['options_deposito_t1_aro'] ?? '' ) );
+
+        update_option( 'options_deposito_t3_badge', sanitize_text_field( $_POST['options_deposito_t3_badge'] ?? '' ) );
+        update_option( 'options_deposito_t3_desc', sanitize_textarea_field( $_POST['options_deposito_t3_desc'] ?? '' ) );
+        update_option( 'options_deposito_t3_aro', sanitize_text_field( $_POST['options_deposito_t3_aro'] ?? '' ) );
+
+        update_option( 'options_deposito_t6_badge', sanitize_text_field( $_POST['options_deposito_t6_badge'] ?? '' ) );
+        update_option( 'options_deposito_t6_desc', sanitize_textarea_field( $_POST['options_deposito_t6_desc'] ?? '' ) );
+        update_option( 'options_deposito_t6_aro', sanitize_text_field( $_POST['options_deposito_t6_aro'] ?? '' ) );
+
+        update_option( 'options_deposito_t12_badge', sanitize_text_field( $_POST['options_deposito_t12_badge'] ?? '' ) );
+        update_option( 'options_deposito_t12_highlight', sanitize_text_field( $_POST['options_deposito_t12_highlight'] ?? '' ) );
+        update_option( 'options_deposito_t12_desc', sanitize_textarea_field( $_POST['options_deposito_t12_desc'] ?? '' ) );
+        update_option( 'options_deposito_t12_aro', sanitize_text_field( $_POST['options_deposito_t12_aro'] ?? '' ) );
+
+        // 5d. Deposito: Keunggulan Card
+        update_option( 'options_deposito_keunggulan_kicker', sanitize_text_field( $_POST['options_deposito_keunggulan_kicker'] ?? '' ) );
+        update_option( 'options_deposito_keunggulan_title', sanitize_text_field( $_POST['options_deposito_keunggulan_title'] ?? '' ) );
+        update_option( 'options_deposito_keunggulan_badge', sanitize_text_field( $_POST['options_deposito_keunggulan_badge'] ?? '' ) );
+        update_option( 'options_deposito_keunggulan', sanitize_textarea_field( $_POST['options_deposito_keunggulan'] ?? '' ) );
+
+        // 5e. Deposito: Section Tabel Nisbah & Sharia Note
+        update_option( 'options_deposito_nisbah_kicker', sanitize_text_field( $_POST['options_deposito_nisbah_kicker'] ?? '' ) );
+        update_option( 'options_deposito_nisbah_title', sanitize_text_field( $_POST['options_deposito_nisbah_title'] ?? '' ) );
+        update_option( 'options_deposito_nisbah_desc', sanitize_textarea_field( $_POST['options_deposito_nisbah_desc'] ?? '' ) );
+        update_option( 'options_deposito_nisbah_row_desc', sanitize_text_field( $_POST['options_deposito_nisbah_row_desc'] ?? '' ) );
+        update_option( 'options_deposito_sharia_note_title', sanitize_text_field( $_POST['options_deposito_sharia_note_title'] ?? '' ) );
+        update_option( 'options_deposito_sharia_note_desc', sanitize_textarea_field( $_POST['options_deposito_sharia_note_desc'] ?? '' ) );
+
+        // 5f. Deposito: Kalkulator Simulasi
+        update_option( 'options_deposito_calc_badge', sanitize_text_field( $_POST['options_deposito_calc_badge'] ?? '' ) );
+        update_option( 'options_deposito_calc_title', sanitize_text_field( $_POST['options_deposito_calc_title'] ?? '' ) );
+        update_option( 'options_deposito_calc_desc', sanitize_textarea_field( $_POST['options_deposito_calc_desc'] ?? '' ) );
+        update_option( 'options_deposito_calc_min', sanitize_text_field( $_POST['options_deposito_calc_min'] ?? '' ) );
+        update_option( 'options_deposito_calc_max', sanitize_text_field( $_POST['options_deposito_calc_max'] ?? '' ) );
+        update_option( 'options_deposito_calc_default', sanitize_text_field( $_POST['options_deposito_calc_default'] ?? '' ) );
+        update_option( 'options_deposito_calc_note', sanitize_textarea_field( $_POST['options_deposito_calc_note'] ?? '' ) );
+
+        // 5g. Deposito: Persyaratan & Dokumen
+        update_option( 'options_deposito_syarat_kicker', sanitize_text_field( $_POST['options_deposito_syarat_kicker'] ?? '' ) );
+        update_option( 'options_deposito_syarat_title', sanitize_text_field( $_POST['options_deposito_syarat_title'] ?? '' ) );
+        update_option( 'options_deposito_syarat_desc', sanitize_textarea_field( $_POST['options_deposito_syarat_desc'] ?? '' ) );
+        update_option( 'options_deposito_tab1_label', sanitize_text_field( $_POST['options_deposito_tab1_label'] ?? '' ) );
+        update_option( 'options_deposito_tab1_badge', sanitize_text_field( $_POST['options_deposito_tab1_badge'] ?? '' ) );
+        update_option( 'options_deposito_syarat_individu', sanitize_textarea_field( $_POST['options_deposito_syarat_individu'] ?? '' ) );
+        update_option( 'options_deposito_syarat_ind_note', sanitize_textarea_field( $_POST['options_deposito_syarat_ind_note'] ?? '' ) );
+        update_option( 'options_deposito_tab2_label', sanitize_text_field( $_POST['options_deposito_tab2_label'] ?? '' ) );
+        update_option( 'options_deposito_tab2_badge', sanitize_text_field( $_POST['options_deposito_tab2_badge'] ?? '' ) );
+        update_option( 'options_deposito_syarat_lembaga', sanitize_textarea_field( $_POST['options_deposito_syarat_lembaga'] ?? '' ) );
+        update_option( 'options_deposito_syarat_lem_note', sanitize_textarea_field( $_POST['options_deposito_syarat_lem_note'] ?? '' ) );
+
+        // 5h. Deposito: CTA Banner & Brosur
+        update_option( 'options_deposito_cta_kicker', sanitize_text_field( $_POST['options_deposito_cta_kicker'] ?? '' ) );
+        update_option( 'options_deposito_cta_title', sanitize_text_field( $_POST['options_deposito_cta_title'] ?? '' ) );
+        update_option( 'options_deposito_cta_desc', sanitize_textarea_field( $_POST['options_deposito_cta_desc'] ?? '' ) );
+        update_option( 'options_deposito_cta_btn_text', sanitize_text_field( $_POST['options_deposito_cta_btn_text'] ?? '' ) );
+        update_option( 'options_deposito_cta_wa_msg', sanitize_textarea_field( $_POST['options_deposito_cta_wa_msg'] ?? '' ) );
+        update_option( 'options_brosur_file_url', esc_url_raw( $_POST['options_brosur_file_url'] ?? '' ) );
+
+        // 6. Deposito: Parameter Dasar
         update_option( 'options_deposito_akad', sanitize_text_field( $_POST['options_deposito_akad'] ?? '' ) );
         update_option( 'options_deposito_min_penempatan', sanitize_text_field( $_POST['options_deposito_min_penempatan'] ?? '' ) );
         update_option( 'options_deposito_tenor_list', sanitize_text_field( $_POST['options_deposito_tenor_list'] ?? '' ) );
-        update_option( 'options_deposito_keunggulan', sanitize_textarea_field( $_POST['options_deposito_keunggulan'] ?? '' ) );
-        update_option( 'options_deposito_syarat_individu', sanitize_textarea_field( $_POST['options_deposito_syarat_individu'] ?? '' ) );
-        update_option( 'options_deposito_syarat_lembaga', sanitize_textarea_field( $_POST['options_deposito_syarat_lembaga'] ?? '' ) );
+
+        // 6b. Deposito: Nisbah Bagi Hasil & Equivalent Rate (Tersinkronisasi)
+        if ( isset( $_POST['options_nisbah_bulan'] ) && ! empty( trim( $_POST['options_nisbah_bulan'] ) ) ) {
+            update_option( 'options_nisbah_bulan', sanitize_text_field( $_POST['options_nisbah_bulan'] ) );
+        }
+
+        if ( isset( $_POST['dep_nisbah_produk'] ) && is_array( $_POST['dep_nisbah_produk'] ) ) {
+            $existing_nisbah = wakalumi_get_nisbah_data();
+            $new_nisbah = [];
+            
+            // Pertahankan produk tabungan yang sudah ada
+            foreach ( $existing_nisbah as $row ) {
+                if ( ( $row['nisbah_jenis'] ?? '' ) !== 'deposito' ) {
+                    $new_nisbah[] = $row;
+                }
+            }
+
+            // Perbarui produk deposito dari form
+            $dep_prods   = $_POST['dep_nisbah_produk'];
+            $dep_nasabah = $_POST['dep_nisbah_nasabah'] ?? [];
+            $dep_bank    = $_POST['dep_nisbah_bank'] ?? [];
+            $dep_equiv   = $_POST['dep_nisbah_equiv'] ?? [];
+
+            for ( $i = 0; $i < count( $dep_prods ); $i++ ) {
+                $p_name = sanitize_text_field( $dep_prods[$i] ?? '' );
+                if ( ! empty( $p_name ) ) {
+                    $new_nisbah[] = [
+                        'nisbah_produk'  => $p_name,
+                        'nisbah_jenis'   => 'deposito',
+                        'nisbah_nasabah' => sanitize_text_field( $dep_nasabah[$i] ?? '' ),
+                        'nisbah_bank'    => sanitize_text_field( $dep_bank[$i] ?? '' ),
+                        'nisbah_equiv'   => sanitize_text_field( $dep_equiv[$i] ?? '' ),
+                    ];
+                }
+            }
+
+            update_option( 'options_nisbah_data', $new_nisbah );
+        }
 
         // 7. Hotline & CTA
         update_option( 'options_produk_wa_number', sanitize_text_field( $_POST['options_produk_wa_number'] ?? '' ) );
         update_option( 'options_produk_cta_title', sanitize_text_field( $_POST['options_produk_cta_title'] ?? '' ) );
         update_option( 'options_produk_cta_desc', sanitize_textarea_field( $_POST['options_produk_cta_desc'] ?? '' ) );
 
-        echo '<div class="notice notice-success is-dismissible" style="margin-top: 15px;"><p><strong>Berhasil!</strong> Pengaturan dan daftar produk Tabungan & Deposito berhasil diperbarui.</p></div>';
+        echo '<div class="notice notice-success is-dismissible" style="margin-top: 15px;"><p><strong>Berhasil!</strong> Seluruh pengaturan produk Tabungan, Deposito, dan Nisbah Bagi Hasil berhasil diperbarui.</p></div>';
     }
 
     // ── AMBIL NILAI DARI DATABASE ───────────────────────────────────
+    // Tabungan: Header Banner & LPS
     $tab_page_badge    = get_option( 'options_tabungan_page_badge', 'Penghimpunan Dana Syariah' );
     $tab_page_title    = get_option( 'options_tabungan_page_title', 'Simpanan Berkah Sesuai Syariah' );
     $tab_page_sub      = get_option( 'options_tabungan_page_subtitle', 'Solusi simpanan syariah amanah, bebas biaya administrasi bulanan, bagi hasil bersaing, dan dijamin LPS hingga Rp 2 Miliar.' );
+    $tab_quote         = get_option( 'options_tabungan_quote', 'Menabung dengan akad syariah yang murni (Wadiah & Mudharabah), menjaga harta tetap berkah, amanah, dan terhindar dari riba sesuai fatwa DSN-MUI.' );
+    $tab_lps_tag       = get_option( 'options_tabungan_lps_tag', 'Penjaminan Resmi LPS & OJK' );
+    $tab_lps_title     = get_option( 'options_tabungan_lps_title', 'Simpanan Dijamin LPS s.d. Rp 2 Miliar' );
+    $tab_lps_desc      = get_option( 'options_tabungan_lps_desc', 'Seluruh dana simpanan tabungan nasabah dijamin keamanannya oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan batas maksimal penjaminan per nasabah per bank.' );
+    $tab_lps_btn       = get_option( 'options_tabungan_lps_btn_text', 'Hitung Simulasi Rencana Menabung' );
 
     $tabungan_list     = wakalumi_get_tabungan_list();
 
-    // Kalkulator Tabungan
+    // Tabungan: Tabel Komparasi
+    $tab_komp_kicker   = get_option( 'options_tabungan_komparasi_kicker', 'Perbandingan Produk' );
+    $tab_komp_title    = get_option( 'options_tabungan_komparasi_title', 'Pilih Tabungan yang Tepat untuk Kebutuhan Anda' );
+    $tab_komp_desc     = get_option( 'options_tabungan_komparasi_desc', 'Bandingkan fitur utama produk simpanan syariah BPRS Wakalumi secara transparan dan amanah.' );
+    $tab_komp_lps      = get_option( 'options_tabungan_komparasi_lps_note', 'Dijamin Lembaga Penjamin Simpanan (LPS) s.d. Rp 2 Miliar per nasabah & Diawasi Otoritas Jasa Keuangan (OJK)' );
+
+    // Tabungan: 4 Keunggulan
+    $tab_keung_kicker  = get_option( 'options_tabungan_keung_kicker', 'Keunggulan Simpanan Syariah' );
+    $tab_keung_title   = get_option( 'options_tabungan_keung_title', 'Mengapa Memilih Menabung di BPRS Wakalumi?' );
+    $tab_keung_desc    = get_option( 'options_tabungan_keung_desc', 'Kami memastikan setiap rupiah yang Anda simpan dikelola secara profesional, amanah, dan mendatangkan kemaslahatan bagi umat.' );
+    $tab_keung_1_title = get_option( 'options_tabungan_keung_1_title', 'Murni Bebas Riba' );
+    $tab_keung_1_desc  = get_option( 'options_tabungan_keung_1_desc', 'Pengelolaan berlandaskan akad syariah yang diawasi langsung oleh Dewan Pengawas Syariah (DPS) dan DSN-MUI.' );
+    $tab_keung_2_title = get_option( 'options_tabungan_keung_2_title', 'Bebas Biaya Bulanan' );
+    $tab_keung_2_desc  = get_option( 'options_tabungan_keung_2_desc', 'Saldo tabungan Anda tidak akan tergerus oleh biaya administrasi bulanan, sehingga dana Anda aman dan optimal.' );
+    $tab_keung_3_title = get_option( 'options_tabungan_keung_3_title', 'Bagi Hasil Kompetitif' );
+    $tab_keung_3_desc  = get_option( 'options_tabungan_keung_3_desc', 'Keuntungan hasil pembiayaan produktif sektor riil dibagikan secara adil dan transparan kepada para penabung setiap bulan.' );
+    $tab_keung_4_title = get_option( 'options_tabungan_keung_4_title', 'Dijamin LPS Rp 2 Miliar' );
+    $tab_keung_4_desc  = get_option( 'options_tabungan_keung_4_desc', 'Dana simpanan masyarakat dijamin secara sah oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan regulasi yang berlaku.' );
+
+    // Tabungan: Kalkulator
     $tab_calc_badge    = get_option( 'options_tabungan_calc_badge', 'Simulasi Finansial Syariah' );
     $tab_calc_title    = get_option( 'options_tabungan_calc_title', 'Kalkulator Rencana Menabung Berkah' );
     $tab_calc_sub      = get_option( 'options_tabungan_calc_subtitle', 'Tentukan target impian Anda—mulai dari porsi haji, dana sekolah anak, program tabungan ukhuwah, hingga simpanan masa depan keluarga. Kami hitungkan estimasi sisihan per bulan.' );
+    $tab_calc_min      = get_option( 'options_tabungan_calc_target_min', '2000000' );
+    $tab_calc_max      = get_option( 'options_tabungan_calc_target_max', '100000000' );
+    $tab_calc_default  = get_option( 'options_tabungan_calc_target_default', '25000000' );
+    $tab_calc_note     = get_option( 'options_tabungan_calc_note', '*Simulasi indikatif pembulatan matematis tanpa potongan admin bulanan.' );
+    $tab_calc_btn      = get_option( 'options_tabungan_calc_btn_text', 'Mulai Menabung via WhatsApp' );
 
     // FAQ Tabungan
     $tab_faq_badge     = get_option( 'options_tabungan_faq_badge', 'Tanya Jawab (FAQ)' );
@@ -257,17 +502,97 @@ function wakalumi_render_produk_admin_page() {
     $tab_faq_sub       = get_option( 'options_tabungan_faq_subtitle', 'Pertanyaan umum nasabah seputar produk simpanan syariah, keamanan simpanan di LPS, dan prosedur pembukaan rekening.' );
     $tab_faq_list      = wakalumi_get_tabungan_faq_list();
 
-    // Deposito
+    // Box Brosur & Promo Deposito
+    $tab_brosur_kicker = get_option( 'options_tabungan_brosur_kicker', 'Katalog Brosur Resmi' );
+    $tab_brosur_title  = get_option( 'options_tabungan_brosur_title', 'Unduh Brosur Produk Lengkap' );
+    $tab_brosur_desc   = get_option( 'options_tabungan_brosur_desc', 'Dapatkan informasi lengkap seluruh produk simpanan, deposito, dan pembiayaan BPRS Wakalumi dalam format dokumen PDF resmi.' );
+    $tab_brosur_btn    = get_option( 'options_tabungan_brosur_btn', 'Unduh File Brosur (PDF)' );
+
+    $tab_dep_kicker    = get_option( 'options_tabungan_dep_kicker', 'Investasi Berjangka' );
+    $tab_dep_title     = get_option( 'options_tabungan_dep_title', 'Ingin Imbal Hasil Lebih Optimal?' );
+    $tab_dep_desc      = get_option( 'options_tabungan_dep_desc', 'Jelajahi produk Deposito Mudharabah BPRS Wakalumi dengan tenor 1, 3, 6, dan 12 bulan serta porsi nisbah bagi hasil yang kompetitif.' );
+    $tab_dep_btn       = get_option( 'options_tabungan_dep_btn', 'Lihat Halaman Deposito Mudharabah' );
+
+    // Deposito: Header & LPS
     $dep_page_badge    = get_option( 'options_deposito_page_badge', 'Investasi Syariah Berkah' );
     $dep_page_title    = get_option( 'options_deposito_page_title', 'Deposito Mudharabah BPRS Wakalumi' );
     $dep_page_sub      = get_option( 'options_deposito_page_subtitle', 'Pilihan tepat bagi Anda berinvestasi sekaligus beribadah. Investasi aman, menguntungkan, dan berkah dengan prinsip Mudharabah Muthlaqah.' );
     $dep_quote         = get_option( 'options_deposito_quote', 'Merupakan investasi anda baik secara individu maupun perusahaan dalam bentuk deposito yang sesuai dengan prinsip syariah yakni Mudharabah Muthlaqah, pilihan tepat bagi anda berinvestasi sekaligus juga ibadah.' );
+    $dep_lps_tag       = get_option( 'options_deposito_lps_tag', 'Penjaminan Resmi LPS & OJK' );
+    $dep_lps_title     = get_option( 'options_deposito_lps_title', 'Dijamin LPS s.d. Rp 2 Miliar' );
+    $dep_lps_desc      = get_option( 'options_deposito_lps_desc', 'Dana simpanan deposito Anda aman dan dijamin oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan batas maksimal penjaminan.' );
+    $dep_lps_btn       = get_option( 'options_deposito_lps_btn_text', 'Hitung Simulasi Bagi Hasil' );
+
+    // Deposito: Tenor Section & 4 Cards
+    $dep_tenor_kicker  = get_option( 'options_deposito_tenor_kicker', 'Fleksibilitas Investasi' );
+    $dep_tenor_title   = get_option( 'options_deposito_tenor_title', 'Pilihan Tenor Fleksibel Sesuai Kebutuhan' );
+    $dep_tenor_desc    = get_option( 'options_deposito_tenor_desc', 'Pilih jangka waktu penempatan yang paling cocok untuk rencana likuiditas pribadi maupun perusahaan.' );
+    $dep_t1_badge      = get_option( 'options_deposito_t1_badge', 'Tenor Singkat' );
+    $dep_t1_desc       = get_option( 'options_deposito_t1_desc', 'Likuiditas cepat dan fleksibel untuk perputaran dana jangka sangat pendek.' );
+    $dep_t1_aro        = get_option( 'options_deposito_t1_aro', 'ARO Tersedia' );
+    $dep_t3_badge      = get_option( 'options_deposito_t3_badge', 'Tenor Menengah' );
+    $dep_t3_desc       = get_option( 'options_deposito_t3_desc', 'Kombinasi seimbang antara imbal hasil menarik dan durasi penempatan dana.' );
+    $dep_t3_aro        = get_option( 'options_deposito_t3_aro', 'ARO Tersedia' );
+    $dep_t6_badge      = get_option( 'options_deposito_t6_badge', 'Tenor Optimal' );
+    $dep_t6_desc       = get_option( 'options_deposito_t6_desc', 'Pilihan populer untuk alokasi dana semesteran dengan nisbah lebih menguntungkan.' );
+    $dep_t6_aro        = get_option( 'options_deposito_t6_aro', 'ARO Tersedia' );
+    $dep_t12_badge     = get_option( 'options_deposito_t12_badge', 'Tenor Panjang' );
+    $dep_t12_high      = get_option( 'options_deposito_t12_highlight', 'Hasil Tertinggi' );
+    $dep_t12_desc      = get_option( 'options_deposito_t12_desc', 'Pertumbuhan investasi maksimal dengan porsi nisbah bagi hasil paling optimal.' );
+    $dep_t12_aro       = get_option( 'options_deposito_t12_aro', 'ARO Tersedia' );
+
+    // Deposito: Keunggulan
+    $dep_keung_kicker  = get_option( 'options_deposito_keunggulan_kicker', 'Nilai Tambah Investasi' );
+    $dep_keung_title   = get_option( 'options_deposito_keunggulan_title', 'Keunggulan Deposito Mudharabah BPRS Wakalumi' );
+    $dep_keung_badge   = get_option( 'options_deposito_keunggulan_badge', '6 Keistimewaan Produk' );
+    $dep_keunggulan    = get_option( 'options_deposito_keunggulan', "Prinsip murni Mudharabah Muthlaqah (bebas riba & gharar)\nNisbah bagi hasil kompetitif dan adil\nPilihan jangka waktu fleksibel (1, 3, 6, dan 12 bulan)\nFasilitas ARO (Automatic Roll Over) pokok atau pokok + bagi hasil\nDapat dijadikan agunan/jaminan pembiayaan syariah\nDijamin Lembaga Penjamin Simpanan (LPS) hingga Rp 2 Miliar" );
+
+    // Deposito: Nisbah Section & Sharia Note
+    $dep_nisbah_kicker = get_option( 'options_deposito_nisbah_kicker', 'Transparansi Realisasi Bagi Hasil' );
+    $dep_nisbah_title  = get_option( 'options_deposito_nisbah_title', 'Tabel Nisbah & Indikasi Equivalent Rate' );
+    $dep_nisbah_desc   = get_option( 'options_deposito_nisbah_desc', 'Porsi pembagian keuntungan periode {bulan}, terkelola profesional dan diawasi Dewan Pengawas Syariah.' );
+    $dep_nisbah_row_desc = get_option( 'options_deposito_nisbah_row_desc', 'Bagi hasil dibagikan bulanan • ARO' );
+    $dep_sharia_title  = get_option( 'options_deposito_sharia_note_title', '*Catatan Penting Syariah (Karakteristik Estimasi Bagi Hasil):' );
+    $dep_sharia_desc   = get_option( 'options_deposito_sharia_note_desc', 'Porsi nisbah dan indikasi Equivalent Rate (Eqv. Rate) adalah estimasi indikatif berdasarkan realisasi kinerja penyaluran pembiayaan riil bisnis bank periode berjalan. Sesuai prinsip fatwa DSN-MUI (Mudharabah Muthlaqah), imbal hasil tidak dijanjikan secara pasti/tetap di muka (bebas riba), melainkan fluktuatif mengikuti pendapatan riil bank.' );
+
+    // Deposito: Kalkulator
+    $dep_calc_badge    = get_option( 'options_deposito_calc_badge', 'Simulasi Finansial Syariah' );
+    $dep_calc_title    = get_option( 'options_deposito_calc_title', 'Kalkulator Simulasi Imbal Hasil Deposito' );
+    $dep_calc_desc     = get_option( 'options_deposito_calc_desc', 'Hitung estimasi bagi hasil bulanan dan total imbal hasil penempatan dana deposito syariah Anda secara instan, transparan, dan sesuai porsi nisbah terkini.' );
+    $dep_calc_min      = get_option( 'options_deposito_calc_min', '500000' );
+    $dep_calc_max      = get_option( 'options_deposito_calc_max', '500000000' );
+    $dep_calc_default  = get_option( 'options_deposito_calc_default', '50000000' );
+    $dep_calc_note     = get_option( 'options_deposito_calc_note', '*Simulasi indikatif sebelum pajak. Bagi hasil riil fluktuatif mengikuti pendapatan bulanan bank.' );
+
+    // Deposito: Persyaratan & Dokumen
+    $dep_syarat_kicker = get_option( 'options_deposito_syarat_kicker', 'Persyaratan Pembukaan' );
+    $dep_syarat_title  = get_option( 'options_deposito_syarat_title', 'Dokumen & Ketentuan Pembukaan Deposito' );
+    $dep_syarat_desc   = get_option( 'options_deposito_syarat_desc', 'Pilih kategori kepemilikan rekening untuk melihat daftar persyaratan dokumen resmi.' );
+    $dep_tab1_label    = get_option( 'options_deposito_tab1_label', 'Nasabah Perorangan (Individu)' );
+    $dep_tab1_badge    = get_option( 'options_deposito_tab1_badge', 'WNI & WNA' );
+    $dep_syarat_ind    = get_option( 'options_deposito_syarat_individu', "Mengisi formulir permohonan pembukaan bilyet Deposito Mudharabah\nFotokopi e-KTP / Paspor pemohon yang masih berlaku\nFotokopi NPWP pemohon\nMemiliki rekening tabungan di BPRS Wakalumi sebagai rekening penampung bagi hasil\nNominal penempatan minimal Rp 5.000.000" );
+    $dep_syarat_ind_note = get_option( 'options_deposito_syarat_ind_note', 'Formulir resmi pembukaan bilyet deposito dapat dibantu pengisiannya langsung oleh Customer Service kami.' );
+    $dep_tab2_label    = get_option( 'options_deposito_tab2_label', 'Perusahaan / Badan Usaha / Yayasan' );
+    $dep_tab2_badge    = get_option( 'options_deposito_tab2_badge', 'PT / CV / Yayasan / Koperasi' );
+    $dep_syarat_lem    = get_option( 'options_deposito_syarat_lembaga', "Mengisi formulir pembukaan rekening Deposito Lembaga / Perusahaan\nFotokopi Akta Pendirian Perusahaan & Perubahan Anggaran Dasar Terakhir\nFotokopi NIB (Nomor Induk Berusaha) / SIUP & TDP\nFotokopi NPWP Perusahaan / Yayasan\nFotokopi e-KTP Pengurus / Direksi yang berwenang menandatangani bilyet\nSurat Kuasa Direksi (jika dikuasakan)\nNominal penempatan minimal Rp 10.000.000" );
+    $dep_syarat_lem_note = get_option( 'options_deposito_syarat_lem_note', 'Persyaratan khusus institusi syariah & penempatan nominal besar dapat dikonsultasikan langsung via tim Treasury.' );
+
+    // Deposito: CTA & Brosur
+    $dep_cta_kicker    = get_option( 'options_deposito_cta_kicker', 'Konsultasi Penempatan Deposito' );
+    $dep_cta_title     = get_option( 'options_deposito_cta_title', 'Siap Mengoptimalkan Pertumbuhan Investasi Berkah Anda?' );
+    $dep_cta_desc      = get_option( 'options_deposito_cta_desc', 'Hubungi staf treasury dan customer service kami untuk mendapatkan penawaran porsi nisbah terbaik bagi dana simpanan perorangan maupun korporasi.' );
+    $dep_cta_btn       = get_option( 'options_deposito_cta_btn_text', 'Hubungi via WhatsApp' );
+    $dep_cta_wa_msg    = get_option( 'options_deposito_cta_wa_msg', 'Halo BPRS Wakalumi, saya ingin berkonsultasi mengenai penempatan dana Deposito Mudharabah.' );
+    $dep_brosur_url    = get_option( 'options_brosur_file_url', '' );
+
+    // Deposito: Parameter Dasar
     $dep_akad          = get_option( 'options_deposito_akad', 'Mudharabah Muthlaqah' );
     $dep_min           = get_option( 'options_deposito_min_penempatan', 'Rp 5.000.000' );
     $dep_tenor         = get_option( 'options_deposito_tenor_list', '1 Bulan, 3 Bulan, 6 Bulan, 12 Bulan' );
-    $dep_keunggulan    = get_option( 'options_deposito_keunggulan', "Prinsip murni Mudharabah Muthlaqah (bebas riba & gharar)\nNisbah bagi hasil kompetitif dan adil\nPilihan jangka waktu fleksibel (1, 3, 6, dan 12 bulan)\nFasilitas ARO (Automatic Roll Over) pokok atau pokok + bagi hasil\nDapat dijadikan agunan/jaminan pembiayaan syariah\nDijamin Lembaga Penjamin Simpanan (LPS) hingga Rp 2 Miliar" );
-    $dep_syarat_ind    = get_option( 'options_deposito_syarat_individu', "Mengisi formulir permohonan pembukaan bilyet Deposito Mudharabah\nFotokopi e-KTP / Paspor pemohon yang masih berlaku\nFotokopi NPWP pemohon\nMemiliki rekening tabungan di BPRS Wakalumi sebagai rekening penampung bagi hasil\nNominal penempatan minimal Rp 5.000.000" );
-    $dep_syarat_lem    = get_option( 'options_deposito_syarat_lembaga', "Mengisi formulir pembukaan rekening Deposito Lembaga / Perusahaan\nFotokopi Akta Pendirian Perusahaan & Perubahan Anggaran Dasar Terakhir\nFotokopi NIB (Nomor Induk Berusaha) / SIUP & TDP\nFotokopi NPWP Perusahaan / Yayasan\nFotokopi e-KTP Pengurus / Direksi yang berwenang menandatangani bilyet\nSurat Kuasa Direksi (jika dikuasakan)\nNominal penempatan minimal Rp 10.000.000" );
+
+    // Nisbah Deposito
+    $dep_nisbah_bulan  = wakalumi_get_nisbah_bulan();
+    $dep_rates         = wakalumi_get_deposito_rates();
 
     // Hotline
     $default_wa        = get_option( 'options_contact_wa', '6281517380388' );
@@ -280,18 +605,18 @@ function wakalumi_render_produk_admin_page() {
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <div>
                 <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
-                    💰 Pengelolaan Produk: Simpanan & Deposito
+                    Pengelolaan Produk: Simpanan & Deposito
                 </h1>
                 <p style="color: #64748b; font-size: 13px; margin: 0;">
                     Kelola daftar produk <strong>Tabungan Syariah (Dinamis Repeater)</strong> serta <strong>Deposito Mudharabah</strong> secara terpadu.
                 </p>
             </div>
             <div style="display: flex; gap: 8px;">
-                <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
-                    👁️ Buka Halaman Tabungan
+                <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span class="dashicons dashicons-external" style="font-size: 16px; width: 16px; height: 16px;"></span> Buka Halaman Tabungan
                 </a>
-                <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 4px;">
-                    👁️ Buka Halaman Deposito
+                <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span class="dashicons dashicons-external" style="font-size: 16px; width: 16px; height: 16px;"></span> Buka Halaman Deposito
                 </a>
             </div>
         </div>
@@ -302,13 +627,13 @@ function wakalumi_render_produk_admin_page() {
             <!-- NAVIGATION TABS -->
             <div style="display: flex; gap: 8px; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px;">
                 <button type="button" class="wkl-tab-btn active" data-tab="tab-tabungan" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: none; cursor: pointer; border-bottom: 3px solid #088395; color: #088395;">
-                    📖 1. Kelola Produk Tabungan (Dinamis)
+                    1. Kelola Produk Tabungan (Dinamis)
                 </button>
                 <button type="button" class="wkl-tab-btn" data-tab="tab-deposito" style="padding: 10px 20px; font-size: 14px; font-weight: 600; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #64748b;">
-                    🏛️ 2. Deposito Mudharabah
+                    2. Deposito Mudharabah & Nisbah
                 </button>
                 <button type="button" class="wkl-tab-btn" data-tab="tab-kontak" style="padding: 10px 20px; font-size: 14px; font-weight: 600; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #64748b;">
-                    💬 3. Hotline & Banner CTA
+                    3. Hotline & Banner CTA
                 </button>
             </div>
 
@@ -316,14 +641,14 @@ function wakalumi_render_produk_admin_page() {
                  TAB 1: TABUNGAN SYARIAH (REPEATER DINAMIS)
                  ======================================================== -->
             <div id="tab-tabungan" class="wkl-tab-content" style="display: block;">
-                <!-- Header Banner Tabungan -->
+                <!-- 1. Header Banner & Kartu Penjaminan LPS Tabungan -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        📌 Header Banner: Halaman Tabungan Syariah
+                        1. Header Banner &amp; Kartu Penjaminan LPS (Tabungan Syariah)
                     </h2>
-                    <table class="form-table" style="margin: 0;">
+                    <table class="form-table" style="margin: 0 0 20px 0;">
                         <tr>
-                            <th style="width: 220px;"><label for="options_tabungan_page_badge">Kicker / Badge Atas</label></th>
+                            <th style="width: 230px;"><label for="options_tabungan_page_badge">Kicker / Badge Atas</label></th>
                             <td><input type="text" id="options_tabungan_page_badge" name="options_tabungan_page_badge" value="<?php echo esc_attr( $tab_page_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
                         </tr>
                         <tr>
@@ -334,7 +659,37 @@ function wakalumi_render_produk_admin_page() {
                             <th><label for="options_tabungan_page_subtitle">Subtitle / Deskripsi</label></th>
                             <td><textarea id="options_tabungan_page_subtitle" name="options_tabungan_page_subtitle" rows="3" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $tab_page_sub ); ?></textarea></td>
                         </tr>
+                        <tr>
+                            <th><label for="options_tabungan_quote">Teks Kutipan Syariah (Quote Box)</label></th>
+                            <td><textarea id="options_tabungan_quote" name="options_tabungan_quote" rows="2" class="large-text" style="width: 100%; max-width: 650px; font-style: italic;"><?php echo esc_textarea( $tab_quote ); ?></textarea></td>
+                        </tr>
                     </table>
+
+                    <!-- Sub-Card: Kartu LPS Kanan Header Tabungan -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #088395; border-radius: 10px; padding: 16px 20px;">
+                        <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #0f172a;">
+                            Sub-Elemen: Kartu Penjaminan LPS (Kolom Kanan Header)
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Badge Penjaminan</label>
+                                <input type="text" name="options_tabungan_lps_tag" value="<?php echo esc_attr( $tab_lps_tag ); ?>" class="regular-text" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Kartu LPS</label>
+                                <input type="text" name="options_tabungan_lps_title" value="<?php echo esc_attr( $tab_lps_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi Jaminan LPS</label>
+                                <textarea name="options_tabungan_lps_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $tab_lps_desc ); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Tombol Aksi Tautan</label>
+                                <input type="text" name="options_tabungan_lps_btn_text" value="<?php echo esc_attr( $tab_lps_btn ); ?>" class="regular-text" style="width: 100%;">
+                                <span style="font-size: 11px; color: #64748b;">Mengarahkan langsung ke kalkulator rencana menabung.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Info Box Dinamis -->
@@ -471,53 +826,175 @@ function wakalumi_render_produk_admin_page() {
                     <?php endforeach; ?>
                 </div>
 
-                <!-- 🧮 PENGATURAN KALKULATOR SIMULASI TABUNGAN -->
+                <!-- 3. Tabel Komparasi Fitur Tabungan -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        🧮 Pengaturan Teks Kalkulator Rencana Menabung
+                        3. Tabel Komparasi Fitur Tabungan
                     </h2>
                     <table class="form-table" style="margin: 0;">
                         <tr>
-                            <th style="width: 220px;"><label for="options_tabungan_calc_badge">Badge / Kicker Atas</label></th>
-                            <td>
-                                <input type="text" id="options_tabungan_calc_badge" name="options_tabungan_calc_badge" value="<?php echo esc_attr( $tab_calc_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;" placeholder="misal: Simulasi Finansial Syariah">
-                                <p class="description">Label kecil di atas judul kalkulator (menggantikan tulisan kaku "Tool Interaktif").</p>
-                            </td>
+                            <th style="width: 230px;"><label for="options_tabungan_komparasi_kicker">Kicker / Badge Tabel</label></th>
+                            <td><input type="text" id="options_tabungan_komparasi_kicker" name="options_tabungan_komparasi_kicker" value="<?php echo esc_attr( $tab_komp_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
                         </tr>
                         <tr>
-                            <th><label for="options_tabungan_calc_title">Judul Utama Kalkulator</label></th>
-                            <td>
-                                <input type="text" id="options_tabungan_calc_title" name="options_tabungan_calc_title" value="<?php echo esc_attr( $tab_calc_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;">
-                            </td>
+                            <th><label for="options_tabungan_komparasi_title">Judul Utama Tabel</label></th>
+                            <td><input type="text" id="options_tabungan_komparasi_title" name="options_tabungan_komparasi_title" value="<?php echo esc_attr( $tab_komp_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
                         </tr>
                         <tr>
-                            <th><label for="options_tabungan_calc_subtitle">Deskripsi / Subtitle</label></th>
-                            <td>
-                                <textarea id="options_tabungan_calc_subtitle" name="options_tabungan_calc_subtitle" rows="3" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $tab_calc_sub ); ?></textarea>
-                            </td>
+                            <th><label for="options_tabungan_komparasi_desc">Deskripsi Tabel</label></th>
+                            <td><textarea id="options_tabungan_komparasi_desc" name="options_tabungan_komparasi_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $tab_komp_desc ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_komparasi_lps_note">Catatan Penjaminan LPS di Tabel</label></th>
+                            <td><input type="text" id="options_tabungan_komparasi_lps_note" name="options_tabungan_komparasi_lps_note" value="<?php echo esc_attr( $tab_komp_lps ); ?>" class="regular-text" style="width: 100%; max-width: 650px;"></td>
                         </tr>
                     </table>
                 </div>
 
-                <!-- ❓ PENGATURAN TANYA JAWAB (FAQ / QnA) TABUNGAN -->
+                <!-- 4. 4 Keunggulan Menabung di BPRS Wakalumi -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        4. Keunggulan Simpanan Syariah (4 Kartu Eksekutif)
+                    </h2>
+                    <table class="form-table" style="margin: 0 0 20px 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_tabungan_keung_kicker">Kicker Section</label></th>
+                            <td><input type="text" id="options_tabungan_keung_kicker" name="options_tabungan_keung_kicker" value="<?php echo esc_attr( $tab_keung_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_keung_title">Judul Section Keunggulan</label></th>
+                            <td><input type="text" id="options_tabungan_keung_title" name="options_tabungan_keung_title" value="<?php echo esc_attr( $tab_keung_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_keung_desc">Deskripsi Singkat</label></th>
+                            <td><textarea id="options_tabungan_keung_desc" name="options_tabungan_keung_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $tab_keung_desc ); ?></textarea></td>
+                        </tr>
+                    </table>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                        <!-- Keunggulan 1 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #088395; border-radius: 10px; padding: 16px;">
+                            <span style="font-size: 11px; font-weight: 800; color: #088395; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 01</span>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 1</label>
+                                <input type="text" name="options_tabungan_keung_1_title" value="<?php echo esc_attr( $tab_keung_1_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 1</label>
+                                <textarea name="options_tabungan_keung_1_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_1_desc ); ?></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Keunggulan 2 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #2563eb; border-radius: 10px; padding: 16px;">
+                            <span style="font-size: 11px; font-weight: 800; color: #2563eb; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 02</span>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 2</label>
+                                <input type="text" name="options_tabungan_keung_2_title" value="<?php echo esc_attr( $tab_keung_2_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 2</label>
+                                <textarea name="options_tabungan_keung_2_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_2_desc ); ?></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Keunggulan 3 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #d97706; border-radius: 10px; padding: 16px;">
+                            <span style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 03</span>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 3</label>
+                                <input type="text" name="options_tabungan_keung_3_title" value="<?php echo esc_attr( $tab_keung_3_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 3</label>
+                                <textarea name="options_tabungan_keung_3_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_3_desc ); ?></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Keunggulan 4 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #059669; border-radius: 10px; padding: 16px;">
+                            <span style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 04</span>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 4</label>
+                                <input type="text" name="options_tabungan_keung_4_title" value="<?php echo esc_attr( $tab_keung_4_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 4</label>
+                                <textarea name="options_tabungan_keung_4_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_4_desc ); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Kalkulator Simulasi Tabungan -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        5. Kalkulator Simulasi Rencana Menabung
+                    </h2>
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_tabungan_calc_badge">Badge / Kicker Atas</label></th>
+                            <td><input type="text" id="options_tabungan_calc_badge" name="options_tabungan_calc_badge" value="<?php echo esc_attr( $tab_calc_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;" placeholder="misal: Simulasi Finansial Syariah"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_title">Judul Utama Kalkulator</label></th>
+                            <td><input type="text" id="options_tabungan_calc_title" name="options_tabungan_calc_title" value="<?php echo esc_attr( $tab_calc_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_subtitle">Deskripsi / Subtitle</label></th>
+                            <td><textarea id="options_tabungan_calc_subtitle" name="options_tabungan_calc_subtitle" rows="3" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $tab_calc_sub ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_target_min">Target Minimum Simulasi (Rp)</label></th>
+                            <td>
+                                <input type="number" id="options_tabungan_calc_target_min" name="options_tabungan_calc_target_min" value="<?php echo esc_attr( $tab_calc_min ); ?>" class="regular-text" style="width: 200px;" step="100000">
+                                <span class="description" style="margin-left: 8px;">Default: <code>2000000</code> (Rp 2 Juta).</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_target_max">Target Maksimum Simulasi (Rp)</label></th>
+                            <td>
+                                <input type="number" id="options_tabungan_calc_target_max" name="options_tabungan_calc_target_max" value="<?php echo esc_attr( $tab_calc_max ); ?>" class="regular-text" style="width: 200px;" step="1000000">
+                                <span class="description" style="margin-left: 8px;">Default: <code>100000000</code> (Rp 100 Juta).</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_target_default">Target Default Awal (Rp)</label></th>
+                            <td>
+                                <input type="number" id="options_tabungan_calc_target_default" name="options_tabungan_calc_target_default" value="<?php echo esc_attr( $tab_calc_default ); ?>" class="regular-text" style="width: 200px;" step="1000000">
+                                <span class="description" style="margin-left: 8px;">Default: <code>25000000</code> (Rp 25 Juta - Porsi Haji).</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_note">Catatan Kaki Simulasi</label></th>
+                            <td><textarea id="options_tabungan_calc_note" name="options_tabungan_calc_note" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $tab_calc_note ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_calc_btn_text">Teks Tombol Aksi WhatsApp</label></th>
+                            <td><input type="text" id="options_tabungan_calc_btn_text" name="options_tabungan_calc_btn_text" value="<?php echo esc_attr( $tab_calc_btn ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 6. Tanya Jawab (FAQ / QnA) Tabungan -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                         <div>
                             <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin: 0 0 4px 0;">
-                                ❓ Tanya Jawab (FAQ / QnA) Tabungan Syariah
+                                6. Tanya Jawab (FAQ / QnA) Tabungan Syariah
                             </h2>
                             <p style="margin: 0; font-size: 12px; color: #64748b;">
-                                Kelola daftar pertanyaan & jawaban umum yang ditampilkan pada halaman Tabungan Syariah.
+                                Kelola daftar pertanyaan &amp; jawaban umum yang ditampilkan pada halaman Tabungan Syariah.
                             </p>
                         </div>
                         <button type="button" id="btn-add-faq" class="button" style="background: #0f766e; color: #fff; border-color: #0d9488; font-weight: bold;">
-                            ➕ Tambah Tanya Jawab Baru
+                            + Tambah Tanya Jawab Baru
                         </button>
                     </div>
 
                     <table class="form-table" style="margin-bottom: 20px;">
                         <tr>
-                            <th style="width: 220px;"><label for="options_tabungan_faq_badge">Badge / Label FAQ</label></th>
+                            <th style="width: 230px;"><label for="options_tabungan_faq_badge">Badge / Label FAQ</label></th>
                             <td><input type="text" id="options_tabungan_faq_badge" name="options_tabungan_faq_badge" value="<?php echo esc_attr( $tab_faq_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
                         </tr>
                         <tr>
@@ -539,7 +1016,7 @@ function wakalumi_render_produk_admin_page() {
                                         Q#<span class="wkl-faq-num"><?php echo ( $f_idx + 1 ); ?></span>
                                     </strong>
                                     <button type="button" class="button-link wkl-btn-remove-faq" style="color: #ef4444; font-size: 12px; text-decoration: none;">
-                                        🗑️ Hapus Pertanyaan
+                                        Hapus Pertanyaan
                                     </button>
                                 </div>
                                 <div style="margin-bottom: 10px;">
@@ -554,20 +1031,80 @@ function wakalumi_render_produk_admin_page() {
                         <?php endforeach; ?>
                     </div>
                 </div>
+
+                <!-- 7. Box Brosur PDF & Box Promo Deposito -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        7. Box Brosur PDF &amp; Box Promo Deposito Mudharabah
+                    </h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Kolom Kiri: Box Brosur -->
+                        <div style="background: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 10px; padding: 16px;">
+                            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; color: #0f766e;">
+                                Box Unduh Brosur Resmi (Terintegrasi Pusat)
+                            </h4>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Kicker / Tag</label>
+                                <input type="text" name="options_tabungan_brosur_kicker" value="<?php echo esc_attr( $tab_brosur_kicker ); ?>" class="regular-text" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Box</label>
+                                <input type="text" name="options_tabungan_brosur_title" value="<?php echo esc_attr( $tab_brosur_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi</label>
+                                <textarea name="options_tabungan_brosur_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $tab_brosur_desc ); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Tombol Unduh</label>
+                                <input type="text" name="options_tabungan_brosur_btn" value="<?php echo esc_attr( $tab_brosur_btn ); ?>" class="regular-text" style="width: 100%;">
+                                <span style="font-size: 11px; color: #64748b;">Menggunakan tautan berkas brosur PDF resmi yang tersimpan di sistem.</span>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan: Box Promo Deposito -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
+                            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 700; color: #0f172a;">
+                                Box Pintasan Deposito Mudharabah
+                            </h4>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Kicker / Tag</label>
+                                <input type="text" name="options_tabungan_dep_kicker" value="<?php echo esc_attr( $tab_dep_kicker ); ?>" class="regular-text" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Box</label>
+                                <input type="text" name="options_tabungan_dep_title" value="<?php echo esc_attr( $tab_dep_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi</label>
+                                <textarea name="options_tabungan_dep_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $tab_dep_desc ); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Tautan</label>
+                                <input type="text" name="options_tabungan_dep_btn" value="<?php echo esc_attr( $tab_dep_btn ); ?>" class="regular-text" style="width: 100%;">
+                                <span style="font-size: 11px; color: #64748b;">Mengarahkan pengunjung langsung ke halaman Deposito Syariah.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ========================================================
-                 TAB 2: DEPOSITO MUDHARABAH
+                 TAB 2: DEPOSITO MUDHARABAH & NISBAH
+                 ======================================================== -->
+            <!-- ========================================================
+                 TAB 2: DEPOSITO MUDHARABAH & NISBAH
                  ======================================================== -->
             <div id="tab-deposito" class="wkl-tab-content" style="display: none;">
-                <!-- Header Banner Deposito -->
+                
+                <!-- 1. Header Banner & Kartu Penjaminan LPS -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        📌 Header Banner: Halaman Deposito Mudharabah
+                        1. Header Banner &amp; Kartu Penjaminan LPS
                     </h2>
-                    <table class="form-table" style="margin: 0;">
+                    <table class="form-table" style="margin: 0 0 20px 0;">
                         <tr>
-                            <th style="width: 220px;"><label for="options_deposito_page_badge">Kicker / Badge Atas</label></th>
+                            <th style="width: 230px;"><label for="options_deposito_page_badge">Kicker / Badge Atas</label></th>
                             <td><input type="text" id="options_deposito_page_badge" name="options_deposito_page_badge" value="<?php echo esc_attr( $dep_page_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
                         </tr>
                         <tr>
@@ -583,16 +1120,373 @@ function wakalumi_render_produk_admin_page() {
                             <td><textarea id="options_deposito_quote" name="options_deposito_quote" rows="3" class="large-text" style="width: 100%; max-width: 650px; font-style: italic;"><?php echo esc_textarea( $dep_quote ); ?></textarea></td>
                         </tr>
                     </table>
+
+                    <!-- Sub-Card: Kartu LPS Kanan Header -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #088395; border-radius: 10px; padding: 16px 20px;">
+                        <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #0f172a;">
+                            Sub-Elemen: Kartu Penjaminan LPS (Kolom Kanan Header)
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Badge Penjaminan</label>
+                                <input type="text" name="options_deposito_lps_tag" value="<?php echo esc_attr( $dep_lps_tag ); ?>" class="regular-text" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Kartu LPS</label>
+                                <input type="text" name="options_deposito_lps_title" value="<?php echo esc_attr( $dep_lps_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi Jaminan LPS</label>
+                                <textarea name="options_deposito_lps_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $dep_lps_desc ); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Tombol Aksi Tautan</label>
+                                <input type="text" name="options_deposito_lps_btn_text" value="<?php echo esc_attr( $dep_lps_btn ); ?>" class="regular-text" style="width: 100%;">
+                                <span style="font-size: 11px; color: #64748b;">Mengarahkan langsung ke section kalkulator simulasi.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Rincian & Ketentuan Deposito -->
+                <!-- 2. Pilihan Tenor & 4 Kartu Tenor -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        2. Section Pilihan Tenor &amp; 4 Kartu Jangka Waktu
+                    </h2>
+                    <table class="form-table" style="margin: 0 0 20px 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_deposito_tenor_kicker">Kicker Section</label></th>
+                            <td><input type="text" id="options_deposito_tenor_kicker" name="options_deposito_tenor_kicker" value="<?php echo esc_attr( $dep_tenor_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_tenor_title">Judul Section</label></th>
+                            <td><input type="text" id="options_deposito_tenor_title" name="options_deposito_tenor_title" value="<?php echo esc_attr( $dep_tenor_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_tenor_desc">Deskripsi Pengantar</label></th>
+                            <td><textarea id="options_deposito_tenor_desc" name="options_deposito_tenor_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_tenor_desc ); ?></textarea></td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin: 15px 0 10px 0; font-size: 13px; font-weight: 700; color: #334155;">Konfigurasi Teks Masing-Masing Kartu Tenor:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+                        
+                        <!-- Tenor 1 Bulan -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                            <div style="font-weight: 800; font-size: 14px; color: #088395; margin-bottom: 8px;">Tenor 1 Bulan</div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
+                            <input type="text" name="options_deposito_t1_badge" value="<?php echo esc_attr( $dep_t1_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                            <textarea name="options_deposito_t1_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t1_desc ); ?></textarea>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
+                            <input type="text" name="options_deposito_t1_aro" value="<?php echo esc_attr( $dep_t1_aro ); ?>" style="width: 100%;">
+                        </div>
+
+                        <!-- Tenor 3 Bulan -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                            <div style="font-weight: 800; font-size: 14px; color: #088395; margin-bottom: 8px;">Tenor 3 Bulan</div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
+                            <input type="text" name="options_deposito_t3_badge" value="<?php echo esc_attr( $dep_t3_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                            <textarea name="options_deposito_t3_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t3_desc ); ?></textarea>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
+                            <input type="text" name="options_deposito_t3_aro" value="<?php echo esc_attr( $dep_t3_aro ); ?>" style="width: 100%;">
+                        </div>
+
+                        <!-- Tenor 6 Bulan -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                            <div style="font-weight: 800; font-size: 14px; color: #088395; margin-bottom: 8px;">Tenor 6 Bulan</div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
+                            <input type="text" name="options_deposito_t6_badge" value="<?php echo esc_attr( $dep_t6_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                            <textarea name="options_deposito_t6_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t6_desc ); ?></textarea>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
+                            <input type="text" name="options_deposito_t6_aro" value="<?php echo esc_attr( $dep_t6_aro ); ?>" style="width: 100%;">
+                        </div>
+
+                        <!-- Tenor 12 Bulan -->
+                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 14px;">
+                            <div style="font-weight: 800; font-size: 14px; color: #0f766e; margin-bottom: 8px;">Tenor 12 Bulan (Pilihan Populer)</div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
+                            <input type="text" name="options_deposito_t12_badge" value="<?php echo esc_attr( $dep_t12_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Highlight Badge Kanan</label>
+                            <input type="text" name="options_deposito_t12_highlight" value="<?php echo esc_attr( $dep_t12_high ); ?>" style="width: 100%; margin-bottom: 8px; font-weight: bold; color: #0d9488;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                            <textarea name="options_deposito_t12_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t12_desc ); ?></textarea>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
+                            <input type="text" name="options_deposito_t12_aro" value="<?php echo esc_attr( $dep_t12_aro ); ?>" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Poin Keunggulan Deposito Mudharabah -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        3. Kotak Keunggulan Deposito Mudharabah
+                    </h2>
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_deposito_keunggulan_kicker">Kicker Atas Kotak</label></th>
+                            <td><input type="text" id="options_deposito_keunggulan_kicker" name="options_deposito_keunggulan_kicker" value="<?php echo esc_attr( $dep_keung_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_keunggulan_title">Judul Utama Kotak</label></th>
+                            <td><input type="text" id="options_deposito_keunggulan_title" name="options_deposito_keunggulan_title" value="<?php echo esc_attr( $dep_keung_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_keunggulan_badge">Badge Kanan Kotak</label></th>
+                            <td><input type="text" id="options_deposito_keunggulan_badge" name="options_deposito_keunggulan_badge" value="<?php echo esc_attr( $dep_keung_badge ); ?>" class="regular-text" style="width: 100%; max-width: 350px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_keunggulan">Daftar Poin Keunggulan<br><small style="color: #64748b; font-weight: normal;">(Tulis 1 poin per baris)</small></label></th>
+                            <td><textarea id="options_deposito_keunggulan" name="options_deposito_keunggulan" rows="6" class="large-text" style="width: 100%; max-width: 650px; font-family: monospace;"><?php echo esc_textarea( $dep_keunggulan ); ?></textarea></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 4. Realisasi Nisbah Bagi Hasil Deposito (Tersinkronisasi 2-Arah) & Catatan Syariah -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">
+                                4. Realisasi Nisbah, Indikasi Equivalent Rate &amp; Catatan Syariah
+                            </h3>
+                            <p style="margin: 0; font-size: 12px; color: #64748b;">
+                                Nilai ini langsung terhubung secara live ke <strong>Halaman Utama (Beranda)</strong>, <strong>Halaman Deposito</strong>, dan <strong>Kalkulator Simulasi</strong>.
+                            </p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label for="options_nisbah_bulan" style="font-size: 12px; font-weight: bold; color: #334155;">Periode Bulan:</label>
+                            <input type="text" id="options_nisbah_bulan" name="options_nisbah_bulan" value="<?php echo esc_attr( $dep_nisbah_bulan ); ?>" class="regular-text" style="width: 150px; font-weight: bold; padding: 4px 8px;" placeholder="Agustus 2026">
+                        </div>
+                    </div>
+
+                    <table class="form-table" style="margin: 0 0 16px 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_deposito_nisbah_kicker">Kicker Section</label></th>
+                            <td><input type="text" id="options_deposito_nisbah_kicker" name="options_deposito_nisbah_kicker" value="<?php echo esc_attr( $dep_nisbah_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_nisbah_title">Judul Section Nisbah</label></th>
+                            <td><input type="text" id="options_deposito_nisbah_title" name="options_deposito_nisbah_title" value="<?php echo esc_attr( $dep_nisbah_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_nisbah_desc">Deskripsi Tabel<br><small style="color: #64748b; font-weight: normal;">Gunakan <code>{bulan}</code> untuk memanggil periode</small></label></th>
+                            <td><input type="text" id="options_deposito_nisbah_desc" name="options_deposito_nisbah_desc" value="<?php echo esc_attr( $dep_nisbah_desc ); ?>" class="large-text" style="width: 100%; max-width: 650px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_nisbah_row_desc">Keterangan Baris Akad</label></th>
+                            <td><input type="text" id="options_deposito_nisbah_row_desc" name="options_deposito_nisbah_row_desc" value="<?php echo esc_attr( $dep_nisbah_row_desc ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                    </table>
+
+                    <table class="widefat striped" style="border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th style="font-weight: 700; padding: 10px 14px;">Tenor Penempatan</th>
+                                <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Porsi Nasabah (%)</th>
+                                <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Porsi Bank (%)</th>
+                                <th style="font-weight: 700; width: 180px; padding: 10px 14px;">Indikasi Eqv. Rate (% p.a.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $tenors = [ 1, 3, 6, 12 ];
+                            foreach ( $tenors as $t_m ) : 
+                                $r = $dep_rates[ $t_m ] ?? [
+                                    'nama'     => 'Deposito ' . $t_m . ' Bulan',
+                                    'nasabah'  => '40',
+                                    'bank'     => '60',
+                                    'equiv'    => '4.00%',
+                                ];
+                            ?>
+                                <tr>
+                                    <td style="padding: 10px 14px; font-weight: 600; color: #0f172a;">
+                                        <input type="hidden" name="dep_nisbah_produk[]" value="<?php echo esc_attr( $r['nama'] ); ?>">
+                                        <span class="dashicons dashicons-calendar-alt" style="color: #088395; margin-right: 6px; font-size: 18px; vertical-align: middle;"></span>
+                                        <?php echo esc_html( $r['nama'] ); ?>
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="dep_nisbah_nasabah[]" value="<?php echo esc_attr( $r['nasabah'] ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="dep_nisbah_bank[]" value="<?php echo esc_attr( $r['bank'] ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="dep_nisbah_equiv[]" value="<?php echo esc_attr( $r['equiv'] ); ?>" style="width: 120px; font-weight: bold; color: #059669;" placeholder="contoh: 4.23%" required>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <!-- Catatan Syariah / Karakteristik Estimasi -->
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; margin-top: 15px;">
+                        <label style="display: block; font-size: 12px; font-weight: 800; color: #166534; margin-bottom: 4px;">Judul Kotak Catatan Syariah (*Estimasi):</label>
+                        <input type="text" name="options_deposito_sharia_note_title" value="<?php echo esc_attr( $dep_sharia_title ); ?>" class="regular-text" style="width: 100%; margin-bottom: 8px; font-weight: 700;">
+                        <label style="display: block; font-size: 12px; font-weight: 800; color: #166534; margin-bottom: 4px;">Isi Catatan Syariah / Ketentuan DSN-MUI:</label>
+                        <textarea name="options_deposito_sharia_note_desc" rows="3" class="large-text" style="width: 100%;"><?php echo esc_textarea( $dep_sharia_desc ); ?></textarea>
+                    </div>
+                </div>
+
+                <!-- 5. Kalkulator Simulasi Imbal Hasil Deposito -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        5. Kalkulator Simulasi Imbal Hasil Deposito
+                    </h2>
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_deposito_calc_badge">Badge Kalkulator</label></th>
+                            <td><input type="text" id="options_deposito_calc_badge" name="options_deposito_calc_badge" value="<?php echo esc_attr( $dep_calc_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_calc_title">Judul Kalkulator</label></th>
+                            <td><input type="text" id="options_deposito_calc_title" name="options_deposito_calc_title" value="<?php echo esc_attr( $dep_calc_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_calc_desc">Deskripsi Kalkulator</label></th>
+                            <td><textarea id="options_deposito_calc_desc" name="options_deposito_calc_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_calc_desc ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label>Batas Nominal Simulasi</label></th>
+                            <td>
+                                <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: bold; color: #475569;">Minimal (Rp)</label>
+                                        <input type="number" id="options_deposito_calc_min" name="options_deposito_calc_min" value="<?php echo esc_attr( $dep_calc_min ); ?>" style="width: 140px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: bold; color: #475569;">Maksimal (Rp)</label>
+                                        <input type="number" id="options_deposito_calc_max" name="options_deposito_calc_max" value="<?php echo esc_attr( $dep_calc_max ); ?>" style="width: 160px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: bold; color: #475569;">Default Awal (Rp)</label>
+                                        <input type="number" id="options_deposito_calc_default" name="options_deposito_calc_default" value="<?php echo esc_attr( $dep_calc_default ); ?>" style="width: 160px;">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_calc_note">Catatan Kaki Simulasi</label></th>
+                            <td><textarea id="options_deposito_calc_note" name="options_deposito_calc_note" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_calc_note ); ?></textarea></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 6. Dokumen & Persyaratan Pembukaan Deposito -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        6. Dokumen &amp; Persyaratan Pembukaan Deposito
+                    </h2>
+                    <table class="form-table" style="margin: 0 0 20px 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_deposito_syarat_kicker">Kicker Section</label></th>
+                            <td><input type="text" id="options_deposito_syarat_kicker" name="options_deposito_syarat_kicker" value="<?php echo esc_attr( $dep_syarat_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_syarat_title">Judul Section</label></th>
+                            <td><input type="text" id="options_deposito_syarat_title" name="options_deposito_syarat_title" value="<?php echo esc_attr( $dep_syarat_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_syarat_desc">Deskripsi Section</label></th>
+                            <td><textarea id="options_deposito_syarat_desc" name="options_deposito_syarat_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_syarat_desc ); ?></textarea></td>
+                        </tr>
+                    </table>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Tab 1: Nasabah Perorangan -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #088395; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #0f172a;">Kategori 1: Perorangan (Individu)</h4>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Label Tab</label>
+                                <input type="text" name="options_deposito_tab1_label" value="<?php echo esc_attr( $dep_tab1_label ); ?>" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Badge Kanan Tab</label>
+                                <input type="text" name="options_deposito_tab1_badge" value="<?php echo esc_attr( $dep_tab1_badge ); ?>" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Daftar Dokumen / Syarat (1 per baris)</label>
+                                <textarea name="options_deposito_syarat_individu" rows="5" style="width: 100%; font-family: monospace;"><?php echo esc_textarea( $dep_syarat_ind ); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Catatan Bawah Card (Bantuan CS)</label>
+                                <textarea name="options_deposito_syarat_ind_note" rows="2" style="width: 100%;"><?php echo esc_textarea( $dep_syarat_ind_note ); ?></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Lembaga / Badan Usaha -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #059669; border-radius: 10px; padding: 18px;">
+                            <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: #0f172a;">Kategori 2: Badan Usaha / Lembaga</h4>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Label Tab</label>
+                                <input type="text" name="options_deposito_tab2_label" value="<?php echo esc_attr( $dep_tab2_label ); ?>" style="width: 100%; font-weight: bold;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Badge Kanan Tab</label>
+                                <input type="text" name="options_deposito_tab2_badge" value="<?php echo esc_attr( $dep_tab2_badge ); ?>" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Daftar Dokumen / Syarat (1 per baris)</label>
+                                <textarea name="options_deposito_syarat_lembaga" rows="5" style="width: 100%; font-family: monospace;"><?php echo esc_textarea( $dep_syarat_lem ); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 3px;">Catatan Bawah Card (Bantuan Treasury)</label>
+                                <textarea name="options_deposito_syarat_lem_note" rows="2" style="width: 100%;"><?php echo esc_textarea( $dep_syarat_lem_note ); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Banner Konsultasi & Unduh Brosur PDF -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        7. Banner Konsultasi &amp; Unduh Brosur PDF
+                    </h2>
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_deposito_cta_kicker">Kicker Banner</label></th>
+                            <td><input type="text" id="options_deposito_cta_kicker" name="options_deposito_cta_kicker" value="<?php echo esc_attr( $dep_cta_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_cta_title">Judul Banner CTA</label></th>
+                            <td><input type="text" id="options_deposito_cta_title" name="options_deposito_cta_title" value="<?php echo esc_attr( $dep_cta_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_cta_desc">Deskripsi Banner CTA</label></th>
+                            <td><textarea id="options_deposito_cta_desc" name="options_deposito_cta_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_cta_desc ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_cta_btn_text">Teks Tombol WhatsApp</label></th>
+                            <td><input type="text" id="options_deposito_cta_btn_text" name="options_deposito_cta_btn_text" value="<?php echo esc_attr( $dep_cta_btn ); ?>" class="regular-text" style="width: 100%; max-width: 350px;"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_cta_wa_msg">Template Pesan WhatsApp</label></th>
+                            <td><textarea id="options_deposito_cta_wa_msg" name="options_deposito_cta_wa_msg" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_cta_wa_msg ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_brosur_file_url">File Dokumen Brosur (PDF)</label></th>
+                            <td>
+                                <div style="display: flex; gap: 8px; align-items: center; max-width: 650px;">
+                                    <input type="text" id="options_brosur_file_url" name="options_brosur_file_url" value="<?php echo esc_url( $dep_brosur_url ); ?>" class="regular-text" style="flex: 1;" placeholder="https://.../brosur-deposito.pdf">
+                                    <button type="button" class="button wkl-upload-file-btn" data-target="options_brosur_file_url">
+                                        <span class="dashicons dashicons-media-document" style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle;"></span> Unggah / Pilih PDF
+                                    </button>
+                                </div>
+                                <p class="description">Jika URL brosur terisi, tombol "Unduh Brosur Produk (PDF)" akan otomatis muncul di banner CTA.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 8. Parameter Dasar Deposito -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #059669; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 16px;">
-                        💎 Ketentuan & Persyaratan Deposito
+                        8. Parameter Dasar Deposito
                     </h3>
                     <table class="form-table" style="margin: 0;">
                         <tr>
-                            <th style="width: 220px;"><label for="options_deposito_akad">Akad Syariah</label></th>
+                            <th style="width: 230px;"><label for="options_deposito_akad">Akad Syariah</label></th>
                             <td><input type="text" id="options_deposito_akad" name="options_deposito_akad" value="<?php echo esc_attr( $dep_akad ); ?>" class="regular-text" style="width: 100%; max-width: 350px;"></td>
                         </tr>
                         <tr>
@@ -603,26 +1497,9 @@ function wakalumi_render_produk_admin_page() {
                             <th><label for="options_deposito_tenor_list">Pilihan Jangka Waktu (Tenor)</label></th>
                             <td><input type="text" id="options_deposito_tenor_list" name="options_deposito_tenor_list" value="<?php echo esc_attr( $dep_tenor ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
                         </tr>
-                        <tr>
-                            <th><label for="options_deposito_keunggulan">Poin Keunggulan Deposito<br><small style="color: #64748b; font-weight: normal;">(1 poin per baris)</small></label></th>
-                            <td><textarea id="options_deposito_keunggulan" name="options_deposito_keunggulan" rows="5" class="large-text" style="width: 100%; max-width: 650px; font-family: monospace;"><?php echo esc_textarea( $dep_keunggulan ); ?></textarea></td>
-                        </tr>
-                        <tr>
-                            <th><label for="options_deposito_syarat_individu">Syarat Nasabah Individu<br><small style="color: #64748b; font-weight: normal;">(1 syarat per baris)</small></label></th>
-                            <td><textarea id="options_deposito_syarat_individu" name="options_deposito_syarat_individu" rows="4" class="large-text" style="width: 100%; max-width: 650px; font-family: monospace;"><?php echo esc_textarea( $dep_syarat_ind ); ?></textarea></td>
-                        </tr>
-                        <tr>
-                            <th><label for="options_deposito_syarat_lembaga">Syarat Badan Usaha / Lembaga<br><small style="color: #64748b; font-weight: normal;">(1 syarat per baris)</small></label></th>
-                            <td><textarea id="options_deposito_syarat_lembaga" name="options_deposito_syarat_lembaga" rows="5" class="large-text" style="width: 100%; max-width: 650px; font-family: monospace;"><?php echo esc_textarea( $dep_syarat_lem ); ?></textarea></td>
-                        </tr>
                     </table>
                 </div>
 
-                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px; margin-bottom: 25px;">
-                    <p style="margin: 0; color: #166534; font-size: 13px; line-height: 1.5;">
-                        💡 <strong>Catatan Pengelolaan Nisbah Bagi Hasil Deposito:</strong> Porsi nisbah nasabah, nisbah bank, dan <em>equivalent rate</em> bulanan secara otomatis tersinkronisasi dari menu <strong><a href="<?php echo admin_url( 'admin.php?page=wakalumi-settings&tab=nisbah' ); ?>" target="_blank" style="color: #15803d; font-weight: bold; text-decoration: underline;">Pengaturan Wakalumi &rarr; Informasi Nisbah</a></strong>. Setiap perubahan data di tabel nisbah akan langsung terupdate di halaman Deposito dan kalkulator simulasi.
-                    </p>
-                </div>
             </div>
 
             <!-- ========================================================
@@ -631,7 +1508,7 @@ function wakalumi_render_produk_admin_page() {
             <div id="tab-kontak" class="wkl-tab-content" style="display: none;">
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        💬 Hotline WhatsApp & Call to Action Produk
+                        Hotline WhatsApp & Call to Action Produk
                     </h2>
                     <table class="form-table" style="margin: 0;">
                         <tr>
@@ -656,7 +1533,7 @@ function wakalumi_render_produk_admin_page() {
             <!-- SUBMIT BUTTON -->
             <div style="margin-top: 20px; padding: 15px 0; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px;">
                 <button type="submit" name="wakalumi_save_produk_dana" class="button button-primary button-hero" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 30px;">
-                    💾 Simpan Semua Pengaturan Produk
+                    Simpan Semua Pengaturan Produk
                 </button>
                 <span style="color: #64748b; font-size: 13px;">Perubahan akan langsung terlihat pada halaman web dan dropdown navigasi secara instan.</span>
             </div>
@@ -773,7 +1650,7 @@ function wakalumi_render_produk_admin_page() {
                     Q#<span class="wkl-faq-num">1</span>
                 </strong>
                 <button type="button" class="button-link wkl-btn-remove-faq" style="color: #ef4444; font-size: 12px; text-decoration: none;">
-                    🗑️ Hapus Pertanyaan
+                    ✕ Hapus Pertanyaan
                 </button>
             </div>
             <div style="margin-bottom: 10px;">
@@ -801,71 +1678,75 @@ function wakalumi_render_produk_admin_page() {
                 tabBtns.forEach(function(b) {
                     b.style.borderBottomColor = 'transparent';
                     b.style.color = '#64748b';
-                    b.style.fontWeight = '600';
                 });
                 this.style.borderBottomColor = '#088395';
                 this.style.color = '#088395';
-                this.style.fontWeight = '700';
 
                 tabContents.forEach(function(content) {
-                    if (content.id === target) {
-                        content.style.display = 'block';
-                    } else {
-                        content.style.display = 'none';
-                    }
+                    content.style.display = 'none';
                 });
+                var activeContent = document.getElementById(target);
+                if (activeContent) {
+                    activeContent.style.display = 'block';
+                }
             });
         });
 
         // Repeater Tabungan functions
-        var listContainer = document.getElementById('tabungan-repeater-list');
+        var listContainer = document.getElementById('tabungan-product-list');
         var addBtn = document.getElementById('btn-add-tabungan');
         var tmpl = document.getElementById('tabungan-card-template');
 
         function updateNumbers() {
-            var items = listContainer.querySelectorAll('.tabungan-card-item');
-            items.forEach(function(item, idx) {
-                var numSpan = item.querySelector('.wkl-item-num');
+            if (!listContainer) return;
+            var cards = listContainer.querySelectorAll('.tabungan-card-item');
+            cards.forEach(function(card, idx) {
+                var numSpan = card.querySelector('.wkl-card-num');
                 if (numSpan) numSpan.textContent = (idx + 1);
+                var orderInput = card.querySelector('.wkl-card-order');
+                if (orderInput && (!orderInput.value || orderInput.value == idx)) {
+                    orderInput.value = (idx + 1);
+                }
             });
         }
 
         function bindCardEvents(card) {
-            var removeBtn = card.querySelector('.wkl-btn-remove-tabungan');
+            var toggleBtn = card.querySelector('.wkl-btn-toggle-card');
+            var body = card.querySelector('.wkl-card-body');
+            var icon = card.querySelector('.wkl-toggle-icon');
+            if (toggleBtn && body) {
+                toggleBtn.addEventListener('click', function() {
+                    if (body.style.display === 'none') {
+                        body.style.display = 'block';
+                        if (icon) icon.textContent = '▲ Tutup';
+                    } else {
+                        body.style.display = 'none';
+                        if (icon) icon.textContent = '▼ Buka';
+                    }
+                });
+            }
+
+            var removeBtn = card.querySelector('.wkl-btn-remove-card');
             if (removeBtn) {
                 removeBtn.addEventListener('click', function() {
-                    if (confirm('Apakah Anda yakin ingin menghapus produk tabungan ini?')) {
+                    if (confirm('Hapus produk tabungan ini?')) {
                         card.remove();
                         updateNumbers();
                     }
                 });
             }
-
-            var nameInput = card.querySelector('.wkl-tab-name-input');
-            var titlePreview = card.querySelector('.wkl-card-title-preview');
-            if (nameInput && titlePreview) {
-                nameInput.addEventListener('input', function() {
-                    titlePreview.textContent = this.value || 'Produk Baru';
-                });
-            }
         }
 
-        // Bind existing items
-        var existingCards = listContainer.querySelectorAll('.tabungan-card-item');
-        existingCards.forEach(function(c) {
-            bindCardEvents(c);
-        });
+        if (listContainer) {
+            listContainer.querySelectorAll('.tabungan-card-item').forEach(function(card) {
+                bindCardEvents(card);
+            });
+        }
 
-        // Add new card
         if (addBtn && tmpl && listContainer) {
             addBtn.addEventListener('click', function() {
                 var clone = tmpl.content.cloneNode(true);
                 var newCard = clone.querySelector('.tabungan-card-item');
-                var count = listContainer.querySelectorAll('.tabungan-card-item').length + 1;
-                
-                var urutanInput = newCard.querySelector('input[name="tab_urutan[]"]');
-                if (urutanInput) urutanInput.value = count;
-
                 bindCardEvents(newCard);
                 listContainer.appendChild(newCard);
                 updateNumbers();
@@ -913,6 +1794,26 @@ function wakalumi_render_produk_admin_page() {
                 faqListContainer.appendChild(newItem);
                 updateFaqNumbers();
                 newItem.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Universal File / PDF Uploader
+        if (window.jQuery) {
+            jQuery(document).on('click', '.wkl-upload-file-btn', function(e) {
+                e.preventDefault();
+                var btn = jQuery(this);
+                var targetId = btn.data('target');
+                var targetInput = jQuery('#' + targetId);
+                var fileFrame = wp.media({
+                    title: 'Pilih atau Unggah Dokumen Brosur (PDF)',
+                    button: { text: 'Gunakan Dokumen Ini' },
+                    multiple: false
+                });
+                fileFrame.on('select', function() {
+                    var attachment = fileFrame.state().get('selection').first().toJSON();
+                    targetInput.val(attachment.url).trigger('change');
+                });
+                fileFrame.open();
             });
         }
     });
