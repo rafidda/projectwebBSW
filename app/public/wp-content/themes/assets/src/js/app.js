@@ -1315,9 +1315,14 @@ const InstagramSlider = {
     const track = document.getElementById('ig-scroll-track');
     const prevBtn = document.getElementById('ig-scroll-prev');
     const nextBtn = document.getElementById('ig-scroll-next');
-    if (!track || !prevBtn || !nextBtn) return;
+    if (!track) return;
 
-    const scrollAmount = () => (window.innerWidth < 768 ? window.innerWidth * 0.85 + 24 : 374);
+    // Trigger Instagram Embed API parsing for new blockquotes
+    this.processEmbeds();
+
+    if (!prevBtn || !nextBtn) return;
+
+    const scrollAmount = () => (window.innerWidth < 768 ? Math.min(340, window.innerWidth * 0.88) + 24 : 374);
 
     const updateArrowVisibility = () => {
       const maxScroll = track.scrollWidth - track.clientWidth - 10;
@@ -1350,6 +1355,35 @@ const InstagramSlider = {
 
     track.addEventListener('scroll', updateArrowVisibility, { passive: true });
     updateArrowVisibility();
+  },
+
+  processEmbeds() {
+    const blockquotes = document.querySelectorAll('blockquote.instagram-media');
+    if (!blockquotes.length) return;
+
+    if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+      window.instgrm.Embeds.process();
+    } else {
+      let script = document.querySelector('script[src*="instagram.com/embed.js"]');
+      if (!script) {
+        script = document.createElement('script');
+        script.src = '//www.instagram.com/embed.js';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+            window.instgrm.Embeds.process();
+          }
+        };
+        document.body.appendChild(script);
+      } else {
+        setTimeout(() => {
+          if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+            window.instgrm.Embeds.process();
+          }
+        }, 300);
+      }
+    }
   }
 };
 
@@ -1564,11 +1598,24 @@ const SavingsCalculator = {
     const monthlyResult = document.getElementById('wkl-calc-result-monthly');
     const waBtn         = document.getElementById('wkl-calc-wa-btn');
     const presetBtns    = document.querySelectorAll('.wkl-calc-preset-btn');
+    const gotoCalcBtns  = document.querySelectorAll('.wkl-goto-calc');
 
     if (!targetRange || !monthsRange || !monthlyResult) return;
 
     const formatRupiah = (num) => {
       return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const selectProductByName = (prodName) => {
+      if (!productSelect || !prodName) return;
+      const cleanTarget = prodName.trim().toLowerCase();
+      for (let i = 0; i < productSelect.options.length; i++) {
+        const val = productSelect.options[i].value.trim().toLowerCase();
+        if (val === cleanTarget || val.includes(cleanTarget) || cleanTarget.includes(val)) {
+          productSelect.selectedIndex = i;
+          break;
+        }
+      }
     };
 
     const calculateSavings = () => {
@@ -1594,20 +1641,43 @@ const SavingsCalculator = {
 
     targetRange.addEventListener('input', calculateSavings);
     monthsRange.addEventListener('input', calculateSavings);
-    if (productSelect) productSelect.addEventListener('change', calculateSavings);
+    if (productSelect) {
+      productSelect.addEventListener('change', calculateSavings);
+    }
 
     presetBtns.forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         const val = parseInt(this.getAttribute('data-val'), 10);
+        const months = parseInt(this.getAttribute('data-months'), 10);
+        const prod = this.getAttribute('data-prod');
+
         if (targetRange && val) {
           targetRange.value = val;
-          presetBtns.forEach(b => {
-            b.classList.remove('border-teal-500/50', 'text-teal-300', 'bg-teal-950/60');
-            b.classList.add('border-slate-700', 'text-slate-200');
-          });
-          this.classList.remove('border-slate-700', 'text-slate-200');
-          this.classList.add('border-teal-500/50', 'text-teal-300', 'bg-teal-950/60');
+        }
+        if (monthsRange && months) {
+          monthsRange.value = months;
+        }
+        if (prod) {
+          selectProductByName(prod);
+        }
+
+        presetBtns.forEach(b => {
+          b.classList.remove('border-teal-500/50', 'text-teal-300', 'bg-teal-950/60');
+          b.classList.add('border-slate-700', 'text-slate-200');
+        });
+        this.classList.remove('border-slate-700', 'text-slate-200');
+        this.classList.add('border-teal-500/50', 'text-teal-300', 'bg-teal-950/60');
+
+        calculateSavings();
+      });
+    });
+
+    gotoCalcBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const targetProd = this.getAttribute('data-calc-select');
+        if (targetProd) {
+          selectProductByName(targetProd);
           calculateSavings();
         }
       });
@@ -1618,6 +1688,326 @@ const SavingsCalculator = {
 };
 
 // ========================================================================
+// VIDEO POPUP MODAL (BERANDA)
+// ========================================================================
+const VideoModal = {
+  _escBound: false,
+
+  init() {
+    const openBtn = document.getElementById('open-video-modal');
+    const closeBtn = document.getElementById('close-video-modal');
+    const modal = document.getElementById('video-modal');
+    const iframe = document.getElementById('video-modal-iframe');
+
+    if (!openBtn || !modal || !iframe) return;
+
+    const closeModal = () => {
+      iframe.src = '';
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    openBtn.onclick = (e) => {
+      e.preventDefault();
+      const src = iframe.getAttribute('data-src');
+      if (src && iframe.src !== src) {
+        iframe.src = src;
+      }
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    };
+
+    if (closeBtn) closeBtn.onclick = closeModal;
+
+    modal.onclick = (e) => {
+      if (e.target === modal) closeModal();
+    };
+
+    if (!this._escBound) {
+      this._escBound = true;
+      document.addEventListener('keydown', (e) => {
+        const curModal = document.getElementById('video-modal');
+        const curIframe = document.getElementById('video-modal-iframe');
+        if (e.key === 'Escape' && curModal && !curModal.classList.contains('hidden')) {
+          if (curIframe) curIframe.src = '';
+          curModal.classList.add('hidden');
+          curModal.classList.remove('flex');
+        }
+      });
+    }
+  }
+};
+
+// ========================================================================
+// DEPOSITO MUDHARABAH MODULE (TABS, KALKULATOR, NISBAH OBSERVER)
+// ========================================================================
+const DepositoPage = {
+  init() {
+    const nominalRange = document.getElementById('wkl-dep-nominal-range');
+    const btnInd = document.getElementById('tab-btn-ind');
+    const nisbahTableWrap = document.querySelector('.wkl-nisbah-table-wrap');
+
+    // If none of the deposito elements exist on this page, exit immediately
+    if (!nominalRange && !btnInd && !nisbahTableWrap) return;
+
+    this.initTabs();
+    this.initNisbahAnimation();
+    this.initCalculator();
+  },
+
+  initTabs() {
+    const btnInd = document.getElementById('tab-btn-ind');
+    const btnLem = document.getElementById('tab-btn-lem');
+    const cntInd = document.getElementById('content-ind');
+    const cntLem = document.getElementById('content-lem');
+
+    if (!btnInd || !btnLem || !cntInd || !cntLem) return;
+
+    btnInd.onclick = () => {
+      btnInd.className = 'px-6 py-2.5 rounded-full bg-teal-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all inline-flex items-center gap-2';
+      btnLem.className = 'px-6 py-2.5 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 shadow-sm transition-all inline-flex items-center gap-2';
+      cntInd.classList.remove('hidden');
+      cntLem.classList.add('hidden');
+    };
+
+    btnLem.onclick = () => {
+      btnLem.className = 'px-6 py-2.5 rounded-full bg-teal-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all inline-flex items-center gap-2';
+      btnInd.className = 'px-6 py-2.5 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 shadow-sm transition-all inline-flex items-center gap-2';
+      cntLem.classList.remove('hidden');
+      cntInd.classList.add('hidden');
+    };
+  },
+
+  initNisbahAnimation() {
+    const nisbahTableWrap = document.querySelector('.wkl-nisbah-table-wrap');
+    if (!nisbahTableWrap) return;
+
+    let hasAnimatedNisbah = false;
+
+    const triggerNisbahAnimation = () => {
+      if (hasAnimatedNisbah) return;
+      hasAnimatedNisbah = true;
+
+      // Animate Progress Bars
+      const ratioBars = nisbahTableWrap.querySelectorAll('.wkl-ratio-bar, .wkl-ratio-bar-bank');
+      ratioBars.forEach((bar) => {
+        const targetWidth = bar.getAttribute('data-width');
+        if (targetWidth) {
+          setTimeout(() => {
+            bar.style.width = targetWidth;
+          }, 120);
+        }
+      });
+
+      // Animate Numbers / Counters
+      const counters = nisbahTableWrap.querySelectorAll('.wkl-counter');
+      counters.forEach((el) => {
+        const target = parseFloat(el.getAttribute('data-target')) || 0;
+        const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+        const suffix = el.getAttribute('data-suffix') || '';
+        const duration = 1200;
+        let startTime = null;
+
+        const step = (timestamp) => {
+          if (!startTime) startTime = timestamp;
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          // Smooth cubic ease-out
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const current = ease * target;
+          el.textContent = (decimals > 0 ? current.toFixed(decimals) : Math.round(current)) + suffix;
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = (decimals > 0 ? target.toFixed(decimals) : Math.round(target)) + suffix;
+          }
+        };
+        requestAnimationFrame(step);
+      });
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            triggerNisbahAnimation();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      observer.observe(nisbahTableWrap);
+    } else {
+      triggerNisbahAnimation();
+    }
+  },
+
+  initCalculator() {
+    const nominalRange  = document.getElementById('wkl-dep-nominal-range');
+    const nominalInput  = document.getElementById('wkl-dep-nominal-input');
+    const resultMonthly = document.getElementById('wkl-dep-result-monthly');
+    const resultTotal   = document.getElementById('wkl-dep-result-total');
+    const depWaBtn      = document.getElementById('wkl-dep-wa-btn');
+    const presetBtns    = document.querySelectorAll('.wkl-dep-preset-btn');
+    const tenorBtns     = document.querySelectorAll('.wkl-dep-tenor-btn');
+    const rateLabel     = document.getElementById('wkl-dep-active-tenor-label');
+
+    if (!nominalRange || !resultMonthly || !resultTotal) return;
+
+    let waNumber = '6281517380388';
+    if (depWaBtn) {
+      waNumber = depWaBtn.getAttribute('data-phone') || waNumber;
+    }
+
+    const activeTenorBtn = document.querySelector('.wkl-dep-tenor-btn.active');
+    let currentMonths = activeTenorBtn ? parseInt(activeTenorBtn.getAttribute('data-months'), 10) : 12;
+    let currentRate   = activeTenorBtn ? parseFloat(activeTenorBtn.getAttribute('data-rate')) : 4.23;
+    let currentEquiv  = activeTenorBtn ? activeTenorBtn.getAttribute('data-equiv') : '4.23%';
+
+    let minSim = parseInt(nominalRange.getAttribute('min'), 10) || 500000;
+    let maxSim = parseInt(nominalRange.getAttribute('max'), 10) || 2000000000;
+    let defaultSim = parseInt(nominalRange.value, 10) || 50000000;
+    if (minSim <= 0) minSim = 500000;
+    if (maxSim <= 0) maxSim = 2000000000;
+    if (defaultSim <= 0) defaultSim = 50000000;
+
+    const formatRupiah = (num) => {
+      return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
+    const parseNominal = (str) => {
+      const clean = String(str).replace(/[^0-9]/g, '');
+      const val = parseInt(clean, 10);
+      return isNaN(val) ? 0 : val;
+    };
+
+    const calculateDeposit = () => {
+      let nominal = parseNominal(nominalInput ? nominalInput.value : nominalRange.value);
+      if (nominal < minSim) {
+        nominal = minSim;
+      }
+
+      if (nominalRange) {
+        if (nominal <= maxSim) {
+          nominalRange.value = nominal;
+        } else {
+          nominalRange.value = maxSim;
+        }
+      }
+
+      const annualReturn  = nominal * (currentRate / 100);
+      const monthlyReturn = Math.round(annualReturn / 12);
+      const totalReturn   = Math.round(monthlyReturn * currentMonths);
+
+      resultMonthly.textContent = formatRupiah(monthlyReturn);
+      resultTotal.textContent   = formatRupiah(totalReturn);
+
+      if (rateLabel) {
+        rateLabel.textContent = `${currentMonths} Bulan (Eqv. ${currentEquiv})`;
+      }
+
+      if (depWaBtn) {
+        const msg = `Halo BPRS Wakalumi, saya berminat membuka Deposito Mudharabah sebesar ${formatRupiah(nominal)} dengan tenor ${currentMonths} bulan (indikasi eqv. ${currentEquiv}, estimasi bagi hasil ${formatRupiah(monthlyReturn)}/bln). Mohon panduan pembukaannya.`;
+        depWaBtn.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+      }
+    };
+
+    nominalRange.oninput = function() {
+      const val = parseInt(this.value, 10) || defaultSim;
+      if (nominalInput) {
+        nominalInput.value = formatRupiah(val);
+      }
+      calculateDeposit();
+    };
+
+    if (nominalInput) {
+      nominalInput.oninput = function() {
+        const num = parseNominal(this.value);
+        if (num > 0) {
+          if (nominalRange) {
+            if (num <= maxSim) {
+              nominalRange.value = num;
+            } else {
+              nominalRange.value = maxSim;
+            }
+          }
+          calculateDeposit();
+        }
+      };
+
+      nominalInput.onblur = function() {
+        let num = parseNominal(this.value);
+        if (num < minSim) num = defaultSim;
+        this.value = formatRupiah(num);
+        calculateDeposit();
+      };
+    }
+
+    presetBtns.forEach((btn) => {
+      btn.onclick = function() {
+        const val = parseInt(this.getAttribute('data-val'), 10);
+        if (val) {
+          if (nominalInput) {
+            nominalInput.value = formatRupiah(val);
+          }
+          if (nominalRange) {
+            nominalRange.value = val;
+          }
+          presetBtns.forEach((b) => {
+            b.classList.remove('border-teal-500/60', 'text-teal-300');
+            b.classList.add('border-slate-700', 'text-slate-200');
+          });
+          this.classList.remove('border-slate-700', 'text-slate-200');
+          this.classList.add('border-teal-500/60', 'text-teal-300');
+          calculateDeposit();
+        }
+      };
+    });
+
+    const setTenor = (months, btnElem) => {
+      currentMonths = parseInt(months, 10);
+      if (!btnElem) {
+        btnElem = document.querySelector(`.wkl-dep-tenor-btn[data-months="${currentMonths}"]`);
+      }
+      if (btnElem) {
+        tenorBtns.forEach((b) => {
+          b.className = 'wkl-dep-tenor-btn py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-all text-center';
+          const subSpan = b.querySelector('span:last-child');
+          if (subSpan) subSpan.className = 'text-[10px] text-slate-400 font-normal';
+        });
+        btnElem.className = 'wkl-dep-tenor-btn active py-2.5 px-2 rounded-xl bg-teal-600 border border-teal-500 text-xs font-bold text-white shadow-md transition-all text-center';
+        const activeSubSpan = btnElem.querySelector('span:last-child');
+        if (activeSubSpan) activeSubSpan.className = 'text-[10px] text-teal-100 font-normal';
+
+        currentRate  = parseFloat(btnElem.getAttribute('data-rate')) || 4.23;
+        currentEquiv = btnElem.getAttribute('data-equiv') || (currentRate + '%');
+      }
+      calculateDeposit();
+    };
+
+    tenorBtns.forEach((btn) => {
+      btn.onclick = function() {
+        const m = this.getAttribute('data-months');
+        setTenor(m, this);
+      };
+    });
+
+    // Expose global helper wklSelectTenor
+    window.wklSelectTenor = (months) => {
+      setTenor(months);
+      const simElem = document.getElementById('simulasi');
+      if (simElem) {
+        simElem.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+
+    calculateDeposit();
+  }
+};
+window.DepositoPage = DepositoPage;
+window.initDepositoPage = () => DepositoPage.init();
+window.VideoModal = VideoModal;
+window.InstagramSlider = InstagramSlider;
+
+// ========================================================================
 // INITIALIZE ALL MODULES
 // ========================================================================
 function initAllModules() {
@@ -1626,6 +2016,7 @@ function initAllModules() {
   MobileMenu.init();
   HeroSlider.init();
   InstagramSlider.init();
+  VideoModal.init();
   AnnouncementBar.init();
   Counter.init();
   SpotlightTilt.init();
@@ -1636,10 +2027,7 @@ function initAllModules() {
   ExecutiveParallax.init();
   KantorModule.init();
   SavingsCalculator.init();
-
-  if (typeof window.initDepositoPage === 'function') {
-    window.initDepositoPage();
-  }
+  DepositoPage.init();
 
   AOS.init({
     duration: 700,
@@ -1676,6 +2064,23 @@ function initSwup() {
 
   // Re-initialize modules and finish preloader after page transition
   swup.hooks.on('page:view', () => {
+    // 1. Re-execute dynamic inline scripts inside #swup container if any
+    const swupContainer = document.getElementById('swup');
+    if (swupContainer) {
+      const inlineScripts = swupContainer.querySelectorAll('script');
+      inlineScripts.forEach((oldScript) => {
+        const newScript = document.createElement('script');
+        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+      });
+    }
+
+    // 2. Re-initialize all theme modules
     initAllModules();
     Preloader.finishTransition();
 

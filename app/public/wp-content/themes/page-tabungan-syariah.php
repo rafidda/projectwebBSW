@@ -52,6 +52,7 @@ $calc_max     = get_option( 'options_tabungan_calc_target_max', '100000000' );
 $calc_default = get_option( 'options_tabungan_calc_target_default', '25000000' );
 $calc_note    = get_option( 'options_tabungan_calc_note', '*Simulasi indikatif pembulatan matematis tanpa potongan admin bulanan.' );
 $calc_btn     = get_option( 'options_tabungan_calc_btn_text', 'Mulai Menabung via WhatsApp' );
+$tab_calc_presets = function_exists( 'wakalumi_get_tabungan_calc_presets' ) ? wakalumi_get_tabungan_calc_presets() : [];
 
 // ── PENGATURAN TANYA JAWAB (FAQ) DARI ADMIN ───────────────────────
 $faq_badge  = get_option( 'options_tabungan_faq_badge', 'Tanya Jawab (FAQ)' );
@@ -70,6 +71,13 @@ $tab_dep_title     = get_option( 'options_tabungan_dep_title', 'Ingin Imbal Hasi
 $tab_dep_desc      = get_option( 'options_tabungan_dep_desc', 'Jelajahi produk Deposito Mudharabah BPRS Wakalumi dengan tenor 1, 3, 6, dan 12 bulan serta porsi nisbah bagi hasil yang kompetitif.' );
 $tab_dep_btn       = get_option( 'options_tabungan_dep_btn', 'Lihat Halaman Deposito Mudharabah' );
 
+// ── PENGATURAN BANNER CTA DARI ADMIN ──────────────────────────────
+$tab_cta_kicker    = get_option( 'options_tabungan_cta_kicker', 'Konsultasi Tabungan Syariah' );
+$tab_cta_title     = get_option( 'options_tabungan_cta_title', 'Mulai Rencanakan Masa Depan Finansial Syariah Anda' );
+$tab_cta_desc      = get_option( 'options_tabungan_cta_desc', 'Buka rekening tabungan syariah tanpa biaya administrasi bulanan dengan proses mudah, cepat, aman, dan dijamin LPS hingga Rp 2 Miliar.' );
+$tab_cta_btn       = get_option( 'options_tabungan_cta_btn_text', 'Buka Tabungan via WhatsApp' );
+$tab_cta_wa_msg    = get_option( 'options_tabungan_cta_wa_msg', 'Halo BPRS Wakalumi, saya ingin membuka rekening tabungan syariah / berkonsultasi mengenai produk tabungan.' );
+
 // WhatsApp Hotline
 $default_wa = get_option( 'options_contact_wa', '6281517380388' );
 $wa_number  = get_option( 'options_produk_wa_number', $default_wa );
@@ -79,9 +87,14 @@ $clean_wa   = preg_replace( '/[^0-9]/', '', $wa_number );
 $brosur_url  = get_option( 'options_brosur_file_url', '' );
 $brosur_name = get_option( 'options_brosur_file_name', 'Brosur Resmi BPRS Wakalumi (PDF)' );
 
-// Helper to convert lines to array
+/**
+ * Helper to convert lines to array
+ *
+ * @param string $text
+ * @return array
+ */
 if ( ! function_exists( 'wakalumi_lines_to_list' ) ) {
-    function wakalumi_lines_to_list( $text ) {
+    function wakalumi_lines_to_list( string $text = '' ): array {
         $lines = explode( "\n", str_replace( "\r", "", $text ) );
         return array_filter( array_map( 'trim', $lines ) );
     }
@@ -292,17 +305,32 @@ $color_themes = [
     ],
 ];
 
-// Helper: SVG Icon per Produk
+/**
+ * Helper: SVG Icon per Produk
+ *
+ * @param string $icon_key
+ * @return string
+ */
 if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
-    function wakalumi_render_tabungan_card_icon( $slug ) {
-        switch ( $slug ) {
+    function wakalumi_render_tabungan_card_icon( string $icon_key = '' ): string {
+        switch ( $icon_key ) {
             case 'pendidikan':
+            case 'education':
                 return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>';
             case 'haji-umroh':
+            case 'haji':
                 return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>';
             case 'ukhuwah':
+            case 'gift':
                 return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v3a2 2 0 01-2 2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>';
+            case 'business':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/></svg>';
+            case 'coins':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            case 'shield':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>';
             case 'tawakal':
+            case 'wallet':
             default:
                 return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>';
         }
@@ -449,7 +477,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                     <div class="flex items-center justify-between gap-3 mb-4">
                         <div class="flex flex-wrap items-center gap-2.5">
                             <div class="w-10 h-10 rounded-2xl <?php echo esc_attr( $c_theme['icon_bg'] ); ?> flex items-center justify-center flex-shrink-0 shadow-sm group-hover/card:scale-110 group-hover/card:rotate-3 transition-all duration-500 ease-out">
-                                <?php echo wakalumi_render_tabungan_card_icon( $prod['slug'] ?? 'tawakal' ); ?>
+                                <?php echo wakalumi_render_tabungan_card_icon( ! empty( $prod['icon'] ) ? $prod['icon'] : ( $prod['slug'] ?? 'tawakal' ) ); ?>
                             </div>
                             <span class="px-3 py-1.5 rounded-xl <?php echo esc_attr( $c_theme['badge_bg'] ); ?> text-xs font-extrabold uppercase tracking-wider border shadow-sm">
                                 Akad: <?php echo esc_html( $prod['akad'] ); ?>
@@ -542,7 +570,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                                 <svg class="w-4 h-4 group-hover/btn:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                                 <span>Buka <?php echo esc_html( $prod['nama'] ); ?></span>
                             </a>
-                            <a href="#kalkulator" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs text-center inline-flex items-center justify-center gap-1.5 transition-colors group/calc">
+                            <a href="#kalkulator" data-calc-select="<?php echo esc_attr( $prod['nama'] ); ?>" class="wkl-goto-calc w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs text-center inline-flex items-center justify-center gap-1.5 transition-colors group/calc">
                                 <span>Hitung Target Tabungan di Kalkulator</span>
                                 <span class="group-hover/calc:translate-y-0.5 transition-transform">&darr;</span>
                             </a>
@@ -730,7 +758,9 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                             <?php foreach ( $tabungan_list as $prod ) : ?>
                                 <td class="p-4 sm:p-5 text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
                                     <?php 
-                                    if ( $prod['slug'] === 'haji-umroh' ) {
+                                    if ( ! empty( $prod['penarikan'] ) ) {
+                                        echo esc_html( $prod['penarikan'] );
+                                    } elseif ( $prod['slug'] === 'haji-umroh' ) {
                                         echo '<span class="font-bold text-amber-700 dark:text-amber-300">Terencana:</span> Saat pelunasan / keberangkatan ibadah';
                                     } elseif ( $prod['slug'] === 'ukhuwah' ) {
                                         echo '<span class="font-bold text-purple-700 dark:text-purple-300">Komitmen:</span> Periode program berhadiah';
@@ -863,10 +893,30 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                             </div>
                             <!-- Preset Pills -->
                             <div class="flex flex-wrap gap-2 mt-3">
-                                <button type="button" class="wkl-calc-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 transition-colors" data-val="10000000">Rp 10 Juta</button>
-                                <button type="button" class="wkl-calc-preset-btn px-2.5 py-1 rounded-lg bg-teal-950/60 border border-teal-500/50 text-xs font-bold text-teal-300 transition-colors" data-val="25000000">Rp 25 Jt (Porsi Haji)</button>
-                                <button type="button" class="wkl-calc-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 transition-colors" data-val="35000000">Rp 35 Jt (Umroh)</button>
-                                <button type="button" class="wkl-calc-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 transition-colors" data-val="50000000">Rp 50 Juta</button>
+                                <?php if ( ! empty( $tab_calc_presets ) ) : ?>
+                                    <?php foreach ( $tab_calc_presets as $p_idx => $preset ) : 
+                                        $p_label = $preset['label'] ?? '';
+                                        $p_nom   = $preset['nominal'] ?? '10000000';
+                                        $p_tenor = $preset['tenor'] ?? '12';
+                                        $p_prod  = $preset['prod'] ?? '';
+                                        if ( empty( $p_label ) ) continue;
+                                    ?>
+                                        <button 
+                                            type="button" 
+                                            class="wkl-calc-preset-btn px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 hover:text-white transition-all hover:shadow-sm" 
+                                            data-val="<?php echo esc_attr( $p_nom ); ?>"
+                                            data-months="<?php echo esc_attr( $p_tenor ); ?>"
+                                            data-prod="<?php echo esc_attr( $p_prod ); ?>"
+                                        >
+                                            <?php echo esc_html( $p_label ); ?>
+                                        </button>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <button type="button" class="wkl-calc-preset-btn px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 transition-colors" data-val="10000000" data-months="12">Rp 10 Juta</button>
+                                    <button type="button" class="wkl-calc-preset-btn px-2.5 py-1.5 rounded-lg bg-teal-950/60 border border-teal-500/50 text-xs font-bold text-teal-300 transition-colors" data-val="25000000" data-months="36" data-prod="Tabungan Haji dan Umroh">Rp 25 Jt (Porsi Haji)</button>
+                                    <button type="button" class="wkl-calc-preset-btn px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 transition-colors" data-val="35000000" data-months="24" data-prod="Tabungan Haji dan Umroh">Rp 35 Jt (Umroh)</button>
+                                    <button type="button" class="wkl-calc-preset-btn px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-teal-400 text-xs font-bold text-slate-200 transition-colors" data-val="50000000" data-months="36">Rp 50 Juta</button>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -1120,6 +1170,61 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                             <span>&rarr;</span>
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================
+     SECTION 6: CTA BANNER KONSULTASI TABUNGAN
+     ======================================== -->
+<section class="py-14 lg:py-20 bg-transparent relative">
+    <div class="container-wide">
+        <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-teal-950 text-white text-center relative overflow-hidden shadow-2xl group" data-aos="fade-up">
+            <!-- Background Watermark Emblem (wm-wkl.png / wm wkl 1.png) -->
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.06] select-none">
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/wm-wkl.png' ); ?>" alt="" class="w-full h-full object-contain" loading="lazy">
+            </div>
+
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <span class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-teal-300 bg-teal-950/80 px-3.5 py-1.5 rounded-full border border-teal-800 mb-3">
+                    <svg class="w-3.5 h-3.5 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
+                    <?php echo esc_html( $tab_cta_kicker ); ?>
+                </span>
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black mb-4 tracking-tight text-white">
+                    <?php echo esc_html( $tab_cta_title ); ?>
+                </h3>
+                <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-8">
+                    <?php echo esc_html( $tab_cta_desc ); ?>
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <a 
+                        href="https://wa.me/<?php echo esc_attr( $clean_wa ); ?>?text=<?php echo urlencode( $tab_cta_wa_msg ); ?>" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="relative overflow-hidden group/btn py-3.5 px-6 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-sm inline-flex items-center gap-2 shadow-lg transition-transform hover:scale-105"
+                    >
+                        <!-- Shimmer Sweep -->
+                        <span class="absolute inset-0 w-1/2 h-full bg-white/30 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none"></span>
+
+                        <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                        </svg>
+                        <span><?php echo esc_html( $tab_cta_btn ); ?></span>
+                    </a>
+                    <?php if ( ! empty( $brosur_url ) ) : ?>
+                        <a 
+                            href="<?php echo esc_url( $brosur_url ); ?>" 
+                            download 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
+                        >
+                            <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                            <span>Unduh Brosur Produk (PDF)</span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

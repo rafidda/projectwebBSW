@@ -57,16 +57,18 @@ $dep_sharia_title  = get_option( 'options_deposito_sharia_note_title', '*Catatan
 $dep_sharia_desc   = get_option( 'options_deposito_sharia_note_desc', 'Porsi nisbah dan indikasi Equivalent Rate (Eqv. Rate) adalah estimasi indikatif berdasarkan realisasi kinerja penyaluran pembiayaan riil bisnis bank periode berjalan. Sesuai prinsip fatwa DSN-MUI (Mudharabah Muthlaqah), imbal hasil tidak dijanjikan secara pasti/tetap di muka (bebas riba), melainkan fluktuatif mengikuti pendapatan riil bank.' );
 
 // Kalkulator Section
-$dep_calc_badge    = get_option( 'options_deposito_calc_badge', 'Simulasi Finansial Syariah' );
-$dep_calc_title    = get_option( 'options_deposito_calc_title', 'Kalkulator Simulasi Imbal Hasil Deposito' );
-$dep_calc_desc     = get_option( 'options_deposito_calc_desc', 'Hitung estimasi bagi hasil bulanan dan total imbal hasil penempatan dana deposito syariah Anda secara instan, transparan, dan sesuai porsi nisbah terkini.' );
-$dep_calc_min      = intval( get_option( 'options_deposito_calc_min', 500000 ) );
+$dep_calc_badge       = get_option( 'options_deposito_calc_badge', 'Simulasi Finansial Syariah' );
+$dep_calc_title       = get_option( 'options_deposito_calc_title', 'Kalkulator Simulasi Imbal Hasil Deposito' );
+$dep_calc_desc        = get_option( 'options_deposito_calc_desc', 'Hitung estimasi bagi hasil bulanan dan total imbal hasil penempatan dana deposito syariah Anda secara instan, transparan, dan sesuai porsi nisbah terkini.' );
+$dep_calc_input_label = get_option( 'options_deposito_calc_input_label', 'Nominal Penempatan Deposito' );
+$dep_calc_min         = intval( get_option( 'options_deposito_calc_min', 500000 ) );
 if ( $dep_calc_min <= 0 ) $dep_calc_min = 500000;
-$dep_calc_max      = intval( get_option( 'options_deposito_calc_max', 500000000 ) );
-if ( $dep_calc_max <= 0 ) $dep_calc_max = 500000000;
-$dep_calc_default  = intval( get_option( 'options_deposito_calc_default', 50000000 ) );
+$dep_calc_max         = intval( get_option( 'options_deposito_calc_max', 2000000000 ) );
+if ( $dep_calc_max <= 0 || $dep_calc_max == 500000000 ) $dep_calc_max = 2000000000;
+$dep_calc_max_note    = get_option( 'options_deposito_calc_max_note', 'Ketik untuk nominal penempatan lebih dari 2 Miliar' );
+$dep_calc_default     = intval( get_option( 'options_deposito_calc_default', 50000000 ) );
 if ( $dep_calc_default < $dep_calc_min ) $dep_calc_default = $dep_calc_min;
-$dep_calc_note     = get_option( 'options_deposito_calc_note', '*Simulasi indikatif sebelum pajak. Bagi hasil riil fluktuatif mengikuti pendapatan bulanan bank.' );
+$dep_calc_note        = get_option( 'options_deposito_calc_note', '*Simulasi indikatif sebelum pajak. Bagi hasil riil fluktuatif mengikuti pendapatan bulanan bank.' );
 
 // Persyaratan & Dokumen
 $dep_syarat_kicker = get_option( 'options_deposito_syarat_kicker', 'Persyaratan Pembukaan' );
@@ -468,7 +470,12 @@ if ( empty( $deposito_nisbah ) ) {
                             $equiv_val   = floatval( $equiv_clean );
 
                             $tenor_num = 12;
-                            if ( strpos( strtolower( $p_name ), '1 bulan' ) !== false ) $tenor_num = 1;
+                            if ( preg_match( '/(\d+)\s*(?:bln|bulan|thn|tahun)/i', $p_name, $m_tenor ) ) {
+                                $tenor_num = intval( $m_tenor[1] );
+                                if ( strpos( strtolower( $p_name ), 'thn' ) !== false || strpos( strtolower( $p_name ), 'tahun' ) !== false ) {
+                                    $tenor_num = $tenor_num * 12;
+                                }
+                            } elseif ( strpos( strtolower( $p_name ), '1 bulan' ) !== false ) $tenor_num = 1;
                             elseif ( strpos( strtolower( $p_name ), '3 bulan' ) !== false ) $tenor_num = 3;
                             elseif ( strpos( strtolower( $p_name ), '6 bulan' ) !== false ) $tenor_num = 6;
                         ?>
@@ -572,7 +579,7 @@ if ( empty( $deposito_nisbah ) ) {
                         <div>
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                                 <label for="wkl-dep-nominal-input" class="text-xs font-bold uppercase tracking-wider text-slate-300">
-                                    1. Nominal Penempatan Pokok
+                                    1. <?php echo esc_html( $dep_calc_input_label ); ?>
                                 </label>
                                 <div class="relative w-full sm:w-auto">
                                     <input 
@@ -595,18 +602,19 @@ if ( empty( $deposito_nisbah ) ) {
                                 class="w-full h-2.5 bg-slate-700/80 rounded-lg appearance-none cursor-pointer accent-teal-400"
                             >
 
-                            <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1.5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 mt-1.5 gap-1">
                                 <span>Min simulasi: Rp <?php echo number_format( $dep_calc_min, 0, ',', '.' ); ?></span>
-                                <span>Maks simulasi: Rp <?php echo number_format( $dep_calc_max, 0, ',', '.' ); ?></span>
+                                <span class="text-teal-300 font-medium"><?php echo esc_html( $dep_calc_max_note ); ?></span>
                             </div>
 
                             <!-- Preset Pills -->
                             <div class="flex flex-wrap gap-2 mt-3">
-                                <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="5000000">Rp 5 Jt</button>
                                 <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="10000000">Rp 10 Jt</button>
                                 <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-teal-500/60 text-xs font-bold text-teal-300 hover:border-teal-400 transition-colors" data-val="50000000">Rp 50 Jt</button>
                                 <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="100000000">Rp 100 Jt</button>
-                                <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="250000000">Rp 250 Jt</button>
+                                <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="500000000">Rp 500 Jt</button>
+                                <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="1000000000">Rp 1 M</button>
+                                <button type="button" class="wkl-dep-preset-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-colors" data-val="2000000000">Rp 2 M</button>
                             </div>
                         </div>
 
@@ -657,6 +665,7 @@ if ( empty( $deposito_nisbah ) ) {
                         <div class="space-y-3 pt-3 border-t border-slate-700">
                             <a 
                                 id="wkl-dep-wa-btn" 
+                                data-phone="<?php echo esc_attr( $clean_wa ); ?>"
                                 href="https://wa.me/<?php echo esc_attr( $clean_wa ); ?>?text=<?php echo urlencode( 'Halo BPRS Wakalumi, saya berminat menempatkan Deposito Mudharabah sebesar Rp ' . number_format( $dep_calc_default, 0, ',', '.' ) . ' dengan tenor 12 bulan. Mohon informasi syarat dan formulir pembukaannya.' ); ?>" 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
@@ -796,10 +805,10 @@ if ( empty( $deposito_nisbah ) ) {
      ======================================== -->
 <section class="py-14 lg:py-20 bg-transparent relative">
     <div class="container-wide">
-        <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-teal-950 text-white text-center relative overflow-hidden shadow-2xl" data-aos="fade-up">
+        <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-teal-950 text-white text-center relative overflow-hidden shadow-2xl group" data-aos="fade-up">
             <!-- Background Watermark Emblem -->
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 opacity-[0.035] pointer-events-none">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png" alt="" class="w-full h-full object-contain">
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.06] select-none">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png" alt="" class="w-full h-full object-contain" loading="lazy">
             </div>
 
             <div class="relative z-10 max-w-2xl mx-auto">
@@ -850,273 +859,13 @@ if ( empty( $deposito_nisbah ) ) {
      INTERACTIVE SIMULATOR & NISBAH JAVASCRIPT (SWUP COMPATIBLE)
      ======================================== -->
 <script>
+// Lightweight fallback caller (primary execution handled automatically by app.js on initial load and Swup navigation)
 (function() {
-    function initDepositoPage() {
-        // 1. Tab Switcher (Perorangan vs Lembaga)
-        var btnInd = document.getElementById('tab-btn-ind');
-        var btnLem = document.getElementById('tab-btn-lem');
-        var cntInd = document.getElementById('content-ind');
-        var cntLem = document.getElementById('content-lem');
-
-        if (btnInd && btnLem && cntInd && cntLem) {
-            btnInd.onclick = function() {
-                btnInd.className = 'px-6 py-2.5 rounded-full bg-teal-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all inline-flex items-center gap-2';
-                btnLem.className = 'px-6 py-2.5 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 shadow-sm transition-all inline-flex items-center gap-2';
-                cntInd.classList.remove('hidden');
-                cntLem.classList.add('hidden');
-            };
-
-            btnLem.onclick = function() {
-                btnLem.className = 'px-6 py-2.5 rounded-full bg-teal-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all inline-flex items-center gap-2';
-                btnInd.className = 'px-6 py-2.5 rounded-full bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 shadow-sm transition-all inline-flex items-center gap-2';
-                cntLem.classList.remove('hidden');
-                cntInd.classList.add('hidden');
-            };
-        }
-
-        // 2. Animate Nisbah Table Counters & Ratio Bars on Scroll (IntersectionObserver)
-        var nisbahTableWrap = document.querySelector('.wkl-nisbah-table-wrap');
-        if (nisbahTableWrap) {
-            var hasAnimatedNisbah = false;
-
-            function triggerNisbahAnimation() {
-                if (hasAnimatedNisbah) return;
-                hasAnimatedNisbah = true;
-
-                // Animate Progress Bars
-                var ratioBars = nisbahTableWrap.querySelectorAll('.wkl-ratio-bar, .wkl-ratio-bar-bank');
-                ratioBars.forEach(function(bar) {
-                    var targetWidth = bar.getAttribute('data-width');
-                    if (targetWidth) {
-                        setTimeout(function() {
-                            bar.style.width = targetWidth;
-                        }, 120);
-                    }
-                });
-
-                // Animate Numbers / Counters
-                var counters = nisbahTableWrap.querySelectorAll('.wkl-counter');
-                counters.forEach(function(el) {
-                    var target = parseFloat(el.getAttribute('data-target')) || 0;
-                    var decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
-                    var suffix = el.getAttribute('data-suffix') || '';
-                    var duration = 1200;
-                    var startTime = null;
-
-                    function step(timestamp) {
-                        if (!startTime) startTime = timestamp;
-                        var progress = Math.min((timestamp - startTime) / duration, 1);
-                        // Smooth cubic ease-out
-                        var ease = 1 - Math.pow(1 - progress, 3);
-                        var current = ease * target;
-                        el.textContent = (decimals > 0 ? current.toFixed(decimals) : Math.round(current)) + suffix;
-                        if (progress < 1) {
-                            requestAnimationFrame(step);
-                        } else {
-                            el.textContent = (decimals > 0 ? target.toFixed(decimals) : Math.round(target)) + suffix;
-                        }
-                    }
-                    requestAnimationFrame(step);
-                });
-            }
-
-            if ('IntersectionObserver' in window) {
-                var observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
-                        if (entry.isIntersecting) {
-                            triggerNisbahAnimation();
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.15 });
-                observer.observe(nisbahTableWrap);
-            } else {
-                triggerNisbahAnimation();
-            }
-        }
-
-        // 3. Deposito Calculator Dual-Input
-        var nominalRange   = document.getElementById('wkl-dep-nominal-range');
-        var nominalInput   = document.getElementById('wkl-dep-nominal-input');
-        var resultMonthly  = document.getElementById('wkl-dep-result-monthly');
-        var resultTotal    = document.getElementById('wkl-dep-result-total');
-        var depWaBtn       = document.getElementById('wkl-dep-wa-btn');
-        var presetBtns     = document.querySelectorAll('.wkl-dep-preset-btn');
-        var tenorBtns      = document.querySelectorAll('.wkl-dep-tenor-btn');
-        var rateLabel      = document.getElementById('wkl-dep-active-tenor-label');
-        var waNumber       = "<?php echo esc_js( $clean_wa ); ?>";
-
-        if (!nominalRange || !resultMonthly || !resultTotal) return;
-
-        // Default to active button rate or fallback
-        var activeTenorBtn = document.querySelector('.wkl-dep-tenor-btn.active');
-        var currentMonths  = activeTenorBtn ? parseInt(activeTenorBtn.getAttribute('data-months'), 10) : 12;
-        var currentRate    = activeTenorBtn ? parseFloat(activeTenorBtn.getAttribute('data-rate')) : 4.23;
-        var currentEquiv   = activeTenorBtn ? activeTenorBtn.getAttribute('data-equiv') : '4.23%';
-
-        var minSim = <?php echo intval( $dep_calc_min ); ?>;
-        var maxSim = <?php echo intval( $dep_calc_max ); ?>;
-        var defaultSim = <?php echo intval( $dep_calc_default ); ?>;
-        if (minSim <= 0) minSim = 500000;
-        if (maxSim <= 0) maxSim = 500000000;
-        if (defaultSim <= 0) defaultSim = 50000000;
-
-        function formatRupiah(num) {
-            return 'Rp ' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
-
-        function parseNominal(str) {
-            var clean = String(str).replace(/[^0-9]/g, '');
-            var val = parseInt(clean, 10);
-            return isNaN(val) ? 0 : val;
-        }
-
-        function calculateDeposit() {
-            var nominal = parseNominal(nominalInput ? nominalInput.value : nominalRange.value);
-            if (nominal < minSim) {
-                nominal = minSim;
-            }
-
-            // Sync range slider
-            if (nominalRange) {
-                if (nominal <= maxSim) {
-                    nominalRange.value = nominal;
-                } else {
-                    nominalRange.value = maxSim;
-                }
-            }
-
-            // Annual indicative return calculation
-            var annualReturn  = nominal * (currentRate / 100);
-            var monthlyReturn = Math.round(annualReturn / 12);
-            var totalReturn   = Math.round(monthlyReturn * currentMonths);
-
-            resultMonthly.textContent = formatRupiah(monthlyReturn);
-            resultTotal.textContent   = formatRupiah(totalReturn);
-
-            if (rateLabel) {
-                rateLabel.textContent = currentMonths + ' Bulan (Eqv. ' + currentEquiv + ')';
-            }
-
-            if (depWaBtn) {
-                var msg = "Halo BPRS Wakalumi, saya berminat membuka Deposito Mudharabah sebesar " + formatRupiah(nominal) + 
-                          " dengan tenor " + currentMonths + " bulan (indikasi eqv. " + currentEquiv + ", estimasi bagi hasil " + formatRupiah(monthlyReturn) + "/bln). Mohon panduan pembukaannya.";
-                depWaBtn.href = "https://wa.me/" + waNumber + "?text=" + encodeURIComponent(msg);
-            }
-        }
-
-        // Slider input handler
-        if (nominalRange) {
-            nominalRange.oninput = function() {
-                var val = parseInt(this.value, 10) || defaultSim;
-                if (nominalInput) {
-                    nominalInput.value = formatRupiah(val);
-                }
-                calculateDeposit();
-            };
-        }
-
-        // Manual text input handler (bisa diketik)
-        if (nominalInput) {
-            nominalInput.oninput = function() {
-                var num = parseNominal(this.value);
-                if (num > 0) {
-                    // Update slider position if within range
-                    if (nominalRange && num <= maxSim) {
-                        nominalRange.value = num;
-                    }
-                    calculateDeposit();
-                }
-            };
-
-            nominalInput.onblur = function() {
-                var num = parseNominal(this.value);
-                if (num < minSim) num = defaultSim; // Reset to default if empty/too small
-                this.value = formatRupiah(num);
-                calculateDeposit();
-            };
-        }
-
-        // Preset buttons
-        presetBtns.forEach(function(btn) {
-            btn.onclick = function() {
-                var val = parseInt(this.getAttribute('data-val'), 10);
-                if (val) {
-                    if (nominalInput) {
-                        nominalInput.value = formatRupiah(val);
-                    }
-                    if (nominalRange) {
-                        nominalRange.value = val;
-                    }
-                    presetBtns.forEach(function(b) {
-                        b.classList.remove('border-teal-500/60', 'text-teal-300');
-                        b.classList.add('border-slate-700', 'text-slate-200');
-                    });
-                    this.classList.remove('border-slate-700', 'text-slate-200');
-                    this.classList.add('border-teal-500/60', 'text-teal-300');
-                    calculateDeposit();
-                }
-            };
-        });
-
-        function setTenor(months, btnElem) {
-            currentMonths = parseInt(months, 10);
-            if (!btnElem) {
-                btnElem = document.querySelector('.wkl-dep-tenor-btn[data-months="' + currentMonths + '"]');
-            }
-            if (btnElem) {
-                tenorBtns.forEach(function(b) {
-                    b.className = 'wkl-dep-tenor-btn py-2.5 px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-200 hover:border-teal-400 transition-all text-center';
-                    var subSpan = b.querySelector('span:last-child');
-                    if (subSpan) subSpan.className = 'text-[10px] text-slate-400 font-normal';
-                });
-                btnElem.className = 'wkl-dep-tenor-btn active py-2.5 px-2 rounded-xl bg-teal-600 border border-teal-500 text-xs font-bold text-white shadow-md transition-all text-center';
-                var activeSubSpan = btnElem.querySelector('span:last-child');
-                if (activeSubSpan) activeSubSpan.className = 'text-[10px] text-teal-100 font-normal';
-
-                currentRate  = parseFloat(btnElem.getAttribute('data-rate')) || 4.23;
-                currentEquiv = btnElem.getAttribute('data-equiv') || (currentRate + '%');
-            }
-            calculateDeposit();
-        }
-
-        tenorBtns.forEach(function(btn) {
-            btn.onclick = function() {
-                var m = this.getAttribute('data-months');
-                setTenor(m, this);
-            };
-        });
-
-        // Global callback for tenor cards in Section 1 & table
-        window.wklSelectTenor = function(months) {
-            setTenor(months);
-            var simElem = document.getElementById('simulasi');
-            if (simElem) {
-                simElem.scrollIntoView({ behavior: 'smooth' });
-            }
-        };
-
-        calculateDeposit();
+    if (window.DepositoPage && typeof window.DepositoPage.init === 'function') {
+        window.DepositoPage.init();
+    } else if (typeof window.initDepositoPage === 'function') {
+        window.initDepositoPage();
     }
-
-    // Expose globally for Swup lifecycle
-    window.initDepositoPage = initDepositoPage;
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initDepositoPage);
-    } else {
-        initDepositoPage();
-    }
-
-    // Swup SPA Hooks
-    if (window.swup && window.swup.hooks) {
-        window.swup.hooks.on('page:view', initDepositoPage);
-    }
-    document.addEventListener('swup:enable', function() {
-        if (window.swup && window.swup.hooks) {
-            window.swup.hooks.on('page:view', initDepositoPage);
-        }
-    });
 })();
 </script>
 

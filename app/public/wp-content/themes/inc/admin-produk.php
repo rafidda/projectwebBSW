@@ -134,6 +134,43 @@ function wakalumi_get_tabungan_faq_list() {
 }
 
 /**
+ * Helper: Ambil Daftar Shortcut / Preset Simulasi Kalkulator Tabungan
+ */
+function wakalumi_get_tabungan_calc_presets() {
+    $saved = get_option( 'options_tabungan_calc_presets', null );
+    if ( is_array( $saved ) && ! empty( $saved ) ) {
+        return $saved;
+    }
+
+    return [
+        [
+            'label'   => 'Rp 10 Juta',
+            'nominal' => '10000000',
+            'tenor'   => '12',
+            'prod'    => '',
+        ],
+        [
+            'label'   => 'Rp 25 Jt (Porsi Haji)',
+            'nominal' => '25000000',
+            'tenor'   => '36',
+            'prod'    => 'Tabungan Haji dan Umroh',
+        ],
+        [
+            'label'   => 'Rp 35 Jt (Umroh)',
+            'nominal' => '35000000',
+            'tenor'   => '24',
+            'prod'    => 'Tabungan Haji dan Umroh',
+        ],
+        [
+            'label'   => 'Rp 50 Juta',
+            'nominal' => '50000000',
+            'tenor'   => '36',
+            'prod'    => '',
+        ],
+    ];
+}
+
+/**
  * Helper: Ambil Data Realisasi Nisbah Terkini dari Database
  */
 function wakalumi_get_nisbah_data() {
@@ -176,7 +213,12 @@ function wakalumi_get_deposito_rates() {
             $raw_equiv = $row['nisbah_equiv'] ?? '';
             $equiv_clean = floatval( str_replace( [ '%', ',', ' ' ], [ '', '.', '' ], $raw_equiv ) );
             $tenor_key = null;
-            if ( strpos( $name, '12' ) !== false ) {
+            if ( preg_match( '/(\d+)\s*(?:bln|bulan|thn|tahun)/i', $name, $matches ) ) {
+                $tenor_key = intval( $matches[1] );
+                if ( strpos( $name, 'thn' ) !== false || strpos( $name, 'tahun' ) !== false ) {
+                    $tenor_key = $tenor_key * 12;
+                }
+            } elseif ( strpos( $name, '12' ) !== false ) {
                 $tenor_key = 12;
             } elseif ( strpos( $name, '6' ) !== false ) {
                 $tenor_key = 6;
@@ -189,10 +231,10 @@ function wakalumi_get_deposito_rates() {
             if ( $tenor_key ) {
                 $rates[ $tenor_key ] = [
                     'nama'     => $row['nisbah_produk'] ?? ( 'Deposito ' . $tenor_key . ' Bulan' ),
-                    'nasabah'  => $row['nisbah_nasabah'] ?? $rates[ $tenor_key ]['nasabah'],
-                    'bank'     => $row['nisbah_bank'] ?? $rates[ $tenor_key ]['bank'],
-                    'equiv'    => ! empty( $raw_equiv ) ? $raw_equiv : $rates[ $tenor_key ]['equiv'],
-                    'rate_val' => $equiv_clean > 0 ? $equiv_clean : $rates[ $tenor_key ]['rate_val'],
+                    'nasabah'  => $row['nisbah_nasabah'] ?? ( $rates[ $tenor_key ]['nasabah'] ?? '40' ),
+                    'bank'     => $row['nisbah_bank'] ?? ( $rates[ $tenor_key ]['bank'] ?? '60' ),
+                    'equiv'    => ! empty( $raw_equiv ) ? $raw_equiv : ( $rates[ $tenor_key ]['equiv'] ?? '4.00%' ),
+                    'rate_val' => $equiv_clean > 0 ? $equiv_clean : ( $rates[ $tenor_key ]['rate_val'] ?? 4.00 ),
                 ];
             }
         }
@@ -224,6 +266,8 @@ function wakalumi_render_produk_admin_page() {
         $tab_taglines     = $_POST['tab_tagline'] ?? [];
         $tab_badges       = $_POST['tab_badge'] ?? [];
         $tab_colors       = $_POST['tab_color'] ?? [];
+        $tab_icons        = $_POST['tab_icon'] ?? [];
+        $tab_penarikans   = $_POST['tab_penarikan'] ?? [];
         $tab_akads        = $_POST['tab_akad'] ?? [];
         $tab_min_setors   = $_POST['tab_min_setor'] ?? [];
         $tab_biaya_admins = $_POST['tab_biaya_admin'] ?? [];
@@ -250,6 +294,8 @@ function wakalumi_render_produk_admin_page() {
                 'tagline'     => sanitize_text_field( $tab_taglines[$i] ?? '' ),
                 'badge'       => sanitize_text_field( $tab_badges[$i] ?? '' ),
                 'color'       => sanitize_text_field( $tab_colors[$i] ?? 'teal' ),
+                'icon'        => sanitize_text_field( $tab_icons[$i] ?? 'wallet' ),
+                'penarikan'   => sanitize_text_field( $tab_penarikans[$i] ?? '' ),
                 'akad'        => sanitize_text_field( $tab_akads[$i] ?? 'Mudharabah Muthlaqah' ),
                 'min_setor'   => sanitize_text_field( $tab_min_setors[$i] ?? 'Rp 50.000' ),
                 'biaya_admin' => sanitize_text_field( $tab_biaya_admins[$i] ?? 'Gratis / Bebas Biaya Bulanan' ),
@@ -297,6 +343,29 @@ function wakalumi_render_produk_admin_page() {
         update_option( 'options_tabungan_calc_note', sanitize_textarea_field( $_POST['options_tabungan_calc_note'] ?? '' ) );
         update_option( 'options_tabungan_calc_btn_text', sanitize_text_field( $_POST['options_tabungan_calc_btn_text'] ?? '' ) );
 
+        // 3b. Tabungan: Repeater Shortcut / Preset Target Simulasi
+        $preset_labels   = $_POST['calc_preset_label'] ?? [];
+        $preset_nominals = $_POST['calc_preset_nominal'] ?? [];
+        $preset_tenors   = $_POST['calc_preset_tenor'] ?? [];
+        $preset_prods    = $_POST['calc_preset_prod'] ?? [];
+
+        $clean_calc_presets = [];
+        for ( $p = 0; $p < count( $preset_labels ); $p++ ) {
+            $p_label   = sanitize_text_field( $preset_labels[$p] ?? '' );
+            $p_nominal = sanitize_text_field( $preset_nominals[$p] ?? '' );
+            $p_tenor   = sanitize_text_field( $preset_tenors[$p] ?? '' );
+            $p_prod    = sanitize_text_field( $preset_prods[$p] ?? '' );
+            if ( ! empty( $p_label ) || ! empty( $p_nominal ) ) {
+                $clean_calc_presets[] = [
+                    'label'   => $p_label,
+                    'nominal' => preg_replace( '/[^0-9]/', '', $p_nominal ),
+                    'tenor'   => preg_replace( '/[^0-9]/', '', $p_tenor ),
+                    'prod'    => $p_prod,
+                ];
+            }
+        }
+        update_option( 'options_tabungan_calc_presets', $clean_calc_presets );
+
         // 4. Tabungan: Pengaturan Tanya Jawab (FAQ / QnA)
         update_option( 'options_tabungan_faq_badge', sanitize_text_field( $_POST['options_tabungan_faq_badge'] ?? '' ) );
         update_option( 'options_tabungan_faq_title', sanitize_text_field( $_POST['options_tabungan_faq_title'] ?? '' ) );
@@ -324,6 +393,51 @@ function wakalumi_render_produk_admin_page() {
         update_option( 'options_tabungan_dep_title', sanitize_text_field( $_POST['options_tabungan_dep_title'] ?? '' ) );
         update_option( 'options_tabungan_dep_desc', sanitize_textarea_field( $_POST['options_tabungan_dep_desc'] ?? '' ) );
         update_option( 'options_tabungan_dep_btn', sanitize_text_field( $_POST['options_tabungan_dep_btn'] ?? '' ) );
+
+        // 4c. Tabungan: Banner CTA Konsultasi Tabungan
+        update_option( 'options_tabungan_cta_kicker', sanitize_text_field( $_POST['options_tabungan_cta_kicker'] ?? '' ) );
+        update_option( 'options_tabungan_cta_title', sanitize_text_field( $_POST['options_tabungan_cta_title'] ?? '' ) );
+        update_option( 'options_tabungan_cta_desc', sanitize_textarea_field( $_POST['options_tabungan_cta_desc'] ?? '' ) );
+        update_option( 'options_tabungan_cta_btn_text', sanitize_text_field( $_POST['options_tabungan_cta_btn_text'] ?? '' ) );
+        update_option( 'options_tabungan_cta_wa_msg', sanitize_textarea_field( $_POST['options_tabungan_cta_wa_msg'] ?? '' ) );
+
+        // 4d. Tabungan: Realisasi Nisbah Bagi Hasil Tabungan
+        if ( isset( $_POST['options_nisbah_bulan'] ) && ! empty( trim( $_POST['options_nisbah_bulan'] ) ) ) {
+            update_option( 'options_nisbah_bulan', sanitize_text_field( $_POST['options_nisbah_bulan'] ) );
+        }
+
+        if ( isset( $_POST['tab_nisbah_produk'] ) && is_array( $_POST['tab_nisbah_produk'] ) ) {
+            $existing_nisbah = wakalumi_get_nisbah_data();
+            $new_nisbah = [];
+
+            // 1. Masukkan produk tabungan dari form
+            $tab_nis_prods   = $_POST['tab_nisbah_produk'];
+            $tab_nis_nasabah = $_POST['tab_nisbah_nasabah'] ?? [];
+            $tab_nis_bank    = $_POST['tab_nisbah_bank'] ?? [];
+            $tab_nis_equiv   = $_POST['tab_nisbah_equiv'] ?? [];
+
+            for ( $tn = 0; $tn < count( $tab_nis_prods ); $tn++ ) {
+                $p_name = sanitize_text_field( $tab_nis_prods[$tn] ?? '' );
+                if ( ! empty( $p_name ) ) {
+                    $new_nisbah[] = [
+                        'nisbah_produk'  => $p_name,
+                        'nisbah_jenis'   => 'tabungan',
+                        'nisbah_nasabah' => sanitize_text_field( $tab_nis_nasabah[$tn] ?? '' ),
+                        'nisbah_bank'    => sanitize_text_field( $tab_nis_bank[$tn] ?? '' ),
+                        'nisbah_equiv'   => sanitize_text_field( $tab_nis_equiv[$tn] ?? '' ),
+                    ];
+                }
+            }
+
+            // 2. Pertahankan produk deposito yang sudah ada
+            foreach ( $existing_nisbah as $row ) {
+                if ( ( $row['nisbah_jenis'] ?? '' ) === 'deposito' ) {
+                    $new_nisbah[] = $row;
+                }
+            }
+
+            update_option( 'options_nisbah_data', $new_nisbah );
+        }
 
         // 5. Deposito: Header Banner
         update_option( 'options_deposito_page_badge', sanitize_text_field( $_POST['options_deposito_page_badge'] ?? '' ) );
@@ -377,8 +491,10 @@ function wakalumi_render_produk_admin_page() {
         update_option( 'options_deposito_calc_badge', sanitize_text_field( $_POST['options_deposito_calc_badge'] ?? '' ) );
         update_option( 'options_deposito_calc_title', sanitize_text_field( $_POST['options_deposito_calc_title'] ?? '' ) );
         update_option( 'options_deposito_calc_desc', sanitize_textarea_field( $_POST['options_deposito_calc_desc'] ?? '' ) );
+        update_option( 'options_deposito_calc_input_label', sanitize_text_field( $_POST['options_deposito_calc_input_label'] ?? '' ) );
         update_option( 'options_deposito_calc_min', sanitize_text_field( $_POST['options_deposito_calc_min'] ?? '' ) );
         update_option( 'options_deposito_calc_max', sanitize_text_field( $_POST['options_deposito_calc_max'] ?? '' ) );
+        update_option( 'options_deposito_calc_max_note', sanitize_text_field( $_POST['options_deposito_calc_max_note'] ?? '' ) );
         update_option( 'options_deposito_calc_default', sanitize_text_field( $_POST['options_deposito_calc_default'] ?? '' ) );
         update_option( 'options_deposito_calc_note', sanitize_textarea_field( $_POST['options_deposito_calc_note'] ?? '' ) );
 
@@ -495,6 +611,7 @@ function wakalumi_render_produk_admin_page() {
     $tab_calc_default  = get_option( 'options_tabungan_calc_target_default', '25000000' );
     $tab_calc_note     = get_option( 'options_tabungan_calc_note', '*Simulasi indikatif pembulatan matematis tanpa potongan admin bulanan.' );
     $tab_calc_btn      = get_option( 'options_tabungan_calc_btn_text', 'Mulai Menabung via WhatsApp' );
+    $tab_calc_presets  = wakalumi_get_tabungan_calc_presets();
 
     // FAQ Tabungan
     $tab_faq_badge     = get_option( 'options_tabungan_faq_badge', 'Tanya Jawab (FAQ)' );
@@ -512,6 +629,13 @@ function wakalumi_render_produk_admin_page() {
     $tab_dep_title     = get_option( 'options_tabungan_dep_title', 'Ingin Imbal Hasil Lebih Optimal?' );
     $tab_dep_desc      = get_option( 'options_tabungan_dep_desc', 'Jelajahi produk Deposito Mudharabah BPRS Wakalumi dengan tenor 1, 3, 6, dan 12 bulan serta porsi nisbah bagi hasil yang kompetitif.' );
     $tab_dep_btn       = get_option( 'options_tabungan_dep_btn', 'Lihat Halaman Deposito Mudharabah' );
+
+    // Tabungan: CTA Banner & Hotline
+    $tab_cta_kicker    = get_option( 'options_tabungan_cta_kicker', 'Konsultasi Tabungan Syariah' );
+    $tab_cta_title     = get_option( 'options_tabungan_cta_title', 'Mulai Rencanakan Masa Depan Finansial Syariah Anda' );
+    $tab_cta_desc      = get_option( 'options_tabungan_cta_desc', 'Buka rekening tabungan syariah tanpa biaya administrasi bulanan dengan proses mudah, cepat, aman, dan dijamin LPS hingga Rp 2 Miliar.' );
+    $tab_cta_btn       = get_option( 'options_tabungan_cta_btn_text', 'Buka Tabungan via WhatsApp' );
+    $tab_cta_wa_msg    = get_option( 'options_tabungan_cta_wa_msg', 'Halo BPRS Wakalumi, saya ingin membuka rekening tabungan syariah / berkonsultasi mengenai produk tabungan.' );
 
     // Deposito: Header & LPS
     $dep_page_badge    = get_option( 'options_deposito_page_badge', 'Investasi Syariah Berkah' );
@@ -556,13 +680,18 @@ function wakalumi_render_produk_admin_page() {
     $dep_sharia_desc   = get_option( 'options_deposito_sharia_note_desc', 'Porsi nisbah dan indikasi Equivalent Rate (Eqv. Rate) adalah estimasi indikatif berdasarkan realisasi kinerja penyaluran pembiayaan riil bisnis bank periode berjalan. Sesuai prinsip fatwa DSN-MUI (Mudharabah Muthlaqah), imbal hasil tidak dijanjikan secara pasti/tetap di muka (bebas riba), melainkan fluktuatif mengikuti pendapatan riil bank.' );
 
     // Deposito: Kalkulator
-    $dep_calc_badge    = get_option( 'options_deposito_calc_badge', 'Simulasi Finansial Syariah' );
-    $dep_calc_title    = get_option( 'options_deposito_calc_title', 'Kalkulator Simulasi Imbal Hasil Deposito' );
-    $dep_calc_desc     = get_option( 'options_deposito_calc_desc', 'Hitung estimasi bagi hasil bulanan dan total imbal hasil penempatan dana deposito syariah Anda secara instan, transparan, dan sesuai porsi nisbah terkini.' );
-    $dep_calc_min      = get_option( 'options_deposito_calc_min', '500000' );
-    $dep_calc_max      = get_option( 'options_deposito_calc_max', '500000000' );
-    $dep_calc_default  = get_option( 'options_deposito_calc_default', '50000000' );
-    $dep_calc_note     = get_option( 'options_deposito_calc_note', '*Simulasi indikatif sebelum pajak. Bagi hasil riil fluktuatif mengikuti pendapatan bulanan bank.' );
+    $dep_calc_badge       = get_option( 'options_deposito_calc_badge', 'Simulasi Finansial Syariah' );
+    $dep_calc_title       = get_option( 'options_deposito_calc_title', 'Kalkulator Simulasi Imbal Hasil Deposito' );
+    $dep_calc_desc        = get_option( 'options_deposito_calc_desc', 'Hitung estimasi bagi hasil bulanan dan total imbal hasil penempatan dana deposito syariah Anda secara instan, transparan, dan sesuai porsi nisbah terkini.' );
+    $dep_calc_input_label = get_option( 'options_deposito_calc_input_label', 'Nominal Penempatan Deposito' );
+    $dep_calc_min         = get_option( 'options_deposito_calc_min', '500000' );
+    $dep_calc_max         = get_option( 'options_deposito_calc_max', '2000000000' );
+    if ( $dep_calc_max === '500000000' ) {
+        $dep_calc_max = '2000000000';
+    }
+    $dep_calc_max_note    = get_option( 'options_deposito_calc_max_note', 'Ketik untuk nominal penempatan lebih dari 2 Miliar' );
+    $dep_calc_default     = get_option( 'options_deposito_calc_default', '50000000' );
+    $dep_calc_note        = get_option( 'options_deposito_calc_note', '*Simulasi indikatif sebelum pajak. Bagi hasil riil fluktuatif mengikuti pendapatan bulanan bank.' );
 
     // Deposito: Persyaratan & Dokumen
     $dep_syarat_kicker = get_option( 'options_deposito_syarat_kicker', 'Persyaratan Pembukaan' );
@@ -590,9 +719,35 @@ function wakalumi_render_produk_admin_page() {
     $dep_min           = get_option( 'options_deposito_min_penempatan', 'Rp 5.000.000' );
     $dep_tenor         = get_option( 'options_deposito_tenor_list', '1 Bulan, 3 Bulan, 6 Bulan, 12 Bulan' );
 
-    // Nisbah Deposito
+    // Nisbah Data Terpadu (Tabungan & Deposito)
     $dep_nisbah_bulan  = wakalumi_get_nisbah_bulan();
     $dep_rates         = wakalumi_get_deposito_rates();
+    $all_nisbah_data   = wakalumi_get_nisbah_data();
+
+    $tab_nisbah_list   = [];
+    $dep_nisbah_list   = [];
+    foreach ( $all_nisbah_data as $nrow ) {
+        if ( ( $nrow['nisbah_jenis'] ?? '' ) === 'tabungan' ) {
+            $tab_nisbah_list[] = $nrow;
+        } else {
+            $dep_nisbah_list[] = $nrow;
+        }
+    }
+
+    if ( empty( $tab_nisbah_list ) ) {
+        $tab_nisbah_list = [
+            [ 'nisbah_produk' => 'Tabungan Reguler', 'nisbah_nasabah' => '15', 'nisbah_bank' => '85', 'nisbah_equiv' => '1.49%' ],
+            [ 'nisbah_produk' => 'Tabungan Ukhuwah', 'nisbah_nasabah' => '10', 'nisbah_bank' => '90', 'nisbah_equiv' => '1.00%' ],
+        ];
+    }
+    if ( empty( $dep_nisbah_list ) ) {
+        $dep_nisbah_list = [
+            [ 'nisbah_produk' => 'Deposito 1 Bulan',  'nisbah_nasabah' => '30',   'nisbah_bank' => '70',   'nisbah_equiv' => '2.99%' ],
+            [ 'nisbah_produk' => 'Deposito 3 Bulan',  'nisbah_nasabah' => '35',   'nisbah_bank' => '65',   'nisbah_equiv' => '3.48%' ],
+            [ 'nisbah_produk' => 'Deposito 6 Bulan',  'nisbah_nasabah' => '40',   'nisbah_bank' => '60',   'nisbah_equiv' => '3.98%' ],
+            [ 'nisbah_produk' => 'Deposito 12 Bulan', 'nisbah_nasabah' => '42.5', 'nisbah_bank' => '57.5', 'nisbah_equiv' => '4.23%' ],
+        ];
+    }
 
     // Hotline
     $default_wa        = get_option( 'options_contact_wa', '6281517380388' );
@@ -780,6 +935,20 @@ function wakalumi_render_produk_admin_page() {
                                 </div>
 
                                 <div>
+                                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Ikon Kartu Produk</label>
+                                    <select name="tab_icon[]" style="width: 100%;">
+                                        <?php $p_icon = $prod['icon'] ?? ($prod['slug'] ?? 'tawakal'); ?>
+                                        <option value="tawakal" <?php selected( $p_icon, 'tawakal' ); ?>>👛 Dompet / Simpanan Umum</option>
+                                        <option value="pendidikan" <?php selected( $p_icon, 'pendidikan' ); ?>>🎓 Pendidikan / Topi Wisuda</option>
+                                        <option value="haji-umroh" <?php selected( $p_icon, 'haji-umroh' ); ?>>🕌 Haji &amp; Umroh / Ka'bah</option>
+                                        <option value="ukhuwah" <?php selected( $p_icon, 'ukhuwah' ); ?>>🎁 Kado / Berhadiah</option>
+                                        <option value="business" <?php selected( $p_icon, 'business' ); ?>>🏢 Bisnis &amp; Institusi</option>
+                                        <option value="coins" <?php selected( $p_icon, 'coins' ); ?>>🪙 Koin / Investasi</option>
+                                        <option value="shield" <?php selected( $p_icon, 'shield' ); ?>>🛡️ Perisai / Amanah LPS</option>
+                                    </select>
+                                </div>
+
+                                <div>
                                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Akad Syariah</label>
                                     <input type="text" name="tab_akad[]" value="<?php echo esc_attr( $prod['akad'] ?? 'Mudharabah Muthlaqah' ); ?>" class="regular-text" style="width: 100%;">
                                 </div>
@@ -792,6 +961,11 @@ function wakalumi_render_produk_admin_page() {
                                 <div>
                                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Biaya Administrasi Bulanan</label>
                                     <input type="text" name="tab_biaya_admin[]" value="<?php echo esc_attr( $prod['biaya_admin'] ?? 'Gratis / Bebas Biaya Bulanan' ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Gratis / Bebas Biaya Bulanan atau Rp 0">
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Ketentuan Penarikan (Tabel Komparasi)</label>
+                                    <input type="text" name="tab_penarikan[]" value="<?php echo esc_attr( $prod['penarikan'] ?? '' ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Fleksibel: Kapan pun pada jam operasional kantor">
                                 </div>
 
                                 <div>
@@ -974,6 +1148,58 @@ function wakalumi_render_produk_admin_page() {
                             <td><input type="text" id="options_tabungan_calc_btn_text" name="options_tabungan_calc_btn_text" value="<?php echo esc_attr( $tab_calc_btn ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
                         </tr>
                     </table>
+
+                    <!-- Sub-Section: Shortcut / Preset Target Simulasi -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 20px; margin-top: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0f172a;">
+                                    Tombol Shortcut / Preset Target Dana (Pills)
+                                </h4>
+                                <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">
+                                    Tombol cepat di bawah slider target dana (contoh: Haji, Umroh, Pendidikan). Anda dapat menambah, mengubah nominal, tenor, dan produk rekomendasi.
+                                </p>
+                            </div>
+                            <button type="button" id="btn-add-calc-preset" class="button" style="background: #088395; color: #fff; border-color: #066e7d; font-weight: 600;">
+                                + Tambah Shortcut Baru
+                            </button>
+                        </div>
+
+                        <div id="tabungan-calc-presets-list" style="display: flex; flex-direction: column; gap: 12px;">
+                            <?php foreach ( $tab_calc_presets as $p_idx => $preset ) : ?>
+                                <div class="tabungan-preset-item" style="background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 2fr 1.5fr 1fr 2fr auto; gap: 12px; align-items: center;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Label Tombol *</label>
+                                        <input type="text" name="calc_preset_label[]" value="<?php echo esc_attr( $preset['label'] ?? '' ); ?>" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="misal: Rp 25 Jt (Porsi Haji)" required>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Target Nominal (Rp) *</label>
+                                        <input type="number" name="calc_preset_nominal[]" value="<?php echo esc_attr( $preset['nominal'] ?? '' ); ?>" class="regular-text" style="width: 100%;" placeholder="25000000" step="100000" required>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Tenor (Bulan)</label>
+                                        <input type="number" name="calc_preset_tenor[]" value="<?php echo esc_attr( $preset['tenor'] ?? '' ); ?>" class="regular-text" style="width: 100%;" placeholder="36" min="6" max="60" step="6">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Pilih Produk Rekomendasi</label>
+                                        <select name="calc_preset_prod[]" style="width: 100%;">
+                                            <option value="">-- Tetap Sesuai Pilihan Nasabah --</option>
+                                            <?php foreach ( $tabungan_list as $prod_opt ) : ?>
+                                                <option value="<?php echo esc_attr( $prod_opt['nama'] ); ?>" <?php selected( $preset['prod'] ?? '', $prod_opt['nama'] ); ?>>
+                                                    <?php echo esc_html( $prod_opt['nama'] ); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div style="padding-top: 18px;">
+                                        <button type="button" class="button wkl-btn-remove-preset" style="color: #ef4444; border-color: #fca5a5;" title="Hapus shortcut">
+                                            ✕
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 6. Tanya Jawab (FAQ / QnA) Tabungan -->
@@ -1086,6 +1312,88 @@ function wakalumi_render_produk_admin_page() {
                             </div>
                         </div>
                     </div>
+                <!-- 7. Realisasi Nisbah Bagi Hasil Tabungan (Tersinkronisasi ke Beranda) -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">
+                                7. Realisasi Nisbah Bagi Hasil Tabungan
+                            </h3>
+                            <p style="margin: 0; font-size: 12px; color: #64748b;">
+                                Daftar produk tabungan dengan porsi bagi hasil dan indikasi equivalent rate ini otomatis tampil pada <strong>Kartu Realisasi Nisbah di Halaman Beranda</strong>.
+                            </p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label for="options_nisbah_bulan_tab" style="font-size: 12px; font-weight: bold; color: #334155;">Periode Bulan:</label>
+                            <input type="text" id="options_nisbah_bulan_tab" name="options_nisbah_bulan" value="<?php echo esc_attr( $dep_nisbah_bulan ); ?>" class="regular-text" style="width: 150px; font-weight: bold; padding: 4px 8px;" placeholder="Agustus 2026">
+                        </div>
+                    </div>
+
+                    <table id="tab-nisbah-table" class="widefat striped" style="border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th style="font-weight: 700; padding: 10px 14px;">Nama Produk Tabungan</th>
+                                <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Porsi Nasabah (%)</th>
+                                <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Porsi Bank (%)</th>
+                                <th style="font-weight: 700; width: 180px; padding: 10px 14px;">Indikasi Eqv. Rate (% p.a.)</th>
+                                <th style="font-weight: 700; width: 80px; text-align: center; padding: 10px 14px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tab-nisbah-tbody">
+                            <?php foreach ( $tab_nisbah_list as $tni => $tnrow ) : ?>
+                                <tr class="tab-nisbah-row">
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="tab_nisbah_produk[]" value="<?php echo esc_attr( $tnrow['nisbah_produk'] ?? '' ); ?>" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="contoh: Tabungan Reguler" required>
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="tab_nisbah_nasabah[]" value="<?php echo esc_attr( $tnrow['nisbah_nasabah'] ?? '' ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="tab_nisbah_bank[]" value="<?php echo esc_attr( $tnrow['nisbah_bank'] ?? '' ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
+                                    </td>
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="tab_nisbah_equiv[]" value="<?php echo esc_attr( $tnrow['nisbah_equiv'] ?? '' ); ?>" style="width: 120px; font-weight: bold; color: #059669;" placeholder="contoh: 1.49%" required>
+                                    </td>
+                                    <td style="padding: 10px 14px; text-align: center;">
+                                        <button type="button" class="button button-link-delete wkl-remove-tab-nisbah" style="color: #ef4444;" title="Hapus Baris">✕ Hapus</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <button type="button" id="btn-add-tab-nisbah" class="button" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> + Tambah Produk Nisbah Tabungan
+                    </button>
+                </div>
+
+                <!-- 8. Banner CTA Konsultasi Tabungan & Hotline WhatsApp -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                        8. Banner CTA Konsultasi Tabungan &amp; Hotline WhatsApp
+                    </h2>
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 230px;"><label for="options_tabungan_cta_kicker">Kicker Banner</label></th>
+                            <td><input type="text" id="options_tabungan_cta_kicker" name="options_tabungan_cta_kicker" value="<?php echo esc_attr( $tab_cta_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 450px;" placeholder="Konsultasi Tabungan Syariah"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_cta_title">Judul Banner CTA</label></th>
+                            <td><input type="text" id="options_tabungan_cta_title" name="options_tabungan_cta_title" value="<?php echo esc_attr( $tab_cta_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;" placeholder="Mulai Rencanakan Masa Depan Finansial Syariah Anda"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_cta_desc">Deskripsi Banner CTA</label></th>
+                            <td><textarea id="options_tabungan_cta_desc" name="options_tabungan_cta_desc" rows="3" class="large-text" style="width: 100%; max-width: 650px;" placeholder="Buka rekening tabungan syariah tanpa biaya administrasi bulanan..."><?php echo esc_textarea( $tab_cta_desc ); ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_cta_btn_text">Teks Tombol WhatsApp</label></th>
+                            <td><input type="text" id="options_tabungan_cta_btn_text" name="options_tabungan_cta_btn_text" value="<?php echo esc_attr( $tab_cta_btn ); ?>" class="regular-text" style="width: 100%; max-width: 350px;" placeholder="Buka Tabungan via WhatsApp"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_tabungan_cta_wa_msg">Template Pesan WhatsApp</label></th>
+                            <td><textarea id="options_tabungan_cta_wa_msg" name="options_tabungan_cta_wa_msg" rows="2" class="large-text" style="width: 100%; max-width: 650px;" placeholder="Halo BPRS Wakalumi, saya ingin membuka rekening tabungan syariah..."><?php echo esc_textarea( $tab_cta_wa_msg ); ?></textarea></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -1280,45 +1588,42 @@ function wakalumi_render_produk_admin_page() {
                         </tr>
                     </table>
 
-                    <table class="widefat striped" style="border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+                    <table id="dep-nisbah-table" class="widefat striped" style="border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
                         <thead>
                             <tr style="background: #f8fafc;">
-                                <th style="font-weight: 700; padding: 10px 14px;">Tenor Penempatan</th>
+                                <th style="font-weight: 700; padding: 10px 14px;">Nama Tenor / Produk Deposito</th>
                                 <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Porsi Nasabah (%)</th>
                                 <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Porsi Bank (%)</th>
                                 <th style="font-weight: 700; width: 180px; padding: 10px 14px;">Indikasi Eqv. Rate (% p.a.)</th>
+                                <th style="font-weight: 700; width: 80px; text-align: center; padding: 10px 14px;">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php 
-                            $tenors = [ 1, 3, 6, 12 ];
-                            foreach ( $tenors as $t_m ) : 
-                                $r = $dep_rates[ $t_m ] ?? [
-                                    'nama'     => 'Deposito ' . $t_m . ' Bulan',
-                                    'nasabah'  => '40',
-                                    'bank'     => '60',
-                                    'equiv'    => '4.00%',
-                                ];
-                            ?>
-                                <tr>
-                                    <td style="padding: 10px 14px; font-weight: 600; color: #0f172a;">
-                                        <input type="hidden" name="dep_nisbah_produk[]" value="<?php echo esc_attr( $r['nama'] ); ?>">
-                                        <span class="dashicons dashicons-calendar-alt" style="color: #088395; margin-right: 6px; font-size: 18px; vertical-align: middle;"></span>
-                                        <?php echo esc_html( $r['nama'] ); ?>
+                        <tbody id="dep-nisbah-tbody">
+                            <?php foreach ( $dep_nisbah_list as $dni => $dnrow ) : ?>
+                                <tr class="dep-nisbah-row">
+                                    <td style="padding: 10px 14px;">
+                                        <input type="text" name="dep_nisbah_produk[]" value="<?php echo esc_attr( $dnrow['nisbah_produk'] ?? '' ); ?>" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="contoh: Deposito 1 Bulan" required>
                                     </td>
                                     <td style="padding: 10px 14px;">
-                                        <input type="text" name="dep_nisbah_nasabah[]" value="<?php echo esc_attr( $r['nasabah'] ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
+                                        <input type="text" name="dep_nisbah_nasabah[]" value="<?php echo esc_attr( $dnrow['nisbah_nasabah'] ?? '' ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
                                     </td>
                                     <td style="padding: 10px 14px;">
-                                        <input type="text" name="dep_nisbah_bank[]" value="<?php echo esc_attr( $r['bank'] ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
+                                        <input type="text" name="dep_nisbah_bank[]" value="<?php echo esc_attr( $dnrow['nisbah_bank'] ?? '' ); ?>" style="width: 90px; text-align: center; font-weight: bold;" required> %
                                     </td>
                                     <td style="padding: 10px 14px;">
-                                        <input type="text" name="dep_nisbah_equiv[]" value="<?php echo esc_attr( $r['equiv'] ); ?>" style="width: 120px; font-weight: bold; color: #059669;" placeholder="contoh: 4.23%" required>
+                                        <input type="text" name="dep_nisbah_equiv[]" value="<?php echo esc_attr( $dnrow['nisbah_equiv'] ?? '' ); ?>" style="width: 120px; font-weight: bold; color: #059669;" placeholder="contoh: 4.23%" required>
+                                    </td>
+                                    <td style="padding: 10px 14px; text-align: center;">
+                                        <button type="button" class="button button-link-delete wkl-remove-dep-nisbah" style="color: #ef4444;" title="Hapus Baris">✕ Hapus</button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                    <button type="button" id="btn-add-dep-nisbah" class="button" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> + Tambah Tenor / Produk Deposito
+                    </button>
 
                     <!-- Catatan Syariah / Karakteristik Estimasi -->
                     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; margin-top: 15px;">
@@ -1337,7 +1642,10 @@ function wakalumi_render_produk_admin_page() {
                     <table class="form-table" style="margin: 0;">
                         <tr>
                             <th style="width: 230px;"><label for="options_deposito_calc_badge">Badge Kalkulator</label></th>
-                            <td><input type="text" id="options_deposito_calc_badge" name="options_deposito_calc_badge" value="<?php echo esc_attr( $dep_calc_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;"></td>
+                            <td>
+                                <input type="text" id="options_deposito_calc_badge" name="options_deposito_calc_badge" value="<?php echo esc_attr( $dep_calc_badge ); ?>" class="regular-text" style="width: 100%; max-width: 450px;">
+                                <p class="description" style="font-size: 11px; color: #64748b; margin-top: 4px;">Badge kecil di atas judul kalkulator (default: <em>Simulasi Finansial Syariah</em>)</p>
+                            </td>
                         </tr>
                         <tr>
                             <th><label for="options_deposito_calc_title">Judul Kalkulator</label></th>
@@ -1348,6 +1656,13 @@ function wakalumi_render_produk_admin_page() {
                             <td><textarea id="options_deposito_calc_desc" name="options_deposito_calc_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $dep_calc_desc ); ?></textarea></td>
                         </tr>
                         <tr>
+                            <th><label for="options_deposito_calc_input_label">Label Input Nominal</label></th>
+                            <td>
+                                <input type="text" id="options_deposito_calc_input_label" name="options_deposito_calc_input_label" value="<?php echo esc_attr( $dep_calc_input_label ); ?>" class="regular-text" style="width: 100%; max-width: 450px;">
+                                <p class="description" style="font-size: 11px; color: #64748b; margin-top: 4px;">Label langkah 1 di kalkulator (default: <em>Nominal Penempatan Deposito</em>)</p>
+                            </td>
+                        </tr>
+                        <tr>
                             <th><label>Batas Nominal Simulasi</label></th>
                             <td>
                                 <div style="display: flex; gap: 14px; flex-wrap: wrap;">
@@ -1356,14 +1671,21 @@ function wakalumi_render_produk_admin_page() {
                                         <input type="number" id="options_deposito_calc_min" name="options_deposito_calc_min" value="<?php echo esc_attr( $dep_calc_min ); ?>" style="width: 140px;">
                                     </div>
                                     <div>
-                                        <label style="display: block; font-size: 11px; font-weight: bold; color: #475569;">Maksimal (Rp)</label>
-                                        <input type="number" id="options_deposito_calc_max" name="options_deposito_calc_max" value="<?php echo esc_attr( $dep_calc_max ); ?>" style="width: 160px;">
+                                        <label style="display: block; font-size: 11px; font-weight: bold; color: #475569;">Maksimal Slider (Rp)</label>
+                                        <input type="number" id="options_deposito_calc_max" name="options_deposito_calc_max" value="<?php echo esc_attr( $dep_calc_max ); ?>" style="width: 170px;">
                                     </div>
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: bold; color: #475569;">Default Awal (Rp)</label>
                                         <input type="number" id="options_deposito_calc_default" name="options_deposito_calc_default" value="<?php echo esc_attr( $dep_calc_default ); ?>" style="width: 160px;">
                                     </div>
                                 </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_calc_max_note">Keterangan Batas Maksimal</label></th>
+                            <td>
+                                <input type="text" id="options_deposito_calc_max_note" name="options_deposito_calc_max_note" value="<?php echo esc_attr( $dep_calc_max_note ); ?>" class="regular-text" style="width: 100%; max-width: 550px;">
+                                <p class="description" style="font-size: 11px; color: #64748b; margin-top: 4px;">Teks keterangan di samping slider (default: <em>Ketik untuk nominal penempatan lebih dari 2 Miliar</em>)</p>
                             </td>
                         </tr>
                         <tr>
@@ -1599,6 +1921,19 @@ function wakalumi_render_produk_admin_page() {
                 </div>
 
                 <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Ikon Kartu Produk</label>
+                    <select name="tab_icon[]" style="width: 100%;">
+                        <option value="tawakal">👛 Dompet / Simpanan Umum</option>
+                        <option value="pendidikan">🎓 Pendidikan / Topi Wisuda</option>
+                        <option value="haji-umroh">🕌 Haji &amp; Umroh / Ka'bah</option>
+                        <option value="ukhuwah" selected>🎁 Kado / Berhadiah</option>
+                        <option value="business">🏢 Bisnis &amp; Institusi</option>
+                        <option value="coins">🪙 Koin / Investasi</option>
+                        <option value="shield">🛡️ Perisai / Amanah LPS</option>
+                    </select>
+                </div>
+
+                <div>
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Akad Syariah</label>
                     <input type="text" name="tab_akad[]" value="Mudharabah Muthlaqah" class="regular-text" style="width: 100%;">
                 </div>
@@ -1611,6 +1946,11 @@ function wakalumi_render_produk_admin_page() {
                 <div>
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Biaya Administrasi Bulanan</label>
                     <input type="text" name="tab_biaya_admin[]" value="Gratis / Bebas Biaya Bulanan" class="regular-text" style="width: 100%;" placeholder="misal: Gratis / Bebas Biaya Bulanan">
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Ketentuan Penarikan (Tabel Komparasi)</label>
+                    <input type="text" name="tab_penarikan[]" value="" class="regular-text" style="width: 100%;" placeholder="misal: Fleksibel: Kapan pun pada jam operasional kantor">
                 </div>
 
                 <div>
@@ -1642,6 +1982,40 @@ function wakalumi_render_produk_admin_page() {
         </div>
     </template>
 
+    <!-- TEMPLATE: PRESET ITEM CLONE -->
+    <template id="tabungan-preset-template">
+        <div class="tabungan-preset-item" style="background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 2fr 1.5fr 1fr 2fr auto; gap: 12px; align-items: center;">
+            <div>
+                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Label Tombol *</label>
+                <input type="text" name="calc_preset_label[]" value="" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="misal: Rp 15 Jt (Pendidikan)" required>
+            </div>
+            <div>
+                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Target Nominal (Rp) *</label>
+                <input type="number" name="calc_preset_nominal[]" value="15000000" class="regular-text" style="width: 100%;" placeholder="15000000" step="100000" required>
+            </div>
+            <div>
+                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Tenor (Bulan)</label>
+                <input type="number" name="calc_preset_tenor[]" value="24" class="regular-text" style="width: 100%;" placeholder="24" min="6" max="60" step="6">
+            </div>
+            <div>
+                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Pilih Produk Rekomendasi</label>
+                <select name="calc_preset_prod[]" style="width: 100%;">
+                    <option value="">-- Tetap Sesuai Pilihan Nasabah --</option>
+                    <?php foreach ( $tabungan_list as $prod_opt ) : ?>
+                        <option value="<?php echo esc_attr( $prod_opt['nama'] ); ?>">
+                            <?php echo esc_html( $prod_opt['nama'] ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div style="padding-top: 18px;">
+                <button type="button" class="button wkl-btn-remove-preset" style="color: #ef4444; border-color: #fca5a5;" title="Hapus shortcut">
+                    ✕
+                </button>
+            </div>
+        </div>
+    </template>
+
     <!-- TEMPLATE: FAQ ITEM CLONE -->
     <template id="tabungan-faq-template">
         <div class="tabungan-faq-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
@@ -1664,36 +2038,93 @@ function wakalumi_render_produk_admin_page() {
         </div>
     </template>
 
+    <!-- TEMPLATE: NISBAH TABUNGAN ROW CLONE -->
+    <template id="tab-nisbah-template">
+        <tr class="tab-nisbah-row">
+            <td style="padding: 10px 14px;">
+                <input type="text" name="tab_nisbah_produk[]" value="" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="contoh: Tabungan Reguler" required>
+            </td>
+            <td style="padding: 10px 14px;">
+                <input type="text" name="tab_nisbah_nasabah[]" value="15" style="width: 90px; text-align: center; font-weight: bold;" required> %
+            </td>
+            <td style="padding: 10px 14px;">
+                <input type="text" name="tab_nisbah_bank[]" value="85" style="width: 90px; text-align: center; font-weight: bold;" required> %
+            </td>
+            <td style="padding: 10px 14px;">
+                <input type="text" name="tab_nisbah_equiv[]" value="1.50%" style="width: 120px; font-weight: bold; color: #059669;" placeholder="contoh: 1.49%" required>
+            </td>
+            <td style="padding: 10px 14px; text-align: center;">
+                <button type="button" class="button button-link-delete wkl-remove-tab-nisbah" style="color: #ef4444;" title="Hapus Baris">✕ Hapus</button>
+            </td>
+        </tr>
+    </template>
+
+    <!-- TEMPLATE: NISBAH DEPOSITO ROW CLONE -->
+    <template id="dep-nisbah-template">
+        <tr class="dep-nisbah-row">
+            <td style="padding: 10px 14px;">
+                <input type="text" name="dep_nisbah_produk[]" value="" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="contoh: Deposito 24 Bulan" required>
+            </td>
+            <td style="padding: 10px 14px;">
+                <input type="text" name="dep_nisbah_nasabah[]" value="45" style="width: 90px; text-align: center; font-weight: bold;" required> %
+            </td>
+            <td style="padding: 10px 14px;">
+                <input type="text" name="dep_nisbah_bank[]" value="55" style="width: 90px; text-align: center; font-weight: bold;" required> %
+            </td>
+            <td style="padding: 10px 14px;">
+                <input type="text" name="dep_nisbah_equiv[]" value="4.50%" style="width: 120px; font-weight: bold; color: #059669;" placeholder="contoh: 4.23%" required>
+            </td>
+            <td style="padding: 10px 14px; text-align: center;">
+                <button type="button" class="button button-link-delete wkl-remove-dep-nisbah" style="color: #ef4444;" title="Hapus Baris">✕ Hapus</button>
+            </td>
+        </tr>
+    </template>
+
     <!-- TAB & REPEATER JAVASCRIPT -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tab switching
+        // Tab switching with Hash Support
         var tabBtns = document.querySelectorAll('.wkl-tab-btn');
         var tabContents = document.querySelectorAll('.wkl-tab-content');
+
+        function activateTab(target) {
+            tabBtns.forEach(function(b) {
+                if (b.getAttribute('data-tab') === target) {
+                    b.style.borderBottomColor = '#088395';
+                    b.style.color = '#088395';
+                } else {
+                    b.style.borderBottomColor = 'transparent';
+                    b.style.color = '#64748b';
+                }
+            });
+            tabContents.forEach(function(content) {
+                content.style.display = 'none';
+            });
+            var activeContent = document.getElementById(target);
+            if (activeContent) {
+                activeContent.style.display = 'block';
+            }
+        }
 
         tabBtns.forEach(function(btn) {
             btn.addEventListener('click', function() {
                 var target = this.getAttribute('data-tab');
-
-                tabBtns.forEach(function(b) {
-                    b.style.borderBottomColor = 'transparent';
-                    b.style.color = '#64748b';
-                });
-                this.style.borderBottomColor = '#088395';
-                this.style.color = '#088395';
-
-                tabContents.forEach(function(content) {
-                    content.style.display = 'none';
-                });
-                var activeContent = document.getElementById(target);
-                if (activeContent) {
-                    activeContent.style.display = 'block';
+                activateTab(target);
+                if (history.replaceState) {
+                    history.replaceState(null, null, '#' + target);
                 }
             });
         });
 
+        if (window.location.hash) {
+            var hashTarget = window.location.hash.replace('#', '');
+            if (document.getElementById(hashTarget)) {
+                activateTab(hashTarget);
+            }
+        }
+
         // Repeater Tabungan functions
-        var listContainer = document.getElementById('tabungan-product-list');
+        var listContainer = document.getElementById('tabungan-repeater-list');
         var addBtn = document.getElementById('btn-add-tabungan');
         var tmpl = document.getElementById('tabungan-card-template');
 
@@ -1701,9 +2132,9 @@ function wakalumi_render_produk_admin_page() {
             if (!listContainer) return;
             var cards = listContainer.querySelectorAll('.tabungan-card-item');
             cards.forEach(function(card, idx) {
-                var numSpan = card.querySelector('.wkl-card-num');
+                var numSpan = card.querySelector('.wkl-item-num');
                 if (numSpan) numSpan.textContent = (idx + 1);
-                var orderInput = card.querySelector('.wkl-card-order');
+                var orderInput = card.querySelector('input[name="tab_urutan[]"]');
                 if (orderInput && (!orderInput.value || orderInput.value == idx)) {
                     orderInput.value = (idx + 1);
                 }
@@ -1711,28 +2142,21 @@ function wakalumi_render_produk_admin_page() {
         }
 
         function bindCardEvents(card) {
-            var toggleBtn = card.querySelector('.wkl-btn-toggle-card');
-            var body = card.querySelector('.wkl-card-body');
-            var icon = card.querySelector('.wkl-toggle-icon');
-            if (toggleBtn && body) {
-                toggleBtn.addEventListener('click', function() {
-                    if (body.style.display === 'none') {
-                        body.style.display = 'block';
-                        if (icon) icon.textContent = '▲ Tutup';
-                    } else {
-                        body.style.display = 'none';
-                        if (icon) icon.textContent = '▼ Buka';
-                    }
-                });
-            }
-
-            var removeBtn = card.querySelector('.wkl-btn-remove-card');
+            var removeBtn = card.querySelector('.wkl-btn-remove-tabungan');
             if (removeBtn) {
                 removeBtn.addEventListener('click', function() {
                     if (confirm('Hapus produk tabungan ini?')) {
                         card.remove();
                         updateNumbers();
                     }
+                });
+            }
+
+            var nameInput = card.querySelector('.wkl-tab-name-input');
+            var titlePreview = card.querySelector('.wkl-card-title-preview');
+            if (nameInput && titlePreview) {
+                nameInput.addEventListener('input', function() {
+                    titlePreview.textContent = this.value.trim() || 'Produk Tabungan Baru';
                 });
             }
         }
@@ -1751,6 +2175,38 @@ function wakalumi_render_produk_admin_page() {
                 listContainer.appendChild(newCard);
                 updateNumbers();
                 newCard.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Repeater Presets Kalkulator
+        var presetListContainer = document.getElementById('tabungan-calc-presets-list');
+        var addPresetBtn = document.getElementById('btn-add-calc-preset');
+        var presetTmpl = document.getElementById('tabungan-preset-template');
+
+        function bindPresetEvents(item) {
+            var removeBtn = item.querySelector('.wkl-btn-remove-preset');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    if (confirm('Hapus shortcut simulasi ini?')) {
+                        item.remove();
+                    }
+                });
+            }
+        }
+
+        if (presetListContainer) {
+            presetListContainer.querySelectorAll('.tabungan-preset-item').forEach(function(item) {
+                bindPresetEvents(item);
+            });
+        }
+
+        if (addPresetBtn && presetTmpl && presetListContainer) {
+            addPresetBtn.addEventListener('click', function() {
+                var clone = presetTmpl.content.cloneNode(true);
+                var newItem = clone.querySelector('.tabungan-preset-item');
+                bindPresetEvents(newItem);
+                presetListContainer.appendChild(newItem);
+                newItem.scrollIntoView({ behavior: 'smooth' });
             });
         }
 
@@ -1793,7 +2249,70 @@ function wakalumi_render_produk_admin_page() {
                 bindFaqEvents(newItem);
                 faqListContainer.appendChild(newItem);
                 updateFaqNumbers();
-                newItem.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Repeater Nisbah Tabungan
+        var tabNisbahTbody = document.getElementById('tab-nisbah-tbody');
+        var addTabNisbahBtn = document.getElementById('btn-add-tab-nisbah');
+        var tabNisbahTmpl = document.getElementById('tab-nisbah-template');
+
+        function bindTabNisbahRow(row) {
+            var removeBtn = row.querySelector('.wkl-remove-tab-nisbah');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    if (confirm('Hapus baris nisbah tabungan ini?')) {
+                        row.remove();
+                    }
+                });
+            }
+        }
+
+        if (tabNisbahTbody) {
+            tabNisbahTbody.querySelectorAll('.tab-nisbah-row').forEach(function(row) {
+                bindTabNisbahRow(row);
+            });
+        }
+
+        if (addTabNisbahBtn && tabNisbahTmpl && tabNisbahTbody) {
+            addTabNisbahBtn.addEventListener('click', function() {
+                var clone = tabNisbahTmpl.content.cloneNode(true);
+                var newRow = clone.querySelector('.tab-nisbah-row');
+                bindTabNisbahRow(newRow);
+                tabNisbahTbody.appendChild(newRow);
+                newRow.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Repeater Nisbah Deposito
+        var depNisbahTbody = document.getElementById('dep-nisbah-tbody');
+        var addDepNisbahBtn = document.getElementById('btn-add-dep-nisbah');
+        var depNisbahTmpl = document.getElementById('dep-nisbah-template');
+
+        function bindDepNisbahRow(row) {
+            var removeBtn = row.querySelector('.wkl-remove-dep-nisbah');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    if (confirm('Hapus baris nisbah deposito ini?')) {
+                        row.remove();
+                    }
+                });
+            }
+        }
+
+        if (depNisbahTbody) {
+            depNisbahTbody.querySelectorAll('.dep-nisbah-row').forEach(function(row) {
+                bindDepNisbahRow(row);
+            });
+        }
+
+        if (addDepNisbahBtn && depNisbahTmpl && depNisbahTbody) {
+            addDepNisbahBtn.addEventListener('click', function() {
+                var clone = depNisbahTmpl.content.cloneNode(true);
+                var newRow = clone.querySelector('.dep-nisbah-row');
+                bindDepNisbahRow(newRow);
+                depNisbahTbody.appendChild(newRow);
+                newRow.scrollIntoView({ behavior: 'smooth' });
             });
         }
 

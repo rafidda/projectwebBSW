@@ -368,40 +368,76 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
     }
     ?>
 
-    <!-- 1. Left/Center: LPS Dedicated Guarantee Badge -->
-    <?php if ( $lps_badge_class !== 'hidden' ) : ?>
-    <div id="hero-lps-badge" class="absolute bottom-24 sm:bottom-32 md:bottom-36 left-3 sm:left-6 md:left-10 z-20 <?php echo esc_attr( $lps_badge_class ); ?> items-center gap-2.5 sm:gap-3 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl shadow-xl max-w-xs sm:max-w-sm transition-all duration-300">
-        <div class="h-7 sm:h-9 bg-white/95 rounded-lg p-1 sm:p-1.5 shadow-inner flex items-center justify-center shrink-0">
-            <img src="<?php echo esc_url( $lps_logo ); ?>" alt="LPS" class="h-full w-auto object-contain" onerror="this.outerHTML='<span class=\'text-[10px] font-bold text-slate-800 px-1.5\'>LPS</span>'">
-        </div>
-        <p class="text-[9px] sm:text-[11px] font-semibold text-white leading-tight drop-shadow-md pr-1">
-            <?php echo esc_html( $lps_text ); ?>
-        </p>
-    </div>
-    <?php endif; ?>
-
-    <!-- 2. Right: Regulatory Logos Repeater (OJK, LPS, BI, etc.) -->
-    <?php if ( $hero_reg_class !== 'hidden' && ! empty( $hero_logos ) ) : ?>
-    <div id="hero-regulatory-badge" class="absolute bottom-24 sm:bottom-32 md:bottom-36 right-3 sm:right-6 md:right-10 z-20 <?php echo esc_attr( $hero_reg_class ); ?> flex-wrap items-center justify-end gap-2 sm:gap-2.5 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl shadow-xl transition-all duration-300 max-w-sm sm:max-w-none">
-        <span class="text-[9px] sm:text-[10px] font-extrabold text-white uppercase tracking-wider sm:tracking-widest mr-0.5 sm:mr-1 opacity-90 drop-shadow-md">Terdaftar & Diawasi:</span>
-        <?php foreach ( $hero_logos as $h_logo ) :
-            $h_lbl = $h_logo['label'] ?? '';
-            $h_url = $h_logo['url'] ?? '';
-            if ( empty( $h_url ) && empty( $h_lbl ) ) continue;
-        ?>
-            <div class="h-7 sm:h-9 flex items-center bg-white/90 backdrop-blur-sm rounded-lg p-1 sm:p-1.5 shadow-inner">
-                <?php if ( ! empty( $h_url ) ) : ?>
-                    <img src="<?php echo esc_url( $h_url ); ?>" alt="<?php echo esc_attr( $h_lbl ); ?>" class="h-full w-auto object-contain" onerror="this.outerHTML='<span class=\'text-[10px] sm:text-[11px] font-bold text-slate-800 px-1.5 sm:px-2\'><?php echo esc_html( $h_lbl ); ?></span>'">
-                <?php else : ?>
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-800 px-1.5 sm:px-2"><?php echo esc_html( $h_lbl ); ?></span>
-                <?php endif; ?>
+    <!-- Coordinated Hero Badges Wrapper -->
+    <?php if ( $lps_badge_class !== 'hidden' || ( $hero_reg_class !== 'hidden' && ! empty( $hero_logos ) ) ) : ?>
+    
+    <!-- 1. DESKTOP ONLY: Dual-Anchor Glassmorphic Badges (>= md) -->
+    <div class="hidden md:flex absolute md:bottom-28 lg:bottom-32 left-0 right-0 z-20 px-6 md:px-10 pointer-events-none items-center justify-between gap-4">
+        <!-- Left: LPS Dedicated Guarantee Badge -->
+        <?php if ( $lps_badge_class !== 'hidden' ) : ?>
+        <div id="hero-lps-badge" class="pointer-events-auto <?php echo esc_attr( $lps_badge_class ); ?> items-center gap-3 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2.5 rounded-2xl shadow-xl max-w-xs sm:max-w-sm transition-all duration-300">
+            <div class="h-9 bg-white/95 rounded-lg p-1.5 shadow-inner flex items-center justify-center shrink-0">
+                <img src="<?php echo esc_url( $lps_logo ); ?>" alt="LPS" class="h-full w-auto object-contain" onerror="this.outerHTML='<span class=\'text-[10px] font-bold text-slate-800 px-1.5\'>LPS</span>'">
             </div>
-        <?php endforeach; ?>
+            <p class="text-[11px] font-semibold text-white leading-tight drop-shadow-md pr-1">
+                <?php echo esc_html( $lps_text ); ?>
+            </p>
+        </div>
+        <?php endif; ?>
+
+        <!-- Right: Regulatory Logos Repeater (OJK, LPS, BI, etc.) -->
+        <?php if ( $hero_reg_class !== 'hidden' && ! empty( $hero_logos ) ) : ?>
+        <div id="hero-regulatory-badge" class="pointer-events-auto <?php echo esc_attr( $hero_reg_class ); ?> flex-wrap items-center justify-end gap-2.5 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2.5 rounded-2xl shadow-xl transition-all duration-300 max-w-sm sm:max-w-none">
+            <span class="text-[10px] font-extrabold text-white uppercase tracking-widest mr-1 opacity-90 drop-shadow-md">Terdaftar & Diawasi:</span>
+            <?php foreach ( $hero_logos as $h_logo ) :
+                $h_lbl = $h_logo['label'] ?? '';
+                $h_url = $h_logo['url'] ?? '';
+                if ( empty( $h_url ) && empty( $h_lbl ) ) continue;
+            ?>
+                <div class="h-9 flex items-center bg-white/90 backdrop-blur-sm rounded-lg p-1.5 shadow-inner">
+                    <?php if ( ! empty( $h_url ) ) : ?>
+                        <img src="<?php echo esc_url( $h_url ); ?>" alt="<?php echo esc_attr( $h_lbl ); ?>" class="h-full w-auto object-contain" onerror="this.outerHTML='<span class=\'text-[11px] font-bold text-slate-800 px-2\'><?php echo esc_html( $h_lbl ); ?></span>'">
+                    <?php else : ?>
+                        <span class="text-[11px] font-bold text-slate-800 px-2"><?php echo esc_html( $h_lbl ); ?></span>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- 2. MOBILE ONLY: Glassmorphic Trust-Dock (< md) -->
+    <div class="md:hidden absolute bottom-14 sm:bottom-20 left-0 right-0 z-20 px-4 pointer-events-none flex justify-center">
+        <div class="pointer-events-auto flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/80 dark:bg-black/80 backdrop-blur-md border border-white/25 shadow-xl max-w-[94vw] overflow-hidden">
+            <!-- Logos Group -->
+            <div class="flex items-center gap-1.5 shrink-0">
+                <?php foreach ( $hero_logos as $h_logo ) :
+                    $h_lbl = $h_logo['label'] ?? '';
+                    $h_url = $h_logo['url'] ?? '';
+                    if ( empty( $h_url ) && empty( $h_lbl ) ) continue;
+                ?>
+                    <div class="h-5 flex items-center bg-white/95 rounded px-1.5 shadow-inner">
+                        <?php if ( ! empty( $h_url ) ) : ?>
+                            <img src="<?php echo esc_url( $h_url ); ?>" alt="<?php echo esc_attr( $h_lbl ); ?>" class="h-3.5 w-auto object-contain">
+                        <?php else : ?>
+                            <span class="text-[9px] font-bold text-slate-800"><?php echo esc_html( $h_lbl ); ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <span class="w-px h-3.5 bg-white/30 shrink-0"></span>
+            
+            <!-- Guarantee Text -->
+            <p class="text-[10px] font-semibold text-white/95 leading-tight truncate">
+                <?php echo esc_html( $lps_text ); ?>
+            </p>
+        </div>
     </div>
     <?php endif; ?>
 
     <!-- Gradient Blending to Next Section -->
-    <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-50 dark:from-dark-surface to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-slate-50 dark:from-dark-surface to-transparent z-10 pointer-events-none"></div>
 
 </section>
 
@@ -496,7 +532,7 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
     }
 }
 ?>
-<section class="relative z-10 -mt-24 bg-slate-50 dark:bg-dark-surface rounded-t-[2rem] md:rounded-t-[4rem] shadow-[0_-20px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_-20px_40px_rgba(0,0,0,0.5)] pb-16 pt-10 md:pt-16">
+<section class="relative z-10 -mt-16 md:-mt-24 bg-slate-50 dark:bg-dark-surface rounded-t-[2rem] md:rounded-t-[4rem] shadow-[0_-20px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_-20px_40px_rgba(0,0,0,0.5)] pb-16 pt-10 md:pt-16">
     <div class="container-wide">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" data-aos="fade-up" data-aos-delay="100">
             <?php for ( $i = 1; $i <= 4; $i++ ) :
@@ -651,11 +687,14 @@ if ( ! empty( $tabungan_preview_list ) ) :
             ?>
                 <div class="card group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border rounded-2xl overflow-hidden p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_style['accent_bar'] ); ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 <?php echo esc_attr( $c_style['card_hover'] ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
                     
-                    <!-- Watermark Logo Background (Subtle) -->
-                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/wm-wkl.png' ); ?>" 
-                         alt="" 
-                         class="absolute -right-6 -bottom-6 w-32 h-32 object-contain opacity-[0.04] dark:opacity-[0.03] pointer-events-none group-hover:scale-115 group-hover:opacity-[0.08] transition-all duration-700" 
-                         aria-hidden="true">
+                    <!-- Watermark Logo Background (Subtle & Consistent with untitled4.png) -->
+                    <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.065] dark:opacity-[0.04] pointer-events-none select-none overflow-hidden transition-all duration-700 ease-out group-hover:scale-115 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:opacity-[0.11] dark:group-hover:opacity-[0.07] mix-blend-multiply dark:mix-blend-screen z-0">
+                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" 
+                             alt="" 
+                             class="w-full h-full object-contain brightness-0 dark:brightness-100" 
+                             loading="lazy"
+                             aria-hidden="true">
+                    </div>
 
                     <!-- Top Badge & Icon (Sharia Bank / Vault Icon - NO DOLLAR SIGN) -->
                     <div class="flex items-center justify-between gap-2 mb-4 relative z-10">
@@ -830,8 +869,8 @@ if ( $about_img_mob === 'hide' ) {
      SECTION 5: REALISASI NISBAH
      ======================================== -->
 <?php
-$nisbah_bulan = ( function_exists( 'get_field' ) ? get_field( 'nisbah_bulan', 'option' ) : null ) ?: get_option( 'options_nisbah_bulan', 'Agustus 2026' );
-$nisbah_data  = ( function_exists( 'get_field' ) ? get_field( 'nisbah_data', 'option' ) : null ) ?: get_option( 'options_nisbah_data' );
+$nisbah_bulan = function_exists( 'wakalumi_get_nisbah_bulan' ) ? wakalumi_get_nisbah_bulan() : get_option( 'options_nisbah_bulan', 'Agustus 2026' );
+$nisbah_data  = function_exists( 'wakalumi_get_nisbah_data' ) ? wakalumi_get_nisbah_data() : get_option( 'options_nisbah_data', [] );
 
 // Tampilkan data dummy jika ACF kosong
 if ( empty( $nisbah_data ) ) {
@@ -1063,36 +1102,12 @@ if ( preg_match( '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const openBtn = document.getElementById('open-video-modal');
-    const closeBtn = document.getElementById('close-video-modal');
-    const modal = document.getElementById('video-modal');
-    const iframe = document.getElementById('video-modal-iframe');
-
-    if (openBtn && modal && iframe) {
-        openBtn.addEventListener('click', function() {
-            iframe.src = iframe.getAttribute('data-src');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        });
-
-        const closeModal = function() {
-            iframe.src = '';
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        };
-
-        if (closeBtn) closeBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) closeModal();
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
+// Video modal interactive handling (primary handled by app.js on initial load and Swup navigation)
+(function() {
+    if (window.VideoModal && typeof window.VideoModal.init === 'function') {
+        window.VideoModal.init();
     }
-});
+})();
 </script>
 
 <!-- ========================================
@@ -1111,37 +1126,42 @@ if ( empty( $ig_posts ) ) {
 }
 $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
 ?>
-<section id="section-sosial-media" class="section bg-transparent relative z-10 py-20 overflow-hidden">
+<section id="section-sosial-media" class="section bg-slate-100/70 dark:bg-dark-surface/50 border-y border-slate-200/80 dark:border-dark-border/80 relative z-10 py-20 overflow-hidden">
     <div class="container-wide relative z-10">
-        <!-- Section Header -->
-        <div class="text-center mb-12" data-aos="fade-up">
-            <span class="section-label mb-4 inline-block">Sosial Media</span>
-            <h2 class="section-title mb-4"><?php echo esc_html( $ig_title ); ?></h2>
-            <p class="section-subtitle mx-auto"><?php echo esc_html( $ig_subtitle ); ?></p>
+        <!-- Section Header with Responsive Navigation Controls -->
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10" data-aos="fade-up">
+            <div>
+                <span class="section-label mb-3 inline-block">Sosial Media</span>
+                <h2 class="section-title mb-2"><?php echo esc_html( $ig_title ); ?></h2>
+                <p class="section-subtitle max-w-xl"><?php echo esc_html( $ig_subtitle ); ?></p>
+            </div>
+            
+            <!-- Dual Navigation Buttons (Fully Accessible on Mobile & Desktop) -->
+            <div class="flex items-center gap-2.5 self-end sm:self-auto shrink-0 pt-2 sm:pt-0">
+                <button id="ig-scroll-prev"
+                        class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-dark-surface shadow-md hover:shadow-lg border border-slate-200/80 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-200 active:scale-95 focus:outline-none cursor-pointer"
+                        aria-label="Scroll sebelumnya">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                <button id="ig-scroll-next"
+                        class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-dark-surface shadow-md hover:shadow-lg border border-slate-200/80 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-200 active:scale-95 focus:outline-none cursor-pointer"
+                        aria-label="Scroll berikutnya">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <!-- Scrollable Wrapper for Instagram -->
         <div class="relative" data-aos="fade-up" data-aos-delay="100">
-            <!-- Navigation Arrows -->
-            <button id="ig-scroll-prev"
-                    class="absolute left-1 sm:left-0 md:-left-4 lg:-left-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-dark-surface shadow-xl border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none cursor-pointer"
-                    aria-label="Scroll sebelumnya">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-            </button>
-            <button id="ig-scroll-next"
-                    class="absolute right-1 sm:right-0 md:-right-4 lg:-right-5 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white dark:bg-dark-surface shadow-xl border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-200 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:scale-110 focus:outline-none cursor-pointer"
-                    aria-label="Scroll berikutnya">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-            </button>
 
-            <div id="ig-scroll-track" class="grid grid-flow-col auto-cols-[85vw] md:auto-cols-[350px] gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-4 -mx-4 hide-scrollbar items-start" style="scroll-behavior: smooth;">
+            <div id="ig-scroll-track" class="grid grid-flow-col auto-cols-[min(340px,88vw)] sm:auto-cols-[340px] md:auto-cols-[350px] gap-5 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-4 -mx-4 hide-scrollbar items-start" style="scroll-behavior: smooth;">
                 <?php if ( ! empty( $ig_posts ) ) : ?>
                     <?php foreach ( $ig_posts as $post_url ) : ?>
-                        <div class="snap-center">
+                        <div class="snap-center min-h-[420px] sm:min-h-[460px] flex items-start justify-center">
                             <blockquote class="instagram-media" data-instgrm-permalink="<?php echo esc_url( $post_url ); ?>?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0; padding:0; width:100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></blockquote>
                         </div>
                     <?php endforeach; ?>
@@ -1152,9 +1172,9 @@ $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.co
                 <?php endif; ?>
             </div>
             
-            <!-- Fade Edges for Scroll Indication -->
-            <div class="absolute top-0 left-0 bottom-8 w-8 bg-gradient-to-r from-slate-50 dark:from-dark-surface to-transparent pointer-events-none"></div>
-            <div class="absolute top-0 right-0 bottom-8 w-12 bg-gradient-to-l from-slate-50 dark:from-dark-surface to-transparent pointer-events-none"></div>
+            <!-- Fade Edges for Scroll Indication (Desktop) -->
+            <div class="hidden md:block absolute top-0 left-0 bottom-8 w-8 bg-gradient-to-r from-white/90 dark:from-dark-surface/90 to-transparent pointer-events-none"></div>
+            <div class="hidden md:block absolute top-0 right-0 bottom-8 w-12 bg-gradient-to-l from-white/90 dark:from-dark-surface/90 to-transparent pointer-events-none"></div>
         </div>
         
         <?php if ( $ig_profile ) : ?>

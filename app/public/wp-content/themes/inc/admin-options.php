@@ -898,33 +898,6 @@ function wakalumi_render_media_page() {
  * ─────────────────────────────────────────────────────────────
  */
 function wakalumi_render_nisbah_page() {
-    if ( isset( $_POST['wakalumi_save_nisbah'] ) && check_admin_referer( 'wakalumi_nisbah_nonce' ) ) {
-        $bulan = sanitize_text_field( $_POST['options_nisbah_bulan'] ?? '' );
-        update_option( 'options_nisbah_bulan', $bulan );
-
-        $products = $_POST['nisbah_produk'] ?? [];
-        $jenis    = $_POST['nisbah_jenis'] ?? [];
-        $nasabah  = $_POST['nisbah_nasabah'] ?? [];
-        $bank     = $_POST['nisbah_bank'] ?? [];
-        $equiv    = $_POST['nisbah_equiv'] ?? [];
-
-        $data = [];
-        for ( $i = 0; $i < count( $products ); $i++ ) {
-            if ( ! empty( trim( $products[$i] ) ) ) {
-                $data[] = [
-                    'nisbah_produk'  => sanitize_text_field( $products[$i] ),
-                    'nisbah_jenis'   => sanitize_text_field( $jenis[$i] ?? 'tabungan' ),
-                    'nisbah_nasabah' => sanitize_text_field( $nasabah[$i] ?? '' ),
-                    'nisbah_bank'    => sanitize_text_field( $bank[$i] ?? '' ),
-                    'nisbah_equiv'   => sanitize_text_field( $equiv[$i] ?? '' ),
-                ];
-            }
-        }
-        update_option( 'options_nisbah_data', $data );
-
-        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Realisasi Nisbah berhasil disimpan!</strong></p></div>';
-    }
-
     $current_bulan = get_option( 'options_nisbah_bulan', 'Agustus 2026' );
     $current_data  = get_option( 'options_nisbah_data', [] );
 
@@ -938,124 +911,133 @@ function wakalumi_render_nisbah_page() {
             ['nisbah_produk' => 'Deposito 12 Bulan', 'nisbah_jenis' => 'deposito', 'nisbah_nasabah' => '42.5', 'nisbah_bank' => '57.5', 'nisbah_equiv' => '4.23%'],
         ];
     }
+
+    $tab_rows = [];
+    $dep_rows = [];
+    foreach ( $current_data as $row ) {
+        if ( ( $row['nisbah_jenis'] ?? '' ) === 'tabungan' ) {
+            $tab_rows[] = $row;
+        } else {
+            $dep_rows[] = $row;
+        }
+    }
     ?>
-    <div class="wrap" style="max-width: 900px; margin-top: 20px;">
-        <h1 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-            <span class="dashicons dashicons-chart-area" style="font-size: 32px; width: 32px; height: 32px; color: #088395;"></span>
-            Pengaturan Informasi Nisbah Bagi Hasil
-        </h1>
-        
-        <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px;">
-            <p style="margin-top: 0; color: #64748b; font-size: 14px;">
-                Ubah informasi bulan dan rincian bagi hasil yang tampil pada kartu <strong>Realisasi Nisbah</strong> di halaman beranda.
-            </p>
-
-            <form method="post" action="">
-                <?php wp_nonce_field( 'wakalumi_nisbah_nonce' ); ?>
-
-                <table class="form-table" style="margin-bottom: 20px;">
-                    <tr>
-                        <th scope="row" style="width: 180px;"><label for="options_nisbah_bulan"><strong>Periode Bulan:</strong></label></th>
-                        <td>
-                            <input type="text" id="options_nisbah_bulan" name="options_nisbah_bulan" value="<?php echo esc_attr( $current_bulan ); ?>" class="regular-text" style="padding: 6px 12px; font-weight: bold; width: 250px;" required>
-                            <p class="description">Contoh: <em>Agustus 2026</em> atau <em>September 2026</em></p>
-                        </td>
-                    </tr>
-                </table>
-
-                <h2 style="font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px; color: #088395;">
-                    Daftar Produk & Porsi Bagi Hasil
-                </h2>
-                
-                <table id="nisbah-table" class="widefat striped" style="border-radius: 6px; overflow: hidden; margin-bottom: 15px;">
-                    <thead>
-                        <tr style="background: #f8fafc;">
-                            <th style="font-weight: 600;">Nama Produk</th>
-                            <th style="font-weight: 600; width: 140px;">Jenis</th>
-                            <th style="font-weight: 600; width: 100px;">Nasabah (%)</th>
-                            <th style="font-weight: 600; width: 100px;">Bank (%)</th>
-                            <th style="font-weight: 600; width: 130px;">Equiv Rate (%)</th>
-                            <th style="width: 50px; text-align: center;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ( $current_data as $i => $row ) : ?>
-                            <tr>
-                                <td>
-                                    <input type="text" name="nisbah_produk[]" value="<?php echo esc_attr( $row['nisbah_produk'] ?? '' ); ?>" style="width: 100%;" required>
-                                </td>
-                                <td>
-                                    <select name="nisbah_jenis[]" style="width: 100%;">
-                                        <option value="tabungan" <?php selected( $row['nisbah_jenis'] ?? '', 'tabungan' ); ?>>Tabungan</option>
-                                        <option value="deposito" <?php selected( $row['nisbah_jenis'] ?? '', 'deposito' ); ?>>Deposito</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" name="nisbah_nasabah[]" value="<?php echo esc_attr( $row['nisbah_nasabah'] ?? '' ); ?>" style="width: 100%;" placeholder="Contoh: 15">
-                                </td>
-                                <td>
-                                    <input type="text" name="nisbah_bank[]" value="<?php echo esc_attr( $row['nisbah_bank'] ?? '' ); ?>" style="width: 100%;" placeholder="Contoh: 85">
-                                </td>
-                                <td>
-                                    <input type="text" name="nisbah_equiv[]" value="<?php echo esc_attr( $row['nisbah_equiv'] ?? '' ); ?>" style="width: 100%;" placeholder="Contoh: 1.49%">
-                                </td>
-                                <td style="text-align: center;">
-                                    <button type="button" class="button button-link-delete remove-nisbah-row" style="color: #ef4444;" title="Hapus baris">&times;</button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-                <div style="margin-bottom: 20px;">
-                    <button type="button" id="add-nisbah-row" class="button" style="display: inline-flex; align-items: center; gap: 5px;">
-                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> Tambah Baris Produk
-                    </button>
-                </div>
-
-                <p class="submit" style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
-                    <button type="submit" name="wakalumi_save_nisbah" class="button button-primary button-large" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 25px;">
-                        Simpan Perubahan Nisbah
-                    </button>
+    <div class="wrap" style="max-width: 960px; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <h1 style="display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">
+                    <span class="dashicons dashicons-chart-area" style="font-size: 30px; width: 30px; height: 30px; color: #088395;"></span>
+                    Informasi Nisbah Bagi Hasil Terpusat
+                </h1>
+                <p style="color: #64748b; font-size: 13px; margin: 0;">
+                    Pusat pemantauan data porsi bagi hasil dan equivalent rate yang aktif di <strong>Beranda</strong> dan <strong>Halaman Produk</strong>.
                 </p>
-            </form>
+            </div>
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 20px;">
+                <span style="font-size: 12px; font-weight: 700; color: #166534;">Periode Aktif:</span>
+                <strong style="color: #047857; font-size: 13px;"><?php echo esc_html( $current_bulan ); ?></strong>
+            </div>
+        </div>
+
+        <!-- Single Source of Truth Notice Box -->
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 5px solid #3b82f6; border-radius: 10px; padding: 18px 22px; margin-bottom: 25px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+            <h3 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 800; color: #1e40af; display: flex; align-items: center; gap: 8px;">
+                <span class="dashicons dashicons-info" style="color: #3b82f6;"></span>
+                Pengelolaan Nisbah Kini Terintegrasi di Modul Produk (Single Source of Truth)
+            </h3>
+            <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">
+                Untuk menghindari tumpang-tindih dan ketidaksinkronan data, seluruh pengaturan produk dan nisbah bagi hasil kini disatukan langsung pada menu <strong>Pengaturan Produk: Simpanan &amp; Deposito</strong>. Data yang diubah pada masing-masing produk otomatis terdistribusi ke kartu Beranda, tabel komparasi, dan kalkulator simulasi.
+            </p>
+        </div>
+
+        <!-- 2 Quick Action Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <!-- Card 1: Tabungan -->
+            <div style="background: #fff; border: 1px solid #cbd5e1; border-top: 4px solid #10b981; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #047857; letter-spacing: 0.5px;">Simpanan Syariah</span>
+                        <span style="background: #ecfdf5; color: #065f46; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;"><?php echo count( $tab_rows ); ?> Produk Aktif</span>
+                    </div>
+                    <h3 style="margin: 0 0 8px 0; font-size: 17px; font-weight: 800; color: #0f172a;">
+                        Nisbah Tabungan Syariah
+                    </h3>
+                    <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; line-height: 1.5;">
+                        Kelola produk simpanan, porsi bagi hasil nasabah, dan equivalent rate yang tampil pada kartu Kinerja Bank di Beranda.
+                    </p>
+                </div>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana#tab-tabungan' ) ); ?>" class="button button-primary" style="background: #10b981; border-color: #059669; font-weight: 700; padding: 6px 18px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 4px rgba(16,185,129,0.2);">
+                    <span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px;"></span> Kelola Nisbah Tabungan
+                </a>
+            </div>
+
+            <!-- Card 2: Deposito -->
+            <div style="background: #fff; border: 1px solid #cbd5e1; border-top: 4px solid #088395; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #088395; letter-spacing: 0.5px;">Investasi Berjangka</span>
+                        <span style="background: #f0fdfa; color: #115e59; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px;"><?php echo count( $dep_rows ); ?> Tenor Aktif</span>
+                    </div>
+                    <h3 style="margin: 0 0 8px 0; font-size: 17px; font-weight: 800; color: #0f172a;">
+                        Nisbah Deposito Mudharabah
+                    </h3>
+                    <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; line-height: 1.5;">
+                        Kelola tenor penempatan (1, 3, 6, 12, 24 bulan), porsi nisbah, indikasi eqv. rate, serta catatan fatwa DSN-MUI.
+                    </p>
+                </div>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana#tab-deposito' ) ); ?>" class="button button-primary" style="background: #088395; border-color: #066e7d; font-weight: 700; padding: 6px 18px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 4px rgba(8,131,149,0.2);">
+                    <span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px;"></span> Kelola Nisbah Deposito
+                </a>
+            </div>
+        </div>
+
+        <!-- Live Preview Table -->
+        <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0f172a;">
+                    Status Data Realisasi Nisbah Live Saat Ini
+                </h3>
+                <span style="font-size: 12px; color: #64748b;">Sumber: <code>options_nisbah_data</code></span>
+            </div>
+
+            <table class="widefat striped" style="border-radius: 8px; overflow: hidden;">
+                <thead>
+                    <tr style="background: #f8fafc;">
+                        <th style="font-weight: 700; padding: 10px 14px;">Nama Produk / Tenor</th>
+                        <th style="font-weight: 700; width: 130px; padding: 10px 14px;">Kategori</th>
+                        <th style="font-weight: 700; width: 120px; padding: 10px 14px;">Nasabah (%)</th>
+                        <th style="font-weight: 700; width: 120px; padding: 10px 14px;">Bank (%)</th>
+                        <th style="font-weight: 700; width: 140px; padding: 10px 14px;">Indikasi Eqv. Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $current_data as $row ) : 
+                        $is_tab = ( $row['nisbah_jenis'] ?? '' ) === 'tabungan';
+                    ?>
+                        <tr>
+                            <td style="padding: 10px 14px; font-weight: 600; color: #0f172a;">
+                                <?php echo esc_html( $row['nisbah_produk'] ?? '' ); ?>
+                            </td>
+                            <td style="padding: 10px 14px;">
+                                <span style="display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; <?php echo $is_tab ? 'background:#ecfdf5; color:#047857;' : 'background:#f0fdfa; color:#0f766e;'; ?>">
+                                    <?php echo $is_tab ? 'Tabungan' : 'Deposito'; ?>
+                                </span>
+                            </td>
+                            <td style="padding: 10px 14px; font-weight: 700; color: #0f766e;">
+                                <?php echo esc_html( $row['nisbah_nasabah'] ?? '-' ); ?>%
+                            </td>
+                            <td style="padding: 10px 14px; font-weight: 700; color: #475569;">
+                                <?php echo esc_html( $row['nisbah_bank'] ?? '-' ); ?>%
+                            </td>
+                            <td style="padding: 10px 14px; font-weight: 800; color: #059669;">
+                                <?php echo esc_html( $row['nisbah_equiv'] ?? '-' ); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tableBody = document.querySelector('#nisbah-table tbody');
-        const addBtn = document.getElementById('add-nisbah-row');
-
-        addBtn.addEventListener('click', function() {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><input type="text" name="nisbah_produk[]" value="" style="width: 100%;" placeholder="Nama Produk Baru" required></td>
-                <td>
-                    <select name="nisbah_jenis[]" style="width: 100%;">
-                        <option value="tabungan">Tabungan</option>
-                        <option value="deposito">Deposito</option>
-                    </select>
-                </td>
-                <td><input type="text" name="nisbah_nasabah[]" value="" style="width: 100%;" placeholder="15"></td>
-                <td><input type="text" name="nisbah_bank[]" value="" style="width: 100%;" placeholder="85"></td>
-                <td><input type="text" name="nisbah_equiv[]" value="" style="width: 100%;" placeholder="1.50%"></td>
-                <td style="text-align: center;"><button type="button" class="button button-link-delete remove-nisbah-row" style="color: #ef4444;" title="Hapus baris">&times;</button></td>
-            `;
-            tableBody.appendChild(tr);
-        });
-
-        tableBody.addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('remove-nisbah-row')) {
-                if (tableBody.querySelectorAll('tr').length > 1) {
-                    e.target.closest('tr').remove();
-                } else {
-                    alert('Minimal harus ada 1 baris produk nisbah.');
-                }
-            }
-        });
-    });
-    </script>
     <?php
 }
 
