@@ -587,7 +587,7 @@
 
 /* Slider dot indicators */
 .slider-dots {
-  @apply absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3;
+  @apply absolute bottom-32 sm:bottom-36 md:bottom-28 lg:bottom-32 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 md:gap-3;
 }
 
 .slider-dot {

@@ -32,8 +32,7 @@ function wakalumi_register_cpts() {
         'public'            => true,
         'has_archive'       => false,
         'rewrite'           => [ 'slug' => 'slide', 'with_front' => false ],
-        'menu_icon'         => 'dashicons-slides',
-        'menu_position'     => 3,
+        'show_in_menu'      => false,
         'supports'          => [ 'title', 'thumbnail', 'page-attributes' ],
         'show_in_rest'      => false,
     ] );
@@ -308,5 +307,23 @@ function wakalumi_save_hero_slide_metabox( $post_id ) {
     }
 }
 add_action( 'save_post_hero_slide', 'wakalumi_save_hero_slide_metabox' );
+
+/**
+ * Pengalihan Otomatis Menu Klasik hero_slide ke Panel Terpadu Wakalumi Hero
+ */
+add_action( 'admin_init', function() {
+    global $pagenow;
+    // Cek edit.php dan post-new.php
+    if ( ( $pagenow === 'edit.php' || $pagenow === 'post-new.php' ) && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'hero_slide' ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=wakalumi-hero' ) );
+        exit;
+    }
+    // Cek post.php edit individual
+    if ( $pagenow === 'post.php' && isset( $_GET['post'] ) && get_post_type( (int) $_GET['post'] ) === 'hero_slide' ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=wakalumi-hero' ) );
+        exit;
+    }
+} );
+
 
 

@@ -548,6 +548,7 @@ if ( empty( $deposito_nisbah ) ) {
      SECTION 3: KALKULATOR SIMULASI DEPOSITO
      ======================================== -->
 <section id="simulasi" class="scroll-mt-24 py-14 lg:py-20 bg-transparent relative">
+    <span id="nisbah" class="relative -top-24"></span>
     <div class="container-wide">
         <div class="max-w-4xl mx-auto p-6 sm:p-10 lg:p-12 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 text-white shadow-2xl relative overflow-hidden group" data-aos="fade-up">
             <!-- Ambient Glow & Subtle Watermark with Hover Animation -->

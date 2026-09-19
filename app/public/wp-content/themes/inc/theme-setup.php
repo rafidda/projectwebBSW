@@ -505,7 +505,7 @@ function wakalumi_render_front_guide_box() {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 10px;">
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
                 <strong style="color: #088395;">🖼️ Banner Berjalan (Hero Slider):</strong><br>
-                Dikelola melalui menu <a href="edit.php?post_type=hero_slide" style="font-weight: bold; text-decoration: underline;">Slider Hero</a> di bilah navigasi kiri.
+                Dikelola melalui menu <a href="admin.php?page=wakalumi-hero" style="font-weight: bold; text-decoration: underline;">Beranda: Hero & Slider</a> di bilah navigasi kiri.
             </div>
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
                 <strong style="color: #088395;">⚡ Layanan Cepat, Video & IG Feed:</strong><br>
@@ -586,8 +586,8 @@ function wakalumi_render_dashboard_roadmap_widget() {
                     </td>
                 </tr>
                 <tr>
-                    <td><a href="edit.php?post_type=hero_slide"><strong>🖼️ Slider Hero</strong></a></td>
-                    <td>Kelola banner slide di beranda atas (foto latar HD, judul headline besar, sub-judul, dan 2 tombol aksi).</td>
+                    <td><a href="admin.php?page=wakalumi-hero"><strong>🖼️ Beranda: Hero &amp; Slider</strong></a></td>
+                    <td>Kelola banner slide di beranda atas (foto latar HD, judul headline besar, sub-judul, dan 2 tombol aksi) beserta lencana LPS &amp; logo regulasi.</td>
                 </tr>
                 <tr>
                     <td><a href="edit.php?post_type=produk"><strong>📦 Katalog Produk</strong></a></td>
@@ -666,7 +666,7 @@ function wakalumi_admin_bar_quick_links( $wp_admin_bar ) {
         'id'     => 'wakalumi_quick_slider',
         'parent' => 'wakalumi_quick_edit',
         'title'  => '🖼️ Slider Hero Banner',
-        'href'   => admin_url( 'edit.php?post_type=hero_slide' ),
+        'href'   => admin_url( 'admin.php?page=wakalumi-hero' ),
     ] );
 
     $wp_admin_bar->add_node( [

@@ -270,6 +270,7 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
         $footer_show_logos    = get_option( 'options_footer_show_logos', '1' );
         $footer_logos_desktop = get_option( 'options_footer_logos_desktop', '1' );
         $footer_logos_mobile  = get_option( 'options_footer_logos_mobile', '1' );
+        $footer_reg_label     = get_option( 'options_footer_reg_label', 'Terdaftar & Diawasi:' );
         
         $footer_logos = get_option( 'options_footer_reg_logos', [] );
         if ( empty( $footer_logos ) ) {
@@ -300,7 +301,9 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
             <?php if ( $footer_logos_class !== 'hidden' && ! empty( $footer_logos ) ) : ?>
             <!-- Logo Regulasi Dinamis (OJK, LPS, BI, dll.) -->
             <div class="<?php echo esc_attr( $footer_logos_class ); ?> flex-wrap items-center justify-center gap-2.5 sm:gap-3 py-1">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-1">Terdaftar & Diawasi:</span>
+                <?php if ( ! empty( $footer_reg_label ) ) : ?>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-1"><?php echo esc_html( $footer_reg_label ); ?></span>
+                <?php endif; ?>
                 <?php foreach ( $footer_logos as $f_logo ) :
                     $f_lbl = $f_logo['label'] ?? '';
                     $f_url = $f_logo['url'] ?? '';

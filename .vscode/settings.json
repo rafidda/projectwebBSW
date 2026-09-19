@@ -1,4 +1,5 @@
 {
-  "LaravelExtraIntellisense.enable": false
+  "LaravelExtraIntellisense.enable": false,
+  "css.lint.unknownAtRules": "ignore"
 }
 

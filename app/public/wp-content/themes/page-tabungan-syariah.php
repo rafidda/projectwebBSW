@@ -473,6 +473,18 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
                 <!-- Kolom Kiri: Detail & Keunggulan (7 Kolom) -->
                 <div class="lg:col-span-7">
+                    <?php $tab_img = ! empty( $prod['image'] ) ? $prod['image'] : ''; ?>
+                    <?php if ( ! empty( $tab_img ) ) : ?>
+                        <!-- Dedicated 16:10 Graphic Slot -->
+                        <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-5 bg-slate-100 dark:bg-slate-800 shadow-sm group/img">
+                            <img src="<?php echo esc_url( $tab_img ); ?>" alt="<?php echo esc_attr( $prod['nama'] ); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105" loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"></div>
+                            <span class="absolute top-3 right-3 px-3 py-1 rounded-full <?php echo esc_attr( $c_theme['badge_bg'] ); ?> text-xs font-extrabold uppercase tracking-wider border shadow-sm backdrop-blur-md">
+                                Akad: <?php echo esc_html( $prod['akad'] ); ?>
+                            </span>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- Header Badges & Themed Icon -->
                     <div class="flex items-center justify-between gap-3 mb-4">
                         <div class="flex flex-wrap items-center gap-2.5">

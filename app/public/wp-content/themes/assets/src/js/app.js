@@ -1290,20 +1290,69 @@ const OrgChartLightbox = {
 // ========================================================================
 const SmoothScroll = {
   init() {
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-      link.addEventListener('click', (e) => {
-        const targetId = link.getAttribute('href');
-        if (targetId === '#') return;
+    const currentPath = window.location.pathname.replace(/\/$/, '');
 
-        const target = document.querySelector(targetId);
-        if (target) {
-          e.preventDefault();
-          const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 0;
-          const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
-          window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('a[href*="#"]').forEach(link => {
+      const hrefAttr = link.getAttribute('href');
+      if (!hrefAttr || hrefAttr === '#') return;
+
+      try {
+        const url = new URL(link.href, window.location.origin);
+        const linkPath = url.pathname.replace(/\/$/, '');
+        const hash = url.hash;
+
+        // If link points to an anchor on the current page or starts with '#'
+        if (hash && hash !== '#' && (linkPath === currentPath || hrefAttr.startsWith('#'))) {
+          link.addEventListener('click', (e) => {
+            const target = document.querySelector(hash);
+            if (target) {
+              e.preventDefault();
+
+              // Close mobile menu if open
+              const overlay = document.getElementById('mobile-menu-overlay');
+              const panel = document.getElementById('mobile-menu-panel');
+              if (panel && panel.classList.contains('active') && typeof MobileMenu !== 'undefined') {
+                MobileMenu.close(overlay, panel);
+              }
+
+              const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
+              const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
+              window.scrollTo({ top, behavior: 'smooth' });
+
+              if (history.pushState) {
+                history.pushState(null, null, hash);
+              }
+            }
+          });
         }
-      });
+      } catch (err) {
+        if (hrefAttr.startsWith('#') && hrefAttr.length > 1) {
+          link.addEventListener('click', (e) => {
+            const target = document.querySelector(hrefAttr);
+            if (target) {
+              e.preventDefault();
+              const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
+              const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
+              window.scrollTo({ top, behavior: 'smooth' });
+            }
+          });
+        }
+      }
     });
+
+    // Also handle initial load with hash in URL
+    if (window.location.hash) {
+      setTimeout(() => {
+        try {
+          const targetEl = document.querySelector(window.location.hash);
+          if (targetEl) {
+            const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
+            const top = targetEl.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        } catch (e) {}
+      }, 350);
+    }
   }
 };
 
@@ -2028,6 +2077,9 @@ function initAllModules() {
   KantorModule.init();
   SavingsCalculator.init();
   DepositoPage.init();
+  if (window.FinancingPage && typeof window.FinancingPage.init === 'function') {
+    window.FinancingPage.init();
+  }
 
   AOS.init({
     duration: 700,
@@ -2084,20 +2136,22 @@ function initSwup() {
     initAllModules();
     Preloader.finishTransition();
 
-    // Check if URL has anchor hash (e.g. #tawakal, #pendidikan, #haji-umroh, #ukhuwah)
+    // Check if URL has anchor hash (e.g. #pedagang, #guru, #murabahah, #kalkulator)
     if (window.location.hash) {
       setTimeout(() => {
         try {
           const targetEl = document.querySelector(window.location.hash);
           if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth' });
+            const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
+            const top = targetEl.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
+            window.scrollTo({ top, behavior: 'smooth' });
           } else {
             window.scrollTo(0, 0);
           }
         } catch (e) {
           window.scrollTo(0, 0);
         }
-      }, 150);
+      }, 200);
     } else {
       window.scrollTo(0, 0);
     }

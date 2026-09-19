@@ -23,12 +23,14 @@ require_once WAKALUMI_DIR . '/inc/theme-setup.php';
 require_once WAKALUMI_DIR . '/inc/cpt.php';
 require_once WAKALUMI_DIR . '/inc/acf-fields.php';
 require_once WAKALUMI_DIR . '/inc/admin-options.php';
+require_once WAKALUMI_DIR . '/inc/admin-hero.php';
 require_once WAKALUMI_DIR . '/inc/admin-about.php';
 require_once WAKALUMI_DIR . '/inc/admin-legalitas.php';
 require_once WAKALUMI_DIR . '/inc/admin-pengurus.php';
 require_once WAKALUMI_DIR . '/inc/admin-kantor.php';
 require_once WAKALUMI_DIR . '/inc/admin-brosur.php';
 require_once WAKALUMI_DIR . '/inc/admin-produk.php';
+require_once WAKALUMI_DIR . '/inc/admin-pembiayaan.php';
 require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 
 // ────────────────────────────────────────────────

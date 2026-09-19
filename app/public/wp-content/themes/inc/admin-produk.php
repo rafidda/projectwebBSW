@@ -17,14 +17,24 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function wakalumi_register_produk_admin_menu() {
     add_submenu_page(
         'wakalumi-settings',
-        'Produk: Simpanan & Deposito',
-        'Produk: Simpanan & Deposito',
+        'Produk: Simpanan Syariah',
+        'Produk Syariah',
         'manage_options',
         'wakalumi-produk-dana',
         'wakalumi_render_produk_admin_page'
     );
 }
 add_action( 'admin_menu', 'wakalumi_register_produk_admin_menu', 23 );
+
+/**
+ * Handle old wakalumi-deposito link redirect
+ */
+add_action( 'admin_init', function() {
+    if ( isset( $_GET['page'] ) && $_GET['page'] === 'wakalumi-deposito' ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=wakalumi-produk-dana&tab=deposito' ) );
+        exit;
+    }
+} );
 
 /**
  * Helper: Ambil Daftar Produk Tabungan dengan Default Bawaan Resmi
@@ -245,7 +255,21 @@ function wakalumi_get_deposito_rates() {
 /**
  * Render Halaman Admin Pengelolaan Produk Dana (Tabungan & Deposito)
  */
-function wakalumi_render_produk_admin_page() {
+function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
+    // Pastikan media WordPress siap untuk upload PDF brosur
+    wp_enqueue_media();
+
+    // ── PENENTUAN TAB AKTIF (Server-Side & URL Fallback) ────────────
+    $active_tab = $default_tab;
+    if ( isset( $_GET['page'] ) && $_GET['page'] === 'wakalumi-deposito' ) {
+        $active_tab = 'deposito';
+    }
+    if ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], [ 'tabungan', 'deposito', 'kontak' ], true ) ) {
+        $active_tab = sanitize_key( $_GET['tab'] );
+    } elseif ( isset( $_POST['active_tab'] ) && in_array( $_POST['active_tab'], [ 'tabungan', 'deposito', 'kontak' ], true ) ) {
+        $active_tab = sanitize_key( $_POST['active_tab'] );
+    }
+
     // ── PROSES SIMPAN DATA ──────────────────────────────────────────
     if ( isset( $_POST['wakalumi_save_produk_dana'] ) && check_admin_referer( 'wakalumi_produk_dana_nonce' ) ) {
         
@@ -275,6 +299,7 @@ function wakalumi_render_produk_admin_page() {
         $tab_keunggulans  = $_POST['tab_keunggulan'] ?? [];
         $tab_syarats      = $_POST['tab_syarat'] ?? [];
         $tab_wa_texts     = $_POST['tab_wa_text'] ?? [];
+        $tab_images       = $_POST['tab_image'] ?? [];
         $tab_urutans      = $_POST['tab_urutan'] ?? [];
 
         $clean_tabungan_list = [];
@@ -303,6 +328,7 @@ function wakalumi_render_produk_admin_page() {
                 'keunggulan'  => sanitize_textarea_field( $tab_keunggulans[$i] ?? '' ),
                 'syarat'      => sanitize_textarea_field( $tab_syarats[$i] ?? '' ),
                 'wa_text'     => sanitize_text_field( $tab_wa_texts[$i] ?? '' ),
+                'image'       => esc_url_raw( $tab_images[$i] ?? '' ),
                 'urutan'      => intval( $tab_urutans[$i] ?? ( $i + 1 ) ),
             ];
         }
@@ -567,7 +593,8 @@ function wakalumi_render_produk_admin_page() {
         update_option( 'options_produk_cta_title', sanitize_text_field( $_POST['options_produk_cta_title'] ?? '' ) );
         update_option( 'options_produk_cta_desc', sanitize_textarea_field( $_POST['options_produk_cta_desc'] ?? '' ) );
 
-        echo '<div class="notice notice-success is-dismissible" style="margin-top: 15px;"><p><strong>Berhasil!</strong> Seluruh pengaturan produk Tabungan, Deposito, dan Nisbah Bagi Hasil berhasil diperbarui.</p></div>';
+        $tab_label = ( $active_tab === 'deposito' ) ? 'Deposito Mudharabah & Nisbah' : ( ( $active_tab === 'kontak' ) ? 'Hotline & CTA' : 'Tabungan Syariah' );
+        echo '<div class="notice notice-success is-dismissible" style="margin-top: 15px;"><p><strong>Berhasil!</strong> Pengaturan ' . esc_html( $tab_label ) . ' dan data produk berhasil diperbarui.</p></div>';
     }
 
     // ── AMBIL NILAI DARI DATABASE ───────────────────────────────────
@@ -776,26 +803,82 @@ function wakalumi_render_produk_admin_page() {
             </div>
         </div>
 
-        <form method="post" action="">
+        <?php
+        $is_tab_tabungan = ( $active_tab === 'tabungan' );
+        $is_tab_deposito = ( $active_tab === 'deposito' );
+        $is_tab_kontak   = ( $active_tab === 'kontak' );
+        ?>
+
+        <form method="post" action="" id="wkl-produk-form">
             <?php wp_nonce_field( 'wakalumi_produk_dana_nonce' ); ?>
+            <input type="hidden" name="active_tab" id="wkl_active_tab" value="<?php echo esc_attr( $active_tab ); ?>">
+
+            <!-- EARLY TAB SWITCHER FUNCTION (Guaranteed ready before click) -->
+            <script>
+            window.wklSwitchTab = function(tabId, el) {
+                var tabBtns = document.querySelectorAll('.wkl-tab-btn');
+                var tabContents = document.querySelectorAll('.wkl-tab-content');
+                tabBtns.forEach(function(b) {
+                    b.style.borderBottomColor = 'transparent';
+                    b.style.color = '#64748b';
+                    b.style.fontWeight = '600';
+                    b.classList.remove('active');
+                });
+                if (el) {
+                    el.style.borderBottomColor = '#088395';
+                    el.style.color = '#088395';
+                    el.style.fontWeight = '700';
+                    el.classList.add('active');
+                }
+                tabContents.forEach(function(c) {
+                    c.style.display = 'none';
+                });
+                var target = document.getElementById(tabId);
+                if (target) {
+                    target.style.display = 'block';
+                }
+                var activeInput = document.getElementById('wkl_active_tab');
+                if (activeInput) {
+                    activeInput.value = tabId.replace('tab-', '');
+                }
+                if (window.history && window.history.replaceState) {
+                    var cleanTab = tabId.replace('tab-', '');
+                    var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?page=wakalumi-produk-dana&tab=' + cleanTab;
+                    window.history.replaceState(null, null, newUrl);
+                }
+                return false;
+            };
+            </script>
 
             <!-- NAVIGATION TABS -->
-            <div style="display: flex; gap: 8px; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px;">
-                <button type="button" class="wkl-tab-btn active" data-tab="tab-tabungan" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: none; cursor: pointer; border-bottom: 3px solid #088395; color: #088395;">
-                    1. Kelola Produk Tabungan (Dinamis)
-                </button>
-                <button type="button" class="wkl-tab-btn" data-tab="tab-deposito" style="padding: 10px 20px; font-size: 14px; font-weight: 600; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #64748b;">
-                    2. Deposito Mudharabah & Nisbah
-                </button>
-                <button type="button" class="wkl-tab-btn" data-tab="tab-kontak" style="padding: 10px 20px; font-size: 14px; font-weight: 600; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #64748b;">
-                    3. Hotline & Banner CTA
-                </button>
+            <div style="display: flex; gap: 8px; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px; flex-wrap: wrap;">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana&tab=tabungan' ) ); ?>" 
+                   class="wkl-tab-btn <?php echo $is_tab_tabungan ? 'active' : ''; ?>" 
+                   data-tab="tab-tabungan" 
+                   onclick="return wklSwitchTab('tab-tabungan', this);"
+                   style="display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; font-size: 14px; font-weight: <?php echo $is_tab_tabungan ? '700' : '600'; ?>; text-decoration: none; border: none; background: none; cursor: pointer; border-bottom: 3px solid <?php echo $is_tab_tabungan ? '#088395' : 'transparent'; ?>; color: <?php echo $is_tab_tabungan ? '#088395' : '#64748b'; ?>;">
+                    💳 1. Kelola Produk Tabungan (Dinamis)
+                </a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana&tab=deposito' ) ); ?>" 
+                   class="wkl-tab-btn <?php echo $is_tab_deposito ? 'active' : ''; ?>" 
+                   data-tab="tab-deposito" 
+                   onclick="return wklSwitchTab('tab-deposito', this);"
+                   style="display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; font-size: 14px; font-weight: <?php echo $is_tab_deposito ? '700' : '600'; ?>; text-decoration: none; border: none; background: none; cursor: pointer; border-bottom: 3px solid <?php echo $is_tab_deposito ? '#088395' : 'transparent'; ?>; color: <?php echo $is_tab_deposito ? '#088395' : '#64748b'; ?>;">
+                    📈 2. Deposito Mudharabah, Nisbah &amp; CTA
+                </a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana&tab=kontak' ) ); ?>" 
+                   class="wkl-tab-btn <?php echo $is_tab_kontak ? 'active' : ''; ?>" 
+                   data-tab="tab-kontak" 
+                   onclick="return wklSwitchTab('tab-kontak', this);"
+                   style="display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; font-size: 14px; font-weight: <?php echo $is_tab_kontak ? '700' : '600'; ?>; text-decoration: none; border: none; background: none; cursor: pointer; border-bottom: 3px solid <?php echo $is_tab_kontak ? '#088395' : 'transparent'; ?>; color: <?php echo $is_tab_kontak ? '#088395' : '#64748b'; ?>;">
+                    📞 3. Hotline WhatsApp
+                </a>
             </div>
 
             <!-- ========================================================
                  TAB 1: TABUNGAN SYARIAH (REPEATER DINAMIS)
                  ======================================================== -->
-            <div id="tab-tabungan" class="wkl-tab-content" style="display: block;">
+            <div id="tab-tabungan" class="wkl-tab-content" style="display: <?php echo $is_tab_tabungan ? 'block' : 'none'; ?>;">
                 <!-- 1. Header Banner & Kartu Penjaminan LPS Tabungan -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
@@ -971,6 +1054,25 @@ function wakalumi_render_produk_admin_page() {
                                 <div>
                                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Pesan WhatsApp Kustom (Opsional)</label>
                                     <input type="text" name="tab_wa_text[]" value="<?php echo esc_attr( $prod['wa_text'] ?? '' ); ?>" class="regular-text" style="width: 100%;" placeholder="Pesan otomatis saat klik Buka Rekening">
+                                </div>
+
+                                <div style="grid-column: 1 / -1;" class="wkl-img-field-wrap">
+                                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">
+                                        Gambar Banner / Kartu Produk (Opsional - Rekomendasi Rasio Standar 16:10 / 800x500px)
+                                    </label>
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <input type="text" name="tab_image[]" value="<?php echo esc_attr( $prod['image'] ?? '' ); ?>" class="regular-text" style="flex: 1; min-width: 250px;" placeholder="https://... atau klik Unggah Gambar">
+                                        <button type="button" class="button wkl-upload-tab-img-btn" style="display: inline-flex; align-items: center; gap: 5px;">
+                                            <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Gambar
+                                        </button>
+                                        <button type="button" class="button button-link-delete wkl-remove-tab-img-btn" style="color: #ef4444; <?php echo empty( $prod['image'] ) ? 'display:none;' : ''; ?>">
+                                            ✕ Hapus
+                                        </button>
+                                    </div>
+                                    <div class="wkl-img-preview-box" style="margin-top: 8px;">
+                                        <img class="wkl-img-preview" src="<?php echo esc_url( $prod['image'] ?? '' ); ?>" style="height: 65px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; <?php echo empty( $prod['image'] ) ? 'display:none;' : ''; ?>" alt="Preview Produk">
+                                    </div>
+                                    <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">Jika gambar diisi, kartu di beranda dan halaman tabungan akan menampilkan grafis produk dengan rasio standar 16:10 (800x500px) menggantikan ikon default.</p>
                                 </div>
                             </div>
 
@@ -1312,12 +1414,14 @@ function wakalumi_render_produk_admin_page() {
                             </div>
                         </div>
                     </div>
-                <!-- 7. Realisasi Nisbah Bagi Hasil Tabungan (Tersinkronisasi ke Beranda) -->
+                </div>
+
+                <!-- 8. Realisasi Nisbah Bagi Hasil Tabungan (Tersinkronisasi ke Beranda) -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; flex-wrap: gap; gap: 10px;">
                         <div>
                             <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">
-                                7. Realisasi Nisbah Bagi Hasil Tabungan
+                                8. Realisasi Nisbah Bagi Hasil Tabungan
                             </h3>
                             <p style="margin: 0; font-size: 12px; color: #64748b;">
                                 Daftar produk tabungan dengan porsi bagi hasil dan indikasi equivalent rate ini otomatis tampil pada <strong>Kartu Realisasi Nisbah di Halaman Beranda</strong>.
@@ -1367,10 +1471,10 @@ function wakalumi_render_produk_admin_page() {
                     </button>
                 </div>
 
-                <!-- 8. Banner CTA Konsultasi Tabungan & Hotline WhatsApp -->
+                <!-- 9. Banner CTA Konsultasi Tabungan & Hotline WhatsApp -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        8. Banner CTA Konsultasi Tabungan &amp; Hotline WhatsApp
+                        9. Banner CTA Konsultasi Tabungan &amp; Hotline WhatsApp
                     </h2>
                     <table class="form-table" style="margin: 0;">
                         <tr>
@@ -1395,15 +1499,20 @@ function wakalumi_render_produk_admin_page() {
                         </tr>
                     </table>
                 </div>
+
+                <!-- Tombol Simpan Cepat Tabungan -->
+                <div style="margin: 20px 0 10px 0; padding: 15px 0; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px;">
+                    <button type="submit" name="wakalumi_save_produk_dana" class="button button-primary button-hero" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 30px;">
+                        Simpan Pengaturan Tabungan &amp; CTA
+                    </button>
+                    <span style="color: #64748b; font-size: 13px;">Perubahan pada Tabungan Syariah dan Banner CTA akan langsung disimpan.</span>
+                </div>
             </div>
 
             <!-- ========================================================
                  TAB 2: DEPOSITO MUDHARABAH & NISBAH
                  ======================================================== -->
-            <!-- ========================================================
-                 TAB 2: DEPOSITO MUDHARABAH & NISBAH
-                 ======================================================== -->
-            <div id="tab-deposito" class="wkl-tab-content" style="display: none;">
+            <div id="tab-deposito" class="wkl-tab-content" style="display: <?php echo $is_tab_deposito ? 'block' : 'none'; ?>;">
                 
                 <!-- 1. Header Banner & Kartu Penjaminan LPS -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
@@ -1822,12 +1931,20 @@ function wakalumi_render_produk_admin_page() {
                     </table>
                 </div>
 
+                <!-- Tombol Simpan Cepat Khusus Deposito & CTA -->
+                <div style="margin: 20px 0 10px 0; padding: 15px 0; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px;">
+                    <button type="submit" name="wakalumi_save_produk_dana" class="button button-primary button-hero" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 30px;">
+                        Simpan Pengaturan Deposito &amp; CTA
+                    </button>
+                    <span style="color: #64748b; font-size: 13px;">Data Deposito Mudharabah dan Banner CTA akan langsung tersimpan.</span>
+                </div>
+
             </div>
 
             <!-- ========================================================
                  TAB 3: HOTLINE & CTA BANNER
                  ======================================================== -->
-            <div id="tab-kontak" class="wkl-tab-content" style="display: none;">
+            <div id="tab-kontak" class="wkl-tab-content" style="display: <?php echo $is_tab_kontak ? 'block' : 'none'; ?>;">
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
                         Hotline WhatsApp & Call to Action Produk
@@ -1957,6 +2074,25 @@ function wakalumi_render_produk_admin_page() {
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Pesan WhatsApp Kustom (Opsional)</label>
                     <input type="text" name="tab_wa_text[]" value="" class="regular-text" style="width: 100%;" placeholder="Pesan otomatis pembukaan">
                 </div>
+
+                <div style="grid-column: 1 / -1;" class="wkl-img-field-wrap">
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">
+                        Gambar Banner / Kartu Produk (Opsional - Rekomendasi Rasio Standar 16:10 / 800x500px)
+                    </label>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" name="tab_image[]" value="" class="regular-text" style="flex: 1; min-width: 250px;" placeholder="https://... atau klik Unggah Gambar">
+                        <button type="button" class="button wkl-upload-tab-img-btn" style="display: inline-flex; align-items: center; gap: 5px;">
+                            <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Gambar
+                        </button>
+                        <button type="button" class="button button-link-delete wkl-remove-tab-img-btn" style="color: #ef4444; display: none;">
+                            ✕ Hapus
+                        </button>
+                    </div>
+                    <div class="wkl-img-preview-box" style="margin-top: 8px;">
+                        <img class="wkl-img-preview" src="" style="height: 65px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; display: none;" alt="Preview Produk">
+                    </div>
+                    <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">Jika gambar diisi, kartu di beranda dan halaman tabungan akan menampilkan grafis produk dengan rasio standar 16:10 (800x500px) menggantikan ikon default.</p>
+                </div>
             </div>
 
             <div style="margin-bottom: 15px;">
@@ -2080,51 +2216,14 @@ function wakalumi_render_produk_admin_page() {
         </tr>
     </template>
 
-    <!-- TAB & REPEATER JAVASCRIPT -->
+    <!-- REPEATER, TAB SWITCHER & UPLOAD JAVASCRIPT -->
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Tab switching with Hash Support
-        var tabBtns = document.querySelectorAll('.wkl-tab-btn');
-        var tabContents = document.querySelectorAll('.wkl-tab-content');
+    // Note: window.wklSwitchTab is defined early before navigation tabs
 
-        function activateTab(target) {
-            tabBtns.forEach(function(b) {
-                if (b.getAttribute('data-tab') === target) {
-                    b.style.borderBottomColor = '#088395';
-                    b.style.color = '#088395';
-                } else {
-                    b.style.borderBottomColor = 'transparent';
-                    b.style.color = '#64748b';
-                }
-            });
-            tabContents.forEach(function(content) {
-                content.style.display = 'none';
-            });
-            var activeContent = document.getElementById(target);
-            if (activeContent) {
-                activeContent.style.display = 'block';
-            }
-        }
-
-        tabBtns.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var target = this.getAttribute('data-tab');
-                activateTab(target);
-                if (history.replaceState) {
-                    history.replaceState(null, null, '#' + target);
-                }
-            });
-        });
-
-        if (window.location.hash) {
-            var hashTarget = window.location.hash.replace('#', '');
-            if (document.getElementById(hashTarget)) {
-                activateTab(hashTarget);
-            }
-        }
-
-        // Repeater Tabungan functions
-        var listContainer = document.getElementById('tabungan-repeater-list');
+    (function() {
+        function initProdukAdmin() {
+            // Repeater Tabungan functions
+            var listContainer = document.getElementById('tabungan-repeater-list');
         var addBtn = document.getElementById('btn-add-tabungan');
         var tmpl = document.getElementById('tabungan-card-template');
 
@@ -2334,8 +2433,74 @@ function wakalumi_render_produk_admin_page() {
                 });
                 fileFrame.open();
             });
+
+            // Media Uploader Kartu Tabungan
+            jQuery(document).on('click', '.wkl-upload-tab-img-btn', function(e) {
+                e.preventDefault();
+                var btn = jQuery(this);
+                var wrap = btn.closest('.wkl-img-field-wrap');
+                var input = wrap.find('input[name="tab_image[]"]');
+                var preview = wrap.find('img.wkl-img-preview');
+                var removeBtn = wrap.find('.wkl-remove-tab-img-btn');
+
+                var frame = wp.media({
+                    title: 'Pilih atau Unggah Gambar Produk Tabungan (Rekomendasi Rasio 16:10)',
+                    button: { text: 'Gunakan Gambar Ini' },
+                    multiple: false,
+                    library: { type: 'image' }
+                });
+
+                frame.on('select', function() {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    var url = (attachment.sizes && attachment.sizes.medium_large)
+                            ? attachment.sizes.medium_large.url
+                            : ((attachment.sizes && attachment.sizes.medium) ? attachment.sizes.medium.url : attachment.url);
+                    input.val(attachment.url).trigger('change');
+                    if (preview.length) {
+                        preview.attr('src', url).show();
+                    }
+                    if (removeBtn.length) {
+                        removeBtn.show();
+                    }
+                });
+
+                frame.open();
+            });
+
+            jQuery(document).on('click', '.wkl-remove-tab-img-btn', function(e) {
+                e.preventDefault();
+                var btn = jQuery(this);
+                var wrap = btn.closest('.wkl-img-field-wrap');
+                var input = wrap.find('input[name="tab_image[]"]');
+                var preview = wrap.find('img.wkl-img-preview');
+                input.val('').trigger('change');
+                if (preview.length) {
+                    preview.attr('src', '').hide();
+                }
+                btn.hide();
+            });
         }
-    });
+
+        // Synchronize Active Tab on page load (URL query or Hash)
+        var urlParams = new URLSearchParams(window.location.search);
+        var tabParam = urlParams.get('tab');
+        var hash = window.location.hash.replace('#', '');
+        var initialTab = tabParam ? ('tab-' + tabParam) : (hash ? hash : null);
+
+        if (initialTab && (initialTab === 'tab-deposito' || initialTab === 'tab-tabungan' || initialTab === 'tab-kontak')) {
+            var targetBtn = document.querySelector('.wkl-tab-btn[data-tab="' + initialTab + '"]');
+            if (targetBtn) {
+                window.wklSwitchTab(initialTab, targetBtn);
+            }
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initProdukAdmin);
+    } else {
+        initProdukAdmin();
+    }
+    })();
     </script>
     <?php
 }

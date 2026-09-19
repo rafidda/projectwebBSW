@@ -207,10 +207,10 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
             <div class="hero-slide-overlay" style="opacity: <?php echo esc_attr( $slide_opacity / 100 ); ?>"></div>
 
             <!-- Content -->
-            <div class="hero-slide-content container-wide relative z-10 flex items-center min-h-[90vh] md:min-h-screen py-20">
+            <div class="hero-slide-content container-wide relative z-10 flex flex-col justify-center min-h-[90vh] md:min-h-screen pt-24 sm:pt-28 pb-32 sm:pb-36 md:py-20">
                 <div class="hero-content-card max-w-2xl lg:max-w-3xl p-5 sm:p-7 md:p-9 rounded-2xl md:rounded-3xl bg-white/[0.06] dark:bg-white/[0.04] backdrop-blur-sm md:backdrop-blur-md border border-white/15 dark:border-white/10 shadow-[0_4px_24px_-1px_rgba(0,0,0,0.15)] relative z-10">
                     <!-- Badge -->
-                    <div class="slide-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 bg-teal-500/20 backdrop-blur-sm border border-teal-300/30 shadow-sm">
+                    <div class="slide-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-3 sm:mb-6 bg-teal-500/20 backdrop-blur-sm border border-teal-300/30 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-teal-300 animate-pulse"></span>
                         <span class="text-xs font-bold text-teal-100 uppercase tracking-wider">
                             Bank Syariah Wakalumi
@@ -218,26 +218,26 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
                     </div>
 
                     <!-- Headline -->
-                    <h1 class="slide-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight mb-4 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
+                    <h1 class="slide-headline text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight mb-2.5 sm:mb-4 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
                         <?php echo esc_html( $slide_headline ); ?>
                     </h1>
 
                     <!-- Subheadline -->
                     <?php if ( $slide_subheadline ) : ?>
-                        <p class="slide-subheadline text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-2xl text-white/90 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
+                        <p class="slide-subheadline text-xs sm:text-base md:text-xl leading-relaxed mb-5 sm:mb-8 max-w-2xl text-white/90 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                             <?php echo esc_html( $slide_subheadline ); ?>
                         </p>
                     <?php endif; ?>
 
                     <!-- CTA -->
-                    <div class="slide-cta flex flex-wrap items-center gap-4">
+                    <div class="slide-cta flex flex-wrap items-center gap-3 sm:gap-4">
                         <a href="<?php echo esc_url( $slide_cta_url ); ?>"
-                           class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
+                           class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
                             <?php echo esc_html( $slide_cta_text ); ?>
                         </a>
                         <?php if ( $slide_cta_url_2 ) : ?>
                             <a href="<?php echo esc_url( $slide_cta_url_2 ); ?>"
-                               class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
+                               class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
                                 <?php echo esc_html( $slide_cta_text_2 ); ?>
                             </a>
                         <?php endif; ?>
@@ -264,31 +264,31 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
             <div class="hero-slide-overlay" style="opacity: 0.4"></div>
 
             <!-- Content -->
-            <div class="hero-slide-content container-wide relative z-10 flex items-center min-h-[90vh] md:min-h-screen py-20">
+            <div class="hero-slide-content container-wide relative z-10 flex flex-col justify-center min-h-[90vh] md:min-h-screen pt-24 sm:pt-28 pb-32 sm:pb-36 md:py-20">
                 <div class="hero-content-card max-w-2xl lg:max-w-3xl p-5 sm:p-7 md:p-9 rounded-2xl md:rounded-3xl bg-white/[0.06] dark:bg-white/[0.04] backdrop-blur-sm md:backdrop-blur-md border border-white/15 dark:border-white/10 shadow-[0_4px_24px_-1px_rgba(0,0,0,0.15)] relative z-10">
-                    <div class="slide-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 bg-teal-500/20 backdrop-blur-sm border border-teal-300/30 shadow-sm">
+                    <div class="slide-badge inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-3 sm:mb-6 bg-teal-500/20 backdrop-blur-sm border border-teal-300/30 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-teal-300 animate-pulse"></span>
                         <span class="text-xs font-bold text-teal-100 uppercase tracking-wider">
                             Bank Syariah Wakalumi
                         </span>
                     </div>
 
-                    <h1 class="slide-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight mb-4 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
+                    <h1 class="slide-headline text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-tight mb-2.5 sm:mb-4 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
                         <?php echo esc_html( $slide['headline'] ); ?>
                     </h1>
 
-                    <p class="slide-subheadline text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-2xl text-white/90 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
+                    <p class="slide-subheadline text-xs sm:text-base md:text-xl leading-relaxed mb-5 sm:mb-8 max-w-2xl text-white/90 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                         <?php echo esc_html( $slide['subheadline'] ); ?>
                     </p>
 
-                    <div class="slide-cta flex flex-wrap items-center gap-4">
+                    <div class="slide-cta flex flex-wrap items-center gap-3 sm:gap-4">
                         <a href="<?php echo esc_url( $wa_url ); ?>"
                            target="_blank" rel="noopener noreferrer"
-                           class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
+                           class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
                             Hubungi Kami
                         </a>
                         <a href="<?php echo esc_url( home_url( '/produk' ) ); ?>"
-                           class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-sm px-8 py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
+                           class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
                             Lihat Produk
                         </a>
                     </div>
@@ -323,27 +323,27 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
     <?php
     $hero_reg_desktop = get_option( 'options_hero_reg_desktop', '1' );
     $hero_reg_mobile  = get_option( 'options_hero_reg_mobile', '1' );
+    $hero_reg_label   = get_option( 'options_hero_reg_label', 'Terdaftar & Diawasi:' );
+    $hero_reg_label_mob = get_option( 'options_hero_reg_label_mobile', '0' );
     
     $hero_logos = get_option( 'options_hero_reg_logos', [] );
-    if ( empty( $hero_logos ) ) {
+    $valid_hero_logos = [];
+    if ( is_array( $hero_logos ) ) {
+        foreach ( $hero_logos as $l ) {
+            if ( ! empty( $l['url'] ) || ! empty( $l['label'] ) ) {
+                $valid_hero_logos[] = $l;
+            }
+        }
+    }
+    if ( empty( $valid_hero_logos ) ) {
         $old_ojk = get_option( 'options_logo_ojk_url', get_template_directory_uri() . '/assets/img/ojk-logo.png' );
         $old_lps = get_option( 'options_logo_lps_url', get_template_directory_uri() . '/assets/img/lps-logo.png' );
-        $hero_logos = [
+        $valid_hero_logos = [
             [ 'label' => 'OJK', 'url' => $old_ojk ],
             [ 'label' => 'LPS', 'url' => $old_lps ],
         ];
     }
-
-    $hero_reg_class = '';
-    if ( $hero_reg_desktop && $hero_reg_mobile ) {
-        $hero_reg_class = 'flex';
-    } elseif ( $hero_reg_desktop && ! $hero_reg_mobile ) {
-        $hero_reg_class = 'hidden md:flex';
-    } elseif ( ! $hero_reg_desktop && $hero_reg_mobile ) {
-        $hero_reg_class = 'flex md:hidden';
-    } else {
-        $hero_reg_class = 'hidden';
-    }
+    $hero_logos = $valid_hero_logos;
 
     // Badge Penjaminan LPS Khusus
     $lps_active = get_option( 'options_lps_badge_active', '1' );
@@ -352,30 +352,21 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
     $lps_desk   = get_option( 'options_lps_badge_desktop', '1' );
     $lps_mob    = get_option( 'options_lps_badge_mobile', '1' );
 
-    $lps_badge_class = '';
-    if ( $lps_active ) {
-        if ( $lps_desk && $lps_mob ) {
-            $lps_badge_class = 'flex';
-        } elseif ( $lps_desk && ! $lps_mob ) {
-            $lps_badge_class = 'hidden md:flex';
-        } elseif ( ! $lps_desk && $lps_mob ) {
-            $lps_badge_class = 'flex md:hidden';
-        } else {
-            $lps_badge_class = 'hidden';
-        }
-    } else {
-        $lps_badge_class = 'hidden';
-    }
+    $show_desk_lps   = ( $lps_active && $lps_desk != '0' );
+    $show_desk_logos = ( $hero_reg_desktop != '0' && ! empty( $hero_logos ) );
+    $show_mob_lps    = ( $lps_active && $lps_mob != '0' );
+    $show_mob_logos  = ( $hero_reg_mobile != '0' && ! empty( $hero_logos ) );
     ?>
 
     <!-- Coordinated Hero Badges Wrapper -->
-    <?php if ( $lps_badge_class !== 'hidden' || ( $hero_reg_class !== 'hidden' && ! empty( $hero_logos ) ) ) : ?>
+    <?php if ( $show_desk_lps || $show_desk_logos || $show_mob_lps || $show_mob_logos ) : ?>
     
     <!-- 1. DESKTOP ONLY: Dual-Anchor Glassmorphic Badges (>= md) -->
+    <?php if ( $show_desk_lps || $show_desk_logos ) : ?>
     <div class="hidden md:flex absolute md:bottom-28 lg:bottom-32 left-0 right-0 z-20 px-6 md:px-10 pointer-events-none items-center justify-between gap-4">
         <!-- Left: LPS Dedicated Guarantee Badge -->
-        <?php if ( $lps_badge_class !== 'hidden' ) : ?>
-        <div id="hero-lps-badge" class="pointer-events-auto <?php echo esc_attr( $lps_badge_class ); ?> items-center gap-3 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2.5 rounded-2xl shadow-xl max-w-xs sm:max-w-sm transition-all duration-300">
+        <?php if ( $show_desk_lps ) : ?>
+        <div id="hero-lps-badge" class="pointer-events-auto flex items-center gap-3 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2.5 rounded-2xl shadow-xl max-w-xs sm:max-w-sm transition-all duration-300">
             <div class="h-9 bg-white/95 rounded-lg p-1.5 shadow-inner flex items-center justify-center shrink-0">
                 <img src="<?php echo esc_url( $lps_logo ); ?>" alt="LPS" class="h-full w-auto object-contain" onerror="this.outerHTML='<span class=\'text-[10px] font-bold text-slate-800 px-1.5\'>LPS</span>'">
             </div>
@@ -383,12 +374,16 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
                 <?php echo esc_html( $lps_text ); ?>
             </p>
         </div>
+        <?php else : ?>
+        <div></div>
         <?php endif; ?>
 
-        <!-- Right: Regulatory Logos Repeater (OJK, LPS, BI, etc.) -->
-        <?php if ( $hero_reg_class !== 'hidden' && ! empty( $hero_logos ) ) : ?>
-        <div id="hero-regulatory-badge" class="pointer-events-auto <?php echo esc_attr( $hero_reg_class ); ?> flex-wrap items-center justify-end gap-2.5 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2.5 rounded-2xl shadow-xl transition-all duration-300 max-w-sm sm:max-w-none">
-            <span class="text-[10px] font-extrabold text-white uppercase tracking-widest mr-1 opacity-90 drop-shadow-md">Terdaftar & Diawasi:</span>
+        <!-- Right: Regulatory / Partner Logos Repeater (OJK, LPS, BI, dll.) -->
+        <?php if ( $show_desk_logos ) : ?>
+        <div id="hero-regulatory-badge" class="pointer-events-auto flex flex-wrap items-center justify-end gap-2.5 bg-white/15 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/15 p-2.5 rounded-2xl shadow-xl transition-all duration-300 max-w-sm sm:max-w-none">
+            <?php if ( ! empty( $hero_reg_label ) ) : ?>
+                <span class="text-[10px] font-extrabold text-white uppercase tracking-widest mr-1 opacity-90 drop-shadow-md"><?php echo esc_html( $hero_reg_label ); ?></span>
+            <?php endif; ?>
             <?php foreach ( $hero_logos as $h_logo ) :
                 $h_lbl = $h_logo['label'] ?? '';
                 $h_url = $h_logo['url'] ?? '';
@@ -405,35 +400,50 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
         </div>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
 
-    <!-- 2. MOBILE ONLY: Glassmorphic Trust-Dock (< md) -->
-    <div class="md:hidden absolute bottom-14 sm:bottom-20 left-0 right-0 z-20 px-4 pointer-events-none flex justify-center">
-        <div class="pointer-events-auto flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/80 dark:bg-black/80 backdrop-blur-md border border-white/25 shadow-xl max-w-[94vw] overflow-hidden">
-            <!-- Logos Group -->
+    <!-- 2. MOBILE ONLY: Glassmorphic Trust Dock (< md) -->
+    <?php if ( $show_mob_lps || $show_mob_logos ) : ?>
+    <div class="md:hidden absolute bottom-20 sm:bottom-24 left-0 right-0 z-20 px-3 pointer-events-none flex justify-center">
+        <div class="pointer-events-auto flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 dark:bg-black/95 backdrop-blur-md border border-white/25 shadow-xl max-w-[95vw]">
+            <!-- Logos -->
+            <?php if ( $show_mob_logos ) : ?>
             <div class="flex items-center gap-1.5 shrink-0">
+                <?php if ( ! empty( $hero_reg_label ) && ! empty( $hero_reg_label_mob ) && $hero_reg_label_mob != '0' ) : ?>
+                    <span class="text-[9px] font-extrabold text-white uppercase tracking-wider mr-0.5 opacity-90"><?php echo esc_html( $hero_reg_label ); ?></span>
+                <?php endif; ?>
                 <?php foreach ( $hero_logos as $h_logo ) :
                     $h_lbl = $h_logo['label'] ?? '';
                     $h_url = $h_logo['url'] ?? '';
                     if ( empty( $h_url ) && empty( $h_lbl ) ) continue;
                 ?>
-                    <div class="h-5 flex items-center bg-white/95 rounded px-1.5 shadow-inner">
+                    <div class="h-6 flex items-center bg-white/95 rounded px-2 shadow-sm">
                         <?php if ( ! empty( $h_url ) ) : ?>
-                            <img src="<?php echo esc_url( $h_url ); ?>" alt="<?php echo esc_attr( $h_lbl ); ?>" class="h-3.5 w-auto object-contain">
+                            <img src="<?php echo esc_url( $h_url ); ?>" alt="<?php echo esc_attr( $h_lbl ); ?>" class="h-4 w-auto object-contain" onerror="this.outerHTML='<span class=\'text-[9px] font-bold text-slate-800\'><?php echo esc_html( $h_lbl ); ?></span>'">
                         <?php else : ?>
                             <span class="text-[9px] font-bold text-slate-800"><?php echo esc_html( $h_lbl ); ?></span>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
-            
+            <?php endif; ?>
+
+            <?php if ( $show_mob_logos && $show_mob_lps ) : ?>
             <span class="w-px h-3.5 bg-white/30 shrink-0"></span>
-            
-            <!-- Guarantee Text -->
-            <p class="text-[10px] font-semibold text-white/95 leading-tight truncate">
-                <?php echo esc_html( $lps_text ); ?>
-            </p>
+            <?php endif; ?>
+
+            <!-- LPS Guarantee Badge -->
+            <?php if ( $show_mob_lps ) : ?>
+            <div class="flex items-center gap-1.5 min-w-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
+                <p class="text-[10px] sm:text-[11px] font-medium text-white/95 leading-tight truncate">
+                    <?php echo esc_html( $lps_text ); ?>
+                </p>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
     <?php endif; ?>
 
     <!-- Gradient Blending to Next Section -->
@@ -567,9 +577,82 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
     </div>
 </section>
 
+<!-- ========================================
+     SECTION 3: TENTANG KAMI (ABOUT PREVIEW)
+     ======================================== -->
+<?php
+$about_label    = get_option( 'options_about_label', function_exists( 'get_field' ) ? ( get_field( 'about_label' ) ?: 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' ) : 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' );
+$about_title    = get_option( 'options_about_title', function_exists( 'get_field' ) ? ( get_field( 'about_title' ) ?: 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' ) : 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
+$about_content  = get_option( 'options_about_content', function_exists( 'get_field' ) ? ( get_field( 'about_content' ) ?: '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' ) : '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' );
+
+$about_img_url  = get_option( 'options_about_image_url', '' );
+if ( empty( $about_img_url ) ) {
+    $acf_img = function_exists( 'get_field' ) ? get_field( 'about_image' ) : null;
+    $about_img_url = $acf_img ? ( $acf_img['sizes']['large'] ?? $acf_img['url'] ) : get_template_directory_uri() . '/assets/img/about-photo.jpg';
+}
+
+$about_cta_text = get_option( 'options_about_cta_text', function_exists( 'get_field' ) ? ( get_field( 'about_cta_text' ) ?: 'Selengkapnya Tentang Kami' ) : 'Selengkapnya Tentang Kami' );
+$about_cta_url  = get_option( 'options_about_cta_url', function_exists( 'get_field' ) ? ( get_field( 'about_cta_url' ) ?: home_url( '/profil/tentang-kami' ) ) : home_url( '/profil/tentang-kami' ) );
+$about_img_mob  = get_option( 'options_about_img_mobile_mode', 'show_top' );
+
+// Mobile layout order classes
+$img_col_class  = '';
+$text_col_class = '';
+if ( $about_img_mob === 'hide' ) {
+    $img_col_class  = 'hidden lg:block';
+    $text_col_class = 'col-span-1 lg:col-span-1';
+} elseif ( $about_img_mob === 'show_bottom' ) {
+    $img_col_class  = 'order-2 lg:order-1';
+    $text_col_class = 'order-1 lg:order-2';
+} else { // show_top
+    $img_col_class  = 'order-1 lg:order-1';
+    $text_col_class = 'order-2 lg:order-2';
+}
+?>
+<section class="section bg-white dark:bg-dark overflow-hidden relative z-10">
+    <div class="container-wide">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <!-- Image Column with Mobile/Desktop Controls -->
+            <div class="relative <?php echo esc_attr( $img_col_class ); ?>" data-aos="fade-right">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary-600/10 dark:shadow-primary-400/5">
+                    <img src="<?php echo esc_url( $about_img_url ); ?>"
+                         alt="<?php echo esc_attr( $about_title ); ?>"
+                         class="w-full aspect-[4/3] object-cover"
+                         loading="lazy">
+                </div>
+                <!-- Decorative element -->
+                <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-3xl bg-primary-100 dark:bg-primary-900/30 -z-10"></div>
+                <div class="absolute -top-6 -left-6 w-24 h-24 rounded-3xl border-2 border-primary-200 dark:border-primary-700/30 -z-10"></div>
+            </div>
+
+            <!-- Content Column -->
+            <div class="<?php echo esc_attr( $text_col_class ); ?>" data-aos="fade-left">
+                <span class="section-label mb-4 inline-block"><?php echo esc_html( $about_label ); ?></span>
+                <h2 class="section-title mb-6"><?php echo esc_html( $about_title ); ?></h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none mb-8">
+                    <?php echo wp_kses_post( $about_content ); ?>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="<?php echo esc_url( $about_cta_url ); ?>" class="btn-primary text-sm inline-flex items-center gap-2">
+                        <span><?php echo esc_html( $about_cta_text ); ?></span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="btn-secondary text-sm inline-flex items-center gap-2">
+                        <span>Legalitas Perusahaan</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- ========================================
-     SECTION 3: PRODUK PREVIEW (TABUNGAN & SIMPANAN)
+     SECTION 4: PRODUK PREVIEW (TABUNGAN & SIMPANAN)
      ======================================== -->
 <?php
 // Ambil produk tabungan dinamis dari Admin Panel
@@ -580,7 +663,7 @@ $tabungan_preview_list = array_slice( $tabungan_preview_list, 0, 4 );
 
 if ( ! empty( $tabungan_preview_list ) ) :
 ?>
-<section class="section bg-slate-50 dark:bg-dark-surface relative z-10 overflow-hidden">
+<section class="section bg-transparent relative z-10 overflow-hidden">
     <div class="pattern-overlay"></div>
     <div class="container-wide relative z-10">
         <!-- Section Header -->
@@ -696,37 +779,55 @@ if ( ! empty( $tabungan_preview_list ) ) :
                              aria-hidden="true">
                     </div>
 
-                    <!-- Top Badge & Icon (Sharia Bank / Vault Icon - NO DOLLAR SIGN) -->
-                    <div class="flex items-center justify-between gap-2 mb-4 relative z-10">
-                        <span class="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border <?php echo esc_attr( $c_style['badge'] ); ?>">
-                            <?php echo esc_html( $p_badge ); ?>
-                        </span>
-                        <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-dark-border flex items-center justify-center text-slate-500 dark:text-slate-400 <?php echo esc_attr( $c_style['icon_bg'] ); ?> group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
-                            <?php if ( $p_slug === 'pendidikan' ) : ?>
-                                <!-- Topi Edukasi / Pelajar -->
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
-                            <?php elseif ( $p_slug === 'haji-umroh' ) : ?>
-                                <!-- Menara / Bintang Ibadah -->
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                            <?php elseif ( $p_slug === 'ukhuwah' ) : ?>
-                                <!-- Kado Berkah / Hadiah -->
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-                            <?php else : ?>
-                                <!-- Gedung Bank Syariah / Brankas Amanah -->
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 10.5h18" /></svg>
-                            <?php endif; ?>
+                    <!-- Top Graphic or Icon + Badge -->
+                    <?php $p_image = ! empty( $prod['image'] ) ? $prod['image'] : ''; ?>
+                    <?php if ( ! empty( $p_image ) ) : ?>
+                        <!-- Dedicated 16:10 Graphic Slot -->
+                        <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 shadow-sm z-10 group/img">
+                            <img src="<?php echo esc_url( $p_image ); ?>" 
+                                 alt="<?php echo esc_attr( $prod['nama'] ); ?>" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                 loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <span class="absolute top-2.5 right-2.5 inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm <?php echo esc_attr( $c_style['badge'] ); ?>">
+                                <?php echo esc_html( $p_badge ); ?>
+                            </span>
                         </div>
-                    </div>
+                    <?php else : ?>
+                        <!-- Top Badge & Icon (Fallback) -->
+                        <div class="flex items-center justify-between gap-2 mb-4 relative z-10">
+                            <span class="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border <?php echo esc_attr( $c_style['badge'] ); ?>">
+                                <?php echo esc_html( $p_badge ); ?>
+                            </span>
+                            <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-dark-border flex items-center justify-center text-slate-500 dark:text-slate-400 <?php echo esc_attr( $c_style['icon_bg'] ); ?> group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
+                                <?php if ( $p_slug === 'pendidikan' ) : ?>
+                                    <!-- Topi Edukasi / Pelajar -->
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
+                                <?php elseif ( $p_slug === 'haji-umroh' ) : ?>
+                                    <!-- Menara / Bintang Ibadah -->
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+                                <?php elseif ( $p_slug === 'ukhuwah' ) : ?>
+                                    <!-- Kado Berkah / Hadiah -->
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                                <?php else : ?>
+                                    <!-- Gedung Bank Syariah / Brankas Amanah -->
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 10.5h18" /></svg>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Title & Tagline -->
                     <div class="mb-3 relative z-10">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white <?php echo esc_attr( $c_style['title_hover'] ); ?> transition-colors duration-200">
-                            <a href="<?php echo esc_url( $target_url ); ?>">
-                                <?php echo esc_html( $prod['nama'] ); ?>
-                            </a>
-                        </h3>
+                        <div class="min-h-[3.25rem] flex items-center justify-start">
+                            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white <?php echo esc_attr( $c_style['title_hover'] ); ?> transition-colors duration-200 leading-snug text-balance">
+                                <a href="<?php echo esc_url( $target_url ); ?>">
+                                    <?php echo esc_html( $prod['nama'] ); ?>
+                                </a>
+                            </h3>
+                        </div>
                         <?php if ( $p_tagline ) : ?>
-                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
                                 <?php echo esc_html( $p_tagline ); ?>
                             </p>
                         <?php endif; ?>
@@ -786,83 +887,7 @@ if ( ! empty( $tabungan_preview_list ) ) :
             </a>
         </div>
     </div>
-</section>
 <?php endif; ?>
-
-
-<!-- ========================================
-     SECTION 4: TENTANG KAMI (ABOUT PREVIEW)
-     ======================================== -->
-<?php
-$about_label    = get_option( 'options_about_label', function_exists( 'get_field' ) ? ( get_field( 'about_label' ) ?: 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' ) : 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' );
-$about_title    = get_option( 'options_about_title', function_exists( 'get_field' ) ? ( get_field( 'about_title' ) ?: 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' ) : 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
-$about_content  = get_option( 'options_about_content', function_exists( 'get_field' ) ? ( get_field( 'about_content' ) ?: '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' ) : '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' );
-
-$about_img_url  = get_option( 'options_about_image_url', '' );
-if ( empty( $about_img_url ) ) {
-    $acf_img = function_exists( 'get_field' ) ? get_field( 'about_image' ) : null;
-    $about_img_url = $acf_img ? ( $acf_img['sizes']['large'] ?? $acf_img['url'] ) : get_template_directory_uri() . '/assets/img/about-photo.jpg';
-}
-
-$about_cta_text = get_option( 'options_about_cta_text', function_exists( 'get_field' ) ? ( get_field( 'about_cta_text' ) ?: 'Selengkapnya Tentang Kami' ) : 'Selengkapnya Tentang Kami' );
-$about_cta_url  = get_option( 'options_about_cta_url', function_exists( 'get_field' ) ? ( get_field( 'about_cta_url' ) ?: home_url( '/profil/tentang-kami' ) ) : home_url( '/profil/tentang-kami' ) );
-$about_img_mob  = get_option( 'options_about_img_mobile_mode', 'show_top' );
-
-// Mobile layout order classes
-$img_col_class  = '';
-$text_col_class = '';
-if ( $about_img_mob === 'hide' ) {
-    $img_col_class  = 'hidden lg:block';
-    $text_col_class = 'col-span-1 lg:col-span-1';
-} elseif ( $about_img_mob === 'show_bottom' ) {
-    $img_col_class  = 'order-2 lg:order-1';
-    $text_col_class = 'order-1 lg:order-2';
-} else { // show_top
-    $img_col_class  = 'order-1 lg:order-1';
-    $text_col_class = 'order-2 lg:order-2';
-}
-?>
-<section class="section bg-white dark:bg-dark overflow-hidden relative z-10">
-    <div class="container-wide">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <!-- Image Column with Mobile/Desktop Controls -->
-            <div class="relative <?php echo esc_attr( $img_col_class ); ?>" data-aos="fade-right">
-                <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary-600/10 dark:shadow-primary-400/5">
-                    <img src="<?php echo esc_url( $about_img_url ); ?>"
-                         alt="<?php echo esc_attr( $about_title ); ?>"
-                         class="w-full aspect-[4/3] object-cover"
-                         loading="lazy">
-                </div>
-                <!-- Decorative element -->
-                <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-3xl bg-primary-100 dark:bg-primary-900/30 -z-10"></div>
-                <div class="absolute -top-6 -left-6 w-24 h-24 rounded-3xl border-2 border-primary-200 dark:border-primary-700/30 -z-10"></div>
-            </div>
-
-            <!-- Content Column -->
-            <div class="<?php echo esc_attr( $text_col_class ); ?>" data-aos="fade-left">
-                <span class="section-label mb-4 inline-block"><?php echo esc_html( $about_label ); ?></span>
-                <h2 class="section-title mb-6"><?php echo esc_html( $about_title ); ?></h2>
-                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none mb-8">
-                    <?php echo wp_kses_post( $about_content ); ?>
-                </div>
-                <div class="flex flex-wrap items-center gap-4">
-                    <a href="<?php echo esc_url( $about_cta_url ); ?>" class="btn-primary text-sm inline-flex items-center gap-2">
-                        <span><?php echo esc_html( $about_cta_text ); ?></span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </a>
-                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="btn-secondary text-sm inline-flex items-center gap-2">
-                        <span>Legalitas Perusahaan</span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 
 <!-- ========================================
@@ -907,8 +932,8 @@ if ( $nisbah_data ) :
                 </p>
             </div>
             
-            <a href="<?php echo esc_url( home_url( '/informasi/nisbah' ) ); ?>" class="btn-ghost text-sm shrink-0 inline-flex items-center gap-2">
-                Lihat Riwayat Lengkap
+            <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah#simulasi' ) ); ?>" class="btn-ghost text-sm shrink-0 inline-flex items-center gap-2">
+                Ke Halaman Deposito dan Simulasi Nisbah
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </a>
         </div>
@@ -1043,7 +1068,160 @@ if ( $nisbah_data ) :
 <?php endif; ?>
 
 <!-- ========================================
-     SECTION: VIDEO PROFIL (Company Profile)
+     SECTION 6: PREVIEW PRODUK PEMBIAYAAN SYARIAH (PENYALURAN DANA)
+     ======================================== -->
+<?php
+$pembiayaan_preview_list = function_exists( 'wakalumi_get_pembiayaan_list' ) ? wakalumi_get_pembiayaan_list() : [];
+$pembiayaan_preview_list = array_slice( $pembiayaan_preview_list, 0, 4 );
+
+if ( ! empty( $pembiayaan_preview_list ) ) :
+    $pemb_sec_badge = get_option( 'options_pembiayaan_page_badge', 'Penyaluran Dana Wakalumi' );
+    if ( empty( $pemb_sec_badge ) || $pemb_sec_badge === 'Penyaluran Dana Berkah' ) {
+        $pemb_sec_badge = 'Penyaluran Dana Wakalumi';
+    }
+    $pemb_sec_title = get_option( 'options_pembiayaan_page_title', 'Solusi Pembiayaan Syariah untuk Kemajuan Usaha Anda' );
+    $pemb_sec_desc  = get_option( 'options_pembiayaan_page_subtitle', 'Mendukung modal kerja, investasi aset, hingga kebutuhan multiguna berlandaskan prinsip muamalah yang adil, transparan, dan tanpa riba.' );
+?>
+<section class="section bg-transparent relative z-10 overflow-hidden border-t border-slate-200/60 dark:border-slate-800/60">
+    <div class="pattern-overlay"></div>
+    <div class="container-wide relative z-10">
+        <!-- Section Header -->
+        <div class="text-center mb-14" data-aos="fade-up">
+            <span class="section-label mb-4 inline-block"><?php echo esc_html( $pemb_sec_badge ); ?></span>
+            <h2 class="section-title mb-4">
+                <?php
+                // Split title to highlight last words in teal
+                $title_words = explode( ' ', $pemb_sec_title );
+                if ( count( $title_words ) > 3 ) {
+                    $highlight_count = 3;
+                    $first_part = implode( ' ', array_slice( $title_words, 0, count( $title_words ) - $highlight_count ) );
+                    $last_part = implode( ' ', array_slice( $title_words, -$highlight_count ) );
+                    echo esc_html( $first_part ) . ' <span class="text-primary-600 dark:text-primary-300">' . esc_html( $last_part ) . '</span>';
+                } else {
+                    echo esc_html( $pemb_sec_title );
+                }
+                ?>
+            </h2>
+            <p class="section-subtitle mx-auto"><?php echo esc_html( $pemb_sec_desc ); ?></p>
+        </div>
+
+        <!-- Financing Products Grid (4 Cards) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <?php
+            $delay = 100;
+            foreach ( $pembiayaan_preview_list as $prod ) :
+                $p_slug     = ! empty( $prod['slug'] ) ? sanitize_title( $prod['slug'] ) : sanitize_title( $prod['nama'] );
+                $p_color    = $prod['color'] ?? 'emerald';
+                $theme      = function_exists( 'wakalumi_get_pembiayaan_color_theme' ) ? wakalumi_get_pembiayaan_color_theme( $p_color ) : [];
+                $target_url = home_url( '/produk/pembiayaan#' . $p_slug );
+                $p_badge    = ! empty( $prod['badge'] ) ? $prod['badge'] : 'Pembiayaan Syariah';
+                $p_tagline  = ! empty( $prod['tagline'] ) ? $prod['tagline'] : '';
+                $p_image    = ! empty( $prod['image'] ) ? $prod['image'] : '';
+            ?>
+                <div class="group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-dark border <?php echo esc_attr( $theme['border'] ?? 'border-slate-200/90 dark:border-slate-800/80' ); ?> p-6 sm:p-7 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-2xl overflow-hidden <?php echo esc_attr( $theme['hover'] ?? '' ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
+                    
+                    <!-- Watermark Logo wm-wkl.png di pojok kanan bawah -->
+                    <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.035] dark:opacity-[0.05] pointer-events-none transition-all duration-700 ease-out group-hover:scale-115 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.09] select-none overflow-hidden">
+                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/wm-wkl.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy" aria-hidden="true">
+                    </div>
+
+                    <!-- Top Row: Image (16:10) or Icon & Badge -->
+                    <div class="relative z-10 mb-4">
+                        <?php if ( ! empty( $p_image ) ) : ?>
+                            <!-- Dedicated 16:10 Graphic Slot -->
+                            <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 shadow-sm group/img">
+                                <img src="<?php echo esc_url( $p_image ); ?>" 
+                                     alt="<?php echo esc_attr( $prod['nama'] ); ?>" 
+                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                     loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <span class="absolute top-2.5 right-2.5 inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm tracking-wide <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
+                                    <?php echo esc_html( $p_badge ); ?>
+                                </span>
+                            </div>
+                        <?php else : ?>
+                            <div class="flex items-center justify-between gap-3 mb-4">
+                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 <?php echo esc_attr( $theme['icon_bg'] ?? 'bg-teal-50 text-teal-600' ); ?>">
+                                    <?php echo function_exists( 'wakalumi_render_pembiayaan_icon' ) ? wakalumi_render_pembiayaan_icon( $prod['icon'] ?? 'coins' ) : ''; ?>
+                                </div>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
+                                    <?php echo esc_html( $p_badge ); ?>
+                                </span>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- Title Wrapper with Balanced Height & Alignment -->
+                        <div class="min-h-[3.75rem] flex items-center justify-start my-1">
+                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white transition-colors duration-200 leading-snug text-balance <?php echo esc_attr( $theme['title_hover'] ?? 'group-hover:text-teal-600' ); ?>">
+                                <a href="<?php echo esc_url( $target_url ); ?>">
+                                    <?php echo esc_html( $prod['nama'] ); ?>
+                                </a>
+                            </h3>
+                        </div>
+
+                        <?php if ( $p_tagline ) : ?>
+                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                                <?php echo esc_html( $p_tagline ); ?>
+                            </p>
+                        <?php endif; ?>
+
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-3 line-clamp-3 leading-relaxed">
+                            <?php echo esc_html( $prod['desc'] ?? '' ); ?>
+                        </p>
+                    </div>
+
+                    <!-- Bottom Info Box & Link -->
+                    <div class="relative z-10 pt-4 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
+                        <div class="grid grid-cols-2 gap-2 text-[11px] mb-4 bg-slate-50/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800/60">
+                            <div>
+                                <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-medium">Limit Plafon</span>
+                                <span class="font-bold text-slate-800 dark:text-slate-200 truncate block"><?php echo esc_html( $prod['limit_primary'] ?? '-' ); ?></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-medium">Jangka Waktu</span>
+                                <span class="font-bold text-primary-600 dark:text-primary-400 truncate block"><?php echo esc_html( $prod['limit_secondary'] ?? '-' ); ?></span>
+                            </div>
+                            <div class="col-span-2 pt-1.5 border-t border-slate-200/50 dark:border-slate-800/50 text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                                <span>Akad:</span>
+                                <span class="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[140px]"><?php echo esc_html( $prod['akad'] ?? '-' ); ?></span>
+                            </div>
+                        </div>
+
+                        <a href="<?php echo esc_url( $target_url ); ?>" class="inline-flex items-center justify-between w-full text-xs font-bold text-slate-700 dark:text-slate-300 <?php echo esc_attr( $theme['pill_hover'] ?? 'hover:text-primary-600' ); ?> group/btn py-1 transition-colors">
+                            <span>Lihat Detail &amp; Simulasi</span>
+                            <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover/btn:translate-x-1 group-hover/btn:bg-primary-500 group-hover/btn:text-white transition-all">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            <?php
+                $delay += 100;
+            endforeach;
+            ?>
+        </div>
+
+        <!-- Section Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-12" data-aos="fade-up">
+            <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="btn-primary text-sm px-7 py-3.5 shadow-md hover:shadow-lg inline-flex items-center gap-2">
+                <span>Jelajahi Seluruh Pembiayaan (8 Pilihan Akad)</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+            </a>
+            <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#kalkulator' ) ); ?>" class="btn-outline text-sm px-6 py-3.5 inline-flex items-center gap-2">
+                <span>Kalkulator Simulasi Angsuran</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- ========================================
+     SECTION 7: VIDEO PROFIL (Company Profile)
      ======================================== -->
 <?php
 $v_badge = get_option( 'options_video_badge', 'Company Profile' );
@@ -1111,7 +1289,7 @@ if ( preg_match( '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)
 </script>
 
 <!-- ========================================
-     SECTION: INSTAGRAM FEED
+     SECTION 8: INSTAGRAM FEED
      ======================================== -->
 <?php
 $ig_title    = get_option( 'options_ig_title', 'Aktivitas & Edukasi Terbaru' );
@@ -1190,9 +1368,8 @@ $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.co
 <!-- Instagram Embed Script (loaded once) -->
 <script async src="//www.instagram.com/embed.js"></script>
 
-
 <!-- ========================================
-     SECTION 6: BERITA TERBARU
+     SECTION 9: BERITA TERBARU
      ======================================== -->
 <?php
 $berita_query = new WP_Query( [
@@ -1281,7 +1458,7 @@ if ( $berita_query->have_posts() ) :
 
 
 <!-- ========================================
-     SECTION 7: CTA (WhatsApp)
+     SECTION 10: CTA (WhatsApp)
      ======================================== -->
 <?php
 $cta_headline              = get_field( 'cta_headline' ) ?: 'Siap Memulai Perjalanan Keuangan Syariah Anda?';

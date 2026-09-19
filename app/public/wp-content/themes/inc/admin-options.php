@@ -354,6 +354,8 @@ function wakalumi_render_media_page() {
         // Badge Regulasi Hero Atas
         update_option( 'options_hero_reg_desktop', isset( $_POST['options_hero_reg_desktop'] ) ? '1' : '0' );
         update_option( 'options_hero_reg_mobile', isset( $_POST['options_hero_reg_mobile'] ) ? '1' : '0' );
+        update_option( 'options_hero_reg_label', sanitize_text_field( $_POST['options_hero_reg_label'] ?? '' ) );
+        update_option( 'options_hero_reg_label_mobile', isset( $_POST['options_hero_reg_label_mobile'] ) ? '1' : '0' );
 
         $hero_labels = $_POST['hero_reg_logos_label'] ?? [];
         $hero_urls   = $_POST['hero_reg_logos_url'] ?? [];
@@ -421,8 +423,10 @@ function wakalumi_render_media_page() {
     }
 
     // Hero Regulatory Badge defaults
-    $hero_reg_desk = get_option( 'options_hero_reg_desktop', '1' );
-    $hero_reg_mob  = get_option( 'options_hero_reg_mobile', '1' );
+    $hero_reg_desk    = get_option( 'options_hero_reg_desktop', '1' );
+    $hero_reg_mob     = get_option( 'options_hero_reg_mobile', '1' );
+    $hero_reg_lbl     = get_option( 'options_hero_reg_label', 'Terdaftar & Diawasi:' );
+    $hero_reg_lbl_mob = get_option( 'options_hero_reg_label_mobile', '0' );
     $hero_logos = get_option( 'options_hero_reg_logos', [] );
     if ( empty( $hero_logos ) ) {
         $hero_logos = [
@@ -597,13 +601,16 @@ function wakalumi_render_media_page() {
                 <p style="color: #64748b; font-size: 13px;">
                     Atur visibilitas dan logo lencana resmi yang melayang di slider utama.
                 </p>
+                <div style="background: #f0fdfa; border: 1px solid #ccfbf1; border-left: 4px solid #088395; border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; font-size: 12px; color: #0f766e;">
+                    💡 <strong>Tips Terpadu:</strong> Pengaturan lencana regulasi &amp; jaminan LPS ini kini juga dapat dikelola secara terpusat bersama Slide Banner di menu <a href="admin.php?page=wakalumi-hero&tab=logos" style="font-weight: bold; text-decoration: underline; color: #088395;">Beranda: Hero &amp; Slider</a>.
+                </div>
                 <table class="form-table">
                     <tr>
                         <th scope="row">Tampilan di Layar Desktop:</th>
                         <td>
                             <label>
                                 <input type="checkbox" name="options_hero_reg_desktop" value="1" <?php checked( $hero_reg_desk, '1' ); ?>>
-                                <strong>Tampilkan di Komputer / Laptop (Desktop)</strong>
+                                <strong>Tampilkan Logo Regulasi/Mitra di Desktop</strong>
                             </label>
                         </td>
                     </tr>
@@ -612,8 +619,25 @@ function wakalumi_render_media_page() {
                         <td>
                             <label>
                                 <input type="checkbox" name="options_hero_reg_mobile" value="1" <?php checked( $hero_reg_mob, '1' ); ?>>
-                                <strong>Tampilkan di Layar Ponsel (Mobile / Tablet)</strong>
+                                <strong>Tampilkan Logo Regulasi/Mitra di Ponsel (Mobile)</strong>
                             </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_hero_reg_label">Label Teks Pengantar:</label></th>
+                        <td>
+                            <input type="text" id="options_hero_reg_label" name="options_hero_reg_label" value="<?php echo esc_attr( $hero_reg_lbl ); ?>" class="regular-text" placeholder="Contoh: Terdaftar & Diawasi:">
+                            <p class="description">Teks yang tampil mendampingi deretan logo. <em>Kosongkan jika ingin menyembunyikan/menghapus label teks ini (hanya menampilkan logo saja).</em></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Label Teks di Ponsel (Mobile):</th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="options_hero_reg_label_mobile" value="1" <?php checked( $hero_reg_lbl_mob, '1' ); ?>>
+                                <strong>Tampilkan label teks ini di layar ponsel</strong>
+                            </label>
+                            <p class="description"><em>Tips:</em> Nonaktifkan opsi ini agar tampilan mobile tetap rapi, bersih, dan ringkas tanpa teks yang memadati layar.</p>
                         </td>
                     </tr>
                 </table>
@@ -966,7 +990,7 @@ function wakalumi_render_nisbah_page() {
                         Kelola produk simpanan, porsi bagi hasil nasabah, dan equivalent rate yang tampil pada kartu Kinerja Bank di Beranda.
                     </p>
                 </div>
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana#tab-tabungan' ) ); ?>" class="button button-primary" style="background: #10b981; border-color: #059669; font-weight: 700; padding: 6px 18px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 4px rgba(16,185,129,0.2);">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana&tab=tabungan' ) ); ?>" class="button button-primary" style="background: #10b981; border-color: #059669; font-weight: 700; padding: 6px 18px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 4px rgba(16,185,129,0.2);">
                     <span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px;"></span> Kelola Nisbah Tabungan
                 </a>
             </div>
@@ -985,7 +1009,7 @@ function wakalumi_render_nisbah_page() {
                         Kelola tenor penempatan (1, 3, 6, 12, 24 bulan), porsi nisbah, indikasi eqv. rate, serta catatan fatwa DSN-MUI.
                     </p>
                 </div>
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana#tab-deposito' ) ); ?>" class="button button-primary" style="background: #088395; border-color: #066e7d; font-weight: 700; padding: 6px 18px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 4px rgba(8,131,149,0.2);">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-produk-dana&tab=deposito' ) ); ?>" class="button button-primary" style="background: #088395; border-color: #066e7d; font-weight: 700; padding: 6px 18px; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 4px rgba(8,131,149,0.2);">
                     <span class="dashicons dashicons-edit" style="font-size: 16px; width: 16px; height: 16px;"></span> Kelola Nisbah Deposito
                 </a>
             </div>
@@ -1061,6 +1085,7 @@ function wakalumi_render_footer_page() {
         update_option( 'options_footer_show_logos', isset( $_POST['options_footer_show_logos'] ) ? '1' : '0' );
         update_option( 'options_footer_logos_desktop', isset( $_POST['options_footer_logos_desktop'] ) ? '1' : '0' );
         update_option( 'options_footer_logos_mobile', isset( $_POST['options_footer_logos_mobile'] ) ? '1' : '0' );
+        update_option( 'options_footer_reg_label', sanitize_text_field( $_POST['options_footer_reg_label'] ?? '' ) );
         
         $footer_labels = $_POST['footer_reg_logos_label'] ?? [];
         $footer_urls   = $_POST['footer_reg_logos_url'] ?? [];
@@ -1108,8 +1133,9 @@ function wakalumi_render_footer_page() {
 
     // Logo Regulasi Footer Defaults
     $show_logos = get_option( 'options_footer_show_logos', '1' );
-    $logos_desk = get_option( 'options_footer_logos_desktop', '1' );
-    $logos_mob  = get_option( 'options_footer_logos_mobile', '1' );
+    $logos_desk     = get_option( 'options_footer_logos_desktop', '1' );
+    $logos_mob      = get_option( 'options_footer_logos_mobile', '1' );
+    $footer_reg_lbl = get_option( 'options_footer_reg_label', 'Terdaftar & Diawasi:' );
     
     $footer_logos = get_option( 'options_footer_reg_logos', [] );
     if ( empty( $footer_logos ) ) {
@@ -1239,6 +1265,13 @@ function wakalumi_render_footer_page() {
                                 <input type="checkbox" name="options_footer_logos_mobile" value="1" <?php checked( $logos_mob, '1' ); ?>>
                                 Tampilkan di Ponsel (Mobile)
                             </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_reg_label">Label Teks Pengantar Footer:</label></th>
+                        <td>
+                            <input type="text" id="options_footer_reg_label" name="options_footer_reg_label" value="<?php echo esc_attr( $footer_reg_lbl ); ?>" class="regular-text" placeholder="Contoh: Terdaftar & Diawasi:">
+                            <p class="description">Teks yang mendampingi logo regulasi di footer. <em>Kosongkan jika ingin menyembunyikan/menghapus label teks ini di footer.</em></p>
                         </td>
                     </tr>
                 </table>
