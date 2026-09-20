@@ -221,6 +221,12 @@ function wakalumi_enforce_template_routing( $template ) {
         if ( $res ) return $res;
     }
 
+    // 9. Informasi: Brosur & Dokumen Digital
+    if ( in_array( $slug, [ 'brosur', 'unduh-brosur', 'katalog-brosur' ], true ) || strpos( $req_uri, '/brosur' ) !== false || strpos( $req_uri, '/unduh-brosur' ) !== false ) {
+        $res = $serve_clean_template( 'page-brosur.php' );
+        if ( $res ) return $res;
+    }
+
     return $template;
 }
 add_filter( 'template_include', 'wakalumi_enforce_template_routing', 99 );
@@ -457,6 +463,32 @@ function wakalumi_ensure_product_pages() {
     }
 }
 add_action( 'init', 'wakalumi_ensure_product_pages' );
+
+/**
+ * Otomatis pastikan halaman 'Brosur' terdaftar di database
+ * agar URL /brosur/ langsung aktif dengan page-brosur.php
+ */
+function wakalumi_ensure_brosur_page() {
+    $page = get_page_by_path( 'brosur' );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( [
+            'post_title'   => 'Katalog Brosur',
+            'post_name'    => 'brosur',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-brosur.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-brosur.php' ) {
+            update_post_meta( $page->ID, '_wp_page_template', 'page-brosur.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_brosur_page' );
 
 /**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda

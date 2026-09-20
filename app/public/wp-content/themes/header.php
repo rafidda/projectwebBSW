@@ -97,7 +97,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             }
             $is_page_home      = ( is_front_page() || is_home() || $req_uri === '/' );
             $is_page_profil    = ( ! $is_page_home && ( strpos( $req_uri, '/profil' ) === 0 || is_page( [ 'tentang-kami', 'legalitas', 'susunan-pengurus', 'jaringan-kantor' ] ) ) );
-            $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
+            $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || strpos( $req_uri, '/brosur' ) === 0 || is_page( 'brosur' ) || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
             $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
 
@@ -377,45 +377,36 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                         </div>
                                     </div>
 
-                                    <!-- Featured Card: Download Brosur (Otomatis bergeser ke bawah saat preview aktif) -->
-                                    <div class="p-3.5 sm:p-4 rounded-2xl bg-teal-50 dark:bg-slate-800 border border-teal-200 dark:border-teal-700/60 mb-3 shadow-sm transition-all duration-300">
-                                        <div class="flex items-center gap-3 mb-2.5">
-                                            <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                    <!-- Featured Card: Katalog Brosur Digital (Minimalis, Modern, Tanpa Teks Menumpuk) -->
+                                    <a 
+                                        href="<?php echo esc_url( home_url( '/brosur/' ) ); ?>" 
+                                        class="block p-4 rounded-2xl <?php echo ( strpos( $req_uri, '/brosur' ) !== false ) ? 'bg-teal-50/90 dark:bg-slate-800/90 ring-2 ring-teal-500/80 border-teal-500 shadow-sm' : 'bg-slate-50/90 dark:bg-slate-800/60 hover:bg-teal-50/80 dark:hover:bg-slate-800/90 border-slate-200/80 dark:border-slate-700/80 hover:border-teal-300 dark:hover:border-teal-700 shadow-xs hover:shadow-md'; ?> border transition-all duration-300 group/bcard mega-link"
+                                    >
+                                        <div class="flex items-center justify-between gap-2 mb-2.5">
+                                            <div class="w-9 h-9 rounded-xl bg-teal-600 group-hover/bcard:bg-teal-500 text-white flex items-center justify-center flex-shrink-0 shadow-sm transition-transform duration-300 group-hover/bcard:scale-105">
+                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                                             </div>
-                                            <div>
-                                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block"><?php echo esc_html( $brosur_file_size ); ?></span>
-                                                <h5 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-tight line-clamp-1"><?php echo esc_html( $brosur_file_name ); ?></h5>
-                                            </div>
+                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full <?php echo ( strpos( $req_uri, '/brosur' ) !== false ) ? 'bg-teal-600 text-white shadow-xs' : 'bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300'; ?>">
+                                                <?php echo ( strpos( $req_uri, '/brosur' ) !== false ) ? 'Halaman Aktif' : 'Katalog PDF'; ?>
+                                            </span>
                                         </div>
-                                        <a 
-                                            href="<?php echo ! empty( $brosur_file_url ) ? esc_url( $brosur_file_url ) : esc_url( $wa_url . '&text=' . urlencode('Halo BPRS Wakalumi, saya ingin meminta brosur resmi produk simpanan dan pembiayaan.') ); ?>" 
-                                            target="_blank" 
-                                            rel="noopener noreferrer" 
-                                            <?php echo ! empty( $brosur_file_url ) ? 'download' : ''; ?>
-                                            class="w-full py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-sm transition-colors"
-                                        >
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                                            <span>Unduh Brosur Lengkap (PDF)</span>
-                                        </a>
-                                    </div>
-
-                                    <!-- Card: Pengajuan Online -->
-                                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                        <div class="flex items-center justify-between mb-1">
-                                            <span class="text-xs font-bold text-slate-900 dark:text-slate-100">Pengajuan Online</span>
-                                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Segera</span>
-                                        </div>
-                                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                                            Layanan e-form pembukaan tabungan & pembiayaan daring dalam integrasi digital resmi.
+                                        <h5 class="text-sm font-bold text-slate-900 dark:text-white leading-tight group-hover/bcard:text-teal-600 dark:group-hover/bcard:text-teal-400 transition-colors">
+                                            Katalog Brosur Digital
+                                        </h5>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed line-clamp-2">
+                                            Unduh seluruh panduan resmi, ringkasan akad syariah, dan nisbah produk.
                                         </p>
-                                    </div>
+                                        <div class="mt-3 pt-2.5 border-t border-slate-200/70 dark:border-slate-700/70 flex items-center justify-between text-xs font-bold text-teal-600 dark:text-teal-400">
+                                            <span>Buka Katalog Brosur</span>
+                                            <svg class="w-3.5 h-3.5 group-hover/bcard:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                        </div>
+                                    </a>
                                 </div>
 
-                                <!-- WhatsApp Hotline Quick Inquiry -->
-                                <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800 text-center">
-                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center justify-center gap-1.5">
-                                        <span>💬 Tanya Syarat & Simulasi via WhatsApp</span>
+                                <!-- WhatsApp Hotline Quick Inquiry (Minimalist) -->
+                                <div class="pt-2 border-t border-slate-200/70 dark:border-slate-800 text-center">
+                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-slate-500 hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-300 inline-flex items-center justify-center gap-1.5 transition-colors">
+                                        <span>💬 Tanya Syarat & Simulasi via CS</span>
                                     </a>
                                 </div>
                             </div>
@@ -675,14 +666,21 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                         ⚖️ Akad Murabahah, Bagi Hasil, Ijarah
                     </a>
 
-                    <!-- Download Brosur Mobile -->
+                    <!-- Katalog Brosur Mobile -->
                     <div class="pt-2 pb-1 pr-2">
-                        <a href="<?php echo ! empty( $brosur_file_url ) ? esc_url( $brosur_file_url ) : esc_url( $wa_url . '&text=' . urlencode('Halo BPRS Wakalumi, saya ingin meminta brosur resmi produk simpanan dan pembiayaan.') ); ?>" target="_blank" rel="noopener noreferrer" <?php echo ! empty( $brosur_file_url ) ? 'download' : ''; ?> class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-teal-50/80 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 font-bold text-xs border border-teal-200/60 dark:border-teal-800/40">
+                        <a href="<?php echo esc_url( home_url( '/brosur/' ) ); ?>" class="mobile-nav-sublink flex items-center justify-between px-3.5 py-2.5 rounded-xl <?php echo ( strpos( $req_uri, '/brosur' ) !== false ) ? 'bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200 ring-2 ring-teal-500/50 font-black' : 'bg-teal-50/80 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 font-bold hover:bg-teal-100'; ?> text-xs border border-teal-200/60 dark:border-teal-800/40 transition-colors">
                             <span class="inline-flex items-center gap-2">
-                                <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                                Download Brosur Resmi
+                                <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                Katalog Brosur Dokumen
                             </span>
-                            <span class="text-[9px] uppercase tracking-wider bg-teal-200/70 dark:bg-teal-800/70 px-2 py-0.5 rounded-full">PDF</span>
+                            <?php if ( strpos( $req_uri, '/brosur' ) !== false ) : ?>
+                                <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-teal-600 text-white flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                                    Aktif
+                                </span>
+                            <?php else : ?>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300">Buka &rarr;</span>
+                            <?php endif; ?>
                         </a>
                     </div>
                 </div>

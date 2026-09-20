@@ -783,11 +783,13 @@ if ( ! empty( $tabungan_preview_list ) ) :
                     <?php $p_image = ! empty( $prod['image'] ) ? $prod['image'] : ''; ?>
                     <?php if ( ! empty( $p_image ) ) : ?>
                         <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
-                            <img src="<?php echo esc_url( $p_image ); ?>" 
-                                 alt="<?php echo esc_attr( $prod['nama'] ); ?>" 
-                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                            <img src="<?php echo esc_url( $p_image ); ?>"
+                                 alt="<?php echo esc_attr( $prod['nama'] ); ?>"
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                  loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                            <!-- Glass glare — see .wkl-glass-shine in main.css -->
+                            <div class="wkl-glass-shine"></div>
                             <span class="absolute top-3 right-3 inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm z-10 <?php echo esc_attr( $c_style['badge'] ); ?>">
                                 <?php echo esc_html( $p_badge ); ?>
                             </span>
@@ -1138,6 +1140,8 @@ if ( ! empty( $pembiayaan_preview_list ) ) :
                                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                                  loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                            <!-- Glass glare — see .wkl-glass-shine in main.css -->
+                            <div class="wkl-glass-shine"></div>
                             <span class="absolute top-3 right-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm tracking-wide z-10 <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
                                 <?php echo esc_html( $p_badge ); ?>
                             </span>

@@ -1042,7 +1042,62 @@ img:not([loading="lazy"]) {
 
 .kantor-card.is-fallback .card-photo-fallback {
   display: flex !important;
+}/* ========================================================================
+   GLASS SHINE / CARD GLARE EFFECT  (.wkl-glass-shine)
+   Inspired by iOS app icon glints & Apple Card reflections.
+
+   HOW TO USE:
+   Add <div class="wkl-glass-shine"></div> inside any card that has
+   class="group" and overflow-hidden on the container.
+
+   The effect:
+   - Instant reset when mouse leaves (transition: 0s)
+   - Smooth asymmetric sweep on hover (1600ms cubic-bezier)
+   - Asymmetric gradient: sharp bright peak + soft trailing halo
+   - Strip extends beyond card height so skewed edges look clean
+
+   EXAMPLE:
+   <div class="relative overflow-hidden group rounded-2xl ...">
+       <img ... />
+       <div class="wkl-glass-shine"></div>
+   </div>
+   ======================================================================== */
+.wkl-glass-shine {
+  position: absolute;
+  inset: -60% 0;            /* taller than card for clean skewed edges */
+  width: 40%;
+  pointer-events: none;
+  z-index: 20;
+
+  /* Asymmetric gradient — mimics real specular highlight on glass:
+     sharp bright peak at center, rapid falloff trailing side,
+     very soft leading halo */
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0)    0%,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(255, 255, 255, 0.07) 35%,
+    rgba(255, 255, 255, 0.18) 44%,
+    rgba(255, 255, 255, 0.55) 49%,
+    rgba(255, 255, 255, 0.62) 51%,  /* peak: brightest point */
+    rgba(255, 255, 255, 0.30) 55%,
+    rgba(255, 255, 255, 0.10) 63%,
+    rgba(255, 255, 255, 0.02) 75%,
+    rgba(255, 255, 255, 0)    100%
+  );
+
+  /* Skew ~22° like a natural oblique light reflection */
+  transform: skewX(-22deg) translateX(-250%);
+
+  /* Instant reset so it's ready for next hover — no reverse animation */
+  transition: transform 0s linear;
+  will-change: transform;
 }
 
+/* On hover: sweep across with a natural ease-out cubic-bezier */
+.group:hover .wkl-glass-shine {
+  transform: skewX(-22deg) translateX(400%);
+  transition: transform 1600ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
 
 

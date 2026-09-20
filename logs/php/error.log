@@ -9,3 +9,11 @@ Stack trace:
 #4 C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\index.php(17): require('C:\\Users\\arifr\\...')
 #5 {main}
   thrown in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\functions.php on line 28
+[20-Sep-2026 06:56:27 UTC] PHP Warning:  require_once(C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes/../../../wp-load.php): Failed to open stream: No such file or directory in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\debug_options.php on line 2
+[20-Sep-2026 06:56:27 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes/../../../wp-load.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\debug_options.php:2
+Stack trace:
+#0 {main}
+  thrown in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\debug_options.php on line 2
+[20-Sep-2026 07:03:22 UTC] PHP Warning:  Undefined array key "upper_gradient" in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-brosur.php on line 890
+[20-Sep-2026 07:03:22 UTC] PHP Warning:  Undefined array key "upper_gradient" in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-brosur.php on line 890
+[20-Sep-2026 07:03:22 UTC] PHP Warning:  Undefined array key "upper_gradient" in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-brosur.php on line 890

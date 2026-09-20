@@ -209,7 +209,7 @@ const Navbar = {
 
     // 1. Reset Desktop active states
     const desktopLinks = document.querySelectorAll('#main-navbar .nav-link');
-    const dropdownItems = document.querySelectorAll('#main-navbar .dropdown-item');
+    const dropdownItems = document.querySelectorAll('#main-navbar .dropdown a, #main-navbar .dropdown-item, #main-navbar .mega-link');
 
     desktopLinks.forEach(link => link.classList.remove('active'));
     dropdownItems.forEach(item => item.classList.remove('active'));
@@ -228,7 +228,7 @@ const Navbar = {
     } else {
       let matchedDropdown = null;
 
-      // Find matching dropdown child item
+      // Find matching dropdown child item across all dropdown links
       dropdownItems.forEach(item => {
         const href = item.getAttribute('href');
         if (!href || href === '#' || href.startsWith('javascript:')) return;
@@ -267,7 +267,7 @@ const Navbar = {
           if (currentPath.startsWith('/profil')) {
             const trigger = Array.from(desktopLinks).find(l => l.classList.contains('dropdown-trigger') && l.textContent.trim().toLowerCase().startsWith('profil'));
             if (trigger) trigger.classList.add('active');
-          } else if (currentPath.startsWith('/produk')) {
+          } else if (currentPath.startsWith('/produk') || currentPath.startsWith('/brosur') || currentPath === '/brosur') {
             const trigger = Array.from(desktopLinks).find(l => l.classList.contains('dropdown-trigger') && l.textContent.trim().toLowerCase().startsWith('produk'));
             if (trigger) trigger.classList.add('active');
           } else if (currentPath.startsWith('/informasi') || currentPath.startsWith('/berita')) {
@@ -291,7 +291,7 @@ const Navbar = {
 
     const topLinks = mobilePanel.querySelectorAll('.mobile-nav-link');
     const triggers = mobilePanel.querySelectorAll('.mobile-dropdown-trigger');
-    const sublinks = mobilePanel.querySelectorAll('.mobile-nav-sublink');
+    const sublinks = mobilePanel.querySelectorAll('.mobile-nav-sublink, .mobile-dropdown-content a');
 
     // Reset styles
     topLinks.forEach(link => {
@@ -333,6 +333,13 @@ const Navbar = {
         }
       } catch (e) {}
     });
+
+    if (!matchedGroup && (currentPath.startsWith('/brosur') || currentPath.startsWith('/produk'))) {
+      const produkTrigger = Array.from(triggers).find(t => t.textContent.trim().toLowerCase().startsWith('produk'));
+      if (produkTrigger) {
+        matchedGroup = produkTrigger.closest('.mobile-nav-group');
+      }
+    }
 
     if (matchedGroup) {
       const trigger = matchedGroup.querySelector('.mobile-dropdown-trigger');
@@ -2151,6 +2158,278 @@ window.VideoModal = VideoModal;
 window.InstagramSlider = InstagramSlider;
 
 // ========================================================================
+// BROSUR & KATALOG DOKUMEN MODULE (FILTER, SEARCH, & PDF LIGHTBOX MODAL)
+// ========================================================================
+const BrosurModule = {
+  activeCategory: 'all',
+  searchQuery: '',
+  _escBound: false,
+
+  init() {
+    const gridContainer = document.getElementById('brosur-grid-container');
+    const modal = document.getElementById('brosur-preview-modal');
+    if (!gridContainer && !modal) return;
+
+    this.initFilter();
+    this.initPdfModal();
+  },
+
+  initFilter() {
+    const filterGroup = document.getElementById('brosur-filter-group');
+    const searchInput = document.getElementById('brosur-search-input');
+    const searchClear = document.getElementById('brosur-search-clear');
+    const resetBtn = document.getElementById('brosur-reset-btn');
+    const cards = document.querySelectorAll('.brosur-card');
+    const countEl = document.getElementById('brosur-count');
+    const emptyState = document.getElementById('brosur-empty-state');
+
+    if (!cards.length) return;
+
+    const applyFilters = () => {
+      let visibleCount = 0;
+      const query = this.searchQuery.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category') || '';
+        const keywords = card.getAttribute('data-keywords') || '';
+        const title = card.getAttribute('data-title') || '';
+
+        const matchesCat = (this.activeCategory === 'all' || cat === this.activeCategory);
+        const matchesSearch = !query || keywords.includes(query) || title.includes(query);
+
+        if (matchesCat && matchesSearch) {
+          card.classList.remove('hidden');
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+          card.style.display = 'none';
+        }
+      });
+
+      if (countEl) {
+        countEl.textContent = visibleCount;
+      }
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+        }
+      }
+
+      if (searchClear) {
+        if (query.length > 0) {
+          searchClear.classList.remove('hidden');
+        } else {
+          searchClear.classList.add('hidden');
+        }
+      }
+    };
+
+    // Category button clicks
+    if (filterGroup) {
+      const buttons = filterGroup.querySelectorAll('.brosur-filter-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filterVal = btn.getAttribute('data-filter') || 'all';
+          this.activeCategory = filterVal;
+
+          buttons.forEach(b => {
+            b.classList.remove('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
+            b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+          });
+
+          btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+          btn.classList.add('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
+
+          applyFilters();
+        });
+      });
+    }
+
+    // Live search input
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        this.searchQuery = e.target.value;
+        applyFilters();
+      });
+    }
+
+    // Clear search button
+    if (searchClear && searchInput) {
+      searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        this.searchQuery = '';
+        searchInput.focus();
+        applyFilters();
+      });
+    }
+
+    // Reset button in empty state
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        this.activeCategory = 'all';
+        this.searchQuery = '';
+        if (searchInput) searchInput.value = '';
+
+        if (filterGroup) {
+          const buttons = filterGroup.querySelectorAll('.brosur-filter-btn');
+          buttons.forEach(b => {
+            const isAll = b.getAttribute('data-filter') === 'all';
+            if (isAll) {
+              b.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+              b.classList.add('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
+            } else {
+              b.classList.remove('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
+              b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+            }
+          });
+        }
+
+        applyFilters();
+      });
+    }
+  },
+
+  initPdfModal() {
+    const modal = document.getElementById('brosur-preview-modal');
+    if (!modal) return;
+
+    const backdrop = document.getElementById('brosur-modal-backdrop');
+    const container = document.getElementById('brosur-modal-container');
+    const iframe = document.getElementById('brosur-modal-iframe');
+    const loading = document.getElementById('brosur-modal-loading');
+    const emptyNotice = document.getElementById('brosur-modal-empty');
+    const titleEl = document.getElementById('brosur-modal-title');
+    const sizeEl = document.getElementById('brosur-modal-size');
+    const extLink = document.getElementById('brosur-modal-external');
+    const downloadBtn = document.getElementById('brosur-modal-download');
+    const closeBtn = document.getElementById('brosur-modal-close');
+    const fallbackWa = document.getElementById('brosur-modal-wa-fallback');
+    const emptyDocTitle = document.getElementById('brosur-empty-doc-title');
+
+    const openModal = (btn) => {
+      const pdfUrl = btn.getAttribute('data-pdf') || '';
+      const title = btn.getAttribute('data-title') || 'Pratinjau Brosur';
+      const size = btn.getAttribute('data-size') || '';
+
+      if (titleEl) titleEl.textContent = title;
+      if (sizeEl) sizeEl.textContent = size ? `• ${size}` : '';
+      if (emptyDocTitle) emptyDocTitle.textContent = `"${title}"`;
+
+      if (fallbackWa) {
+        const defaultWa = '6281517380388';
+        const msg = `Halo BPRS Wakalumi, saya ingin menanyakan dan meminta berkas PDF resmi untuk: ${title}.`;
+        fallbackWa.href = `https://wa.me/${defaultWa}?text=${encodeURIComponent(msg)}`;
+      }
+
+      if (pdfUrl && pdfUrl.length > 5 && !pdfUrl.startsWith('#')) {
+        // PDF tersedia: tampilkan viewer iframe
+        if (emptyNotice) emptyNotice.classList.add('hidden');
+        if (loading) {
+          loading.classList.remove('hidden');
+          loading.style.opacity = '1';
+        }
+        if (iframe) {
+          iframe.classList.remove('hidden');
+          iframe.src = pdfUrl;
+          iframe.onload = () => {
+            if (loading) {
+              loading.style.opacity = '0';
+              setTimeout(() => { loading.classList.add('hidden'); }, 200);
+            }
+          };
+        }
+        if (extLink) {
+          extLink.href = pdfUrl;
+          extLink.style.display = 'inline-flex';
+        }
+        if (downloadBtn) {
+          downloadBtn.href = pdfUrl;
+          downloadBtn.style.display = 'inline-flex';
+        }
+      } else {
+        // PDF belum diunggah: tampilkan antarmuka Empty State di dalam modal (TANPA alert js)
+        if (loading) loading.classList.add('hidden');
+        if (iframe) {
+          iframe.classList.add('hidden');
+          iframe.src = 'about:blank';
+        }
+        if (emptyNotice) {
+          emptyNotice.classList.remove('hidden');
+        }
+        if (extLink) {
+          extLink.style.display = 'none';
+        }
+        if (downloadBtn) {
+          downloadBtn.style.display = 'none';
+        }
+      }
+
+      // Animasi Buka Modal
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        if (backdrop) {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+        }
+        if (container) {
+          container.classList.remove('scale-95', 'opacity-0');
+          container.classList.add('scale-100', 'opacity-100');
+        }
+      });
+    };
+
+    const closeModal = () => {
+      if (backdrop) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+      }
+      if (container) {
+        container.classList.remove('scale-100', 'opacity-100');
+        container.classList.add('scale-95', 'opacity-0');
+      }
+
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+        if (iframe) iframe.src = 'about:blank';
+        if (emptyNotice) emptyNotice.classList.add('hidden');
+      }, 250);
+    };
+
+    // Pasang pemicu buka modal ke semua tombol pratinjau
+    document.querySelectorAll('.brosur-preview-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(btn);
+      });
+    });
+
+    // Pemicu tutup modal
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+
+    if (!this._escBound) {
+      this._escBound = true;
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    }
+  }
+};
+
+window.BrosurModule = BrosurModule;
+
+// ========================================================================
 // INITIALIZE ALL MODULES
 // ========================================================================
 function initAllModules() {
@@ -2171,6 +2450,7 @@ function initAllModules() {
   KantorModule.init();
   SavingsCalculator.init();
   DepositoPage.init();
+  BrosurModule.init();
   if (window.FinancingPage && typeof window.FinancingPage.init === 'function') {
     window.FinancingPage.init();
   }

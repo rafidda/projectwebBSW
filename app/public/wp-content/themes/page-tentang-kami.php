@@ -180,14 +180,14 @@ if ( empty( $cta_btn1_url ) ) {
                     </div>
                 </div>
 
-                <!-- Floating Experience Badge -->
-                <div class="absolute -bottom-6 -left-6 sm:-bottom-8 sm:-left-8 bg-white/90 dark:bg-dark-surface/90 backdrop-blur-md p-4 sm:p-5 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/60 flex items-center gap-3.5 max-w-[240px]" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-teal-400 flex items-center justify-center text-white shrink-0 shadow-md">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                <!-- Floating Amanah Badge — top-right, outside image frame -->
+                <div class="absolute -top-5 -right-5 sm:-top-6 sm:-right-6 bg-white/95 dark:bg-dark-surface/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/60 flex items-center gap-3 max-w-[210px]" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-teal-400 flex items-center justify-center text-white shrink-0 shadow-md">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     </div>
                     <div>
-                        <span class="block text-xl font-black text-slate-900 dark:text-white leading-none mb-1">Amanah</span>
-                        <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-tight block">Berpengalaman & Terpercaya</span>
+                        <span class="block text-base font-black text-slate-900 dark:text-white leading-none mb-0.5">Amanah</span>
+                        <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 leading-tight block">Berpengalaman &amp; Terpercaya</span>
                     </div>
                 </div>
             </div>
