@@ -20,10 +20,11 @@ $dep_lps_title     = get_option( 'options_deposito_lps_title', 'Dijamin LPS s.d.
 $dep_lps_desc      = get_option( 'options_deposito_lps_desc', 'Dana simpanan deposito Anda aman dan dijamin oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan batas maksimal penjaminan.' );
 $dep_lps_btn       = get_option( 'options_deposito_lps_btn_text', 'Hitung Simulasi Bagi Hasil' );
 
-// Tenor Section & 4 Cards
+// Tenor Section & Repeater Kartu Tenor Dinamis
 $dep_tenor_kicker  = get_option( 'options_deposito_tenor_kicker', 'Fleksibilitas Investasi' );
 $dep_tenor_title   = get_option( 'options_deposito_tenor_title', 'Pilihan Tenor Fleksibel Sesuai Kebutuhan' );
 $dep_tenor_desc    = get_option( 'options_deposito_tenor_desc', 'Pilih jangka waktu penempatan yang paling cocok untuk rencana likuiditas pribadi maupun perusahaan.' );
+$dep_tenor_cards   = function_exists( 'wakalumi_get_deposito_tenor_cards' ) ? wakalumi_get_deposito_tenor_cards() : [];
 
 $dep_t1_badge      = get_option( 'options_deposito_t1_badge', 'Tenor Singkat' );
 $dep_t1_desc       = get_option( 'options_deposito_t1_desc', 'Likuiditas cepat dan fleksibel untuk perputaran dana jangka sangat pendek.' );
@@ -223,7 +224,7 @@ if ( empty( $deposito_nisbah ) ) {
 <!-- ========================================
      SECTION 1: PILIHAN TENOR & FITUR UTAMA
      ======================================== -->
-<section class="py-14 lg:py-20 bg-transparent relative overflow-hidden">
+<section id="tenor" class="scroll-mt-28 py-14 lg:py-20 bg-transparent relative overflow-hidden">
     <div class="container-wide relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-12" data-aos="fade-up">
             <span class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-teal-800 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/60 px-3.5 py-1.5 rounded-full border border-teal-200/80 dark:border-teal-800/80 shadow-sm">
@@ -239,136 +240,80 @@ if ( empty( $deposito_nisbah ) ) {
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16" data-aos="fade-up">
-            
-            <!-- Tenor 1 Bulan -->
-            <div class="hub-product-card relative rounded-3xl p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group cursor-pointer flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out" onclick="window.wklSelectTenor && window.wklSelectTenor(1)">
+            <?php foreach ( $dep_tenor_cards as $c_idx => $card ) : 
+                $t_num      = intval( $card['tenor_num'] ?? ( $c_idx + 1 ) );
+                $is_pop     = ! empty( $card['is_popular'] );
+                $c_img      = ! empty( $card['image'] ) ? $card['image'] : '';
+                $c_badge    = ! empty( $card['badge'] ) ? $card['badge'] : 'Deposito Syariah';
+                $c_high     = ! empty( $card['highlight'] ) ? $card['highlight'] : '';
+                $c_aro      = ! empty( $card['aro'] ) ? $card['aro'] : 'ARO Tersedia';
+                // Rate display: custom if set, or fallback to $dep_rates[$t_num]['equiv']
+                $c_equiv    = ! empty( $card['equiv'] ) ? $card['equiv'] : ( $dep_rates[ $t_num ]['equiv'] ?? ( $dep_rates[12]['equiv'] ?? '4.23%' ) );
+                $border_cls = $is_pop ? 'border-2 border-teal-500/60 dark:border-teal-500/60' : 'border border-slate-200/80 dark:border-slate-800';
+                $bar_cls    = $is_pop ? 'before:h-1.5 before:bg-gradient-to-r before:from-teal-600 via-primary-500 to-cyan-400 before:scale-x-90' : 'before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75';
+            ?>
+            <div id="tenor-<?php echo esc_attr( $t_num ); ?>" class="hub-product-card scroll-mt-28 relative rounded-3xl bg-white dark:bg-slate-900 <?php echo esc_attr( $border_cls ); ?> shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group cursor-pointer flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 <?php echo esc_attr( $bar_cls ); ?> group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out" onclick="window.wklSelectTenor && window.wklSelectTenor(<?php echo esc_attr( $t_num ); ?>)">
+                
                 <!-- Sliding Watermark -->
                 <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-28 h-28 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                 </div>
 
-                <div class="relative z-10">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1"><?php echo esc_html( $dep_t1_badge ); ?></span>
-                    <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                        1 Bulan
-                    </h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                        <?php echo esc_html( $dep_t1_desc ); ?>
-                    </p>
-                </div>
-
-                <div class="relative z-10 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                    <div class="py-2 px-3 rounded-xl bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60 text-center">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block">Indikasi Eqv. Rate (*Estimasi)</span>
-                        <span class="text-lg font-black text-teal-800 dark:text-teal-200"><?php echo esc_html( $dep_rates[1]['equiv'] ); ?> p.a.</span>
+                <!-- Top Graphic Slot: Flush edge-to-edge ("ngepas") if image exists -->
+                <?php if ( ! empty( $c_img ) ) : ?>
+                    <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
+                        <img src="<?php echo esc_url( $c_img ); ?>" alt="<?php echo esc_attr( $card['tenor'] ); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                        <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+                            <?php if ( ! empty( $c_high ) ) : ?>
+                                <span class="px-2.5 py-0.5 rounded-full bg-teal-500 text-white text-[10px] font-black uppercase tracking-wider shadow-sm">
+                                    <?php echo esc_html( $c_high ); ?>
+                                </span>
+                            <?php endif; ?>
+                            <span class="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm text-teal-800 dark:text-teal-300 border-teal-200 dark:border-teal-800">
+                                <?php echo esc_html( $c_badge ); ?>
+                            </span>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-600 dark:text-slate-400"><?php echo esc_html( $dep_t1_aro ); ?></span>
-                        <span class="text-teal-600 dark:text-teal-300 font-bold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                            Hitung &rarr;
-                        </span>
+                <?php endif; ?>
+
+                <!-- Card Body with clean padding -->
+                <div class="p-6 flex flex-col justify-between flex-1 relative z-10 <?php echo ! empty( $c_img ) ? 'pt-5' : ''; ?>">
+                    <div>
+                        <?php if ( empty( $c_img ) ) : ?>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block"><?php echo esc_html( $c_badge ); ?></span>
+                                <?php if ( ! empty( $c_high ) ) : ?>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/80 text-[10px] font-black uppercase tracking-wider shadow-sm">
+                                        <?php echo esc_html( $c_high ); ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
+                            <?php echo esc_html( $card['tenor'] ); ?>
+                        </h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                            <?php echo esc_html( $card['desc'] ); ?>
+                        </p>
                     </div>
-                </div>
-            </div>
 
-            <!-- Tenor 3 Bulan -->
-            <div class="hub-product-card relative rounded-3xl p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group cursor-pointer flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out" onclick="window.wklSelectTenor && window.wklSelectTenor(3)">
-                <!-- Sliding Watermark -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-28 h-28 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                </div>
-
-                <div class="relative z-10">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1"><?php echo esc_html( $dep_t3_badge ); ?></span>
-                    <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                        3 Bulan
-                    </h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                        <?php echo esc_html( $dep_t3_desc ); ?>
-                    </p>
-                </div>
-
-                <div class="relative z-10 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                    <div class="py-2 px-3 rounded-xl bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60 text-center">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block">Indikasi Eqv. Rate (*Estimasi)</span>
-                        <span class="text-lg font-black text-teal-800 dark:text-teal-200"><?php echo esc_html( $dep_rates[3]['equiv'] ); ?> p.a.</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-600 dark:text-slate-400"><?php echo esc_html( $dep_t3_aro ); ?></span>
-                        <span class="text-teal-600 dark:text-teal-300 font-bold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                            Hitung &rarr;
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tenor 6 Bulan -->
-            <div class="hub-product-card relative rounded-3xl p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group cursor-pointer flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out" onclick="window.wklSelectTenor && window.wklSelectTenor(6)">
-                <!-- Sliding Watermark -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-28 h-28 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                </div>
-
-                <div class="relative z-10">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1"><?php echo esc_html( $dep_t6_badge ); ?></span>
-                    <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                        6 Bulan
-                    </h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                        <?php echo esc_html( $dep_t6_desc ); ?>
-                    </p>
-                </div>
-
-                <div class="relative z-10 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                    <div class="py-2 px-3 rounded-xl bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60 text-center">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block">Indikasi Eqv. Rate (*Estimasi)</span>
-                        <span class="text-lg font-black text-teal-800 dark:text-teal-200"><?php echo esc_html( $dep_rates[6]['equiv'] ); ?> p.a.</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-600 dark:text-slate-400"><?php echo esc_html( $dep_t6_aro ); ?></span>
-                        <span class="text-teal-600 dark:text-teal-300 font-bold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                            Hitung &rarr;
-                        </span>
+                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                        <div class="py-2 px-3 rounded-xl <?php echo $is_pop ? 'bg-teal-50/90 dark:bg-teal-950/40 border border-teal-200/70 dark:border-teal-800/60' : 'bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60'; ?> text-center">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block">Indikasi Eqv. Rate (*Estimasi)</span>
+                            <span class="text-lg font-black text-teal-800 dark:text-teal-200"><?php echo esc_html( $c_equiv ); ?> p.a.</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-slate-600 dark:text-slate-400"><?php echo esc_html( $c_aro ); ?></span>
+                            <span class="text-teal-600 dark:text-teal-300 font-bold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                                Hitung &rarr;
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Tenor 12 Bulan (Featured - Kontras Bersih & Selaras di Light Mode) -->
-            <div class="hub-product-card relative rounded-3xl p-6 bg-white dark:bg-slate-900 border-2 border-teal-500/60 dark:border-teal-500/60 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group cursor-pointer flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-600 via-primary-500 to-cyan-400 before:scale-x-90 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out" onclick="window.wklSelectTenor && window.wklSelectTenor(12)">
-                <!-- Sliding Watermark -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                </div>
-
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block"><?php echo esc_html( $dep_t12_badge ); ?></span>
-                        <span class="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/80 text-[10px] font-black uppercase tracking-wider shadow-sm">
-                            <?php echo esc_html( $dep_t12_high ); ?>
-                        </span>
-                    </div>
-                    <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                        12 Bulan
-                    </h4>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                        <?php echo esc_html( $dep_t12_desc ); ?>
-                    </p>
-                </div>
-
-                <div class="relative z-10 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                    <div class="py-2 px-3 rounded-xl bg-teal-50/90 dark:bg-teal-950/40 border border-teal-200/70 dark:border-teal-800/60 text-center">
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block">Indikasi Eqv. Rate (*Estimasi)</span>
-                        <span class="text-lg font-black text-teal-800 dark:text-teal-200"><?php echo esc_html( $dep_rates[12]['equiv'] ); ?> p.a.</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-600 dark:text-slate-400"><?php echo esc_html( $dep_t12_aro ); ?></span>
-                        <span class="text-teal-600 dark:text-teal-300 font-bold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                            Hitung &rarr;
-                        </span>
-                    </div>
-                </div>
-            </div>
-
+            <?php endforeach; ?>
         </div>
 
         <!-- 6 Keunggulan List Card (Enhanced Executive Card Header & Numbered Badges) -->

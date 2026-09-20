@@ -411,58 +411,62 @@ $color_themes = [
                 <!-- Card Item Anchor Target -->
                 <div 
                     id="<?php echo esc_attr( $slug ); ?>" 
-                    class="spotlight-card rounded-3xl p-7 sm:p-9 bg-white/95 dark:bg-slate-900 border <?php echo esc_attr( $c_theme['border'] ); ?> <?php echo esc_attr( $c_theme['hover'] ); ?> shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 relative overflow-hidden flex flex-col justify-between group scroll-mt-28" 
+                    class="spotlight-card rounded-3xl bg-white/95 dark:bg-slate-900 border <?php echo esc_attr( $c_theme['border'] ); ?> <?php echo esc_attr( $c_theme['hover'] ); ?> shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 relative overflow-hidden flex flex-col justify-between group scroll-mt-28" 
                     data-aos="fade-up" 
                     data-aos-delay="<?php echo ( $p_idx % 2 === 0 ? '0' : '100' ); ?>"
                 >
                     <!-- Bottom-Right Watermark wm-wkl.png (wm wkl 1.png) -->
-                    <div class="absolute -right-6 -bottom-6 w-48 h-48 sm:w-56 sm:h-56 opacity-[0.035] dark:opacity-[0.05] pointer-events-none transition-all duration-700 ease-out group-hover:scale-115 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.09] select-none overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-48 h-48 sm:w-56 sm:h-56 opacity-[0.035] dark:opacity-[0.05] pointer-events-none transition-all duration-700 ease-out group-hover:scale-115 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.09] select-none overflow-hidden z-0">
                         <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/wm-wkl.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy">
                     </div>
 
-                    <div class="relative z-10">
-                        <!-- Top Header: Graphic (16:10) or Icon & Badges -->
-                        <?php $p_img = ! empty( $prod['image'] ) ? $prod['image'] : ''; ?>
-                        <?php if ( ! empty( $p_img ) ) : ?>
-                            <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-5 bg-slate-100 dark:bg-slate-800 shadow-sm group/img">
-                                <img src="<?php echo esc_url( $p_img ); ?>" alt="<?php echo esc_attr( $prod['nama'] ); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div class="absolute top-3 right-3 flex flex-col items-end gap-1.5">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm <?php echo esc_attr( $c_theme['badge_bg'] ); ?>">
-                                        <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $c_theme['accent_dot'] ); ?>"></span>
-                                        <?php echo esc_html( $prod['badge'] ?? 'Pembiayaan' ); ?>
+                    <!-- Top Graphic Slot: Flush Edge-to-Edge ("Ngepas" tanpa bezel) -->
+                    <?php $p_img = ! empty( $prod['image'] ) ? $prod['image'] : ''; ?>
+                    <?php if ( ! empty( $p_img ) ) : ?>
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
+                            <img src="<?php echo esc_url( $p_img ); ?>" alt="<?php echo esc_attr( $prod['nama'] ); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                            <div class="absolute top-3.5 right-3.5 flex flex-col items-end gap-1.5 z-10">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm <?php echo esc_attr( $c_theme['badge_bg'] ); ?>">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $c_theme['accent_dot'] ); ?>"></span>
+                                    <?php echo esc_html( $prod['badge'] ?? 'Pembiayaan' ); ?>
+                                </span>
+                                <?php if ( ! empty( $prod['akad'] ) ) : ?>
+                                    <span class="text-2xs font-bold uppercase tracking-wider text-white drop-shadow-md">
+                                        Akad: <?php echo esc_html( $prod['akad'] ); ?>
                                     </span>
-                                    <?php if ( ! empty( $prod['akad'] ) ) : ?>
-                                        <span class="text-2xs font-bold uppercase tracking-wider text-white drop-shadow-md">
-                                            Akad: <?php echo esc_html( $prod['akad'] ); ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
+                                <?php endif; ?>
                             </div>
-                        <?php else : ?>
-                            <div class="flex items-start justify-between gap-4 mb-5">
-                                <div class="w-14 h-14 rounded-2xl <?php echo esc_attr( $c_theme['icon_bg'] ); ?> flex items-center justify-center flex-shrink-0 shadow-2xs group-hover:scale-110 transition-transform duration-300">
-                                    <?php 
-                                    if ( ! empty( $prod['custom_svg'] ) ) {
-                                        echo $prod['custom_svg'];
-                                    } else {
-                                        echo wakalumi_render_pembiayaan_icon( $icon_key );
-                                    }
-                                    ?>
-                                </div>
-                                <div class="flex flex-col items-end gap-1.5 text-right">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border <?php echo esc_attr( $c_theme['badge_bg'] ); ?>">
-                                        <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $c_theme['accent_dot'] ); ?>"></span>
-                                        <?php echo esc_html( $prod['badge'] ?? 'Pembiayaan' ); ?>
-                                    </span>
-                                    <?php if ( ! empty( $prod['akad'] ) ) : ?>
-                                        <span class="text-2xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                            Akad: <?php echo esc_html( $prod['akad'] ); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Card Body Container with internal padding -->
+                    <div class="p-7 sm:p-9 flex flex-col justify-between flex-1 relative z-10 <?php echo ! empty( $p_img ) ? 'pt-6 sm:pt-7' : ''; ?>">
+                        <div>
+                            <?php if ( empty( $p_img ) ) : ?>
+                                <div class="flex items-start justify-between gap-4 mb-5">
+                                    <div class="w-14 h-14 rounded-2xl <?php echo esc_attr( $c_theme['icon_bg'] ); ?> flex items-center justify-center flex-shrink-0 shadow-2xs group-hover:scale-110 transition-transform duration-300">
+                                        <?php 
+                                        if ( ! empty( $prod['custom_svg'] ) ) {
+                                            echo $prod['custom_svg'];
+                                        } else {
+                                            echo wakalumi_render_pembiayaan_icon( $icon_key );
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="flex flex-col items-end gap-1.5 text-right">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border <?php echo esc_attr( $c_theme['badge_bg'] ); ?>">
+                                            <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $c_theme['accent_dot'] ); ?>"></span>
+                                            <?php echo esc_html( $prod['badge'] ?? 'Pembiayaan' ); ?>
                                         </span>
-                                    <?php endif; ?>
+                                        <?php if ( ! empty( $prod['akad'] ) ) : ?>
+                                            <span class="text-2xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                                Akad: <?php echo esc_html( $prod['akad'] ); ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
 
                         <!-- Title & Tagline -->
                         <div class="mb-4">
@@ -531,7 +535,7 @@ $color_themes = [
                     </div>
 
                     <!-- Card Actions -->
-                    <div class="relative z-10 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 flex-wrap">
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 flex-wrap mt-5">
                         <a 
                             href="https://wa.me/<?php echo esc_attr( $clean_wa ); ?>?text=<?php echo urlencode( $wa_msg ); ?>" 
                             target="_blank" 
@@ -551,6 +555,7 @@ $color_themes = [
                         </a>
                     </div>
                 </div>
+            </div>
             <?php endforeach; ?>
         </div>
     </div>

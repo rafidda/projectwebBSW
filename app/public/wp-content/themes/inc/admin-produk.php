@@ -253,6 +253,85 @@ function wakalumi_get_deposito_rates() {
 }
 
 /**
+ * Helper: Ambil Daftar Kartu Tenor Deposito (Dinamis dengan Fallback Nilai Lama)
+ */
+function wakalumi_get_deposito_tenor_cards() {
+    $saved = get_option( 'options_deposito_tenor_cards', null );
+    if ( is_array( $saved ) && ! empty( $saved ) ) {
+        return $saved;
+    }
+
+    // Fallback otomatis membaca dari opsi database bawaan lama jika belum pernah disimpan
+    $t1_badge  = get_option( 'options_deposito_t1_badge', 'Tenor Singkat' );
+    $t1_desc   = get_option( 'options_deposito_t1_desc', 'Likuiditas cepat dan fleksibel untuk perputaran dana jangka sangat pendek.' );
+    $t1_aro    = get_option( 'options_deposito_t1_aro', 'ARO Tersedia' );
+
+    $t3_badge  = get_option( 'options_deposito_t3_badge', 'Tenor Menengah' );
+    $t3_desc   = get_option( 'options_deposito_t3_desc', 'Kombinasi seimbang antara imbal hasil menarik dan durasi penempatan dana.' );
+    $t3_aro    = get_option( 'options_deposito_t3_aro', 'ARO Tersedia' );
+
+    $t6_badge  = get_option( 'options_deposito_t6_badge', 'Tenor Optimal' );
+    $t6_desc   = get_option( 'options_deposito_t6_desc', 'Pilihan populer untuk alokasi dana semesteran dengan nisbah lebih menguntungkan.' );
+    $t6_aro    = get_option( 'options_deposito_t6_aro', 'ARO Tersedia' );
+
+    $t12_badge = get_option( 'options_deposito_t12_badge', 'Tenor Panjang' );
+    $t12_high  = get_option( 'options_deposito_t12_highlight', 'Hasil Tertinggi' );
+    $t12_desc  = get_option( 'options_deposito_t12_desc', 'Pertumbuhan investasi maksimal dengan porsi nisbah bagi hasil paling optimal.' );
+    $t12_aro   = get_option( 'options_deposito_t12_aro', 'ARO Tersedia' );
+
+    return [
+        [
+            'tenor'      => '1 Bulan',
+            'tenor_num'  => 1,
+            'badge'      => $t1_badge,
+            'highlight'  => '',
+            'desc'       => $t1_desc,
+            'aro'        => $t1_aro,
+            'equiv'      => '',
+            'image'      => '',
+            'is_popular' => 0,
+            'urutan'     => 1,
+        ],
+        [
+            'tenor'      => '3 Bulan',
+            'tenor_num'  => 3,
+            'badge'      => $t3_badge,
+            'highlight'  => '',
+            'desc'       => $t3_desc,
+            'aro'        => $t3_aro,
+            'equiv'      => '',
+            'image'      => '',
+            'is_popular' => 0,
+            'urutan'     => 2,
+        ],
+        [
+            'tenor'      => '6 Bulan',
+            'tenor_num'  => 6,
+            'badge'      => $t6_badge,
+            'highlight'  => '',
+            'desc'       => $t6_desc,
+            'aro'        => $t6_aro,
+            'equiv'      => '',
+            'image'      => '',
+            'is_popular' => 0,
+            'urutan'     => 3,
+        ],
+        [
+            'tenor'      => '12 Bulan',
+            'tenor_num'  => 12,
+            'badge'      => $t12_badge,
+            'highlight'  => $t12_high,
+            'desc'       => $t12_desc,
+            'aro'        => $t12_aro,
+            'equiv'      => '',
+            'image'      => '',
+            'is_popular' => 1,
+            'urutan'     => 4,
+        ],
+    ];
+}
+
+/**
  * Render Halaman Admin Pengelolaan Produk Dana (Tabungan & Deposito)
  */
 function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
@@ -477,27 +556,59 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
         update_option( 'options_deposito_lps_desc', sanitize_textarea_field( $_POST['options_deposito_lps_desc'] ?? '' ) );
         update_option( 'options_deposito_lps_btn_text', sanitize_text_field( $_POST['options_deposito_lps_btn_text'] ?? '' ) );
 
-        // 5c. Deposito: Section Tenor & 4 Kartu Tenor
+        // 5c. Deposito: Section Tenor & Repeater Kartu Tenor Dinamis
         update_option( 'options_deposito_tenor_kicker', sanitize_text_field( $_POST['options_deposito_tenor_kicker'] ?? '' ) );
         update_option( 'options_deposito_tenor_title', sanitize_text_field( $_POST['options_deposito_tenor_title'] ?? '' ) );
         update_option( 'options_deposito_tenor_desc', sanitize_textarea_field( $_POST['options_deposito_tenor_desc'] ?? '' ) );
 
-        update_option( 'options_deposito_t1_badge', sanitize_text_field( $_POST['options_deposito_t1_badge'] ?? '' ) );
-        update_option( 'options_deposito_t1_desc', sanitize_textarea_field( $_POST['options_deposito_t1_desc'] ?? '' ) );
-        update_option( 'options_deposito_t1_aro', sanitize_text_field( $_POST['options_deposito_t1_aro'] ?? '' ) );
+        if ( isset( $_POST['dep_tenor_nama'] ) && is_array( $_POST['dep_tenor_nama'] ) ) {
+            $dep_tenors     = $_POST['dep_tenor_nama'];
+            $dep_nums       = $_POST['dep_tenor_num'] ?? [];
+            $dep_badges     = $_POST['dep_tenor_badge'] ?? [];
+            $dep_highs      = $_POST['dep_tenor_highlight'] ?? [];
+            $dep_descs      = $_POST['dep_tenor_desc'] ?? [];
+            $dep_aros       = $_POST['dep_tenor_aro'] ?? [];
+            $dep_equivs     = $_POST['dep_tenor_equiv'] ?? [];
+            $dep_images     = $_POST['dep_tenor_image'] ?? [];
+            $dep_populars   = $_POST['dep_tenor_popular'] ?? [];
+            $dep_urutans    = $_POST['dep_tenor_urutan'] ?? [];
 
-        update_option( 'options_deposito_t3_badge', sanitize_text_field( $_POST['options_deposito_t3_badge'] ?? '' ) );
-        update_option( 'options_deposito_t3_desc', sanitize_textarea_field( $_POST['options_deposito_t3_desc'] ?? '' ) );
-        update_option( 'options_deposito_t3_aro', sanitize_text_field( $_POST['options_deposito_t3_aro'] ?? '' ) );
+            $clean_dep_cards = [];
+            for ( $i = 0; $i < count( $dep_tenors ); $i++ ) {
+                $t_name = sanitize_text_field( $dep_tenors[$i] ?? '' );
+                if ( empty( $t_name ) ) continue;
 
-        update_option( 'options_deposito_t6_badge', sanitize_text_field( $_POST['options_deposito_t6_badge'] ?? '' ) );
-        update_option( 'options_deposito_t6_desc', sanitize_textarea_field( $_POST['options_deposito_t6_desc'] ?? '' ) );
-        update_option( 'options_deposito_t6_aro', sanitize_text_field( $_POST['options_deposito_t6_aro'] ?? '' ) );
+                $clean_dep_cards[] = [
+                    'tenor'      => $t_name,
+                    'tenor_num'  => intval( $dep_nums[$i] ?? 1 ),
+                    'badge'      => sanitize_text_field( $dep_badges[$i] ?? '' ),
+                    'highlight'  => sanitize_text_field( $dep_highs[$i] ?? '' ),
+                    'desc'       => sanitize_textarea_field( $dep_descs[$i] ?? '' ),
+                    'aro'        => sanitize_text_field( $dep_aros[$i] ?? 'ARO Tersedia' ),
+                    'equiv'      => sanitize_text_field( $dep_equivs[$i] ?? '' ),
+                    'image'      => esc_url_raw( $dep_images[$i] ?? '' ),
+                    'is_popular' => ! empty( $dep_populars[$i] ) ? 1 : 0,
+                    'urutan'     => intval( $dep_urutans[$i] ?? ( $i + 1 ) ),
+                ];
+            }
+            usort( $clean_dep_cards, function( $a, $b ) {
+                return ( $a['urutan'] ?? 0 ) <=> ( $b['urutan'] ?? 0 );
+            } );
+            update_option( 'options_deposito_tenor_cards', $clean_dep_cards );
 
-        update_option( 'options_deposito_t12_badge', sanitize_text_field( $_POST['options_deposito_t12_badge'] ?? '' ) );
-        update_option( 'options_deposito_t12_highlight', sanitize_text_field( $_POST['options_deposito_t12_highlight'] ?? '' ) );
-        update_option( 'options_deposito_t12_desc', sanitize_textarea_field( $_POST['options_deposito_t12_desc'] ?? '' ) );
-        update_option( 'options_deposito_t12_aro', sanitize_text_field( $_POST['options_deposito_t12_aro'] ?? '' ) );
+            // Sinkronisasi opsi legacy (1, 3, 6, 12 Bulan) agar aman jika dibaca komponen lama
+            foreach ( $clean_dep_cards as $c_item ) {
+                $t_num = $c_item['tenor_num'] ?? 0;
+                if ( in_array( $t_num, [ 1, 3, 6, 12 ] ) ) {
+                    update_option( "options_deposito_t{$t_num}_badge", $c_item['badge'] );
+                    update_option( "options_deposito_t{$t_num}_desc", $c_item['desc'] );
+                    update_option( "options_deposito_t{$t_num}_aro", $c_item['aro'] );
+                    if ( $t_num === 12 ) {
+                        update_option( 'options_deposito_t12_highlight', $c_item['highlight'] );
+                    }
+                }
+            }
+        }
 
         // 5d. Deposito: Keunggulan Card
         update_option( 'options_deposito_keunggulan_kicker', sanitize_text_field( $_POST['options_deposito_keunggulan_kicker'] ?? '' ) );
@@ -674,10 +785,11 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
     $dep_lps_desc      = get_option( 'options_deposito_lps_desc', 'Dana simpanan deposito Anda aman dan dijamin oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan batas maksimal penjaminan.' );
     $dep_lps_btn       = get_option( 'options_deposito_lps_btn_text', 'Hitung Simulasi Bagi Hasil' );
 
-    // Deposito: Tenor Section & 4 Cards
+    // Deposito: Tenor Section & Repeater Kartu Tenor Dinamis
     $dep_tenor_kicker  = get_option( 'options_deposito_tenor_kicker', 'Fleksibilitas Investasi' );
     $dep_tenor_title   = get_option( 'options_deposito_tenor_title', 'Pilihan Tenor Fleksibel Sesuai Kebutuhan' );
     $dep_tenor_desc    = get_option( 'options_deposito_tenor_desc', 'Pilih jangka waktu penempatan yang paling cocok untuk rencana likuiditas pribadi maupun perusahaan.' );
+    $dep_tenor_cards   = wakalumi_get_deposito_tenor_cards();
     $dep_t1_badge      = get_option( 'options_deposito_t1_badge', 'Tenor Singkat' );
     $dep_t1_desc       = get_option( 'options_deposito_t1_desc', 'Likuiditas cepat dan fleksibel untuk perputaran dana jangka sangat pendek.' );
     $dep_t1_aro        = get_option( 'options_deposito_t1_aro', 'ARO Tersedia' );
@@ -1565,10 +1677,10 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                     </div>
                 </div>
 
-                <!-- 2. Pilihan Tenor & 4 Kartu Tenor -->
+                <!-- 2. Pilihan Tenor & Repeater Kartu Tenor Dinamis -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        2. Section Pilihan Tenor &amp; 4 Kartu Jangka Waktu
+                        2. Section Pilihan Tenor &amp; Kartu Jangka Waktu (Dinamis)
                     </h2>
                     <table class="form-table" style="margin: 0 0 20px 0;">
                         <tr>
@@ -1585,54 +1697,126 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                         </tr>
                     </table>
 
-                    <h4 style="margin: 15px 0 10px 0; font-size: 13px; font-weight: 700; color: #334155;">Konfigurasi Teks Masing-Masing Kartu Tenor:</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
-                        
-                        <!-- Tenor 1 Bulan -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
-                            <div style="font-weight: 800; font-size: 14px; color: #088395; margin-bottom: 8px;">Tenor 1 Bulan</div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
-                            <input type="text" name="options_deposito_t1_badge" value="<?php echo esc_attr( $dep_t1_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
-                            <textarea name="options_deposito_t1_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t1_desc ); ?></textarea>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
-                            <input type="text" name="options_deposito_t1_aro" value="<?php echo esc_attr( $dep_t1_aro ); ?>" style="width: 100%;">
+                    <!-- Info Box Dinamis & Tombol Tambah Tenor -->
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <span style="font-size: 13px; font-weight: 700; color: #166534;">
+                                ✨ Daftar Kartu Tenor Deposito (Dinamis):
+                            </span>
+                            <p style="margin: 4px 0 0 0; color: #15803d; font-size: 12px;">
+                                Anda dapat mengunggah foto/grafis produk untuk setiap tenor (rasio rekomendasi 16:10 / 800×500 px agar pas tanpa terpotong), menambah tenor baru (misal: 24 Bulan atau program promo), mengubah nama, memindahkan urutan, atau menghapus kartu.
+                            </p>
                         </div>
+                        <button type="button" id="btn-add-deposito-tenor" class="button button-primary" style="background: #088395; border-color: #066e7d; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;">
+                            <span style="font-size: 16px; line-height: 1;">+</span> Tambah Kartu Tenor Baru
+                        </button>
+                    </div>
 
-                        <!-- Tenor 3 Bulan -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
-                            <div style="font-weight: 800; font-size: 14px; color: #088395; margin-bottom: 8px;">Tenor 3 Bulan</div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
-                            <input type="text" name="options_deposito_t3_badge" value="<?php echo esc_attr( $dep_t3_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
-                            <textarea name="options_deposito_t3_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t3_desc ); ?></textarea>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
-                            <input type="text" name="options_deposito_t3_aro" value="<?php echo esc_attr( $dep_t3_aro ); ?>" style="width: 100%;">
-                        </div>
+                    <!-- REPEATER CONTAINER KARTU TENOR DEPOSITO -->
+                    <div id="deposito-tenor-repeater-list" style="display: flex; flex-direction: column; gap: 20px;">
+                        <?php foreach ( $dep_tenor_cards as $d_idx => $card ) : 
+                            $c_tenor   = $card['tenor'] ?? ( ( $d_idx + 1 ) . ' Bulan' );
+                            $c_num     = $card['tenor_num'] ?? 1;
+                            $c_badge   = $card['badge'] ?? 'Tenor Deposito';
+                            $c_high    = $card['highlight'] ?? '';
+                            $c_desc    = $card['desc'] ?? '';
+                            $c_aro     = $card['aro'] ?? 'ARO Tersedia';
+                            $c_equiv   = $card['equiv'] ?? '';
+                            $c_image   = $card['image'] ?? '';
+                            $c_pop     = ! empty( $card['is_popular'] );
+                            $c_urutan  = $card['urutan'] ?? ( $d_idx + 1 );
+                        ?>
+                            <div class="deposito-tenor-card-item" style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: relative;">
+                                <!-- Header Card Item -->
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <span class="wkl-dep-num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #088395; color: #fff; font-weight: bold; font-size: 12px;">
+                                            <?php echo ( $d_idx + 1 ); ?>
+                                        </span>
+                                        <strong style="font-size: 15px; color: #0f172a;" class="wkl-dep-title-preview">
+                                            Tenor <?php echo esc_html( $c_tenor ); ?>
+                                        </strong>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <span style="font-size: 12px; color: #64748b;">Urutan:</span>
+                                        <input type="number" name="dep_tenor_urutan[]" value="<?php echo esc_attr( $c_urutan ); ?>" style="width: 60px; height: 30px;" min="1">
+                                        <button type="button" class="button wkl-btn-remove-dep-tenor" style="color: #ef4444; border-color: #fca5a5;">
+                                            🗑️ Hapus
+                                        </button>
+                                    </div>
+                                </div>
 
-                        <!-- Tenor 6 Bulan -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
-                            <div style="font-weight: 800; font-size: 14px; color: #088395; margin-bottom: 8px;">Tenor 6 Bulan</div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
-                            <input type="text" name="options_deposito_t6_badge" value="<?php echo esc_attr( $dep_t6_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
-                            <textarea name="options_deposito_t6_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t6_desc ); ?></textarea>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
-                            <input type="text" name="options_deposito_t6_aro" value="<?php echo esc_attr( $dep_t6_aro ); ?>" style="width: 100%;">
-                        </div>
+                                <!-- Fields Grid -->
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Nama / Label Tenor *</label>
+                                        <input type="text" name="dep_tenor_nama[]" value="<?php echo esc_attr( $c_tenor ); ?>" class="regular-text wkl-dep-name-input" style="width: 100%; font-weight: bold;" placeholder="misal: 1 Bulan, 24 Bulan" required>
+                                    </div>
 
-                        <!-- Tenor 12 Bulan -->
-                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 14px;">
-                            <div style="font-weight: 800; font-size: 14px; color: #0f766e; margin-bottom: 8px;">Tenor 12 Bulan (Pilihan Populer)</div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Kategori</label>
-                            <input type="text" name="options_deposito_t12_badge" value="<?php echo esc_attr( $dep_t12_badge ); ?>" style="width: 100%; margin-bottom: 8px;">
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Highlight Badge Kanan</label>
-                            <input type="text" name="options_deposito_t12_highlight" value="<?php echo esc_attr( $dep_t12_high ); ?>" style="width: 100%; margin-bottom: 8px; font-weight: bold; color: #0d9488;">
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
-                            <textarea name="options_deposito_t12_desc" rows="2" style="width: 100%; margin-bottom: 8px;"><?php echo esc_textarea( $dep_t12_desc ); ?></textarea>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label ARO</label>
-                            <input type="text" name="options_deposito_t12_aro" value="<?php echo esc_attr( $dep_t12_aro ); ?>" style="width: 100%;">
-                        </div>
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Durasi Tenor Angka (Bulan) *</label>
+                                        <input type="number" name="dep_tenor_num[]" value="<?php echo esc_attr( $c_num ); ?>" style="width: 100%; font-weight: bold;" min="1" placeholder="1" required>
+                                        <span style="font-size: 11px; color: #64748b;">Digunakan untuk interaktivitas kalkulator simulasi saat kartu diklik.</span>
+                                    </div>
+
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Badge Kategori</label>
+                                        <input type="text" name="dep_tenor_badge[]" value="<?php echo esc_attr( $c_badge ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Tenor Singkat, Tenor Optimal">
+                                    </div>
+
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Highlight Badge Kanan (Opsional)</label>
+                                        <input type="text" name="dep_tenor_highlight[]" value="<?php echo esc_attr( $c_high ); ?>" class="regular-text" style="width: 100%; font-weight: bold; color: #0d9488;" placeholder="misal: Hasil Tertinggi, Promo">
+                                    </div>
+
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Label ARO</label>
+                                        <input type="text" name="dep_tenor_aro[]" value="<?php echo esc_attr( $c_aro ); ?>" class="regular-text" style="width: 100%;" placeholder="ARO Tersedia">
+                                    </div>
+
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Indikasi Eqv. Rate Kustom (Opsional)</label>
+                                        <input type="text" name="dep_tenor_equiv[]" value="<?php echo esc_attr( $c_equiv ); ?>" class="regular-text" style="width: 100%; font-weight: bold; color: #059669;" placeholder="Otomatis dari tabel nisbah jika kosong">
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; padding-top: 20px;">
+                                        <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #0f766e; cursor: pointer;">
+                                            <input type="checkbox" class="wkl-dep-popular-cb" <?php checked( $c_pop ); ?>>
+                                            Kartu Unggulan / Pilihan Populer (Aksen Border Tebal)
+                                        </label>
+                                        <input type="hidden" name="dep_tenor_popular[]" class="wkl-dep-popular-hidden" value="<?php echo $c_pop ? '1' : '0'; ?>">
+                                    </div>
+
+                                    <!-- Upload Foto / Gambar Produk Deposito -->
+                                    <div style="grid-column: 1 / -1;" class="wkl-dep-img-field-wrap">
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">
+                                            Gambar / Foto Produk Deposito (Opsional - Rekomendasi Rasio 16:10 / 800×500 px)
+                                        </label>
+                                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                            <input type="text" name="dep_tenor_image[]" value="<?php echo esc_attr( $c_image ); ?>" class="regular-text" style="flex: 1; min-width: 250px;" placeholder="https://... atau klik Unggah Gambar">
+                                            <button type="button" class="button wkl-upload-dep-img-btn" style="display: inline-flex; align-items: center; gap: 5px;">
+                                                <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Gambar
+                                            </button>
+                                            <button type="button" class="button button-link-delete wkl-remove-dep-img-btn" style="color: #ef4444; <?php echo empty( $c_image ) ? 'display:none;' : ''; ?>">
+                                                ✕ Hapus
+                                            </button>
+                                        </div>
+                                        <div class="wkl-dep-img-preview-box" style="margin-top: 8px;">
+                                            <img class="wkl-dep-img-preview" src="<?php echo esc_url( $c_image ); ?>" style="height: 65px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; <?php echo empty( $c_image ) ? 'display:none;' : ''; ?>" alt="Preview Deposito">
+                                        </div>
+                                        <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">
+                                            Rekomendasi rasio gambar <strong>16:10</strong> (misal 800×500 px). Jika gambar diunggah dengan rasio berbeda, sistem otomatis menyesuaikan proporsi (<em>object-cover</em>) tanpa merusak tampilan kartu.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Deskripsi Singkat -->
+                                <div>
+                                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Deskripsi Singkat Tenor</label>
+                                    <textarea name="dep_tenor_desc[]" rows="2" style="width: 100%;" placeholder="Keterangan singkat keunggulan tenor ini..."><?php echo esc_textarea( $c_desc ); ?></textarea>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
@@ -2216,6 +2400,100 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
         </tr>
     </template>
 
+    <!-- TEMPLATE: DEPOSITO TENOR CARD CLONE -->
+    <template id="deposito-tenor-card-template">
+        <div class="deposito-tenor-card-item" style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); position: relative;">
+            <!-- Header Card Item -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="wkl-dep-num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #088395; color: #fff; font-weight: bold; font-size: 12px;">
+                        #
+                    </span>
+                    <strong style="font-size: 15px; color: #0f172a;" class="wkl-dep-title-preview">
+                        Tenor Baru
+                    </strong>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 12px; color: #64748b;">Urutan:</span>
+                    <input type="number" name="dep_tenor_urutan[]" value="5" style="width: 60px; height: 30px;" min="1">
+                    <button type="button" class="button wkl-btn-remove-dep-tenor" style="color: #ef4444; border-color: #fca5a5;">
+                        🗑️ Hapus
+                    </button>
+                </div>
+            </div>
+
+            <!-- Fields Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Nama / Label Tenor *</label>
+                    <input type="text" name="dep_tenor_nama[]" value="" class="regular-text wkl-dep-name-input" style="width: 100%; font-weight: bold;" placeholder="misal: 24 Bulan" required>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Durasi Tenor Angka (Bulan) *</label>
+                    <input type="number" name="dep_tenor_num[]" value="24" style="width: 100%; font-weight: bold;" min="1" placeholder="24" required>
+                    <span style="font-size: 11px; color: #64748b;">Digunakan untuk interaktivitas kalkulator simulasi saat kartu diklik.</span>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Badge Kategori</label>
+                    <input type="text" name="dep_tenor_badge[]" value="Tenor Spesial" class="regular-text" style="width: 100%;" placeholder="misal: Tenor Singkat, Tenor Optimal">
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Highlight Badge Kanan (Opsional)</label>
+                    <input type="text" name="dep_tenor_highlight[]" value="" class="regular-text" style="width: 100%; font-weight: bold; color: #0d9488;" placeholder="misal: Hasil Tertinggi, Promo">
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Label ARO</label>
+                    <input type="text" name="dep_tenor_aro[]" value="ARO Tersedia" class="regular-text" style="width: 100%;" placeholder="ARO Tersedia">
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Indikasi Eqv. Rate Kustom (Opsional)</label>
+                    <input type="text" name="dep_tenor_equiv[]" value="" class="regular-text" style="width: 100%; font-weight: bold; color: #059669;" placeholder="Otomatis dari tabel nisbah jika kosong">
+                </div>
+
+                <div style="display: flex; align-items: center; padding-top: 20px;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #0f766e; cursor: pointer;">
+                        <input type="checkbox" class="wkl-dep-popular-cb">
+                        Kartu Unggulan / Pilihan Populer (Aksen Border Tebal)
+                    </label>
+                    <input type="hidden" name="dep_tenor_popular[]" class="wkl-dep-popular-hidden" value="0">
+                </div>
+
+                <!-- Upload Foto / Gambar Produk Deposito -->
+                <div style="grid-column: 1 / -1;" class="wkl-dep-img-field-wrap">
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">
+                        Gambar / Foto Produk Deposito (Opsional - Rekomendasi Rasio 16:10 / 800×500 px)
+                    </label>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" name="dep_tenor_image[]" value="" class="regular-text" style="flex: 1; min-width: 250px;" placeholder="https://... atau klik Unggah Gambar">
+                        <button type="button" class="button wkl-upload-dep-img-btn" style="display: inline-flex; align-items: center; gap: 5px;">
+                            <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Gambar
+                        </button>
+                        <button type="button" class="button button-link-delete wkl-remove-dep-img-btn" style="color: #ef4444; display: none;">
+                            ✕ Hapus
+                        </button>
+                    </div>
+                    <div class="wkl-dep-img-preview-box" style="margin-top: 8px;">
+                        <img class="wkl-dep-img-preview" src="" style="height: 65px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; display: none;" alt="Preview Deposito">
+                    </div>
+                    <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">
+                        Rekomendasi rasio gambar <strong>16:10</strong> (misal 800×500 px). Jika gambar diunggah dengan rasio berbeda, sistem otomatis menyesuaikan proporsi (<em>object-cover</em>) tanpa merusak tampilan kartu.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Deskripsi Singkat -->
+            <div>
+                <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Deskripsi Singkat Tenor</label>
+                <textarea name="dep_tenor_desc[]" rows="2" style="width: 100%;" placeholder="Keterangan singkat keunggulan tenor ini..."></textarea>
+            </div>
+        </div>
+    </template>
+
     <!-- REPEATER, TAB SWITCHER & UPLOAD JAVASCRIPT -->
     <script>
     // Note: window.wklSwitchTab is defined early before navigation tabs
@@ -2415,6 +2693,69 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
             });
         }
 
+        // Repeater Kartu Tenor Deposito (Dinamis)
+        var depListContainer = document.getElementById('deposito-tenor-repeater-list');
+        var addDepTenorBtn = document.getElementById('btn-add-deposito-tenor');
+        var depTenorTmpl = document.getElementById('deposito-tenor-card-template');
+
+        function updateDepNumbers() {
+            if (!depListContainer) return;
+            var cards = depListContainer.querySelectorAll('.deposito-tenor-card-item');
+            cards.forEach(function(card, idx) {
+                var numSpan = card.querySelector('.wkl-dep-num');
+                if (numSpan) numSpan.textContent = (idx + 1);
+                var orderInput = card.querySelector('input[name="dep_tenor_urutan[]"]');
+                if (orderInput && (!orderInput.value || orderInput.value == idx)) {
+                    orderInput.value = (idx + 1);
+                }
+            });
+        }
+
+        function bindDepCardEvents(card) {
+            var removeBtn = card.querySelector('.wkl-btn-remove-dep-tenor');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    if (confirm('Hapus kartu tenor deposito ini?')) {
+                        card.remove();
+                        updateDepNumbers();
+                    }
+                });
+            }
+
+            var nameInput = card.querySelector('.wkl-dep-name-input');
+            var titlePreview = card.querySelector('.wkl-dep-title-preview');
+            if (nameInput && titlePreview) {
+                nameInput.addEventListener('input', function() {
+                    titlePreview.textContent = 'Tenor ' + (this.value.trim() || 'Baru');
+                });
+            }
+
+            var popCb = card.querySelector('.wkl-dep-popular-cb');
+            var popHidden = card.querySelector('.wkl-dep-popular-hidden');
+            if (popCb && popHidden) {
+                popCb.addEventListener('change', function() {
+                    popHidden.value = this.checked ? '1' : '0';
+                });
+            }
+        }
+
+        if (depListContainer) {
+            depListContainer.querySelectorAll('.deposito-tenor-card-item').forEach(function(card) {
+                bindDepCardEvents(card);
+            });
+        }
+
+        if (addDepTenorBtn && depTenorTmpl && depListContainer) {
+            addDepTenorBtn.addEventListener('click', function() {
+                var clone = depTenorTmpl.content.cloneNode(true);
+                var newCard = clone.querySelector('.deposito-tenor-card-item');
+                bindDepCardEvents(newCard);
+                depListContainer.appendChild(newCard);
+                updateDepNumbers();
+                newCard.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
         // Universal File / PDF Uploader
         if (window.jQuery) {
             jQuery(document).on('click', '.wkl-upload-file-btn', function(e) {
@@ -2473,6 +2814,52 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                 var wrap = btn.closest('.wkl-img-field-wrap');
                 var input = wrap.find('input[name="tab_image[]"]');
                 var preview = wrap.find('img.wkl-img-preview');
+                input.val('').trigger('change');
+                if (preview.length) {
+                    preview.attr('src', '').hide();
+                }
+                btn.hide();
+            });
+
+            // Media Uploader Kartu Deposito
+            jQuery(document).on('click', '.wkl-upload-dep-img-btn', function(e) {
+                e.preventDefault();
+                var btn = jQuery(this);
+                var wrap = btn.closest('.wkl-dep-img-field-wrap');
+                var input = wrap.find('input[name="dep_tenor_image[]"]');
+                var preview = wrap.find('img.wkl-dep-img-preview');
+                var removeBtn = wrap.find('.wkl-remove-dep-img-btn');
+
+                var frame = wp.media({
+                    title: 'Pilih atau Unggah Foto Produk Deposito (Rekomendasi Rasio 16:10)',
+                    button: { text: 'Gunakan Gambar Ini' },
+                    multiple: false,
+                    library: { type: 'image' }
+                });
+
+                frame.on('select', function() {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    var url = (attachment.sizes && attachment.sizes.medium_large)
+                            ? attachment.sizes.medium_large.url
+                            : ((attachment.sizes && attachment.sizes.medium) ? attachment.sizes.medium.url : attachment.url);
+                    input.val(attachment.url).trigger('change');
+                    if (preview.length) {
+                        preview.attr('src', url).show();
+                    }
+                    if (removeBtn.length) {
+                        removeBtn.show();
+                    }
+                });
+
+                frame.open();
+            });
+
+            jQuery(document).on('click', '.wkl-remove-dep-img-btn', function(e) {
+                e.preventDefault();
+                var btn = jQuery(this);
+                var wrap = btn.closest('.wkl-dep-img-field-wrap');
+                var input = wrap.find('input[name="dep_tenor_image[]"]');
+                var preview = wrap.find('img.wkl-dep-img-preview');
                 input.val('').trigger('change');
                 if (preview.length) {
                     preview.attr('src', '').hide();

@@ -768,7 +768,7 @@ if ( ! empty( $tabungan_preview_list ) ) :
                 $p_tagline  = ! empty( $prod['tagline'] ) ? $prod['tagline'] : '';
                 $target_url = home_url( '/produk/tabungan-syariah#' . $p_slug );
             ?>
-                <div class="card group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border rounded-2xl overflow-hidden p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_style['accent_bar'] ); ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 <?php echo esc_attr( $c_style['card_hover'] ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
+                <div class="card group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_style['accent_bar'] ); ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 <?php echo esc_attr( $c_style['card_hover'] ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
                     
                     <!-- Watermark Logo Background (Subtle & Consistent with untitled4.png) -->
                     <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.065] dark:opacity-[0.04] pointer-events-none select-none overflow-hidden transition-all duration-700 ease-out group-hover:scale-115 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:opacity-[0.11] dark:group-hover:opacity-[0.07] mix-blend-multiply dark:mix-blend-screen z-0">
@@ -779,90 +779,94 @@ if ( ! empty( $tabungan_preview_list ) ) :
                              aria-hidden="true">
                     </div>
 
-                    <!-- Top Graphic or Icon + Badge -->
+                    <!-- Top Graphic Slot: Flush Edge-to-Edge ("Ngepas" tanpa bezel) -->
                     <?php $p_image = ! empty( $prod['image'] ) ? $prod['image'] : ''; ?>
                     <?php if ( ! empty( $p_image ) ) : ?>
-                        <!-- Dedicated 16:10 Graphic Slot -->
-                        <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 shadow-sm z-10 group/img">
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
                             <img src="<?php echo esc_url( $p_image ); ?>" 
                                  alt="<?php echo esc_attr( $prod['nama'] ); ?>" 
                                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                                  loading="lazy">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <span class="absolute top-2.5 right-2.5 inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm <?php echo esc_attr( $c_style['badge'] ); ?>">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                            <span class="absolute top-3 right-3 inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm z-10 <?php echo esc_attr( $c_style['badge'] ); ?>">
                                 <?php echo esc_html( $p_badge ); ?>
                             </span>
-                        </div>
-                    <?php else : ?>
-                        <!-- Top Badge & Icon (Fallback) -->
-                        <div class="flex items-center justify-between gap-2 mb-4 relative z-10">
-                            <span class="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border <?php echo esc_attr( $c_style['badge'] ); ?>">
-                                <?php echo esc_html( $p_badge ); ?>
-                            </span>
-                            <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-dark-border flex items-center justify-center text-slate-500 dark:text-slate-400 <?php echo esc_attr( $c_style['icon_bg'] ); ?> group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
-                                <?php if ( $p_slug === 'pendidikan' ) : ?>
-                                    <!-- Topi Edukasi / Pelajar -->
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
-                                <?php elseif ( $p_slug === 'haji-umroh' ) : ?>
-                                    <!-- Menara / Bintang Ibadah -->
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                                <?php elseif ( $p_slug === 'ukhuwah' ) : ?>
-                                    <!-- Kado Berkah / Hadiah -->
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-                                <?php else : ?>
-                                    <!-- Gedung Bank Syariah / Brankas Amanah -->
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 10.5h18" /></svg>
-                                <?php endif; ?>
-                            </div>
                         </div>
                     <?php endif; ?>
 
-                    <!-- Title & Tagline -->
-                    <div class="mb-3 relative z-10">
-                        <div class="min-h-[3.25rem] flex items-center justify-start">
-                            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white <?php echo esc_attr( $c_style['title_hover'] ); ?> transition-colors duration-200 leading-snug text-balance">
-                                <a href="<?php echo esc_url( $target_url ); ?>">
-                                    <?php echo esc_html( $prod['nama'] ); ?>
-                                </a>
-                            </h3>
-                        </div>
-                        <?php if ( $p_tagline ) : ?>
-                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
-                                <?php echo esc_html( $p_tagline ); ?>
-                            </p>
+                    <!-- Card Body with Internal Padding -->
+                    <div class="p-6 flex flex-col flex-1 relative z-10 <?php echo ! empty( $p_image ) ? 'pt-5' : ''; ?>">
+                        <?php if ( empty( $p_image ) ) : ?>
+                            <!-- Top Badge & Icon (Fallback when no image) -->
+                            <div class="flex items-center justify-between gap-2 mb-4">
+                                <span class="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border <?php echo esc_attr( $c_style['badge'] ); ?>">
+                                    <?php echo esc_html( $p_badge ); ?>
+                                </span>
+                                <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-dark-border flex items-center justify-center text-slate-500 dark:text-slate-400 <?php echo esc_attr( $c_style['icon_bg'] ); ?> group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-sm">
+                                    <?php if ( $p_slug === 'pendidikan' ) : ?>
+                                        <!-- Topi Edukasi / Pelajar -->
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
+                                    <?php elseif ( $p_slug === 'haji-umroh' ) : ?>
+                                        <!-- Menara / Bintang Ibadah -->
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
+                                    <?php elseif ( $p_slug === 'ukhuwah' ) : ?>
+                                        <!-- Kado Berkah / Hadiah -->
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                                    <?php else : ?>
+                                        <!-- Gedung Bank Syariah / Brankas Amanah -->
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 10.5h18" /></svg>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         <?php endif; ?>
-                    </div>
 
-                    <!-- Brief Description -->
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-5 line-clamp-3 relative z-10 flex-grow">
-                        <?php echo esc_html( $prod['desc'] ?? '' ); ?>
-                    </p>
+                        <!-- Title & Tagline -->
+                        <div class="mb-3">
+                            <div class="min-h-[3.25rem] flex items-center justify-start">
+                                <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white <?php echo esc_attr( $c_style['title_hover'] ); ?> transition-colors duration-200 leading-snug text-balance">
+                                    <a href="<?php echo esc_url( $target_url ); ?>">
+                                        <?php echo esc_html( $prod['nama'] ); ?>
+                                    </a>
+                                </h3>
+                            </div>
+                            <?php if ( $p_tagline ) : ?>
+                                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
+                                    <?php echo esc_html( $p_tagline ); ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
 
-                    <!-- Info Meta: Akad, Biaya Admin & Setoran -->
-                    <div class="pt-3 border-t border-slate-100 dark:border-dark-border/60 mb-4 grid grid-cols-2 gap-2 text-[11px] relative z-10">
-                        <div>
-                            <span class="text-slate-400 block text-[10px]">Akad Syariah</span>
-                            <span class="font-semibold text-slate-700 dark:text-slate-300 truncate block"><?php echo esc_html( $prod['akad'] ); ?></span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-slate-400 block text-[10px]">Setoran Awal</span>
-                            <span class="font-bold text-primary-600 dark:text-primary-400 truncate block"><?php echo esc_html( $prod['min_setor'] ); ?></span>
-                        </div>
-                        <div class="col-span-2 pt-1.5 flex items-center justify-between text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold border-t border-slate-50 dark:border-dark-border/30">
-                            <span class="text-slate-400 font-normal">Biaya Admin Bulanan:</span>
-                            <span class="flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                <?php echo esc_html( ! empty( $prod['biaya_admin'] ) ? $prod['biaya_admin'] : 'Gratis / Bebas Biaya' ); ?>
-                            </span>
-                        </div>
-                    </div>
+                        <!-- Brief Description -->
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-5 line-clamp-3 flex-grow">
+                            <?php echo esc_html( $prod['desc'] ?? '' ); ?>
+                        </p>
 
-                    <!-- Link Pelajari Selengkapnya -->
-                    <div class="mt-auto relative z-10 pt-1">
-                        <a href="<?php echo esc_url( $target_url ); ?>" class="inline-flex items-center text-xs font-bold <?php echo esc_attr( $c_style['btn'] ); ?> transition-all group-hover:translate-x-1">
-                            Pelajari Selengkapnya
-                            <svg class="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                        </a>
+                        <!-- Info Meta: Akad, Biaya Admin & Setoran -->
+                        <div class="pt-3 border-t border-slate-100 dark:border-dark-border/60 mb-4 grid grid-cols-2 gap-2 text-[11px]">
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Akad Syariah</span>
+                                <span class="font-semibold text-slate-700 dark:text-slate-300 truncate block"><?php echo esc_html( $prod['akad'] ); ?></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-slate-400 block text-[10px]">Setoran Awal</span>
+                                <span class="font-bold text-primary-600 dark:text-primary-400 truncate block"><?php echo esc_html( $prod['min_setor'] ); ?></span>
+                            </div>
+                            <div class="col-span-2 pt-1.5 flex items-center justify-between text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold border-t border-slate-50 dark:border-dark-border/30">
+                                <span class="text-slate-400 font-normal">Biaya Admin Bulanan:</span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                    <?php echo esc_html( ! empty( $prod['biaya_admin'] ) ? $prod['biaya_admin'] : 'Gratis / Bebas Biaya' ); ?>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Link Pelajari Selengkapnya -->
+                        <div class="mt-auto pt-1">
+                            <a href="<?php echo esc_url( $target_url ); ?>" class="inline-flex items-center text-xs font-bold <?php echo esc_attr( $c_style['btn'] ); ?> transition-all group-hover:translate-x-1">
+                                Pelajari Selengkapnya
+                                <svg class="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             <?php 
@@ -887,6 +891,7 @@ if ( ! empty( $tabungan_preview_list ) ) :
             </a>
         </div>
     </div>
+</section>
 <?php endif; ?>
 
 
@@ -1118,81 +1123,85 @@ if ( ! empty( $pembiayaan_preview_list ) ) :
                 $p_tagline  = ! empty( $prod['tagline'] ) ? $prod['tagline'] : '';
                 $p_image    = ! empty( $prod['image'] ) ? $prod['image'] : '';
             ?>
-                <div class="group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-dark border <?php echo esc_attr( $theme['border'] ?? 'border-slate-200/90 dark:border-slate-800/80' ); ?> p-6 sm:p-7 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-2xl overflow-hidden <?php echo esc_attr( $theme['hover'] ?? '' ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
+                <div class="group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-dark border <?php echo esc_attr( $theme['border'] ?? 'border-slate-200/90 dark:border-slate-800/80' ); ?> transition-all duration-500 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-2xl overflow-hidden <?php echo esc_attr( $theme['hover'] ?? '' ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
                     
                     <!-- Watermark Logo wm-wkl.png di pojok kanan bawah -->
-                    <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.035] dark:opacity-[0.05] pointer-events-none transition-all duration-700 ease-out group-hover:scale-115 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.09] select-none overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.035] dark:opacity-[0.05] pointer-events-none transition-all duration-700 ease-out group-hover:scale-115 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.09] select-none overflow-hidden z-0">
                         <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/wm-wkl.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy" aria-hidden="true">
                     </div>
 
-                    <!-- Top Row: Image (16:10) or Icon & Badge -->
-                    <div class="relative z-10 mb-4">
-                        <?php if ( ! empty( $p_image ) ) : ?>
-                            <!-- Dedicated 16:10 Graphic Slot -->
-                            <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 shadow-sm group/img">
-                                <img src="<?php echo esc_url( $p_image ); ?>" 
-                                     alt="<?php echo esc_attr( $prod['nama'] ); ?>" 
-                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                                     loading="lazy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <span class="absolute top-2.5 right-2.5 inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm tracking-wide <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
-                                    <?php echo esc_html( $p_badge ); ?>
-                                </span>
-                            </div>
-                        <?php else : ?>
-                            <div class="flex items-center justify-between gap-3 mb-4">
-                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 <?php echo esc_attr( $theme['icon_bg'] ?? 'bg-teal-50 text-teal-600' ); ?>">
-                                    <?php echo function_exists( 'wakalumi_render_pembiayaan_icon' ) ? wakalumi_render_pembiayaan_icon( $prod['icon'] ?? 'coins' ) : ''; ?>
-                                </div>
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
-                                    <?php echo esc_html( $p_badge ); ?>
-                                </span>
-                            </div>
-                        <?php endif; ?>
-
-                        <!-- Title Wrapper with Balanced Height & Alignment -->
-                        <div class="min-h-[3.75rem] flex items-center justify-start my-1">
-                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white transition-colors duration-200 leading-snug text-balance <?php echo esc_attr( $theme['title_hover'] ?? 'group-hover:text-teal-600' ); ?>">
-                                <a href="<?php echo esc_url( $target_url ); ?>">
-                                    <?php echo esc_html( $prod['nama'] ); ?>
-                                </a>
-                            </h3>
-                        </div>
-
-                        <?php if ( $p_tagline ) : ?>
-                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
-                                <?php echo esc_html( $p_tagline ); ?>
-                            </p>
-                        <?php endif; ?>
-
-                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-3 line-clamp-3 leading-relaxed">
-                            <?php echo esc_html( $prod['desc'] ?? '' ); ?>
-                        </p>
-                    </div>
-
-                    <!-- Bottom Info Box & Link -->
-                    <div class="relative z-10 pt-4 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
-                        <div class="grid grid-cols-2 gap-2 text-[11px] mb-4 bg-slate-50/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800/60">
-                            <div>
-                                <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-medium">Limit Plafon</span>
-                                <span class="font-bold text-slate-800 dark:text-slate-200 truncate block"><?php echo esc_html( $prod['limit_primary'] ?? '-' ); ?></span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-medium">Jangka Waktu</span>
-                                <span class="font-bold text-primary-600 dark:text-primary-400 truncate block"><?php echo esc_html( $prod['limit_secondary'] ?? '-' ); ?></span>
-                            </div>
-                            <div class="col-span-2 pt-1.5 border-t border-slate-200/50 dark:border-slate-800/50 text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
-                                <span>Akad:</span>
-                                <span class="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[140px]"><?php echo esc_html( $prod['akad'] ?? '-' ); ?></span>
-                            </div>
-                        </div>
-
-                        <a href="<?php echo esc_url( $target_url ); ?>" class="inline-flex items-center justify-between w-full text-xs font-bold text-slate-700 dark:text-slate-300 <?php echo esc_attr( $theme['pill_hover'] ?? 'hover:text-primary-600' ); ?> group/btn py-1 transition-colors">
-                            <span>Lihat Detail &amp; Simulasi</span>
-                            <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover/btn:translate-x-1 group-hover/btn:bg-primary-500 group-hover/btn:text-white transition-all">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                    <!-- Top Graphic Slot: Flush Edge-to-Edge ("Ngepas" tanpa bezel) -->
+                    <?php if ( ! empty( $p_image ) ) : ?>
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
+                            <img src="<?php echo esc_url( $p_image ); ?>" 
+                                 alt="<?php echo esc_attr( $prod['nama'] ); ?>" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                 loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+                            <span class="absolute top-3 right-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm tracking-wide z-10 <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
+                                <?php echo esc_html( $p_badge ); ?>
                             </span>
-                        </a>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Card Body with Internal Padding -->
+                    <div class="p-6 sm:p-7 flex flex-col justify-between flex-1 relative z-10 <?php echo ! empty( $p_image ) ? 'pt-5' : ''; ?>">
+                        <div>
+                            <?php if ( empty( $p_image ) ) : ?>
+                                <div class="flex items-center justify-between gap-3 mb-4">
+                                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 <?php echo esc_attr( $theme['icon_bg'] ?? 'bg-teal-50 text-teal-600' ); ?>">
+                                        <?php echo function_exists( 'wakalumi_render_pembiayaan_icon' ) ? wakalumi_render_pembiayaan_icon( $prod['icon'] ?? 'coins' ) : ''; ?>
+                                    </div>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide <?php echo esc_attr( $theme['badge_bg'] ?? 'bg-slate-100 text-slate-700' ); ?>">
+                                        <?php echo esc_html( $p_badge ); ?>
+                                    </span>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Title Wrapper with Balanced Height & Alignment -->
+                            <div class="min-h-[3.75rem] flex items-center justify-start my-1">
+                                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white transition-colors duration-200 leading-snug text-balance <?php echo esc_attr( $theme['title_hover'] ?? 'group-hover:text-teal-600' ); ?>">
+                                    <a href="<?php echo esc_url( $target_url ); ?>">
+                                        <?php echo esc_html( $prod['nama'] ); ?>
+                                    </a>
+                                </h3>
+                            </div>
+
+                            <?php if ( $p_tagline ) : ?>
+                                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                                    <?php echo esc_html( $p_tagline ); ?>
+                                </p>
+                            <?php endif; ?>
+
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-3 line-clamp-3 leading-relaxed">
+                                <?php echo esc_html( $prod['desc'] ?? '' ); ?>
+                            </p>
+                        </div>
+
+                        <!-- Bottom Info Box & Link -->
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800/80 mt-5">
+                            <div class="grid grid-cols-2 gap-2 text-[11px] mb-4 bg-slate-50/80 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800/60">
+                                <div>
+                                    <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-medium">Limit Plafon</span>
+                                    <span class="font-bold text-slate-800 dark:text-slate-200 truncate block"><?php echo esc_html( $prod['limit_primary'] ?? '-' ); ?></span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-medium">Jangka Waktu</span>
+                                    <span class="font-bold text-primary-600 dark:text-primary-400 truncate block"><?php echo esc_html( $prod['limit_secondary'] ?? '-' ); ?></span>
+                                </div>
+                                <div class="col-span-2 pt-1.5 border-t border-slate-200/50 dark:border-slate-800/50 text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                                    <span>Akad:</span>
+                                    <span class="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[140px]"><?php echo esc_html( $prod['akad'] ?? '-' ); ?></span>
+                                </div>
+                            </div>
+
+                            <a href="<?php echo esc_url( $target_url ); ?>" class="inline-flex items-center justify-between w-full text-xs font-bold text-slate-700 dark:text-slate-300 <?php echo esc_attr( $theme['pill_hover'] ?? 'hover:text-primary-600' ); ?> group/btn py-1 transition-colors">
+                                <span>Lihat Detail &amp; Simulasi</span>
+                                <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover/btn:translate-x-1 group-hover/btn:bg-primary-500 group-hover/btn:text-white transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             <?php

@@ -218,8 +218,11 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                         <?php 
                                         $header_tabungan_list = function_exists( 'wakalumi_get_tabungan_list' ) ? wakalumi_get_tabungan_list() : [];
                                         foreach ( $header_tabungan_list as $h_tab ) : 
-                                            $h_slug  = esc_attr( $h_tab['slug'] ?? 'tabungan' );
-                                            $h_color = $h_tab['color'] ?? 'teal';
+                                            $h_slug    = esc_attr( $h_tab['slug'] ?? 'tabungan' );
+                                            $h_color   = $h_tab['color'] ?? 'teal';
+                                            $h_image   = ! empty( $h_tab['image'] ) ? esc_url( $h_tab['image'] ) : '';
+                                            $h_badge   = ! empty( $h_tab['badge'] ) ? $h_tab['badge'] : 'Tabungan Syariah';
+                                            $h_tagline = ! empty( $h_tab['tagline'] ) ? $h_tab['tagline'] : '';
 
                                             $h_bg_class = 'bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400';
                                             if ( $h_color === 'blue' ) {
@@ -243,19 +246,39 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                                 $h_icon_svg = '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v3a2 2 0 01-2 2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>';
                                             }
                                         ?>
-                                            <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah#' . $h_slug ) ); ?>" class="mega-link group/item">
+                                            <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah/#' . $h_slug ) ); ?>" 
+                                               class="mega-link group/item product-hover-item"
+                                               data-name="<?php echo esc_attr( $h_tab['nama'] ); ?>"
+                                               data-badge="<?php echo esc_attr( $h_badge ); ?>"
+                                               data-tagline="<?php echo esc_attr( $h_tagline ); ?>"
+                                               data-image="<?php echo esc_url( $h_image ); ?>">
                                                 <div class="w-8 h-8 rounded-xl <?php echo esc_attr( $h_bg_class ); ?> flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
                                                     <?php echo $h_icon_svg; ?>
                                                 </div>
                                                 <div>
                                                     <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug"><?php echo esc_html( $h_tab['nama'] ); ?></span>
-                                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug"><?php echo esc_html( $h_tab['tagline'] ); ?></span>
+                                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug"><?php echo esc_html( $h_tagline ); ?></span>
                                                 </div>
                                             </a>
                                         <?php endforeach; ?>
 
                                         <!-- Deposito Mudharabah -->
-                                        <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="mega-link group/item">
+                                        <?php
+                                        $dep_cards_sample = function_exists( 'wakalumi_get_deposito_tenor_cards' ) ? wakalumi_get_deposito_tenor_cards() : [];
+                                        $dep_sample_img   = '';
+                                        foreach ( $dep_cards_sample as $dc ) {
+                                            if ( ! empty( $dc['image'] ) ) {
+                                                $dep_sample_img = $dc['image'];
+                                                break;
+                                            }
+                                        }
+                                        ?>
+                                        <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah/#tenor' ) ); ?>" 
+                                           class="mega-link group/item product-hover-item"
+                                           data-name="Deposito Mudharabah"
+                                           data-badge="Investasi Syariah"
+                                           data-tagline="Tenor 1, 3, 6, 12 Bulan • Nisbah Kompetitif"
+                                           data-image="<?php echo esc_url( $dep_sample_img ); ?>">
                                             <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                                             </div>
@@ -268,13 +291,13 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                 </div>
 
                                 <div class="pt-3 px-2">
-                                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="text-xs font-bold text-teal-700 hover:text-teal-800 dark:text-teal-400 inline-flex items-center gap-1">
+                                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah/' ) ); ?>" class="text-xs font-bold text-teal-700 hover:text-teal-800 dark:text-teal-400 inline-flex items-center gap-1">
                                         Lihat Halaman Simpanan &rarr;
                                     </a>
                                 </div>
                             </div>
 
-                            <!-- Kolom 2: Penyaluran Dana (Lending) (4 Cols) -->
+                            <!-- Kolom 2: Penyaluran Dana (Lending) (4 Cols) - 100% Dinamis dari Database -->
                             <div class="col-span-12 lg:col-span-4 flex flex-col justify-between pr-0 lg:pr-3 lg:border-r border-slate-200/80 dark:border-slate-800">
                                 <div>
                                     <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-primary-50 dark:bg-primary-950 text-primary-800 dark:text-teal-300 w-fit mb-3 border border-primary-200/50 dark:border-primary-800/50">
@@ -283,64 +306,79 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                     </div>
 
                                     <div class="space-y-1.5">
-                                        <!-- Pembiayaan 1000 Pedagang -->
-                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#pedagang' ) ); ?>" class="mega-link group/item">
-                                            <div class="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                                            </div>
-                                            <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pembiayaan 1000 Pedagang</span>
-                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Bantuan modal usaha & pertumbuhan UMKM</span>
-                                            </div>
-                                        </a>
+                                        <?php 
+                                        $header_pembiayaan_list = function_exists( 'wakalumi_get_pembiayaan_list' ) ? wakalumi_get_pembiayaan_list() : [];
+                                        // Tampilkan 4 produk pembiayaan utama di mega-menu
+                                        $header_pem_preview = array_slice( $header_pembiayaan_list, 0, 4 );
+                                        foreach ( $header_pem_preview as $h_pem ) :
+                                            $p_slug    = ! empty( $h_pem['slug'] ) ? sanitize_title( $h_pem['slug'] ) : sanitize_title( $h_pem['nama'] );
+                                            $p_color   = $h_pem['color'] ?? 'orange';
+                                            $p_badge   = ! empty( $h_pem['badge'] ) ? $h_pem['badge'] : 'Pembiayaan Syariah';
+                                            $p_tagline = ! empty( $h_pem['tagline'] ) ? $h_pem['tagline'] : '';
+                                            $p_image   = ! empty( $h_pem['image'] ) ? esc_url( $h_pem['image'] ) : '';
 
-                                        <!-- Pembiayaan 1000 Guru -->
-                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#guru' ) ); ?>" class="mega-link group/item">
-                                            <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                                            </div>
-                                            <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pembiayaan 1000 Guru</span>
-                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Pemenuhan sarana & kebutuhan tenaga pengajar</span>
-                                            </div>
-                                        </a>
-
-                                        <!-- Akad Murabahah (Jual Beli) -->
-                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#murabahah' ) ); ?>" class="mega-link group/item">
-                                            <div class="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-900/50 text-primary-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                            </div>
-                                            <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Al-Murabahah (Jual Beli)</span>
-                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Harga asal + margin pasti disepakati bersama</span>
-                                            </div>
-                                        </a>
-
-                                        <!-- Akad Bagi Hasil & Jasa -->
-                                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#akad-lainnya' ) ); ?>" class="mega-link group/item">
-                                            <div class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                                            </div>
-                                            <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Bagi Hasil & Multijasa</span>
-                                                <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Mudharabah, Musyarakah, Ijarah & Qardh</span>
-                                            </div>
-                                        </a>
+                                            $p_bg_class = 'bg-orange-50 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400';
+                                            if ( $p_color === 'indigo' || $p_color === 'blue' ) {
+                                                $p_bg_class = 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400';
+                                            } elseif ( $p_color === 'purple' ) {
+                                                $p_bg_class = 'bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400';
+                                            } elseif ( $p_color === 'teal' || $p_color === 'emerald' ) {
+                                                $p_bg_class = 'bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400';
+                                            } elseif ( $p_color === 'amber' ) {
+                                                $p_bg_class = 'bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400';
+                                            }
+                                        ?>
+                                            <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#' . $p_slug ) ); ?>" 
+                                               class="mega-link group/item product-hover-item"
+                                               data-name="<?php echo esc_attr( $h_pem['nama'] ); ?>"
+                                               data-badge="<?php echo esc_attr( $p_badge ); ?>"
+                                               data-tagline="<?php echo esc_attr( $p_tagline ); ?>"
+                                               data-image="<?php echo esc_url( $p_image ); ?>">
+                                                <div class="w-8 h-8 rounded-xl <?php echo esc_attr( $p_bg_class ); ?> flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                                    <?php 
+                                                    if ( function_exists( 'wakalumi_render_pembiayaan_icon' ) ) {
+                                                        echo str_replace( 'w-6 h-6', 'w-4 h-4', wakalumi_render_pembiayaan_icon( $h_pem['icon'] ?? 'coins' ) );
+                                                    } else {
+                                                        echo '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>';
+                                                    }
+                                                    ?>
+                                                </div>
+                                                <div>
+                                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug"><?php echo esc_html( $h_pem['nama'] ); ?></span>
+                                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug"><?php echo esc_html( $p_tagline ); ?></span>
+                                                </div>
+                                            </a>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
 
                                 <div class="pt-3 px-2">
-                                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan' ) ); ?>" class="text-xs font-bold text-primary-700 hover:text-primary-800 dark:text-teal-400 inline-flex items-center gap-1">
+                                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/' ) ); ?>" class="text-xs font-bold text-primary-700 hover:text-primary-800 dark:text-teal-400 inline-flex items-center gap-1">
                                         Lihat Halaman Pembiayaan &rarr;
                                     </a>
                                 </div>
                             </div>
 
-                            <!-- Kolom 3: Brosur & Aksi Cepat (4 Cols) -->
+                            <!-- Kolom 3: Brosur & Live Hover Preview (4 Cols) -->
                             <div class="col-span-12 lg:col-span-4 flex flex-col justify-between gap-3">
                                 <div>
-                                    <!-- Featured Card: Download Brosur -->
-                                    <div class="p-4 rounded-2xl bg-teal-50 dark:bg-slate-800 border border-teal-200 dark:border-teal-700/60 mb-3 shadow-sm">
+                                    <!-- Live Product Hover Preview Card (Tampil di atas brosur saat produk berfoto di-hover) -->
+                                    <div id="mega-preview-container" class="hidden opacity-0 scale-95 transition-all duration-300 ease-out mb-3">
+                                        <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 shadow-md border border-slate-200/90 dark:border-slate-700/80 group/mprev">
+                                            <img id="mega-preview-img" src="" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover/mprev:scale-105" loading="lazy">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
+                                            <div class="absolute top-2.5 right-2.5 z-10">
+                                                <span id="mega-preview-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-700/60 shadow-sm"></span>
+                                            </div>
+                                            <div class="absolute bottom-2.5 left-3 right-3 z-10">
+                                                <h6 id="mega-preview-title" class="text-xs sm:text-sm font-black text-white leading-tight drop-shadow-md truncate"></h6>
+                                                <p id="mega-preview-tagline" class="text-[10px] text-teal-200 font-medium truncate mt-0.5"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Featured Card: Download Brosur (Otomatis bergeser ke bawah saat preview aktif) -->
+                                    <div class="p-3.5 sm:p-4 rounded-2xl bg-teal-50 dark:bg-slate-800 border border-teal-200 dark:border-teal-700/60 mb-3 shadow-sm transition-all duration-300">
                                         <div class="flex items-center gap-3 mb-2.5">
                                             <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -445,6 +483,101 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             </div>
         </nav>
     </div>
+
+    <!-- Progressive Enhancement: Mega Menu Hover Preview Fallback -->
+    <script>
+    (function() {
+        function initMegaHoverPreview() {
+            var c = document.getElementById('mega-preview-container');
+            var img = document.getElementById('mega-preview-img');
+            if (!c || !img || c.dataset.hoverInitialized === 'true') return;
+            c.dataset.hoverInitialized = 'true';
+
+            var badge = document.getElementById('mega-preview-badge');
+            var title = document.getElementById('mega-preview-title');
+            var tagline = document.getElementById('mega-preview-tagline');
+            var items = document.querySelectorAll('.product-hover-item');
+            var timer = null;
+
+            function show(el) {
+                if (timer) clearTimeout(timer);
+                var src = el.getAttribute('data-image');
+                if (!src || src.trim() === '') {
+                    hide(false);
+                    return;
+                }
+                img.src = src;
+                img.alt = el.getAttribute('data-name') || '';
+                if (badge) badge.textContent = el.getAttribute('data-badge') || '';
+                if (title) title.textContent = el.getAttribute('data-name') || '';
+                if (tagline) tagline.textContent = el.getAttribute('data-tagline') || '';
+
+                c.classList.remove('hidden');
+                void c.offsetWidth;
+                c.classList.remove('opacity-0', 'scale-95');
+                c.classList.add('opacity-100', 'scale-100');
+            }
+
+            function hide(fast) {
+                if (timer) clearTimeout(timer);
+                var delay = fast ? 0 : 150;
+                timer = setTimeout(function() {
+                    c.classList.remove('opacity-100', 'scale-100');
+                    c.classList.add('opacity-0', 'scale-95');
+                    setTimeout(function() {
+                        if (c.classList.contains('opacity-0')) {
+                            c.classList.add('hidden');
+                        }
+                    }, 300);
+                }, delay);
+            }
+
+            items.forEach(function(item) {
+                item.addEventListener('mouseenter', function() { show(item); });
+                item.addEventListener('focus', function() { show(item); });
+                item.addEventListener('mouseleave', function() { hide(false); });
+                item.addEventListener('blur', function() { hide(false); });
+            });
+
+            var mm = c.closest('.dropdown-mega-menu');
+            if (mm) {
+                mm.addEventListener('mouseleave', function() { hide(true); });
+            }
+        }
+
+        // Progressive Enhancement: Immediate Same-Page Anchor Click Delegation with Highlight Pulse
+        document.addEventListener('click', function(e) {
+            var a = e.target.closest ? e.target.closest('a') : null;
+            if (!a) return;
+            var href = a.getAttribute('href');
+            if (!href || href === '#' || href.indexOf('#') === -1 || href.indexOf('javascript:') === 0) return;
+            try {
+                var u = new URL(a.href, window.location.origin);
+                var p1 = u.pathname.replace(/\/$/, '') || '/';
+                var p2 = window.location.pathname.replace(/\/$/, '') || '/';
+                if (u.hash && u.hash.length > 1 && (p1 === p2 || href.charAt(0) === '#')) {
+                    var t = document.querySelector(u.hash);
+                    if (t) {
+                        e.preventDefault();
+                        // Close dropdowns
+                        document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(function(d) {
+                            d.classList.remove('open', 'is-open', 'hovered');
+                        });
+                        var nav = document.getElementById('main-navbar');
+                        var navH = nav ? nav.offsetHeight : 70;
+                        var top = t.getBoundingClientRect().top + window.pageYOffset - navH - 20;
+                        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                        t.classList.add('ring-4', 'ring-teal-500/80', 'ring-offset-4', 'ring-offset-white', 'dark:ring-offset-slate-900', 'transition-all', 'duration-500');
+                        setTimeout(function() {
+                            t.classList.remove('ring-4', 'ring-teal-500/80', 'ring-offset-4', 'ring-offset-white', 'dark:ring-offset-slate-900');
+                        }, 2500);
+                        if (history.pushState) history.pushState(null, null, u.hash);
+                    }
+                }
+            } catch(err) {}
+        }, true);
+    })();
+    </script>
 </header>
 
 <!-- ========================================
@@ -524,10 +657,10 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     <div class="px-3 pt-2 pb-1 text-[10px] font-extrabold text-teal-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Penghimpunan Dana
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
                         Tabungan Syariah (Tawakal, Pendidikan, Haji, Ukhuwah)
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah/#tenor' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
                         Deposito Mudharabah (1-12 Bulan)
                     </a>
 
@@ -535,10 +668,10 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     <div class="px-3 pt-3 pb-1 text-[10px] font-extrabold text-primary-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Penyaluran Dana (Lending)
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#pedagang' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#pedagang' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
                         ⭐ 1000 Pedagang & 1000 Guru
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#akad-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#akad-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
                         ⚖️ Akad Murabahah, Bagi Hasil, Ijarah
                     </a>
 

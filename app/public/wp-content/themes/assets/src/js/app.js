@@ -198,6 +198,7 @@ const Navbar = {
     this.handleScroll();
     window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
     this.initDropdowns();
+    this.initMegaMenuHover();
     this.updateActiveState();
   },
 
@@ -446,6 +447,75 @@ const Navbar = {
         }
       });
     });
+  },
+
+  initMegaMenuHover() {
+    const previewContainer = document.getElementById('mega-preview-container');
+    const previewImg       = document.getElementById('mega-preview-img');
+    const previewBadge     = document.getElementById('mega-preview-badge');
+    const previewTitle     = document.getElementById('mega-preview-title');
+    const previewTagline   = document.getElementById('mega-preview-tagline');
+
+    if (!previewContainer || !previewImg) return;
+    if (previewContainer.dataset.hoverInitialized === 'true') return;
+    previewContainer.dataset.hoverInitialized = 'true';
+
+    const hoverItems = document.querySelectorAll('.product-hover-item');
+    const megaMenu = previewContainer.closest('.dropdown-mega-menu');
+    let hideTimer = null;
+
+    const showPreview = (item) => {
+      if (hideTimer) {
+        clearTimeout(hideTimer);
+        hideTimer = null;
+      }
+      const img = item.getAttribute('data-image');
+      const name = item.getAttribute('data-name') || '';
+      const badge = item.getAttribute('data-badge') || '';
+      const tagline = item.getAttribute('data-tagline') || '';
+
+      if (!img || img.trim() === '') {
+        hidePreview();
+        return;
+      }
+
+      previewImg.src = img;
+      previewImg.alt = name;
+      if (previewBadge) previewBadge.textContent = badge;
+      if (previewTitle) previewTitle.textContent = name;
+      if (previewTagline) previewTagline.textContent = tagline;
+
+      previewContainer.classList.remove('hidden');
+      // Trigger reflow for smooth transition
+      void previewContainer.offsetWidth;
+      previewContainer.classList.remove('opacity-0', 'scale-95');
+      previewContainer.classList.add('opacity-100', 'scale-100');
+    };
+
+    const hidePreview = (immediate = false) => {
+      if (hideTimer) clearTimeout(hideTimer);
+      const delay = immediate ? 0 : 150;
+      hideTimer = setTimeout(() => {
+        previewContainer.classList.remove('opacity-100', 'scale-100');
+        previewContainer.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => {
+          if (previewContainer.classList.contains('opacity-0')) {
+            previewContainer.classList.add('hidden');
+          }
+        }, 300);
+      }, delay);
+    };
+
+    hoverItems.forEach(item => {
+      item.addEventListener('mouseenter', () => showPreview(item));
+      item.addEventListener('focus', () => showPreview(item));
+      item.addEventListener('mouseleave', () => hidePreview(false));
+      item.addEventListener('blur', () => hidePreview(false));
+    });
+
+    if (megaMenu) {
+      megaMenu.addEventListener('mouseleave', () => hidePreview(true));
+    }
   }
 };
 
@@ -1288,70 +1358,94 @@ const OrgChartLightbox = {
 // ========================================================================
 // SMOOTH SCROLL for Anchor Links
 // ========================================================================
-const SmoothScroll = {
-  init() {
-    const currentPath = window.location.pathname.replace(/\/$/, '');
+// GLOBAL ACCURATE SMOOTH SCROLL HELPER
+// ========================================================================
+function performSmoothScrollToTarget(targetSelector, withPulse = true) {
+  if (!targetSelector || targetSelector === '#') return;
+  try {
+    let selector = targetSelector;
+    if (!selector.startsWith('#')) selector = '#' + selector;
+    const targetEl = document.querySelector(selector);
+    if (!targetEl) return;
 
-    document.querySelectorAll('a[href*="#"]').forEach(link => {
+    const navbar = document.getElementById('main-navbar');
+    const navbarHeight = navbar ? navbar.offsetHeight : 70;
+    const rect = targetEl.getBoundingClientRect();
+    const top = rect.top + window.scrollY - navbarHeight - 20;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth'
+    });
+
+    if (withPulse) {
+      targetEl.classList.remove('ring-4', 'ring-teal-500/80', 'ring-offset-4', 'ring-offset-white', 'dark:ring-offset-slate-900');
+      void targetEl.offsetWidth; // force DOM reflow
+      targetEl.classList.add('ring-4', 'ring-teal-500/80', 'ring-offset-4', 'ring-offset-white', 'dark:ring-offset-slate-900', 'transition-all', 'duration-500');
+      setTimeout(() => {
+        targetEl.classList.remove('ring-4', 'ring-teal-500/80', 'ring-offset-4', 'ring-offset-white', 'dark:ring-offset-slate-900');
+      }, 2500);
+    }
+  } catch (e) {
+    console.warn('Scroll to target failed:', e);
+  }
+}
+window.performSmoothScrollToTarget = performSmoothScrollToTarget;
+window.wklScrollToSection = performSmoothScrollToTarget;
+
+const SmoothScroll = {
+  initialized: false,
+
+  init() {
+    if (this.initialized) return;
+    this.initialized = true;
+
+    // Universal delegated click handler for anchor links
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
       const hrefAttr = link.getAttribute('href');
-      if (!hrefAttr || hrefAttr === '#') return;
+      if (!hrefAttr || hrefAttr === '#' || hrefAttr.startsWith('javascript:')) return;
 
       try {
         const url = new URL(link.href, window.location.origin);
-        const linkPath = url.pathname.replace(/\/$/, '');
+        const linkPath = url.pathname.replace(/\/$/, '') || '/';
+        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
         const hash = url.hash;
 
-        // If link points to an anchor on the current page or starts with '#'
-        if (hash && hash !== '#' && (linkPath === currentPath || hrefAttr.startsWith('#'))) {
-          link.addEventListener('click', (e) => {
-            const target = document.querySelector(hash);
-            if (target) {
-              e.preventDefault();
+        // If link points to an anchor on the CURRENT page
+        if (hash && hash.length > 1 && (linkPath === currentPath || hrefAttr.startsWith('#'))) {
+          const targetEl = document.querySelector(hash);
+          if (targetEl) {
+            e.preventDefault();
 
-              // Close mobile menu if open
-              const overlay = document.getElementById('mobile-menu-overlay');
-              const panel = document.getElementById('mobile-menu-panel');
-              if (panel && panel.classList.contains('active') && typeof MobileMenu !== 'undefined') {
-                MobileMenu.close(overlay, panel);
-              }
+            // Close desktop dropdowns immediately
+            document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(d => {
+              d.classList.remove('open', 'is-open', 'hovered');
+            });
 
-              const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
-              const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
-              window.scrollTo({ top, behavior: 'smooth' });
-
-              if (history.pushState) {
-                history.pushState(null, null, hash);
-              }
+            // Close mobile menu if open
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const panel = document.getElementById('mobile-menu-panel');
+            if (panel && panel.classList.contains('active') && typeof MobileMenu !== 'undefined') {
+              MobileMenu.close(overlay, panel);
             }
-          });
-        }
-      } catch (err) {
-        if (hrefAttr.startsWith('#') && hrefAttr.length > 1) {
-          link.addEventListener('click', (e) => {
-            const target = document.querySelector(hrefAttr);
-            if (target) {
-              e.preventDefault();
-              const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
-              const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
-              window.scrollTo({ top, behavior: 'smooth' });
-            }
-          });
-        }
-      }
-    });
 
-    // Also handle initial load with hash in URL
+            performSmoothScrollToTarget(hash, true);
+
+            if (history.pushState) {
+              history.pushState(null, null, hash);
+            }
+          }
+        }
+      } catch (err) {}
+    }, true);
+
+    // Initial page load with hash in URL
     if (window.location.hash) {
       setTimeout(() => {
-        try {
-          const targetEl = document.querySelector(window.location.hash);
-          if (targetEl) {
-            const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
-            const top = targetEl.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
-            window.scrollTo({ top, behavior: 'smooth' });
-          }
-        } catch (e) {}
-      }, 350);
+        performSmoothScrollToTarget(window.location.hash, true);
+      }, 400);
     }
   }
 };
@@ -2103,15 +2197,36 @@ function initSwup() {
     ],
   });
 
-  // Page navigation start: trigger preloader & loading line, close mobile menu
-  swup.hooks.on('visit:start', () => {
+  // Page navigation start: trigger preloader & loading line, close mobile & desktop menus
+  swup.hooks.on('visit:start', (visit) => {
     const overlay = document.getElementById('mobile-menu-overlay');
     const panel = document.getElementById('mobile-menu-panel');
     if (panel && panel.classList.contains('active')) {
       MobileMenu.close(overlay, panel);
     }
 
+    // Close desktop dropdowns
+    document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(d => {
+      d.classList.remove('open', 'is-open', 'hovered');
+    });
+
+    try {
+      const targetUrl = new URL(visit.to.url, window.location.origin);
+      window._swupTargetHash = visit.to.hash || targetUrl.hash || '';
+    } catch (e) {
+      window._swupTargetHash = (visit && visit.to ? visit.to.hash : '') || '';
+    }
+
     Preloader.startTransition();
+  });
+
+  // Prevent Swup's default scroll-to-top if we have a target hash
+  swup.hooks.replace('visit:scroll', (visit, { next }) => {
+    const hasHash = (visit && visit.to && visit.to.hash) || window._swupTargetHash;
+    if (hasHash) {
+      return Promise.resolve();
+    }
+    return next();
   });
 
   // Re-initialize modules and finish preloader after page transition
@@ -2136,23 +2251,9 @@ function initSwup() {
     initAllModules();
     Preloader.finishTransition();
 
-    // Check if URL has anchor hash (e.g. #pedagang, #guru, #murabahah, #kalkulator)
-    if (window.location.hash) {
-      setTimeout(() => {
-        try {
-          const targetEl = document.querySelector(window.location.hash);
-          if (targetEl) {
-            const navbarHeight = document.getElementById('main-navbar')?.offsetHeight || 70;
-            const top = targetEl.getBoundingClientRect().top + window.scrollY - navbarHeight - 16;
-            window.scrollTo({ top, behavior: 'smooth' });
-          } else {
-            window.scrollTo(0, 0);
-          }
-        } catch (e) {
-          window.scrollTo(0, 0);
-        }
-      }, 200);
-    } else {
+    // Scroll to top only if there is no hash
+    const targetHash = window._swupTargetHash || window.location.hash;
+    if (!targetHash) {
       window.scrollTo(0, 0);
     }
 
@@ -2161,6 +2262,18 @@ function initSwup() {
         AOS.refreshHard();
       }
     }, 100);
+  });
+
+  // When transition animation finishes completely, smooth scroll to the target section
+  swup.hooks.on('visit:end', (visit) => {
+    const targetHash = window._swupTargetHash || (visit && visit.to ? visit.to.hash : '') || window.location.hash;
+    window._swupTargetHash = null;
+
+    if (targetHash && targetHash.length > 1) {
+      setTimeout(() => {
+        performSmoothScrollToTarget(targetHash, true);
+      }, 100);
+    }
   });
 
   // In case visit is cancelled/aborted
