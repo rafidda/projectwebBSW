@@ -31,6 +31,8 @@ require_once WAKALUMI_DIR . '/inc/admin-kantor.php';
 require_once WAKALUMI_DIR . '/inc/admin-brosur.php';
 require_once WAKALUMI_DIR . '/inc/admin-produk.php';
 require_once WAKALUMI_DIR . '/inc/admin-pembiayaan.php';
+require_once WAKALUMI_DIR . '/inc/admin-laporan.php';
+require_once WAKALUMI_DIR . '/inc/admin-pengaduan.php';
 require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 
 // ────────────────────────────────────────────────
@@ -64,7 +66,7 @@ function wakalumi_enqueue_assets() {
         true // Load in footer
     );
 
-    // Pass WP data to JS (if needed)
+    // Pass WP data to JS
     wp_localize_script( 'wakalumi-script', 'wakalumiData', [
         'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
         'homeUrl'  => home_url( '/' ),
@@ -165,5 +167,86 @@ function wakalumi_admin_media_scripts( $hook ) {
     );
 }
 add_action( 'admin_enqueue_scripts', 'wakalumi_admin_media_scripts' );
+
+// ────────────────────────────────────────────────
+// PDF PREVIEW STREAMER (Anti IDM Auto-Download Interception)
+// Melayani stream PDF via AJAX binary octet-stream agar IDM tidak membajak pratinjau modal
+// ────────────────────────────────────────────────
+function wakalumi_ajax_stream_pdf() {
+    $raw_url = isset( $_GET['doc'] ) ? wp_unslash( $_GET['doc'] ) : '';
+    if ( empty( $raw_url ) ) {
+        wp_die( 'URL Dokumen tidak ditemukan', 'Bad Request', [ 'response' => 400 ] );
+    }
+
+    $doc_url   = esc_url_raw( $raw_url );
+    $uploads   = wp_get_upload_dir();
+    $file_path = '';
+
+    // 1. Cek apakah file berada di direktori upload WordPress lokal
+    if ( preg_match( '#/wp-content/uploads/(.+)$#i', $doc_url, $matches ) ) {
+        $potential_path = $uploads['basedir'] . '/' . ltrim( $matches[1], '/' );
+        if ( file_exists( $potential_path ) && is_readable( $potential_path ) ) {
+            $file_path = $potential_path;
+        }
+    }
+
+    // 2. Cek apakah file berada di direktori theme
+    if ( ! $file_path && preg_match( '#/wp-content/themes/(.+)$#i', $doc_url, $matches ) ) {
+        $potential_path = get_theme_root() . '/' . ltrim( $matches[1], '/' );
+        if ( file_exists( $potential_path ) && is_readable( $potential_path ) ) {
+            $file_path = $potential_path;
+        }
+    }
+
+    // 3. Jika file lokal ditemukan di disk
+    if ( $file_path ) {
+        if ( strtolower( pathinfo( $file_path, PATHINFO_EXTENSION ) ) !== 'pdf' ) {
+            wp_die( 'Akses berkas ditolak', 'Forbidden', [ 'response' => 403 ] );
+        }
+
+        while ( ob_get_level() ) {
+            ob_end_clean();
+        }
+
+        header( 'Content-Type: application/pdf' );
+        header( 'Content-Disposition: inline; filename="' . basename( $file_path ) . '"' );
+        header( 'Content-Length: ' . filesize( $file_path ) );
+        header( 'Cache-Control: public, max-age=86400' );
+        header( 'X-Content-Type-Options: nosniff' );
+        header( 'Access-Control-Allow-Origin: *' );
+
+        readfile( $file_path );
+        exit;
+    }
+
+    // 4. Fallback jika file remote
+    $response = wp_remote_get( $doc_url, [
+        'timeout'   => 30,
+        'sslverify' => false,
+    ] );
+
+    if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+        wp_die( 'Gagal memuat dokumen PDF', 'File Not Found', [ 'response' => 404 ] );
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+
+    while ( ob_get_level() ) {
+        ob_end_clean();
+    }
+
+    header( 'Content-Type: application/pdf' );
+    header( 'Content-Disposition: inline; filename="document.pdf"' );
+    header( 'Content-Length: ' . strlen( $body ) );
+    header( 'Cache-Control: public, max-age=86400' );
+    header( 'X-Content-Type-Options: nosniff' );
+    header( 'Access-Control-Allow-Origin: *' );
+
+    echo $body;
+    exit;
+}
+add_action( 'wp_ajax_wakalumi_pdf_stream', 'wakalumi_ajax_stream_pdf' );
+add_action( 'wp_ajax_nopriv_wakalumi_pdf_stream', 'wakalumi_ajax_stream_pdf' );
+
 
 

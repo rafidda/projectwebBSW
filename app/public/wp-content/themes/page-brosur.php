@@ -695,8 +695,6 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                     data-category="<?php echo esc_attr( $kat_slug ); ?>"
                     data-title="<?php echo esc_attr( strtolower( $title ) ); ?>"
                     data-keywords="<?php echo esc_attr( $search_meta ); ?>"
-                    data-aos="fade-up"
-                    data-aos-delay="<?php echo esc_attr( ( $index % 3 ) * 100 ); ?>"
                 >
                     <!-- Dynamic Ambient Aura Glow on Hover -->
                     <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r <?php echo esc_attr( $c_theme['aura_gradient'] ); ?> opacity-0 group-hover:opacity-100 transition-all duration-500 blur-xl pointer-events-none -z-10"></div>
@@ -1045,20 +1043,34 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 </div>
             </div>
 
-            <!-- Right: Actions (Open New Tab, Download, Close) -->
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <!-- Open in New Tab -->
-                <a 
-                    id="brosur-modal-external" 
-                    href="#" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    class="p-2 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-dark-surface transition-colors"
-                    title="Buka di Tab Baru"
-                >
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
+            <!-- Center: Reader Toolbar (Page Jump & Zoom) -->
+            <div id="brosur-pdf-toolbar" class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border shadow-xs">
+                <!-- Page Navigator -->
+                <div class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+                    <span class="font-medium">Hal:</span>
+                    <select id="brosur-pdf-page-select" class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-dark-surface border border-slate-300 dark:border-dark-border text-xs font-bold text-slate-800 dark:text-slate-100 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500">
+                        <option value="1">1</option>
+                    </select>
+                    <span>/ <strong id="brosur-pdf-total-pages" class="text-teal-600 dark:text-teal-400">1</strong></span>
+                </div>
 
+                <span class="w-px h-4 bg-slate-200 dark:bg-dark-border mx-1"></span>
+
+                <!-- Zoom Controls -->
+                <button type="button" id="brosur-pdf-zoom-out" class="p-1 rounded-lg text-slate-600 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-dark-surface-alt transition-colors cursor-pointer" title="Perkecil (-)">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15"/></svg>
+                </button>
+                <span id="brosur-pdf-zoom-level" class="text-[11px] font-bold text-slate-700 dark:text-slate-200 min-w-[38px] text-center select-none">100%</span>
+                <button type="button" id="brosur-pdf-zoom-in" class="p-1 rounded-lg text-slate-600 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-dark-surface-alt transition-colors cursor-pointer" title="Perbesar (+)">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                </button>
+                <button type="button" id="brosur-pdf-fit" class="px-2 py-0.5 rounded-lg text-[11px] font-bold text-slate-600 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400 hover:bg-slate-100 dark:hover:bg-dark-surface-alt transition-colors cursor-pointer" title="Sesuaikan Lebar Layar">
+                    Fit
+                </button>
+            </div>
+
+            <!-- Right: Actions (Download, Close) -->
+            <div class="flex items-center gap-2 flex-shrink-0">
                 <!-- Download Directly -->
                 <a 
                     id="brosur-modal-download" 
@@ -1082,12 +1094,13 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
             </div>
         </div>
 
-        <!-- Modal Body (PDF Viewer Iframe with Loading Spinner & In-Theme Empty State) -->
-        <div class="relative flex-1 w-full h-full bg-slate-100 dark:bg-dark-surface overflow-hidden">
+        <!-- Modal Body (PDF Viewer Canvas Container with Loading Spinner & Empty State) -->
+        <div class="relative flex-1 w-full h-full bg-slate-900 overflow-hidden flex flex-col">
             <!-- Loading Indicator -->
-            <div id="brosur-modal-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-dark-card z-20 transition-opacity duration-300">
+            <div id="brosur-modal-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/95 dark:bg-dark-card/95 z-20 transition-opacity duration-300">
                 <div class="w-10 h-10 border-3 border-teal-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Memuat dokumen brosur...</p>
+                <p class="text-xs text-slate-600 dark:text-slate-300 font-medium">Memuat pratinjau dokumen brosur...</p>
+                <span id="brosur-pdf-loading-detail" class="text-[11px] text-slate-400 mt-1">Mengambil berkas dari peladen</span>
             </div>
 
             <!-- In-Theme Empty State Notice (When PDF is not yet uploaded - Replaces JS Alert) -->
@@ -1129,13 +1142,14 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 </div>
             </div>
 
-            <!-- PDF Viewer Iframe -->
-            <iframe 
-                id="brosur-modal-iframe" 
-                src="about:blank" 
-                class="w-full h-full border-0 relative z-10"
-                title="Pratinjau Brosur Dokumen"
-            ></iframe>
+            <!-- Native HTML5 Canvas Multi-Page Viewer Container (Rendered via PDF.js Canvas, 100% immune to IDM auto-download & Edge OOPIF block) -->
+            <div 
+                id="brosur-pdf-canvas-container" 
+                class="flex-1 w-full h-full overflow-y-auto overflow-x-auto p-4 sm:p-8 flex flex-col items-center gap-6 scroll-smooth bg-slate-900"
+            >
+                <!-- Pages will be rendered progressively here -->
+            </div>
+        </div>
         </div>
     </div>
 </div>

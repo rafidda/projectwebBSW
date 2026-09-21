@@ -294,14 +294,14 @@ if ( empty( $cta_btn1_url ) ) {
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
                 <?php foreach ( $missions as $idx => $mission_text ) : ?>
-                    <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 100; ?>">
+                    <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-teal-200/70 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 100; ?>">
                         <!-- Dual-Tone Header Bar -->
-                        <div class="px-6 py-3.5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
+                        <div class="px-6 py-3.5 bg-gradient-to-r from-teal-50/95 via-teal-100/50 to-primary-50/60 dark:from-teal-950/80 dark:via-teal-900/50 dark:to-slate-800/90 border-b border-teal-200/80 dark:border-teal-800/60 flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-teal-400 text-white font-black text-xs flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                                     <?php echo sprintf( '%02d', $idx + 1 ); ?>
                                 </div>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-teal-300">Misi Perusahaan</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-teal-800 dark:text-teal-300">Misi Perusahaan</span>
                             </div>
                             <span class="w-2 h-2 rounded-full bg-teal-400 group-hover:scale-125 transition-transform"></span>
                         </div>
@@ -331,11 +331,11 @@ if ( empty( $cta_btn1_url ) ) {
         <!-- Jati Diri & Keyakinan Inti (Core Beliefs) -->
         <div class="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-6" data-aos="fade-up">
             <!-- Jati Diri -->
-            <div class="spotlight-card tilt-card group relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-lg shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 cursor-default">
+            <div class="spotlight-card tilt-card group relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900/95 border border-teal-200/80 dark:border-teal-800/60 shadow-lg shadow-teal-500/5 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 cursor-default">
                 <!-- Dual-Tone Header Bar -->
-                <div class="px-7 py-3.5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
-                    <span class="text-xs uppercase tracking-widest font-extrabold text-teal-600 dark:text-teal-400">Jati Diri Lembaga</span>
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20">Fokus Syariah</span>
+                <div class="px-7 py-4 bg-gradient-to-r from-teal-100/80 via-teal-50 to-emerald-50/80 dark:from-teal-950/90 dark:via-teal-900/50 dark:to-slate-800/90 border-b border-teal-200 dark:border-teal-800/80 flex items-center justify-between">
+                    <span class="text-xs uppercase tracking-widest font-extrabold text-teal-800 dark:text-teal-300">Jati Diri Lembaga</span>
+                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-teal-200/70 text-teal-900 dark:bg-teal-900/70 dark:text-teal-200 border border-teal-300/80 dark:border-teal-700/80 shadow-sm">Fokus Syariah</span>
                 </div>
                 <div class="p-7 relative overflow-hidden">
                     <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
@@ -357,11 +357,11 @@ if ( empty( $cta_btn1_url ) ) {
             </div>
 
             <!-- Keyakinan Inti (ISHLAH) -->
-            <div class="spotlight-card tilt-card group relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-lg shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 cursor-default">
+            <div class="spotlight-card tilt-card group relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900/95 border border-primary-200/80 dark:border-primary-800/60 shadow-lg shadow-primary-500/5 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:-translate-y-1.5 transition-all duration-300 cursor-default">
                 <!-- Dual-Tone Header Bar -->
-                <div class="px-7 py-3.5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
-                    <span class="text-xs uppercase tracking-widest font-extrabold text-primary-600 dark:text-teal-300">Keyakinan Inti (Core Beliefs)</span>
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary-500/10 text-primary-700 dark:text-teal-300 border border-primary-500/20">Nilai Abadi</span>
+                <div class="px-7 py-4 bg-gradient-to-r from-primary-100/80 via-primary-50 to-teal-50/80 dark:from-primary-950/90 dark:via-primary-900/50 dark:to-slate-800/90 border-b border-primary-200 dark:border-primary-800/80 flex items-center justify-between">
+                    <span class="text-xs uppercase tracking-widest font-extrabold text-primary-800 dark:text-teal-300">Keyakinan Inti (Core Beliefs)</span>
+                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-primary-200/70 text-primary-900 dark:bg-primary-900/70 dark:text-teal-200 border border-primary-300 dark:border-primary-700 shadow-sm">Nilai Abadi</span>
                 </div>
                 <div class="p-7 relative overflow-hidden">
                     <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
@@ -412,15 +412,15 @@ if ( empty( $cta_btn1_url ) ) {
                 $v_title = $val_item['title'] ?? '';
                 $v_desc  = $val_item['desc'] ?? '';
             ?>
-                <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $v_idx % 4 ) * 80; ?>">
+                <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-teal-200/70 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $v_idx % 4 ) * 80; ?>">
                     <!-- Dual-Tone Header Bar -->
-                    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
+                    <div class="px-6 py-4 bg-gradient-to-r from-teal-50/95 via-teal-100/50 to-primary-50/70 dark:from-teal-950/80 dark:via-teal-900/50 dark:to-slate-800/90 border-b border-teal-200/80 dark:border-teal-800/60 flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-teal-400 text-white font-black text-lg flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:-rotate-3 transition-transform">
                                 <?php echo esc_html( $acronym ); ?>
                             </div>
                             <div>
-                                <span class="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">Karakter</span>
+                                <span class="text-[10px] uppercase tracking-widest font-extrabold text-teal-800 dark:text-teal-300 block">Karakter</span>
                                 <h3 class="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-teal-300 transition-colors">
                                     <?php echo esc_html( $v_title ); ?>
                                 </h3>
@@ -494,7 +494,7 @@ if ( empty( $cta_btn1_url ) ) {
 
                 <div class="space-y-6">
                     <!-- Pillar 1 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-sm hover:shadow-md hover:border-teal-500/40 transition-all flex items-start gap-4 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-teal-50/60 via-white to-white dark:from-teal-950/40 dark:via-slate-900/95 dark:to-slate-900/95 border-l-4 border-l-teal-500 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-teal-500/60 transition-all flex items-start gap-4 cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
@@ -513,7 +513,7 @@ if ( empty( $cta_btn1_url ) ) {
                     </div>
 
                     <!-- Pillar 2 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-primary-500/40 transition-all flex items-start gap-4 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-primary-50/60 via-white to-white dark:from-primary-950/40 dark:via-slate-900/95 dark:to-slate-900/95 border-l-4 border-l-primary-500 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-primary-500/60 transition-all flex items-start gap-4 cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
@@ -532,7 +532,7 @@ if ( empty( $cta_btn1_url ) ) {
                     </div>
 
                     <!-- Pillar 3 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-teal-500/40 transition-all flex items-start gap-4 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-teal-50/60 via-white to-white dark:from-teal-950/40 dark:via-slate-900/95 dark:to-slate-900/95 border-l-4 border-l-teal-500 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-teal-500/60 transition-all flex items-start gap-4 cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">

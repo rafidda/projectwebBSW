@@ -1469,6 +1469,250 @@ if ( $berita_query->have_posts() ) :
 </section>
 <?php endif; ?>
 
+<!-- ========================================================================
+     SECTION 9B: PRATINJAU LAYANAN PENGADUAN KONSUMEN (POJK NO. 22 TAHUN 2023)
+     Wadah Regulasi Resmi & Pelindungan Nasabah di atas CTA Banner
+     ======================================================================== -->
+<?php
+$pk_cfg = function_exists( 'wakalumi_get_pengaduan_settings' ) ? wakalumi_get_pengaduan_settings() : [];
+$pk_pages = get_pages( [
+    'meta_key'   => '_wp_page_template',
+    'meta_value' => 'page-pengaduan-konsumen.php',
+    'number'     => 1,
+] );
+$pk_url = ! empty( $pk_pages ) ? get_permalink( $pk_pages[0]->ID ) : home_url( '/informasi/pengaduan-konsumen/' );
+
+// Konten dinamis yang dapat dimodifikasi oleh admin via WP-Admin > Pengaduan Konsumen
+$pk_badge    = ! empty( $pk_cfg['home_badge'] ) ? $pk_cfg['home_badge'] : 'Kepatuhan Regulasi POJK No. 22/2023';
+$pk_title    = ! empty( $pk_cfg['home_title'] ) ? $pk_cfg['home_title'] : 'Layanan Pengaduan & Pelindungan Nasabah';
+$pk_desc     = ! empty( $pk_cfg['home_desc'] ) ? $pk_cfg['home_desc'] : 'BPRS Wakalumi berkomitmen memberikan kepastian dan keadilan bagi setiap nasabah. Sesuai regulasi OJK, mekanisme penanganan pengaduan kami transparan, bebas biaya (gratis), serta menjamin kerahasiaan informasi dengan batas waktu penyelesaian yang terukur.';
+$pk_btn_text = ! empty( $pk_cfg['home_btn_text'] ) ? $pk_cfg['home_btn_text'] : 'Pelajari Prosedur & Ajukan Pengaduan';
+
+$pk_wa       = ! empty( $pk_cfg['wa'] ) ? $pk_cfg['wa'] : '6281517380388';
+$pk_clean_wa = preg_replace( '/[^0-9]/', '', $pk_wa );
+$pk_wa_url   = 'https://wa.me/' . $pk_clean_wa . '?text=' . rawurlencode( 'Halo Tim Layanan Nasabah BPRS Wakalumi, saya ingin menyampaikan pengaduan terkait layanan perbankan.' );
+$pk_phone    = ! empty( $pk_cfg['phone'] ) ? $pk_cfg['phone'] : '(021) 7471 4555';
+$pk_clean_tel= preg_replace( '/[^0-9\+]/', '', $pk_phone );
+$pk_sla_l    = ! empty( $pk_cfg['sla_lisan'] ) ? $pk_cfg['sla_lisan'] : '5 Hari Kerja';
+$pk_sla_t    = ! empty( $pk_cfg['sla_tertulis'] ) ? $pk_cfg['sla_tertulis'] : '10 Hari Kerja';
+$pk_appk_url = ! empty( $pk_cfg['ojk_appk_url'] ) ? $pk_cfg['ojk_appk_url'] : 'https://kontak157.ojk.go.id';
+$pk_ojk_tel  = ! empty( $pk_cfg['ojk_phone'] ) ? $pk_cfg['ojk_phone'] : '157';
+?>
+<section class="py-16 lg:py-24 bg-gradient-to-b from-transparent via-slate-50/70 to-slate-100/80 dark:from-dark dark:via-dark-surface/50 dark:to-dark border-t border-slate-200/80 dark:border-dark-border/80 relative overflow-hidden">
+    <!-- Ambient Glow Ornaments -->
+    <div class="absolute top-1/2 -right-24 -translate-y-1/2 w-96 h-96 bg-teal-500/10 dark:bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 -left-24 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="container-wide relative z-10">
+        
+        <!-- SPOTLIGHT MASTER CARD (Elegant Corner Watermark) -->
+        <div class="spotlight-card group relative rounded-3xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-slate-200/90 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-500 shadow-xl hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-700 overflow-hidden" data-aos="fade-up">
+            
+            <!-- Top Gradient Accent Bar -->
+            <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-blue-600"></div>
+
+            <!-- Master Watermark Logo — pojok kanan bawah, membesar elegan saat hover -->
+            <div class="absolute -right-10 -bottom-10 w-52 h-52 sm:w-60 sm:h-60
+                        opacity-[0.04] dark:opacity-[0.055] 
+                        pointer-events-none select-none 
+                        transition-transform duration-700 ease-out 
+                        group-hover:scale-125
+                        group-hover:opacity-[0.07] dark:group-hover:opacity-[0.10] 
+                        grayscale mix-blend-multiply dark:mix-blend-screen z-0">
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
+            </div>
+
+            <!-- Subtle Light Sweep Bar on Hover -->
+            <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none z-10"></div>
+
+            <div class="p-6 sm:p-10 lg:p-12 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                    
+                    <!-- LEFT COLUMN: Informasi & 3 Chip Minimalis -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Regulatory Badge Row -->
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100/90 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300/70 dark:border-emerald-700/60 shadow-xs group-hover:border-emerald-400 transition-colors">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <?php echo esc_html( $pk_badge ); ?>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 dark:bg-dark-surface text-slate-700 dark:text-slate-300 text-[11px] font-bold border border-slate-200 dark:border-dark-border shadow-2xs">
+                                <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                <span>Perlindungan Konsumen Terjamin</span>
+                            </span>
+                        </div>
+
+                        <!-- Title & Description (Editable by Admin) -->
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-3 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors duration-300">
+                                <?php echo esc_html( $pk_title ); ?>
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+                                <?php echo esc_html( $pk_desc ); ?>
+                            </p>
+                        </div>
+
+                        <!-- 3 INFO CHIPS MINIMALIS — watermark pojok kanan bawah, tanpa angka hari -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+
+                            <!-- CHIP 1: Aduan Lisan -->
+                            <div class="group/mini relative overflow-hidden rounded-xl bg-white/90 dark:bg-dark-surface/90 border border-slate-200/80 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-500 p-3.5 shadow-sm hover:shadow-md transition-all duration-300">
+                                <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-teal-500 to-emerald-400 rounded-t-xl"></div>
+                                <div class="absolute -right-4 -bottom-4 w-14 h-14 opacity-[0.05] dark:opacity-[0.07] pointer-events-none transition-transform duration-500 ease-out group-hover/mini:scale-[1.4] grayscale mix-blend-multiply dark:mix-blend-screen select-none">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex items-center gap-2.5 relative z-10">
+                                    <div class="w-7 h-7 rounded-lg bg-teal-100/80 dark:bg-teal-950 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 block leading-none">Aduan Lisan</span>
+                                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-0.5 block">Proses Cepat</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CHIP 2: Aduan Tertulis -->
+                            <div class="group/mini relative overflow-hidden rounded-xl bg-white/90 dark:bg-dark-surface/90 border border-slate-200/80 dark:border-dark-border hover:border-blue-400 dark:hover:border-blue-500 p-3.5 shadow-sm hover:shadow-md transition-all duration-300">
+                                <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 to-indigo-500 rounded-t-xl"></div>
+                                <div class="absolute -right-4 -bottom-4 w-14 h-14 opacity-[0.05] dark:opacity-[0.07] pointer-events-none transition-transform duration-500 ease-out group-hover/mini:scale-[1.4] grayscale mix-blend-multiply dark:mix-blend-screen select-none">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex items-center gap-2.5 relative z-10">
+                                    <div class="w-7 h-7 rounded-lg bg-blue-100/80 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 block leading-none">Aduan Tertulis</span>
+                                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-0.5 block">Investigasi Penuh</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CHIP 3: Bebas Biaya -->
+                            <div class="group/mini relative overflow-hidden rounded-xl bg-white/90 dark:bg-dark-surface/90 border border-slate-200/80 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500 p-3.5 shadow-sm hover:shadow-md transition-all duration-300">
+                                <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-400 rounded-t-xl"></div>
+                                <div class="absolute -right-4 -bottom-4 w-14 h-14 opacity-[0.05] dark:opacity-[0.07] pointer-events-none transition-transform duration-500 ease-out group-hover/mini:scale-[1.4] grayscale mix-blend-multiply dark:mix-blend-screen select-none">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
+                                </div>
+                                <div class="flex items-center gap-2.5 relative z-10">
+                                    <div class="w-7 h-7 rounded-lg bg-emerald-100/80 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 block leading-none">Biaya Layanan</span>
+                                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-0.5 block">100% Gratis</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: Saluran Kontak Terpadu & CTA Aksi Nyata -->
+                    <div class="lg:col-span-5">
+                        
+                        <!-- HIGH-TRUST ACTION HUB CARD (Dual-Tone & Glass Shine) -->
+                        <div class="group/hub relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-teal-50/90 via-white to-emerald-50/60 dark:from-dark-surface dark:via-dark-surface dark:to-dark-card border border-teal-200/90 dark:border-dark-border shadow-lg shadow-teal-500/5 hover:border-teal-400 dark:hover:border-teal-600 transition-all duration-500 p-6 sm:p-7 space-y-5">
+                            
+                            <!-- Watermark Hub Card — pojok kanan bawah -->
+                            <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.04] dark:opacity-[0.05] pointer-events-none transition-transform duration-700 ease-out group-hover/hub:scale-125 grayscale mix-blend-multiply dark:mix-blend-screen select-none">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
+                            </div>
+
+                            <!-- Hub Header -->
+                            <div class="relative z-10 flex items-center justify-between pb-3 border-b border-teal-100/90 dark:border-dark-border">
+                                <div>
+                                    <span class="text-[11px] font-extrabold text-teal-800 dark:text-teal-300 uppercase tracking-wider block">Saluran Penanganan</span>
+                                    <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Langsung Terhubung</span>
+                                </div>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-extrabold uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    Aktif
+                                </span>
+                            </div>
+
+                            <!-- Channel List -->
+                            <div class="space-y-2.5 relative z-10">
+                                
+                                <!-- WhatsApp BPRS Wakalumi -->
+                                <a href="<?php echo esc_url( $pk_wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="group/ch flex items-center justify-between p-3 rounded-xl bg-white/90 dark:bg-dark-card/90 border border-slate-200/80 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-600 hover:-translate-x-0.5 hover:shadow-sm transition-all duration-200">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-xs shadow-emerald-500/30 group-hover/ch:scale-105 transition-transform">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.966-.941 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                        </div>
+                                        <div>
+                                            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block leading-tight">WhatsApp Pengaduan</span>
+                                            <span class="text-xs font-extrabold text-slate-900 dark:text-white group-hover/ch:text-emerald-600 dark:group-hover/ch:text-emerald-400 transition-colors">+<?php echo esc_html( $pk_wa ); ?></span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-slate-400 group-hover/ch:text-emerald-500 group-hover/ch:translate-x-0.5 transition-all">→</span>
+                                </a>
+
+                                <!-- Hotline Kantor Pusat -->
+                                <a href="tel:<?php echo esc_attr( $pk_clean_tel ); ?>" class="group/ch flex items-center justify-between p-3 rounded-xl bg-white/90 dark:bg-dark-card/90 border border-slate-200/80 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-600 hover:-translate-x-0.5 hover:shadow-sm transition-all duration-200">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs shadow-teal-600/30 group-hover/ch:scale-105 transition-transform">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                                        </div>
+                                        <div>
+                                            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block leading-tight">Hotline Kantor Pusat</span>
+                                            <span class="text-xs font-extrabold text-slate-900 dark:text-white group-hover/ch:text-teal-600 dark:group-hover/ch:text-teal-400 transition-colors"><?php echo esc_html( $pk_phone ); ?></span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-slate-400 group-hover/ch:text-teal-500 group-hover/ch:translate-x-0.5 transition-all">→</span>
+                                </a>
+
+                                <!-- Portal Resmi OJK APPK -->
+                                <a href="<?php echo esc_url( $pk_appk_url ); ?>" target="_blank" rel="noopener noreferrer" class="group/ch flex items-center justify-between p-3 rounded-xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-900/40 hover:border-blue-400 dark:hover:border-blue-700 hover:-translate-x-0.5 hover:shadow-sm transition-all duration-200">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs shadow-blue-600/30 group-hover/ch:scale-105 transition-transform">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253"/></svg>
+                                        </div>
+                                        <div>
+                                            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block leading-tight">Portal APPK Kontak OJK</span>
+                                            <span class="text-xs font-extrabold text-blue-700 dark:text-blue-300">Hotline <?php echo esc_html( $pk_ojk_tel ); ?> • kontak157.ojk.go.id ↗</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-blue-500 group-hover/ch:translate-x-0.5 transition-all">↗</span>
+                                </a>
+
+                            </div>
+
+                            <!-- PRIMARY ACTION BUTTON (With Glass Shine Sweep) -->
+                            <div class="pt-2 relative z-10 space-y-2">
+                                <a 
+                                    href="<?php echo esc_url( $pk_url ); ?>" 
+                                    class="group/btn relative overflow-hidden w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 text-white text-xs sm:text-sm font-black shadow-lg shadow-teal-600/30 hover:shadow-xl hover:shadow-teal-600/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2.5 text-center"
+                                >
+                                    <!-- Shimmer Glass Light Sweep -->
+                                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out pointer-events-none"></div>
+                                    
+                                    <span class="relative z-10"><?php echo esc_html( $pk_btn_text ); ?></span>
+                                    <svg class="w-4 h-4 flex-shrink-0 group-hover/btn:translate-x-1 transition-transform relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                </a>
+
+                                <div class="text-center">
+                                    <span class="text-[11px] text-slate-400 dark:text-slate-500 block">
+                                        Tata cara resmi, alur eskalasi, &amp; berkas sesuai POJK No. 22/2023
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
 
 <!-- ========================================
      SECTION 10: CTA (WhatsApp)

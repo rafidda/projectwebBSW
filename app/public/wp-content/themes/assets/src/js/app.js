@@ -8,6 +8,30 @@ import 'aos/dist/aos.css';
 import Swup from 'swup';
 import SwupHeadPlugin from '@swup/head-plugin';
 import AOS from 'aos';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
+
+let cachedPdfWorkerBlobUrl = null;
+async function getPdfWorkerSrc() {
+  if (cachedPdfWorkerBlobUrl) return cachedPdfWorkerBlobUrl;
+  try {
+    const res = await fetch('/wp-content/themes/wakalumi-theme/assets/build/assets/pdf.worker.min.js');
+    if (res.ok) {
+      const blob = await res.blob();
+      cachedPdfWorkerBlobUrl = URL.createObjectURL(blob);
+      return cachedPdfWorkerBlobUrl;
+    }
+  } catch (e) {
+    // fallback to relative path
+  }
+  return '/wp-content/themes/wakalumi-theme/assets/build/assets/pdf.worker.min.js';
+}
+
+try {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/wp-content/themes/wakalumi-theme/assets/build/assets/pdf.worker.min.js';
+} catch (e) {
+  // worker initialization fallback
+}
 
 // ========================================================================
 // PRELOADER & PAGE TRANSITION LOADER
@@ -2158,6 +2182,408 @@ window.VideoModal = VideoModal;
 window.InstagramSlider = InstagramSlider;
 
 // ========================================================================
+// ========================================================================
+// PURE HTML5 CANVAS PDF VIEWER ENGINE (POWERED BY PDF.JS)
+// 100% IMMUNE TO IDM INTERCEPTION & MICROSOFT EDGE OOPIF IFRAME ERRORS
+// ========================================================================
+function createWakalumiCanvasViewer(cfg) {
+  const {
+    containerEl,
+    loadingEl,
+    loadingDetailEl,
+    emptyNoticeEl,
+    downloadBtnEl,
+    toolbarEl,
+    pageSelectEl,
+    totalPagesEl,
+    zoomOutBtn,
+    zoomLevelEl,
+    zoomInBtn,
+    fitBtn,
+  } = cfg;
+
+  let currentDoc = null;
+  let currentPdfUrl = '';
+  let abortController = null;
+  let activeRenderTasks = [];
+  let isCancelled = false;
+  let currentScale = 1.0;
+  let isAutoFit = true;
+  let totalNumPages = 0;
+  let scrollListenerAttached = false;
+
+  const cancelActiveTasks = () => {
+    isCancelled = true;
+    activeRenderTasks.forEach((task) => {
+      try {
+        if (task && typeof task.cancel === 'function') {
+          task.cancel();
+        }
+      } catch (e) {
+        // ignore cancellation
+      }
+    });
+    activeRenderTasks = [];
+  };
+
+  const cleanup = () => {
+    cancelActiveTasks();
+    if (abortController) {
+      abortController.abort();
+      abortController = null;
+    }
+    if (currentDoc) {
+      try {
+        currentDoc.destroy();
+      } catch (e) {
+        // ignore
+      }
+      currentDoc = null;
+    }
+    // Bebaskan blob URL dari memori
+    if (load._blobUrl) {
+      try { URL.revokeObjectURL(load._blobUrl); } catch(e) {}
+      load._blobUrl = null;
+    }
+    if (containerEl) {
+      containerEl.innerHTML = '';
+    }
+    if (pageSelectEl) {
+      pageSelectEl.innerHTML = '<option value="1">1</option>';
+      pageSelectEl.value = '1';
+    }
+    if (totalPagesEl) {
+      totalPagesEl.textContent = '1';
+    }
+    if (zoomLevelEl) {
+      zoomLevelEl.textContent = '100%';
+    }
+    if (toolbarEl) {
+      toolbarEl.classList.add('hidden');
+      toolbarEl.classList.remove('flex');
+    }
+    currentPdfUrl = '';
+    totalNumPages = 0;
+  };
+
+  const calculateFitScale = (firstPageWidth) => {
+    if (!containerEl || !firstPageWidth) return 1.0;
+    const containerWidth = containerEl.clientWidth || (window.innerWidth > 900 ? 840 : window.innerWidth - 40);
+    const availableWidth = Math.max(containerWidth - 64, 280);
+    const scale = availableWidth / firstPageWidth;
+    return Math.min(Math.max(scale, 0.45), 2.2);
+  };
+
+  const renderSinglePage = async (pageNum, scale) => {
+    if (isCancelled || !currentDoc) return;
+
+    const pageCard = containerEl ? containerEl.querySelector(`[data-page-num="${pageNum}"]`) : null;
+    if (!pageCard) return;
+
+    const canvas = pageCard.querySelector('canvas');
+    if (!canvas) return;
+
+    try {
+      const page = await currentDoc.getPage(pageNum);
+      if (isCancelled) return;
+
+      const pixelRatio = window.devicePixelRatio || 1;
+      const cssViewport = page.getViewport({ scale });
+      const canvasViewport = page.getViewport({ scale: scale * pixelRatio });
+
+      canvas.width = Math.floor(canvasViewport.width);
+      canvas.height = Math.floor(canvasViewport.height);
+      canvas.style.width = Math.floor(cssViewport.width) + 'px';
+      canvas.style.height = Math.floor(cssViewport.height) + 'px';
+
+      const ctx = canvas.getContext('2d', { alpha: false });
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: canvasViewport,
+      };
+
+      const renderTask = page.render(renderContext);
+      activeRenderTasks.push(renderTask);
+      await renderTask.promise;
+
+      const idx = activeRenderTasks.indexOf(renderTask);
+      if (idx !== -1) activeRenderTasks.splice(idx, 1);
+    } catch (err) {
+      if (err && err.name !== 'RenderingCancelledException') {
+        console.warn(`Halaman ${pageNum} render notice:`, err);
+      }
+    }
+  };
+
+  const reRenderAllPages = async () => {
+    if (!currentDoc || totalNumPages === 0) return;
+    cancelActiveTasks();
+    isCancelled = false;
+
+    for (let p = 1; p <= totalNumPages; p++) {
+      if (isCancelled) break;
+      await renderSinglePage(p, currentScale);
+    }
+  };
+
+  const initScrollSpy = () => {
+    if (scrollListenerAttached || !containerEl || !pageSelectEl) return;
+    scrollListenerAttached = true;
+
+    let ticking = false;
+    containerEl.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          ticking = false;
+          const cards = containerEl.querySelectorAll('.wkl-pdf-page-card');
+          if (!cards.length) return;
+          const containerTop = containerEl.getBoundingClientRect().top;
+          let activePage = 1;
+          let minDiff = Infinity;
+
+          cards.forEach((card) => {
+            const rect = card.getBoundingClientRect();
+            const diff = Math.abs(rect.top - containerTop - 16);
+            if (diff < minDiff) {
+              minDiff = diff;
+              activePage = parseInt(card.getAttribute('data-page-num'), 10) || 1;
+            }
+          });
+
+          if (pageSelectEl.value !== String(activePage)) {
+            pageSelectEl.value = String(activePage);
+          }
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  };
+
+  // Wire Toolbar Events Once
+  if (pageSelectEl && !pageSelectEl._viewerBound) {
+    pageSelectEl._viewerBound = true;
+    pageSelectEl.addEventListener('change', () => {
+      const pageNum = parseInt(pageSelectEl.value, 10);
+      const target = containerEl ? containerEl.querySelector(`[data-page-num="${pageNum}"]`) : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  if (zoomInBtn && !zoomInBtn._viewerBound) {
+    zoomInBtn._viewerBound = true;
+    zoomInBtn.addEventListener('click', () => {
+      if (!currentDoc) return;
+      isAutoFit = false;
+      currentScale = Math.min(Number((currentScale + 0.15).toFixed(2)), 2.5);
+      if (zoomLevelEl) zoomLevelEl.textContent = Math.round(currentScale * 100) + '%';
+      reRenderAllPages();
+    });
+  }
+
+  if (zoomOutBtn && !zoomOutBtn._viewerBound) {
+    zoomOutBtn._viewerBound = true;
+    zoomOutBtn.addEventListener('click', () => {
+      if (!currentDoc) return;
+      isAutoFit = false;
+      currentScale = Math.max(Number((currentScale - 0.15).toFixed(2)), 0.45);
+      if (zoomLevelEl) zoomLevelEl.textContent = Math.round(currentScale * 100) + '%';
+      reRenderAllPages();
+    });
+  }
+
+  if (fitBtn && !fitBtn._viewerBound) {
+    fitBtn._viewerBound = true;
+    fitBtn.addEventListener('click', async () => {
+      if (!currentDoc) return;
+      isAutoFit = true;
+      try {
+        const p1 = await currentDoc.getPage(1);
+        const unscaled = p1.getViewport({ scale: 1.0 });
+        currentScale = Number(calculateFitScale(unscaled.width).toFixed(2));
+        if (zoomLevelEl) zoomLevelEl.textContent = Math.round(currentScale * 100) + '%';
+        reRenderAllPages();
+      } catch (e) {
+        // fallback
+      }
+    });
+  }
+
+  // ─── Helper: render PDF langsung via <object> embed (hard-tempel universal) ───
+  const renderHardEmbed = (directUrl) => {
+    if (!containerEl) return;
+    // Sembunyikan loading
+    if (loadingEl) {
+      loadingEl.style.opacity = '0';
+      setTimeout(() => { if (loadingEl) loadingEl.classList.add('hidden'); }, 200);
+    }
+    if (emptyNoticeEl) emptyNoticeEl.classList.add('hidden');
+    containerEl.classList.remove('hidden');
+
+    containerEl.innerHTML = `
+      <div class="w-full h-full flex flex-col bg-white" style="min-height:70vh;">
+        <object
+          data="${directUrl}"
+          type="application/pdf"
+          class="w-full flex-1 border-0"
+          style="min-height:70vh;"
+        >
+          <div class="flex flex-col items-center justify-center h-full p-8 text-center">
+            <svg class="w-12 h-12 text-teal-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            <p class="text-slate-700 font-semibold mb-3">Peramban Anda tidak mendukung tampilan PDF bawaan.</p>
+            <a href="${directUrl}" target="_blank" rel="noopener" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm inline-flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+              Buka / Unduh PDF
+            </a>
+          </div>
+        </object>
+      </div>
+    `;
+  };
+
+  const load = async (pdfUrl) => {
+    cleanup();
+    currentPdfUrl = pdfUrl;
+
+    // Bersihkan blob URL lama
+    if (load._blobUrl) {
+      try { URL.revokeObjectURL(load._blobUrl); } catch(e) {}
+      load._blobUrl = null;
+    }
+
+    if (!pdfUrl || pdfUrl.length < 5 || pdfUrl.startsWith('#')) {
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (emptyNoticeEl) emptyNoticeEl.classList.remove('hidden');
+      if (containerEl) containerEl.classList.add('hidden');
+      return;
+    }
+
+    if (emptyNoticeEl) emptyNoticeEl.classList.add('hidden');
+    if (containerEl) containerEl.classList.remove('hidden');
+
+    // Loading spinner
+    if (loadingEl) {
+      loadingEl.classList.remove('hidden');
+      loadingEl.style.opacity = '1';
+    }
+    if (loadingDetailEl) loadingDetailEl.textContent = 'Memuat dokumen...';
+
+    // Set download button ke URL asli (bukan trigger download, hanya href)
+    if (downloadBtnEl) {
+      downloadBtnEl.setAttribute('href', pdfUrl);
+      downloadBtnEl.removeAttribute('download'); // hapus download attribute supaya tidak trigger IDM
+      downloadBtnEl.classList.remove('opacity-50', 'pointer-events-none');
+    }
+
+    // Toolbar disembunyikan (tidak digunakan tanpa PDF.js)
+    if (toolbarEl) {
+      toolbarEl.classList.add('hidden');
+      toolbarEl.classList.remove('flex');
+    }
+
+    // Ambil path relatif dari URL penuh
+    let docPath = pdfUrl;
+    try {
+      const parsed = new URL(pdfUrl, window.location.origin);
+      docPath = parsed.pathname;
+    } catch(e) {}
+
+    const viewerEndpoint = '/wp-content/themes/wakalumi-theme/pdf-view.php?f=' + encodeURIComponent(docPath);
+
+    const showFallback = (errMsg) => {
+      if (loadingEl) {
+        loadingEl.style.opacity = '0';
+        setTimeout(() => { if (loadingEl) loadingEl.classList.add('hidden'); }, 200);
+      }
+      if (containerEl) {
+        const safeUrl = pdfUrl.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        containerEl.innerHTML = `
+          <div style="width:100%;height:75vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0f172a;gap:20px;padding:32px;text-align:center;">
+            <div style="width:64px;height:64px;border-radius:16px;background:#1e293b;display:flex;align-items:center;justify-content:center;">
+              <svg style="width:32px;height:32px;color:#14b8a6;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            </div>
+            <div>
+              <p style="color:#94a3b8;font-size:13px;margin:0 0 4px;">Pratinjau tidak tersedia.</p>
+              <p style="color:#64748b;font-size:11px;margin:0;">${errMsg}</p>
+            </div>
+            <button onclick="window.open('${safeUrl}','_blank','noopener')"
+               style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#0d9488;color:white;border:none;border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;">
+              <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              Buka PDF di Tab Baru
+            </button>
+          </div>`;
+      }
+    };
+
+    try {
+      // ── Minta PDF dalam format base64 JSON ──
+      // IDM TIDAK mengintervensi response ber-Content-Type: application/json
+      if (loadingDetailEl) loadingDetailEl.textContent = 'Mengambil dokumen...';
+
+      const res = await fetch(viewerEndpoint, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-Wkl-Fmt': 'b64',       // ← Mode base64: PHP kirim JSON, bukan PDF langsung
+        },
+      });
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      const json = await res.json();
+
+      if (!json.ok || !json.data) throw new Error('Respons tidak valid: ' + (json.error || 'unknown'));
+
+      if (loadingDetailEl) loadingDetailEl.textContent = 'Memproses dokumen...';
+
+      // ── Decode base64 → Uint8Array ──
+      const b64 = json.data;
+      const binaryStr = atob(b64);
+      const bytes = new Uint8Array(binaryStr.length);
+      for (let i = 0; i < binaryStr.length; i++) {
+        bytes[i] = binaryStr.charCodeAt(i);
+      }
+
+      // Validasi magic bytes %PDF (25 50 44 46)
+      if (bytes.length < 4 || bytes[0] !== 0x25 || bytes[1] !== 0x50 || bytes[2] !== 0x44 || bytes[3] !== 0x46) {
+        throw new Error('Bukan file PDF valid');
+      }
+
+      // ── Buat blob: URL — IDM tidak bisa intercept blob: URLs ──
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      load._blobUrl = blobUrl;
+
+      // Sembunyikan spinner
+      if (loadingEl) {
+        loadingEl.style.opacity = '0';
+        setTimeout(() => { if (loadingEl) loadingEl.classList.add('hidden'); }, 200);
+      }
+
+      // ── EMBED via iframe dengan blob: URL ──
+      if (containerEl) {
+        containerEl.innerHTML = `<iframe
+          src="${blobUrl}"
+          style="width:100%;height:100%;min-height:75vh;border:none;display:block;"
+          title="Pratinjau Dokumen Resmi BPRS Wakalumi"
+        ></iframe>`;
+      }
+
+    } catch(err) {
+      console.warn('[WKL PDF] Gagal:', err.message);
+      showFallback(err.message);
+    }
+  };
+
+
+
+  return {
+    load,
+    reset: cleanup,
+  };
+}
+
+// ========================================================================
 // BROSUR & KATALOG DOKUMEN MODULE (FILTER, SEARCH, & PDF LIGHTBOX MODAL)
 // ========================================================================
 const BrosurModule = {
@@ -2200,6 +2626,8 @@ const BrosurModule = {
         if (matchesCat && matchesSearch) {
           card.classList.remove('hidden');
           card.style.display = 'flex';
+          card.style.opacity = '1';
+          card.style.visibility = 'visible';
           visibleCount++;
         } else {
           card.classList.add('hidden');
@@ -2233,16 +2661,15 @@ const BrosurModule = {
       const buttons = filterGroup.querySelectorAll('.brosur-filter-btn');
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-          const filterVal = btn.getAttribute('data-filter') || 'all';
-          this.activeCategory = filterVal;
+          this.activeCategory = btn.getAttribute('data-category') || 'all';
 
           buttons.forEach(b => {
-            b.classList.remove('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
-            b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+            b.classList.remove('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
+            b.classList.add('text-slate-600', 'dark:text-slate-300');
           });
 
-          btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
-          btn.classList.add('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
+          btn.classList.add('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
+          btn.classList.remove('text-slate-600', 'dark:text-slate-300');
 
           applyFilters();
         });
@@ -2262,8 +2689,8 @@ const BrosurModule = {
       searchClear.addEventListener('click', () => {
         searchInput.value = '';
         this.searchQuery = '';
-        searchInput.focus();
         applyFilters();
+        searchInput.focus();
       });
     }
 
@@ -2276,14 +2703,13 @@ const BrosurModule = {
 
         if (filterGroup) {
           const buttons = filterGroup.querySelectorAll('.brosur-filter-btn');
-          buttons.forEach(b => {
-            const isAll = b.getAttribute('data-filter') === 'all';
-            if (isAll) {
-              b.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
-              b.classList.add('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
+          buttons.forEach((b, idx) => {
+            if (idx === 0) {
+              b.classList.add('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
+              b.classList.remove('text-slate-600', 'dark:text-slate-300');
             } else {
-              b.classList.remove('bg-teal-600', 'text-white', 'border-teal-600', 'active-filter');
-              b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-slate-700');
+              b.classList.remove('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
+              b.classList.add('text-slate-600', 'dark:text-slate-300');
             }
           });
         }
@@ -2299,16 +2725,40 @@ const BrosurModule = {
 
     const backdrop = document.getElementById('brosur-modal-backdrop');
     const container = document.getElementById('brosur-modal-container');
-    const iframe = document.getElementById('brosur-modal-iframe');
+    const canvasContainer = document.getElementById('brosur-pdf-canvas-container');
     const loading = document.getElementById('brosur-modal-loading');
+    const loadingDetail = document.getElementById('brosur-pdf-loading-detail');
     const emptyNotice = document.getElementById('brosur-modal-empty');
     const titleEl = document.getElementById('brosur-modal-title');
     const sizeEl = document.getElementById('brosur-modal-size');
-    const extLink = document.getElementById('brosur-modal-external');
     const downloadBtn = document.getElementById('brosur-modal-download');
     const closeBtn = document.getElementById('brosur-modal-close');
     const fallbackWa = document.getElementById('brosur-modal-wa-fallback');
     const emptyDocTitle = document.getElementById('brosur-empty-doc-title');
+
+    // Toolbar elements
+    const toolbar = document.getElementById('brosur-pdf-toolbar');
+    const pageSelect = document.getElementById('brosur-pdf-page-select');
+    const totalPages = document.getElementById('brosur-pdf-total-pages');
+    const zoomOut = document.getElementById('brosur-pdf-zoom-out');
+    const zoomLevel = document.getElementById('brosur-pdf-zoom-level');
+    const zoomIn = document.getElementById('brosur-pdf-zoom-in');
+    const fitBtn = document.getElementById('brosur-pdf-fit');
+
+    const pdfViewer = createWakalumiCanvasViewer({
+      containerEl: canvasContainer,
+      loadingEl: loading,
+      loadingDetailEl: loadingDetail,
+      emptyNoticeEl: emptyNotice,
+      downloadBtnEl: downloadBtn,
+      toolbarEl: toolbar,
+      pageSelectEl: pageSelect,
+      totalPagesEl: totalPages,
+      zoomOutBtn: zoomOut,
+      zoomLevelEl: zoomLevel,
+      zoomInBtn: zoomIn,
+      fitBtn: fitBtn,
+    });
 
     const openModal = (btn) => {
       const pdfUrl = btn.getAttribute('data-pdf') || '';
@@ -2325,48 +2775,7 @@ const BrosurModule = {
         fallbackWa.href = `https://wa.me/${defaultWa}?text=${encodeURIComponent(msg)}`;
       }
 
-      if (pdfUrl && pdfUrl.length > 5 && !pdfUrl.startsWith('#')) {
-        // PDF tersedia: tampilkan viewer iframe
-        if (emptyNotice) emptyNotice.classList.add('hidden');
-        if (loading) {
-          loading.classList.remove('hidden');
-          loading.style.opacity = '1';
-        }
-        if (iframe) {
-          iframe.classList.remove('hidden');
-          iframe.src = pdfUrl;
-          iframe.onload = () => {
-            if (loading) {
-              loading.style.opacity = '0';
-              setTimeout(() => { loading.classList.add('hidden'); }, 200);
-            }
-          };
-        }
-        if (extLink) {
-          extLink.href = pdfUrl;
-          extLink.style.display = 'inline-flex';
-        }
-        if (downloadBtn) {
-          downloadBtn.href = pdfUrl;
-          downloadBtn.style.display = 'inline-flex';
-        }
-      } else {
-        // PDF belum diunggah: tampilkan antarmuka Empty State di dalam modal (TANPA alert js)
-        if (loading) loading.classList.add('hidden');
-        if (iframe) {
-          iframe.classList.add('hidden');
-          iframe.src = 'about:blank';
-        }
-        if (emptyNotice) {
-          emptyNotice.classList.remove('hidden');
-        }
-        if (extLink) {
-          extLink.style.display = 'none';
-        }
-        if (downloadBtn) {
-          downloadBtn.style.display = 'none';
-        }
-      }
+      pdfViewer.load(pdfUrl);
 
       // Animasi Buka Modal
       modal.classList.remove('hidden');
@@ -2399,13 +2808,15 @@ const BrosurModule = {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
         document.body.style.overflow = '';
-        if (iframe) iframe.src = 'about:blank';
+        pdfViewer.reset();
         if (emptyNotice) emptyNotice.classList.add('hidden');
       }, 250);
     };
 
     // Pasang pemicu buka modal ke semua tombol pratinjau
     document.querySelectorAll('.brosur-preview-btn').forEach(btn => {
+      if (btn._brosurBound) return;
+      btn._brosurBound = true;
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         openModal(btn);
@@ -2413,8 +2824,14 @@ const BrosurModule = {
     });
 
     // Pemicu tutup modal
-    closeBtn?.addEventListener('click', closeModal);
-    backdrop?.addEventListener('click', closeModal);
+    if (closeBtn && !closeBtn._brosurBound) {
+      closeBtn._brosurBound = true;
+      closeBtn.addEventListener('click', closeModal);
+    }
+    if (backdrop && !backdrop._brosurBound) {
+      backdrop._brosurBound = true;
+      backdrop.addEventListener('click', closeModal);
+    }
 
     if (!this._escBound) {
       this._escBound = true;
@@ -2428,6 +2845,520 @@ const BrosurModule = {
 };
 
 window.BrosurModule = BrosurModule;
+
+// ========================================================================
+// LAPORAN PUBLIKASI & GCG MODULE
+// ========================================================================
+const LaporanModule = {
+  activeTab: 'all',
+  activeYear: 'all',
+  activeTW: 'all',
+  searchQuery: '',
+  _escBound: false,
+
+  init() {
+    const gridContainer = document.getElementById('laporan-grid-container');
+    const modal = document.getElementById('laporan-preview-modal');
+    if (!gridContainer && !modal) return;
+
+    this.initTabs();
+    this.initFilters();
+    this.initPdfModal();
+    this.updateYearCounts();
+    this.applyFilters();
+  },
+
+  initTabs() {
+    const tabButtons = document.querySelectorAll('.laporan-tab-btn');
+    const twGroup = document.getElementById('laporan-tw-group');
+    if (!tabButtons.length) return;
+
+    tabButtons.forEach(btn => {
+      if (btn._wklTabBound) return;
+      btn._wklTabBound = true;
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab') || 'all';
+        this.activeTab = tab;
+
+        // Auto-reset year filter & TW filter whenever switching categories
+        // This ensures the user immediately sees all documents of the new category
+        // without getting stuck in a zero-result state from a previously clicked year
+        this.activeYear = 'all';
+        this.activeTW = 'all';
+
+        tabButtons.forEach(b => {
+          const activeClasses = (b.getAttribute('data-active-classes') || '').split(/\s+/).filter(Boolean);
+          const inactiveClasses = (b.getAttribute('data-inactive-classes') || '').split(/\s+/).filter(Boolean);
+          const iconActive = (b.getAttribute('data-icon-active') || 'bg-white/20 text-white').split(/\s+/).filter(Boolean);
+          const iconInactive = (b.getAttribute('data-icon-inactive') || '').split(/\s+/).filter(Boolean);
+          const iconBox = b.querySelector('.tab-icon-box');
+
+          b.classList.remove('active-tab', ...activeClasses);
+          b.classList.add(...inactiveClasses);
+          if (iconBox) {
+            iconBox.classList.remove(...iconActive);
+            if (iconInactive.length) iconBox.classList.add(...iconInactive);
+          }
+        });
+
+        const activeClasses = (btn.getAttribute('data-active-classes') || '').split(/\s+/).filter(Boolean);
+        const inactiveClasses = (btn.getAttribute('data-inactive-classes') || '').split(/\s+/).filter(Boolean);
+        const iconActive = (btn.getAttribute('data-icon-active') || 'bg-white/20 text-white').split(/\s+/).filter(Boolean);
+        const iconInactive = (btn.getAttribute('data-icon-inactive') || '').split(/\s+/).filter(Boolean);
+        const activeIconBox = btn.querySelector('.tab-icon-box');
+
+        btn.classList.remove(...inactiveClasses);
+        btn.classList.add('active-tab', ...activeClasses);
+        if (activeIconBox) {
+          if (iconInactive.length) activeIconBox.classList.remove(...iconInactive);
+          activeIconBox.classList.add(...iconActive);
+        }
+
+        // Reset Year Buttons UI to "Semua Tahun"
+        const yearButtons = document.querySelectorAll('.laporan-year-btn');
+        yearButtons.forEach(b => {
+          const isAll = b.getAttribute('data-year') === 'all';
+          if (isAll) {
+            b.classList.add('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+            b.classList.remove('text-slate-600', 'dark:text-slate-300');
+          } else {
+            b.classList.remove('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+            b.classList.add('text-slate-600', 'dark:text-slate-300');
+          }
+        });
+
+        // Show or hide Triwulan sub-filter pills
+        if (twGroup) {
+          if (tab === 'triwulan') {
+            twGroup.classList.remove('hidden');
+            twGroup.classList.add('flex');
+            twGroup.style.display = 'flex';
+          } else {
+            twGroup.classList.remove('flex');
+            twGroup.classList.add('hidden');
+            twGroup.style.display = 'none';
+          }
+        }
+
+        // Reset TW buttons UI to "Semua TW"
+        const twButtons = document.querySelectorAll('.laporan-tw-btn');
+        twButtons.forEach(b => {
+          const isAll = b.getAttribute('data-tw') === 'all';
+          if (isAll) {
+            b.classList.remove('text-emerald-800', 'dark:text-emerald-300');
+            b.classList.add('active-tw', 'bg-emerald-600', 'text-white', 'font-black', 'shadow-sm', 'shadow-emerald-600/30');
+          } else {
+            b.classList.remove('active-tw', 'bg-emerald-600', 'text-white', 'font-black', 'shadow-sm', 'shadow-emerald-600/30');
+            b.classList.add('text-emerald-800', 'dark:text-emerald-300', 'font-bold');
+          }
+        });
+
+        this.updateYearCounts();
+        this.applyFilters();
+      });
+    });
+  },
+
+  updateYearCounts() {
+    const cards = document.querySelectorAll('.laporan-card');
+    const yearButtons = document.querySelectorAll('.laporan-year-btn');
+    if (!cards.length || !yearButtons.length) return;
+
+    const yearCounts = {};
+    let totalInActiveTab = 0;
+    const curTab = (this.activeTab || 'all').trim();
+
+    cards.forEach(card => {
+      const kat = (card.getAttribute('data-kategori') || '').trim();
+      const yr = (card.getAttribute('data-tahun') || '').trim();
+      const matchTab = (curTab === 'all' || kat === curTab || (curTab === 'berkelanjutan' && (kat === 'lkb' || kat === 'berkelanjutan')));
+
+      if (matchTab && yr) {
+        yearCounts[yr] = (yearCounts[yr] || 0) + 1;
+        totalInActiveTab++;
+      }
+    });
+
+    // Jika tahun yang sedang aktif tidak memiliki dokumen sama sekali di tab ini, otomatis reset ke 'all'
+    if (this.activeYear !== 'all' && !(yearCounts[this.activeYear] > 0)) {
+      this.activeYear = 'all';
+    }
+
+    yearButtons.forEach(btn => {
+      const yr = (btn.getAttribute('data-year') || '').trim();
+      const isCurrentActive = (this.activeYear === yr);
+
+      if (isCurrentActive) {
+        btn.classList.add('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300');
+      } else {
+        btn.classList.remove('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      }
+
+      const badgeClass = isCurrentActive 
+        ? 'bg-teal-100 dark:bg-teal-900/80 text-teal-800 dark:text-teal-200' 
+        : 'bg-slate-200/80 dark:bg-slate-700/80 text-slate-700 dark:text-slate-300';
+
+      if (yr === 'all') {
+        btn.style.display = '';
+        btn.innerHTML = `Semua Tahun <span class="year-count-badge ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">${totalInActiveTab}</span>`;
+      } else {
+        const count = yearCounts[yr] || 0;
+        btn.innerHTML = `${yr} <span class="year-count-badge ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">${count}</span>`;
+        if (count === 0) {
+          // Sembunyikan tombol tahun jika tidak ada data untuk kategori ini
+          btn.style.display = 'none';
+        } else {
+          btn.style.display = '';
+          btn.classList.remove('opacity-40', 'cursor-not-allowed');
+          btn.removeAttribute('title');
+        }
+      }
+    });
+  },
+
+  initFilters() {
+    const yearButtons = document.querySelectorAll('.laporan-year-btn');
+    const twButtons = document.querySelectorAll('.laporan-tw-btn');
+    const searchInput = document.getElementById('laporan-search-input');
+    const searchClear = document.getElementById('laporan-search-clear');
+    const resetBtn = document.getElementById('laporan-reset-btn');
+    const resetYearBtn = document.getElementById('laporan-reset-year-btn');
+
+    // Year filters
+    yearButtons.forEach(btn => {
+      if (btn._wklYearBound) return;
+      btn._wklYearBound = true;
+      btn.addEventListener('click', () => {
+        this.activeYear = (btn.getAttribute('data-year') || 'all').trim();
+        yearButtons.forEach(b => {
+          b.classList.remove('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+          b.classList.add('text-slate-600', 'dark:text-slate-300');
+        });
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300');
+        btn.classList.add('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+        this.updateYearCounts();
+        this.applyFilters();
+      });
+    });
+
+    // TW filters
+    twButtons.forEach(btn => {
+      if (btn._wklTWBound) return;
+      btn._wklTWBound = true;
+      btn.addEventListener('click', () => {
+        this.activeTW = (btn.getAttribute('data-tw') || 'all').trim();
+        twButtons.forEach(b => {
+          b.classList.remove('active-tw', 'bg-emerald-600', 'text-white', 'font-black', 'shadow-sm', 'shadow-emerald-600/30');
+          b.classList.add('text-emerald-800', 'dark:text-emerald-300', 'font-bold');
+        });
+        btn.classList.remove('text-emerald-800', 'dark:text-emerald-300');
+        btn.classList.add('active-tw', 'bg-emerald-600', 'text-white', 'font-black', 'shadow-sm', 'shadow-emerald-600/30');
+        this.applyFilters();
+      });
+    });
+
+    // Search input
+    if (searchInput && !searchInput._wklSearchBound) {
+      searchInput._wklSearchBound = true;
+      searchInput.addEventListener('input', (e) => {
+        this.searchQuery = e.target.value;
+        this.applyFilters();
+      });
+    }
+
+    // Search clear
+    if (searchClear && searchInput && !searchClear._wklClearBound) {
+      searchClear._wklClearBound = true;
+      searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        this.searchQuery = '';
+        searchInput.focus();
+        this.applyFilters();
+      });
+    }
+
+    // Reset Year Only Button (inside empty state)
+    if (resetYearBtn && !resetYearBtn._wklResetYrBound) {
+      resetYearBtn._wklResetYrBound = true;
+      resetYearBtn.addEventListener('click', () => {
+        this.activeYear = 'all';
+        yearButtons.forEach(b => {
+          const isAll = (b.getAttribute('data-year') || '').trim() === 'all';
+          if (isAll) {
+            b.classList.add('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+            b.classList.remove('text-slate-600', 'dark:text-slate-300');
+          } else {
+            b.classList.remove('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+            b.classList.add('text-slate-600', 'dark:text-slate-300');
+          }
+        });
+        this.updateYearCounts();
+        this.applyFilters();
+      });
+    }
+
+    // Reset button
+    if (resetBtn && !resetBtn._wklResetBound) {
+      resetBtn._wklResetBound = true;
+      resetBtn.addEventListener('click', () => {
+        this.activeTab = 'all';
+        this.activeYear = 'all';
+        this.activeTW = 'all';
+        this.searchQuery = '';
+        if (searchInput) searchInput.value = '';
+
+        // Reset Tab UI
+        const tabButtons = document.querySelectorAll('.laporan-tab-btn');
+        tabButtons.forEach(b => {
+          const isAllTab = (b.getAttribute('data-tab') || '').trim() === 'all';
+          const activeClasses = (b.getAttribute('data-active-classes') || '').split(/\s+/).filter(Boolean);
+          const inactiveClasses = (b.getAttribute('data-inactive-classes') || '').split(/\s+/).filter(Boolean);
+          const iconActive = (b.getAttribute('data-icon-active') || 'bg-white/20 text-white').split(/\s+/).filter(Boolean);
+          const iconInactive = (b.getAttribute('data-icon-inactive') || '').split(/\s+/).filter(Boolean);
+          const iconBox = b.querySelector('.tab-icon-box');
+
+          if (isAllTab) {
+            b.classList.remove(...inactiveClasses);
+            b.classList.add('active-tab', ...activeClasses);
+            if (iconBox) {
+              if (iconInactive.length) iconBox.classList.remove(...iconInactive);
+              iconBox.classList.add(...iconActive);
+            }
+          } else {
+            b.classList.remove('active-tab', ...activeClasses);
+            b.classList.add(...inactiveClasses);
+            if (iconBox) {
+              iconBox.classList.remove(...iconActive);
+              if (iconInactive.length) iconBox.classList.add(...iconInactive);
+            }
+          }
+        });
+
+        // Reset Year UI
+        yearButtons.forEach(b => {
+          const isAll = (b.getAttribute('data-year') || '').trim() === 'all';
+          if (isAll) {
+            b.classList.add('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+            b.classList.remove('text-slate-600', 'dark:text-slate-300');
+          } else {
+            b.classList.remove('active-year', 'bg-white', 'dark:bg-dark-card', 'text-teal-700', 'dark:text-teal-300', 'shadow-xs');
+            b.classList.add('text-slate-600', 'dark:text-slate-300');
+          }
+        });
+
+        // Reset TW UI
+        twButtons.forEach(b => {
+          const isAll = (b.getAttribute('data-tw') || '').trim() === 'all';
+          if (isAll) {
+            b.classList.remove('text-emerald-800', 'dark:text-emerald-300');
+            b.classList.add('active-tw', 'bg-emerald-600', 'text-white', 'font-black', 'shadow-sm', 'shadow-emerald-600/30');
+          } else {
+            b.classList.remove('active-tw', 'bg-emerald-600', 'text-white', 'font-black', 'shadow-sm', 'shadow-emerald-600/30');
+            b.classList.add('text-emerald-800', 'dark:text-emerald-300', 'font-bold');
+          }
+        });
+
+        const twGroup = document.getElementById('laporan-tw-group');
+        if (twGroup) {
+          twGroup.classList.remove('flex');
+          twGroup.classList.add('hidden');
+          twGroup.style.display = 'none';
+        }
+
+        this.updateYearCounts();
+        this.applyFilters();
+      });
+    }
+  },
+
+  applyFilters() {
+    const cards = document.querySelectorAll('.laporan-card');
+    const countEl = document.getElementById('laporan-count');
+    const emptyState = document.getElementById('laporan-empty-state');
+    const searchClear = document.getElementById('laporan-search-clear');
+    const query = this.searchQuery.toLowerCase().trim();
+    const curTab = (this.activeTab || 'all').trim();
+    const curYear = (this.activeYear || 'all').trim();
+    const curTW = (this.activeTW || 'all').trim();
+
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const kat = (card.getAttribute('data-kategori') || '').trim();
+      const tahun = (card.getAttribute('data-tahun') || '').trim();
+      const periode = (card.getAttribute('data-periode') || '').trim();
+      const keywords = (card.getAttribute('data-keywords') || '').trim();
+      const title = (card.getAttribute('data-title') || '').trim();
+
+      const matchTab = (curTab === 'all' || kat === curTab || (curTab === 'berkelanjutan' && (kat === 'lkb' || kat === 'berkelanjutan')));
+      const matchYear = (curYear === 'all' || tahun === curYear);
+      const matchTW = (curTab !== 'triwulan' || curTW === 'all' || periode.includes(curTW));
+      const matchSearch = !query || keywords.includes(query) || title.includes(query);
+
+      if (matchTab && matchYear && matchTW && matchSearch) {
+        card.classList.remove('hidden');
+        card.style.display = 'flex';
+        card.style.opacity = '1';
+        card.style.visibility = 'visible';
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+        card.style.display = 'none';
+      }
+    });
+
+    if (countEl) countEl.textContent = visibleCount;
+    if (emptyState) {
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        emptyState.style.display = 'flex';
+
+        const descEl = document.getElementById('laporan-empty-desc');
+        if (descEl) {
+          if (query) {
+            descEl.textContent = `Tidak ditemukan dokumen laporan yang cocok dengan pencarian "${query}".`;
+          } else if (this.activeYear !== 'all') {
+            descEl.textContent = `Tidak ada dokumen laporan untuk tahun ${this.activeYear} pada kategori yang dipilih. Silakan klik tombol di bawah untuk melihat arsip lengkap tahun lainnya.`;
+          } else {
+            descEl.textContent = 'Tidak ditemukan dokumen laporan untuk kriteria pencarian atau filter yang dipilih.';
+          }
+        }
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+        emptyState.style.display = 'none';
+      }
+    }
+    if (searchClear) {
+      if (query.length > 0) {
+        searchClear.classList.remove('hidden');
+      } else {
+        searchClear.classList.add('hidden');
+      }
+    }
+  },
+
+  initPdfModal() {
+    const modal = document.getElementById('laporan-preview-modal');
+    if (!modal) return;
+
+    const backdrop = document.getElementById('laporan-modal-backdrop');
+    const container = document.getElementById('laporan-modal-container');
+    const canvasContainer = document.getElementById('laporan-pdf-canvas-container');
+    const loading = document.getElementById('laporan-modal-loading');
+    const loadingDetail = document.getElementById('laporan-pdf-loading-detail');
+    const emptyNotice = document.getElementById('laporan-modal-empty');
+    const titleEl = document.getElementById('laporan-modal-title');
+    const sizeEl = document.getElementById('laporan-modal-size');
+    const downloadBtn = document.getElementById('laporan-modal-download');
+    const closeBtn = document.getElementById('laporan-modal-close');
+    const fallbackWa = document.getElementById('laporan-modal-wa-fallback');
+    const emptyDocTitle = document.getElementById('laporan-empty-doc-title');
+
+    // Toolbar elements
+    const toolbar = document.getElementById('laporan-pdf-toolbar');
+    const pageSelect = document.getElementById('laporan-pdf-page-select');
+    const totalPages = document.getElementById('laporan-pdf-total-pages');
+    const zoomOut = document.getElementById('laporan-pdf-zoom-out');
+    const zoomLevel = document.getElementById('laporan-pdf-zoom-level');
+    const zoomIn = document.getElementById('laporan-pdf-zoom-in');
+    const fitBtn = document.getElementById('laporan-pdf-fit');
+
+    const pdfViewer = createWakalumiCanvasViewer({
+      containerEl: canvasContainer,
+      loadingEl: loading,
+      loadingDetailEl: loadingDetail,
+      emptyNoticeEl: emptyNotice,
+      downloadBtnEl: downloadBtn,
+      toolbarEl: toolbar,
+      pageSelectEl: pageSelect,
+      totalPagesEl: totalPages,
+      zoomOutBtn: zoomOut,
+      zoomLevelEl: zoomLevel,
+      zoomInBtn: zoomIn,
+      fitBtn: fitBtn,
+    });
+
+    const openModal = (btn) => {
+      const pdfUrl = btn.getAttribute('data-pdf') || '';
+      const title = btn.getAttribute('data-title') || 'Pratinjau Laporan';
+      const size = btn.getAttribute('data-size') || '';
+
+      if (titleEl) titleEl.textContent = title;
+      if (sizeEl) sizeEl.textContent = size ? `• ${size}` : '';
+      if (emptyDocTitle) emptyDocTitle.textContent = `"${title}"`;
+
+      if (fallbackWa) {
+        const defaultWa = '6281517380388';
+        const msg = `Halo Sekretariat BPRS Wakalumi, saya ingin menanyakan dan meminta berkas laporan resmi untuk: ${title}.`;
+        fallbackWa.href = `https://wa.me/${defaultWa}?text=${encodeURIComponent(msg)}`;
+      }
+
+      pdfViewer.load(pdfUrl);
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        if (backdrop) backdrop.style.opacity = '1';
+        if (container) {
+          container.style.opacity = '1';
+          container.style.transform = 'scale(1)';
+        }
+      });
+    };
+
+    const closeModal = () => {
+      if (backdrop) backdrop.style.opacity = '0';
+      if (container) {
+        container.style.opacity = '0';
+        container.style.transform = 'scale(0.95)';
+      }
+      setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        pdfViewer.reset();
+        if (emptyNotice) emptyNotice.classList.add('hidden');
+      }, 300);
+    };
+
+    // Bind preview buttons
+    const previewButtons = document.querySelectorAll('.laporan-preview-btn');
+    previewButtons.forEach(btn => {
+      if (btn._laporanBound) return;
+      btn._laporanBound = true;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(btn);
+      });
+    });
+
+    if (closeBtn && !closeBtn._laporanBound) {
+      closeBtn._laporanBound = true;
+      closeBtn.addEventListener('click', closeModal);
+    }
+    if (backdrop && !backdrop._laporanBound) {
+      backdrop._laporanBound = true;
+      backdrop.addEventListener('click', closeModal);
+    }
+
+    if (!this._escBound) {
+      this._escBound = true;
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    }
+  }
+};
+
+window.LaporanModule = LaporanModule;
 
 // ========================================================================
 // INITIALIZE ALL MODULES
@@ -2451,6 +3382,7 @@ function initAllModules() {
   SavingsCalculator.init();
   DepositoPage.init();
   BrosurModule.init();
+  LaporanModule.init();
   if (window.FinancingPage && typeof window.FinancingPage.init === 'function') {
     window.FinancingPage.init();
   }

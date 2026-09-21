@@ -304,6 +304,19 @@
     transform: translateX(-42%) translateY(0) scale(1) !important;
   }
 
+  /* ---- Mega Menu for Informasi (Shifted left so it doesn't overflow the screen) ---- */
+  .dropdown-mega-menu-info {
+    left: 50% !important;
+    max-width: min(840px, calc(100vw - 2rem)) !important;
+    transform: translateX(-68%) translateY(6px) scale(0.98) !important;
+  }
+  .dropdown:hover .dropdown-mega-menu-info,
+  .dropdown.hovered .dropdown-mega-menu-info,
+  .dropdown.is-open .dropdown-mega-menu-info,
+  .dropdown.open .dropdown-mega-menu-info {
+    transform: translateX(-68%) translateY(0) scale(1) !important;
+  }
+
   .mega-link {
     @apply flex items-start gap-3 p-2.5 rounded-xl transition-all duration-200 cursor-pointer;
   }

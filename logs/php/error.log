@@ -17,3 +17,12 @@ Stack trace:
 [20-Sep-2026 07:03:22 UTC] PHP Warning:  Undefined array key "upper_gradient" in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-brosur.php on line 890
 [20-Sep-2026 07:03:22 UTC] PHP Warning:  Undefined array key "upper_gradient" in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-brosur.php on line 890
 [20-Sep-2026 07:03:22 UTC] PHP Warning:  Undefined array key "upper_gradient" in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-brosur.php on line 890
+[20-Sep-2026 10:15:16 UTC] PHP Fatal error:  Cannot redeclare wakalumi_get_laporan_theme() (previously declared in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\inc\admin-laporan.php:177) in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\page-laporan.php on line 60
+[21-Sep-2026 15:58:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_unslash() in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\wakalumi-theme\pdf-view.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\wakalumi-theme\pdf-view.php on line 28
+[21-Sep-2026 15:58:44 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_unslash() in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\wakalumi-theme\pdf-view.php:28
+Stack trace:
+#0 {main}
+  thrown in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\wakalumi-theme\pdf-view.php on line 28

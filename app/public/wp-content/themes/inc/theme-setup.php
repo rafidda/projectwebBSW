@@ -227,6 +227,12 @@ function wakalumi_enforce_template_routing( $template ) {
         if ( $res ) return $res;
     }
 
+    // 10. Informasi: Laporan Publikasi & GCG
+    if ( in_array( $slug, [ 'laporan-publikasi', 'laporan', 'laporan-keuangan', 'laporan-gcg' ], true ) || strpos( $req_uri, '/informasi/laporan' ) !== false || strpos( $req_uri, '/laporan-publikasi' ) !== false ) {
+        $res = $serve_clean_template( 'page-laporan.php' );
+        if ( $res ) return $res;
+    }
+
     return $template;
 }
 add_filter( 'template_include', 'wakalumi_enforce_template_routing', 99 );
@@ -489,6 +495,55 @@ function wakalumi_ensure_brosur_page() {
     }
 }
 add_action( 'init', 'wakalumi_ensure_brosur_page' );
+
+/**
+ * Otomatis pastikan Parent 'Informasi' dan Child 'Laporan Publikasi & GCG' terdaftar di database
+ * agar URL /informasi/laporan-publikasi/ langsung aktif dengan page-laporan.php
+ */
+function wakalumi_ensure_laporan_page() {
+    // 1. Pastikan Parent Page 'Informasi' ada
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = 0;
+    if ( ! $parent_info ) {
+        $parent_id = wp_insert_post( [
+            'post_title'   => 'Informasi',
+            'post_name'    => 'informasi',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+    } else {
+        $parent_id = $parent_info->ID;
+    }
+
+    // 2. Pastikan Child Page 'laporan-publikasi' ada
+    $laporan_page = get_page_by_path( 'informasi/laporan-publikasi' ) ?: get_page_by_path( 'laporan-publikasi' );
+    if ( ! $laporan_page ) {
+        $lap_id = wp_insert_post( [
+            'post_title'   => 'Laporan Publikasi & GCG',
+            'post_name'    => 'laporan-publikasi',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $lap_id && ! is_wp_error( $lap_id ) ) {
+            update_post_meta( $lap_id, '_wp_page_template', 'page-laporan.php' );
+        }
+    } else {
+        if ( (int) $laporan_page->post_parent !== (int) $parent_id ) {
+            wp_update_post( [
+                'ID'          => $laporan_page->ID,
+                'post_parent' => $parent_id,
+            ] );
+        }
+        $curr_tmpl = get_post_meta( $laporan_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-laporan.php' ) {
+            update_post_meta( $laporan_page->ID, '_wp_page_template', 'page-laporan.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_laporan_page' );
 
 /**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
