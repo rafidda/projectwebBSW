@@ -554,6 +554,7 @@ const Navbar = {
 // MOBILE MENU
 // ========================================================================
 const MobileMenu = {
+  initialized: false,
   init() {
     const toggle = document.getElementById('mobile-menu-toggle');
     const close = document.getElementById('mobile-menu-close');
@@ -562,24 +563,43 @@ const MobileMenu = {
 
     if (!toggle || !panel) return;
 
-    toggle.addEventListener('click', () => this.open(overlay, panel));
-    close?.addEventListener('click', () => this.close(overlay, panel));
-    overlay?.addEventListener('click', () => this.close(overlay, panel));
+    if (!this.initialized) {
+      this.initialized = true;
 
-    // Close on ESC
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') this.close(overlay, panel);
-    });
-
-    // Mobile dropdown toggles
-    document.querySelectorAll('.mobile-dropdown-trigger').forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        const submenu = trigger.nextElementSibling;
-        const icon = trigger.querySelector('.dropdown-icon');
-        submenu?.classList.toggle('hidden');
-        icon?.classList.toggle('rotate-180');
+      toggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.open(overlay, panel);
       });
-    });
+      close?.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.close(overlay, panel);
+      });
+      overlay?.addEventListener('click', () => this.close(overlay, panel));
+
+      // Close on ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.close(overlay, panel);
+      });
+
+      // Mobile dropdown toggles using delegation on panel to prevent duplicate bindings
+      panel.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.mobile-dropdown-trigger');
+        if (!trigger) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const group = trigger.closest('.mobile-nav-group');
+        const submenu = group ? group.querySelector('.mobile-dropdown-content') : trigger.nextElementSibling;
+        const icon = trigger.querySelector('.dropdown-icon');
+        
+        if (submenu) {
+          submenu.classList.toggle('hidden');
+        }
+        if (icon) {
+          icon.classList.toggle('rotate-180');
+        }
+      });
+    }
   },
 
   open(overlay, panel) {

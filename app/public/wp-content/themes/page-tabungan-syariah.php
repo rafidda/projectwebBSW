@@ -85,7 +85,15 @@ $clean_wa   = preg_replace( '/[^0-9]/', '', $wa_number );
 
 // Brosur File
 $brosur_url  = get_option( 'options_brosur_file_url', '' );
-$brosur_name = get_option( 'options_brosur_file_name', 'Brosur Resmi BPRS Wakalumi (PDF)' );
+$brosur_name = get_option( 'options_brosur_file_name', 'Brosur Resmi Bank Syariah Wakalumi (PDF)' );
+
+// Sanitasi otomatis: pastikan tidak ada sisa BPRS
+$tab_komp_desc   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $tab_komp_desc );
+$tab_keung_title = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $tab_keung_title );
+$tab_brosur_desc = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $tab_brosur_desc );
+$tab_dep_desc    = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $tab_dep_desc );
+$tab_cta_wa_msg  = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $tab_cta_wa_msg );
+$brosur_name     = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $brosur_name );
 
 /**
  * Helper to convert lines to array
@@ -326,7 +334,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
             case 'business':
                 return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/></svg>';
             case 'coins':
-                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>';
             case 'shield':
                 return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>';
             case 'tawakal':
@@ -452,8 +460,8 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
             $keunggulan_arr = wakalumi_lines_to_list( $prod['keunggulan'] ?? '' );
             $syarat_arr     = wakalumi_lines_to_list( $prod['syarat'] ?? '' );
             $wa_cta_text    = ! empty( $prod['wa_text'] ) 
-                              ? $prod['wa_text'] 
-                              : 'Halo BPRS Wakalumi, saya tertarik membuka rekening ' . $prod['nama'] . '. Mohon informasi prosedur dan persyaratannya.';
+                              ? str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $prod['wa_text'] ) 
+                              : 'Halo Bank Syariah Wakalumi, saya tertarik membuka rekening ' . $prod['nama'] . '. Mohon informasi prosedur dan persyaratannya.';
         ?>
         <div id="<?php echo esc_attr( $prod['slug'] ); ?>" 
              class="hub-product-card scroll-mt-28 p-6 sm:p-8 lg:p-10 rounded-3xl bg-gradient-to-br from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/70 backdrop-blur-xl border <?php echo esc_attr( $c_theme['card_border'] ); ?> <?php echo esc_attr( $c_theme['card_hover'] ); ?> shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative overflow-hidden group/card before:absolute before:inset-x-0 before:top-0 before:h-1 sm:before:h-1.5 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_theme['accent_gradient'] ); ?> before:to-transparent before:opacity-0 group-hover/card:before:opacity-100 before:scale-x-75 group-hover/card:scale-x-100 before:transition-all before:duration-700 before:ease-out" 
@@ -679,7 +687,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                             <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm bg-slate-50/50 dark:bg-slate-800/40">
                                 <div class="flex items-center gap-2.5">
                                     <div class="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                                     </div>
                                     <span>Setoran Awal Minimal</span>
                                 </div>
@@ -791,7 +799,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                             </td>
                             <?php foreach ( $tabungan_list as $prod ) : 
                                 $c_theme = $color_themes[ $prod['color'] ?? 'teal' ] ?? $color_themes['teal'];
-                                $prod_wa_msg = ! empty( $prod['wa_text'] ) ? $prod['wa_text'] : 'Halo BPRS Wakalumi, saya tertarik membuka simpanan ' . $prod['nama'] . '. Mohon informasinya.';
+                                $prod_wa_msg = ! empty( $prod['wa_text'] ) ? str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $prod['wa_text'] ) : 'Halo Bank Syariah Wakalumi, saya tertarik membuka simpanan ' . $prod['nama'] . '. Mohon informasinya.';
                             ?>
                                 <td class="p-4 sm:p-5 text-center">
                                     <a 
@@ -983,7 +991,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                                 <a 
                                     id="wkl-calc-wa-btn" 
                                     data-phone="<?php echo esc_attr( $clean_wa ); ?>"
-                                    href="https://wa.me/<?php echo esc_attr( $clean_wa ); ?>?text=<?php echo urlencode( 'Halo BPRS Wakalumi, saya tertarik membuka simpanan syariah dengan target Rp 25.000.000 selama 24 bulan (estimasi sisihan Rp 1.042.000/bln). Mohon panduannya.' ); ?>" 
+                                    href="https://wa.me/<?php echo esc_attr( $clean_wa ); ?>?text=<?php echo urlencode( 'Halo Bank Syariah Wakalumi, saya tertarik membuka simpanan syariah dengan target Rp 25.000.000 selama 24 bulan (estimasi sisihan Rp 1.042.000/bln). Mohon panduannya.' ); ?>" 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
                                     class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-sm inline-flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-[1.02]"
@@ -1148,7 +1156,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                             <?php echo esc_html( $tab_brosur_desc ); ?>
                         </p>
                         <a 
-                            href="<?php echo ! empty( $brosur_url ) ? esc_url( $brosur_url ) : 'https://wa.me/' . esc_attr( $clean_wa ) . '?text=' . urlencode( 'Halo BPRS Wakalumi, saya ingin meminta brosur lengkap produk tabungan syariah.' ); ?>" 
+                            href="<?php echo ! empty( $brosur_url ) ? esc_url( $brosur_url ) : 'https://wa.me/' . esc_attr( $clean_wa ) . '?text=' . urlencode( 'Halo Bank Syariah Wakalumi, saya ingin meminta brosur lengkap produk tabungan syariah.' ); ?>" 
                             target="_blank" 
                             rel="noopener noreferrer" 
                             <?php echo ! empty( $brosur_url ) ? 'download' : ''; ?>

@@ -29,18 +29,18 @@ if ( ! function_exists( 'wakalumi_get_pengumuman_categories' ) ) {
                 'name'         => 'operasional',
                 'label'        => 'Operasional & Libur Layanan',
                 'pill_label'   => 'Operasional & Layanan',
-                'color'        => 'amber',
-                'badge_class'  => 'bg-amber-500/10 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-300/60 dark:border-amber-700/60',
-                'tag_dot'      => 'bg-amber-500',
+                'color'        => 'sky',
+                'badge_class'  => 'bg-sky-500/10 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-300/60 dark:border-sky-700/60',
+                'tag_dot'      => 'bg-sky-500',
                 'icon'         => 'clock',
             ],
             'keamanan' => [
                 'name'         => 'keamanan',
                 'label'        => 'Keamanan & Anti-Fraud (Peringatan)',
                 'pill_label'   => 'Keamanan & Waspada Penipuan',
-                'color'        => 'rose',
-                'badge_class'  => 'bg-rose-500/10 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300/60 dark:border-rose-700/60',
-                'tag_dot'      => 'bg-rose-500',
+                'color'        => 'amber',
+                'badge_class'  => 'bg-amber-500/10 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-300/60 dark:border-amber-700/60',
+                'tag_dot'      => 'bg-amber-500',
                 'icon'         => 'shield',
             ],
             'lelang' => [
@@ -574,7 +574,7 @@ function wakalumi_render_pengumuman_page() {
                             $status      = $item['status'] ?? 'aktif';
                             $urutan      = $item['urutan'] ?? ( $index + 1 );
                         ?>
-                            <div class="pengumuman-card" data-index="<?php echo $index; ?>" style="background: #ffffff; border: 1px solid #cbd5e1; border-left: 5px solid <?php echo $urgensi === 'penting' ? '#e11d48' : '#088395'; ?>; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); overflow: hidden; transition: all 0.2s ease;">
+                            <div class="pengumuman-card" data-index="<?php echo $index; ?>" style="background: #ffffff; border: 1px solid #cbd5e1; border-left: 5px solid <?php echo $urgensi === 'penting' ? '#f59e0b' : '#088395'; ?>; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); overflow: hidden; transition: all 0.2s ease;">
                                 <!-- Card Header (Clickable to collapse/expand) -->
                                 <div class="pengumuman-card-header" style="padding: 14px 18px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
                                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
@@ -595,7 +595,7 @@ function wakalumi_render_pengumuman_page() {
                                                     <span style="background: #f0fdf4; color: #166534; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">🔗 LINK TOMBOL</span>
                                                 <?php endif; ?>
                                                 <?php if ( $urgensi === 'penting' ) : ?>
-                                                    <span style="background: #ffe4e6; color: #be123c; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">🚨 URGENT</span>
+                                                    <span style="background: #fef3c7; color: #b45309; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">⚡ PENTING</span>
                                                 <?php endif; ?>
                                                 <?php if ( $is_popup ) : ?>
                                                     <span style="background: #fef3c7; color: #92400e; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">⚡ POP-UP</span>
@@ -673,7 +673,7 @@ function wakalumi_render_pengumuman_page() {
                                             <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Tingkat Urgensi</label>
                                             <select name="pengumuman_urgensi[]" class="large-text pengumuman-urgensi-select" style="border-radius: 6px;">
                                                 <option value="normal" <?php selected( $urgensi, 'normal' ); ?>>Normal (Informasi Reguler)</option>
-                                                <option value="penting" <?php selected( $urgensi, 'penting' ); ?>>🚨 Penting / Sangat Urgent</option>
+                                                <option value="penting" <?php selected( $urgensi, 'penting' ); ?>>⚡ Penting / Diutamakan</option>
                                             </select>
                                         </div>
                                         <div>
@@ -868,7 +868,7 @@ function wakalumi_render_pengumuman_page() {
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Tingkat Urgensi</label>
                         <select name="pengumuman_urgensi[]" class="large-text pengumuman-urgensi-select" style="border-radius: 6px;">
                             <option value="normal">Normal (Informasi Reguler)</option>
-                            <option value="penting">🚨 Penting / Sangat Urgent</option>
+                            <option value="penting">⚡ Penting / Diutamakan</option>
                         </select>
                     </div>
                     <div>
@@ -983,7 +983,7 @@ function wakalumi_render_pengumuman_page() {
         $(document).on('change', '.pengumuman-urgensi-select', function() {
             var card = $(this).closest('.pengumuman-card');
             if ($(this).val() === 'penting') {
-                card.css('border-left-color', '#e11d48');
+                card.css('border-left-color', '#f59e0b');
             } else {
                 card.css('border-left-color', '#088395');
             }

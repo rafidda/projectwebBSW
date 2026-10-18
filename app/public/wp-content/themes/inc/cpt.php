@@ -96,10 +96,9 @@ function wakalumi_register_cpts() {
         'public'            => true,
         'has_archive'       => true,
         'rewrite'           => [ 'slug' => 'berita', 'with_front' => false ],
-        'menu_icon'         => 'dashicons-megaphone',
-        'menu_position'     => 5,
+        'show_in_menu'      => false, // Managed via custom Wakalumi CMS panel (admin-berita.php)
         'supports'          => [ 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ],
-        'show_in_rest'      => true, // Gutenberg support
+        'show_in_rest'      => true,
         'taxonomies'        => [ 'kategori_berita' ],
     ] );
 

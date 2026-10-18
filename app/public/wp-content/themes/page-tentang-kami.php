@@ -107,6 +107,20 @@ $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 if ( empty( $cta_btn1_url ) ) {
     $cta_btn1_url = $wa_url;
 }
+
+// Sanitasi otomatis: pastikan tidak ada sisa BPRS
+$page_title    = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $page_title );
+$narrative_1   = str_replace( 'PT. Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi', 'PT Bank Syariah Wakalumi (BSW)', $narrative_1 );
+$narrative_1   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $narrative_1 );
+$narrative_2   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $narrative_2 );
+$vision_desc   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $vision_desc );
+$identity_text = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $identity_text );
+$belief_text   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $belief_text );
+$logo_desc     = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $logo_desc );
+$compro_title  = str_replace( 'PT BPRS Wakalumi', 'PT Bank Syariah Wakalumi', $compro_title );
+$compro_title  = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $compro_title );
+$compro_desc   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $compro_desc );
+$cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_desc );
 ?>
 
 <!-- ========================================
@@ -193,12 +207,12 @@ if ( empty( $cta_btn1_url ) ) {
             <div class="lg:col-span-5 relative" data-aos="fade-left">
                 <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-slate-300/50 dark:shadow-black/50 border border-slate-200/80 dark:border-slate-700/60 group">
                     <img src="<?php echo esc_url( $about_img ); ?>" 
-                         alt="Gedung Kantor BPRS Wakalumi" 
+                         alt="Gedung Kantor Bank Syariah Wakalumi" 
                          class="w-full h-80 sm:h-96 md:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                     <div class="absolute bottom-5 left-5 right-5 text-white">
                         <span class="text-xs font-semibold uppercase tracking-widest text-teal-300 drop-shadow">Kantor Pusat</span>
-                        <h4 class="text-lg font-bold drop-shadow">BPRS Wakalumi Ciputat, Tangerang Selatan</h4>
+                        <h4 class="text-lg font-bold drop-shadow">Bank Syariah Wakalumi Ciputat, Tangerang Selatan</h4>
                     </div>
                 </div>
 
@@ -274,7 +288,7 @@ if ( empty( $cta_btn1_url ) ) {
                 Arah & Tujuan Strategis
             </div>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Visi & Misi BPRS Wakalumi
+                Visi & Misi Bank Syariah Wakalumi
             </h2>
             <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3">
                 Landasan cita-cita luhur dan aksi nyata kami dalam melayani serta menggerakkan roda perekonomian masyarakat secara syariah.
@@ -499,13 +513,13 @@ if ( empty( $cta_btn1_url ) ) {
                     
                     <div class="relative z-10 w-full max-w-xs h-32 sm:h-40 flex items-center justify-center p-4">
                         <img src="<?php echo esc_url( $logo_img ); ?>" 
-                             alt="Logo Resmi BPRS Wakalumi" 
+                             alt="Logo Resmi Bank Syariah Wakalumi" 
                              class="max-w-full max-h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform duration-500">
                     </div>
 
                     <div class="relative z-10 mt-6 pt-6 border-t border-white/10 w-full">
                         <span class="text-xs uppercase tracking-widest font-bold text-teal-300">Identitas Visual Resmi</span>
-                        <h4 class="text-base font-bold text-white mt-1">PT BPRS Wakalumi</h4>
+                        <h4 class="text-base font-bold text-white mt-1">PT Bank Syariah Wakalumi</h4>
                     </div>
                 </div>
             </div>
@@ -644,7 +658,7 @@ if ( empty( $cta_btn1_url ) ) {
 
                                 <div class="absolute bottom-4 left-6 right-4 z-20 text-left">
                                     <span class="text-[10px] uppercase font-bold tracking-widest text-teal-300 block">Profil Resmi</span>
-                                    <h4 class="text-sm sm:text-base font-extrabold text-white leading-tight">PT BPRS Wakalumi</h4>
+                                    <h4 class="text-sm sm:text-base font-extrabold text-white leading-tight">PT Bank Syariah Wakalumi</h4>
                                 </div>
                             <?php else : ?>
                                 <!-- High-End Procedural Booklet Cover -->

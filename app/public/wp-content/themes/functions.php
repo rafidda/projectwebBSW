@@ -34,6 +34,12 @@ require_once WAKALUMI_DIR . '/inc/admin-pembiayaan.php';
 require_once WAKALUMI_DIR . '/inc/admin-laporan.php';
 require_once WAKALUMI_DIR . '/inc/admin-pengaduan.php';
 require_once WAKALUMI_DIR . '/inc/admin-pengumuman.php';
+require_once WAKALUMI_DIR . '/inc/admin-lelang.php';
+require_once WAKALUMI_DIR . '/inc/admin-berita.php';
+require_once WAKALUMI_DIR . '/inc/admin-kegiatan.php';
+require_once WAKALUMI_DIR . '/inc/admin-galeri.php';
+require_once WAKALUMI_DIR . '/inc/admin-tim-kami.php';
+require_once WAKALUMI_DIR . '/inc/admin-karir.php';
 require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 
 // ────────────────────────────────────────────────
@@ -248,6 +254,19 @@ function wakalumi_ajax_stream_pdf() {
 }
 add_action( 'wp_ajax_wakalumi_pdf_stream', 'wakalumi_ajax_stream_pdf' );
 add_action( 'wp_ajax_nopriv_wakalumi_pdf_stream', 'wakalumi_ajax_stream_pdf' );
+
+/**
+ * Custom Query Adjustments for Berita Archive
+ * Standardize 9 posts per page for the 3-column layout.
+ */
+function wakalumi_berita_archive_query( $query ) {
+    if ( ! is_admin() && $query->is_main_query() ) {
+        if ( is_post_type_archive( 'berita' ) || is_tax( 'kategori_berita' ) ) {
+            $query->set( 'posts_per_page', 9 );
+        }
+    }
+}
+add_action( 'pre_get_posts', 'wakalumi_berita_archive_query' );
 
 
 

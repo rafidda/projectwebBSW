@@ -236,7 +236,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     $link_target = ! empty( $item['link_target'] ) ? $item['link_target'] : '_self';
                 ?>
                     <article id="<?php echo $row_id; ?>"
-                             class="ann-card card group relative flex flex-col h-full bg-white dark:bg-dark-surface border <?php echo $is_urgent ? 'border-rose-200/90 dark:border-rose-900/60 shadow-rose-500/5 hover:border-rose-400 dark:hover:border-rose-600' : 'border-slate-200/80 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-600 shadow-teal-500/5'; ?> rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo $is_urgent ? 'before:via-rose-500' : 'before:via-teal-500'; ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 z-10"
+                             class="ann-card card group relative flex flex-col h-full bg-white dark:bg-dark-surface border <?php echo $is_urgent ? 'border-amber-200/90 dark:border-amber-800/60 shadow-amber-500/5 hover:border-amber-400 dark:hover:border-amber-500' : 'border-slate-200/80 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-600 shadow-teal-500/5'; ?> rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo $is_urgent ? 'before:via-amber-400' : 'before:via-teal-500'; ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 z-10"
                              data-id="<?php echo $row_id; ?>"
                              data-category="<?php echo esc_attr( $kategori ); ?>"
                              data-year="<?php echo esc_attr( $date_year ); ?>"
@@ -275,9 +275,9 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 
                                 <!-- Urgent Pulsing Tag on Image -->
                                 <?php if ( $is_urgent ) : ?>
-                                    <span class="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600/95 text-white backdrop-blur-md text-[10px] font-black uppercase tracking-wider shadow-md z-10 border border-white/20">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                                        🚨 PENTING
+                                    <span class="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/85 dark:bg-slate-950/85 text-amber-300 backdrop-blur-md text-[10px] font-black uppercase tracking-wider shadow-md z-10 border border-amber-400/40">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                        PENTING
                                     </span>
                                 <?php endif; ?>
                             </div>
@@ -295,9 +295,9 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                                 <?php echo esc_html( $cat_info['label'] ?? 'Pengumuman Resmi' ); ?>
                                             </span>
                                             <?php if ( $is_urgent ) : ?>
-                                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 text-[10px] font-black uppercase tracking-wider shadow-sm">
-                                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
-                                                    🚨 PENTING
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 text-[10px] font-black uppercase tracking-wider shadow-xs">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                    PENTING
                                                 </span>
                                             <?php endif; ?>
                                         </div>
@@ -342,7 +342,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                            target="_blank"
                                            download
                                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-dark-surface text-slate-700 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-teal-950/60 hover:text-teal-700 dark:hover:text-teal-300 border border-slate-200 dark:border-dark-border transition-all">
-                                            <svg class="w-3.5 h-3.5 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                                            <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
                                             <span>PDF</span>
                                             <span class="text-[10px] text-slate-400 font-normal hidden sm:inline">(<?php echo esc_html( $file_size ); ?>)</span>
                                         </a>
@@ -430,9 +430,9 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 <div class="flex items-center justify-between gap-4 mb-3">
                     <div class="flex items-center gap-2 flex-wrap">
                         <span id="modal-category" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border"></span>
-                        <span id="modal-urgent-badge" class="hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 text-[10px] font-black uppercase">
-                            <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
-                            🚨 PENTING
+                        <span id="modal-urgent-badge" class="hidden inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 text-[10px] font-black uppercase">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                            PENTING
                         </span>
                         <span id="modal-date" class="text-xs font-semibold text-slate-500 dark:text-slate-400"></span>
                     </div>
@@ -476,7 +476,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 <!-- PDF Attachment Box -->
                 <div id="modal-pdf-box" class="hidden rounded-2xl p-4 sm:p-5 bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/80 dark:border-teal-800/60 flex items-center justify-between gap-4 flex-wrap">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950 text-red-600 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 shadow-sm border border-teal-200/60 dark:border-teal-800/60">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
                         </div>
                         <div>
@@ -855,7 +855,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             var topAccent   = document.getElementById('modal-top-accent');
             if (isUrgent) {
                 urgentBadge.classList.remove('hidden');
-                topAccent.className = 'h-2 w-full bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 flex-shrink-0';
+                topAccent.className = 'h-2 w-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 flex-shrink-0';
             } else {
                 urgentBadge.classList.add('hidden');
                 topAccent.className = 'h-2 w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-teal-600 flex-shrink-0';

@@ -38,10 +38,22 @@ $social_yt      = get_option( 'options_social_youtube', '' );
 
 // Legal & Copyright
 $copyright_text = get_option( 'options_footer_copyright', 'Bank Syariah Wakalumi. All Rights Reserved.' );
-$disclaimer_text= get_option( 'options_footer_disclaimer', 'BPRS Wakalumi Berizin dan Diawasi Oleh Otoritas Jasa Keuangan (OJK) serta merupakan peserta program penjaminan Lembaga Penjamin Simpanan (LPS).' );
+$disclaimer_text= get_option( 'options_footer_disclaimer', 'Bank Syariah Wakalumi Berizin dan Diawasi Oleh Otoritas Jasa Keuangan (OJK) serta merupakan peserta program penjaminan Lembaga Penjamin Simpanan (LPS).' );
+$disclaimer_text= str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $disclaimer_text );
 
 $wa_number      = get_option( 'options_contact_wa', '6281517380388' );
 $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
+
+$brand          = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
+    'logo_url'      => get_option( 'options_site_logo', '' ),
+    'logo_id'       => get_option( 'options_site_logo_id', 0 ),
+    'logo_dark_url' => get_option( 'options_site_logo_dark', '' ),
+    'logo_dark_id'  => get_option( 'options_site_logo_dark_id', 0 ),
+    'name'          => get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' ),
+    'tagline'       => get_option( 'options_site_brand_tagline', 'BSW' ),
+    'display_mode'  => get_option( 'options_site_logo_display', 'both' ),
+    'logo_height'   => get_option( 'options_site_logo_height', 42 ),
+];
 
 $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) ) 
     ? 'py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-10' 
@@ -72,24 +84,35 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
             <!-- Column 1: About & Social -->
             <div class="lg:col-span-1">
                 <div class="flex items-center gap-3 mb-5">
-                    <?php if ( has_custom_logo() ) : ?>
-                        <div class="w-10 h-10 flex-shrink-0">
-                            <?php
-                            $logo_id = get_theme_mod( 'custom_logo' );
-                            echo wp_get_attachment_image( $logo_id, 'thumbnail', false, [
-                                'class' => 'w-full h-full object-contain'
-                            ] );
-                            ?>
-                        </div>
-                    <?php else: ?>
-                        <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold">
-                            W
+                    <?php if ( $brand['display_mode'] !== 'text_only' ) : ?>
+                        <?php if ( ! empty( $brand['logo_dark_url'] ) || ! empty( $brand['logo_url'] ) ) : 
+                            $footer_logo = ! empty( $brand['logo_dark_url'] ) ? $brand['logo_dark_url'] : $brand['logo_url'];
+                        ?>
+                            <div class="flex items-center flex-shrink-0">
+                                <img src="<?php echo esc_url( $footer_logo ); ?>" 
+                                     alt="<?php echo esc_attr( $brand['name'] ); ?>" 
+                                     class="w-auto object-contain"
+                                     style="height: <?php echo esc_attr( $brand['logo_height'] ); ?>px; max-height: 52px;" />
+                            </div>
+                        <?php else: ?>
+                            <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold">
+                                W
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php if ( $brand['display_mode'] !== 'logo_only' ) : ?>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-white tracking-tight leading-none mb-1">
+                                <?php echo esc_html( $brand['name'] ); ?>
+                            </h3>
+                            <?php if ( ! empty( $brand['tagline'] ) ) : ?>
+                                <p class="text-[10px] font-semibold text-primary-400 uppercase tracking-widest">
+                                    <?php echo esc_html( $brand['tagline'] ); ?>
+                                </p>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
-                    <div>
-                        <h3 class="text-xl font-extrabold text-white tracking-tight leading-none mb-1">Bank Syariah Wakalumi</h3>
-                        <p class="text-[10px] font-semibold text-primary-400 uppercase tracking-widest">BPRS</p>
-                    </div>
                 </div>
 
                 <p class="text-sm text-slate-400 leading-relaxed mb-8 pr-4">
@@ -215,7 +238,7 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
                     <?php if ( ! empty( $prayer_data['hijri'] ) ) : ?>
                         <span class="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5 text-teal-400/80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.253 18.75h18a2.25 2.25 0 002.25-2.25V7.5a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 7.5v11.25c0 1.243 1.007 2.25 2.25 2.25z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                             </svg>
                             <span><?php echo esc_html( $prayer_data['hijri'] ); ?></span>
                         </span>

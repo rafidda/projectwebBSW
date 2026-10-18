@@ -265,6 +265,14 @@ function wakalumi_register_acf_fields() {
                 'rows'         => 2,
                 'instructions' => 'Ringkasan singkat untuk kartu berita di beranda dan arsip.',
             ],
+            [
+                'key'          => 'field_berita_penulis',
+                'label'        => 'Nama Penulis / Redaksi',
+                'name'         => 'berita_penulis',
+                'type'         => 'text',
+                'default_value'=> 'Redaksi BPRS Wakalumi',
+                'instructions' => 'Nama jurnalis, staf humas, atau redaksi yang menulis artikel.',
+            ],
         ],
         'location' => [
             [

@@ -56,6 +56,16 @@
 <?php
 $wa_number = get_option( 'options_contact_wa', '6281517380388' );
 $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
+$brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
+    'logo_url'      => get_option( 'options_site_logo', '' ),
+    'logo_id'       => get_option( 'options_site_logo_id', 0 ),
+    'logo_dark_url' => get_option( 'options_site_logo_dark', '' ),
+    'logo_dark_id'  => get_option( 'options_site_logo_dark_id', 0 ),
+    'name'          => get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' ),
+    'tagline'       => get_option( 'options_site_brand_tagline', 'BSW' ),
+    'display_mode'  => get_option( 'options_site_logo_display', 'both' ),
+    'logo_height'   => get_option( 'options_site_logo_height', 42 ),
+];
 ?>
 
 <!-- ========================================
@@ -65,29 +75,47 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
     <div class="container-wide">
         <nav class="flex items-center justify-between h-16 md:h-20">
 
-            <!-- Logo & Name -->
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3 group relative z-10">
-                <?php if ( has_custom_logo() ) : ?>
-                    <div class="w-10 h-10 flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
-                        <?php
-                        $logo_id = get_theme_mod( 'custom_logo' );
-                        echo wp_get_attachment_image( $logo_id, 'thumbnail', false, [
-                            'class' => 'w-full h-full object-contain',
-                        ] );
-                        ?>
-                    </div>
-                <?php else : ?>
-                    <!-- Placeholder Logo (geometric Islamic pattern) -->
-                    <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/20 dark:shadow-primary-400/20 group-hover:scale-105 transition-transform duration-300">
-                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-                        </svg>
+            <!-- Logo & Name (Flexible Aspect Ratio & Full Dynamic Brand Control) -->
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-2.5 sm:gap-3 relative z-10 py-1">
+                <?php if ( $brand['display_mode'] !== 'text_only' ) : ?>
+                    <?php if ( ! empty( $brand['logo_url'] ) ) : ?>
+                        <div class="flex items-center flex-shrink-0">
+                            <!-- Logo Utama (Mode Terang) -->
+                            <img src="<?php echo esc_url( $brand['logo_url'] ); ?>" 
+                                 alt="<?php echo esc_attr( $brand['name'] ); ?>" 
+                                 class="w-auto object-contain transition-all duration-300 <?php echo ! empty( $brand['logo_dark_url'] ) ? 'dark:hidden' : ''; ?>"
+                                 style="height: <?php echo esc_attr( $brand['logo_height'] ); ?>px; max-height: 52px;" />
+                            
+                            <?php if ( ! empty( $brand['logo_dark_url'] ) ) : ?>
+                                <!-- Logo Khusus Dark Mode (jika diunggah) -->
+                                <img src="<?php echo esc_url( $brand['logo_dark_url'] ); ?>" 
+                                     alt="<?php echo esc_attr( $brand['name'] ); ?>" 
+                                     class="w-auto object-contain transition-all duration-300 hidden dark:block"
+                                     style="height: <?php echo esc_attr( $brand['logo_height'] ); ?>px; max-height: 52px;" />
+                            <?php endif; ?>
+                        </div>
+                    <?php else : ?>
+                        <!-- Placeholder Logo (geometric Islamic pattern) -->
+                        <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/20 dark:shadow-primary-400/20">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                            </svg>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ( $brand['display_mode'] !== 'logo_only' ) : ?>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-[16px] sm:text-[17px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-none mb-0.5">
+                            <?php echo esc_html( $brand['name'] ); ?>
+                        </span>
+                        <?php if ( ! empty( $brand['tagline'] ) ) : ?>
+                            <span class="text-[9px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-[0.2em] opacity-80 leading-none">
+                                <?php echo esc_html( $brand['tagline'] ); ?>
+                            </span>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
-                <div>
-                    <h1 class="text-[17px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-none mb-0.5">Bank Syariah Wakalumi</h1>
-                    <p class="text-[9px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-[0.2em] opacity-80">BPRS</p>
-                </div>
             </a>
 
             <?php
@@ -98,12 +126,12 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             $is_page_home      = ( is_front_page() || is_home() || $req_uri === '/' );
             $is_page_profil    = ( ! $is_page_home && ( strpos( $req_uri, '/profil' ) === 0 || is_page( [ 'tentang-kami', 'legalitas', 'susunan-pengurus', 'jaringan-kantor' ] ) ) );
             $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || strpos( $req_uri, '/brosur' ) === 0 || is_page( 'brosur' ) || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
-            $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/pengumuman' ) === 0 || is_page( 'pengumuman' ) || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
+            $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/pengumuman' ) === 0 || strpos( $req_uri, '/lelang' ) === 0 || strpos( $req_uri, '/tim-kami' ) === 0 || is_page( [ 'pengumuman', 'lelang', 'tim-kami' ] ) || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
 
             // Brosur Dokumen Dinamis dari Database
             $brosur_file_url  = get_option( 'options_brosur_file_url', '' );
-            $brosur_file_name = get_option( 'options_brosur_file_name', 'Brosur Resmi BPRS Wakalumi (Edisi 2026).pdf' );
+            $brosur_file_name = get_option( 'options_brosur_file_name', 'Brosur Resmi Bank Syariah Wakalumi (Edisi 2026).pdf' );
             $brosur_file_size = get_option( 'options_brosur_file_size', 'PDF Resmi • Edisi Terkini' );
             ?>
 
@@ -189,7 +217,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                 Tata Kelola Perusahaan
                             </span>
-                            <span class="font-bold uppercase tracking-wider text-[11px] text-slate-400 dark:text-slate-500">BPRS Wakalumi</span>
+                            <span class="font-bold uppercase tracking-wider text-[11px] text-slate-400 dark:text-slate-500">BSW</span>
                         </div>
                     </div>
                 </div>
@@ -476,14 +504,14 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                             </div>
                                         </a>
 
-                                        <!-- Pengumuman Resmi Bank -->
-                                        <a href="<?php echo esc_url( home_url( '/informasi/pengumuman/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/pengumuman' ) !== false ) ? 'active' : ''; ?>">
-                                            <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.455a20.01 20.01 0 01-1.341-3.67m3.003-.549c.562-.05 1.135-.08 1.716-.08h.277c1.192 0 2.275.642 2.872 1.681l1.109 1.93c.31.54.103 1.232-.444 1.518l-.684.356c-.53.275-1.187.11-1.503-.396l-.99-1.587m-2.357-4.422a21.464 21.464 0 00-.737-2.617m0 0a21.465 21.465 0 01.737-2.618m0 5.235c.24.02.48.035.72.047m-1.44-.094c-.24.02-.48.035-.72.047" /></svg>
+                                        <!-- Literasi & Inklusi Keuangan -->
+                                        <a href="<?php echo esc_url( home_url( '/informasi/literasi-keuangan/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/literasi' ) !== false ) ? 'active' : ''; ?>">
+                                            <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.493 1.508 1.333 1.508 2.316V18" /></svg>
                                             </div>
                                             <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pengumuman Resmi</span>
-                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Jadwal operasional &amp; lelang</span>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Literasi &amp; Inklusi</span>
+                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Edukasi syariah &amp; kepatuhan OJK</span>
                                             </div>
                                         </a>
                                     </div>
@@ -505,6 +533,34 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                     </div>
                                     
                                     <div class="space-y-1.5">
+                                        <!-- Pengumuman Resmi Bank -->
+                                        <a href="<?php echo esc_url( home_url( '/informasi/pengumuman/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/pengumuman' ) !== false ) ? 'active' : ''; ?>">
+                                            <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.455a20.01 20.01 0 01-1.341-3.67m3.003-.549c.562-.05 1.135-.08 1.716-.08h.277c1.192 0 2.275.642 2.872 1.681l1.109 1.93c.31.54.103 1.232-.444 1.518l-.684.356c-.53.275-1.187.11-1.503-.396l-.99-1.587m-2.357-4.422a21.464 21.464 0 00-.737-2.617m0 0a21.465 21.465 0 01.737-2.618m0 5.235c.24.02.48.035.72.047m-1.44-.094c-.24.02-.48.035-.72.047" /></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pengumuman Resmi</span>
+                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Jadwal operasional &amp; edaran</span>
+                                            </div>
+                                        </a>
+
+                                        <!-- Info Lelang Agunan -->
+                                        <a href="<?php echo esc_url( home_url( '/informasi/lelang/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/lelang' ) !== false || strpos( $req_uri, '/lelang' ) !== false || is_page( 'lelang' ) ) ? 'active' : ''; ?>">
+                                            <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="m14 13-7.5 7.5a2.12 2.12 0 1 1-3-3L11 10"/>
+                                                    <path d="m16 16 6-6"/>
+                                                    <path d="m8 8 6-6"/>
+                                                    <path d="m9 7 8 8"/>
+                                                    <path d="m21 11-8-8"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Info Lelang Agunan</span>
+                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Aset jaminan &amp; AYDA likuidasi</span>
+                                            </div>
+                                        </a>
+
                                         <!-- Berita & Edukasi -->
                                         <a href="<?php echo esc_url( home_url( '/berita/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/berita' ) === 0 ) ? 'active' : ''; ?>">
                                             <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
@@ -516,10 +572,10 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                             </div>
                                         </a>
 
-                                        <!-- Kegiatan BPRS Wakalumi -->
+                                        <!-- Kegiatan Bank Syariah Wakalumi -->
                                         <a href="<?php echo esc_url( home_url( '/informasi/kegiatan/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/kegiatan' ) !== false ) ? 'active' : ''; ?>">
                                             <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.253M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
                                             </div>
                                             <div>
                                                 <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Kegiatan &amp; Agenda</span>
@@ -552,10 +608,25 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                 <div>
                                     <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 w-fit mb-3 border border-amber-200/50 dark:border-amber-800/50">
                                         <svg class="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg>
-                                        <span class="text-xs font-black uppercase tracking-wider">Karir &amp; Program</span>
+                                        <span class="text-xs font-black uppercase tracking-wider">SDM &amp; Karir</span>
                                     </div>
                                     
                                     <div class="space-y-1.5">
+                                        <!-- Tim Kami & Verifikasi Karyawan -->
+                                        <a href="<?php echo esc_url( home_url( '/informasi/tim-kami/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/tim-kami' ) !== false || strpos( $req_uri, '/tim-kami' ) !== false || is_page( 'tim-kami' ) ) ? 'active' : ''; ?>">
+                                            <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                                    <circle cx="12" cy="10" r="3"/>
+                                                    <path d="M7 21v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Tim Kami</span>
+                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Direktori &amp; verifikasi staf aktif</span>
+                                            </div>
+                                        </a>
+
                                         <!-- Karir & Rekrutmen -->
                                         <a href="<?php echo esc_url( home_url( '/informasi/karir/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/karir' ) !== false ) ? 'active' : ''; ?>">
                                             <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
@@ -567,27 +638,6 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                                             </div>
                                         </a>
 
-                                        <!-- Literasi & Inklusi Keuangan -->
-                                        <a href="<?php echo esc_url( home_url( '/informasi/literasi-keuangan/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/literasi' ) !== false ) ? 'active' : ''; ?>">
-                                            <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.493 1.508 1.333 1.508 2.316V18" /></svg>
-                                            </div>
-                                            <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Literasi &amp; Inklusi</span>
-                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Edukasi syariah, inklusi &amp; kuis</span>
-                                            </div>
-                                        </a>
-
-                                        <!-- Informasi Nisbah Bagi Hasil -->
-                                        <a href="<?php echo esc_url( home_url( '/informasi/nisbah/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/nisbah' ) !== false ) ? 'active' : ''; ?>">
-                                            <div class="w-8 h-8 rounded-xl bg-cyan-50 dark:bg-cyan-950/70 text-cyan-600 dark:text-cyan-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>
-                                            </div>
-                                            <div>
-                                                <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Informasi Nisbah</span>
-                                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block leading-snug">Equivalent rate imbal hasil bulanan</span>
-                                            </div>
-                                        </a>
                                     </div>
                                 </div>
 
@@ -604,7 +654,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-2 text-xs text-slate-500 dark:text-slate-400">
                             <span class="inline-flex items-center gap-1.5 font-medium">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                Transparansi Informasi Resmi BPRS Wakalumi • Terdaftar &amp; Diawasi OJK
+                                Transparansi Informasi Resmi Bank Syariah Wakalumi (BSW) • Terdaftar &amp; Diawasi OJK
                             </span>
                             <a href="https://kontak157.ojk.go.id/" target="_blank" rel="noopener noreferrer" class="font-bold text-teal-600 hover:text-teal-700 dark:text-teal-400 inline-flex items-center gap-1 hover:underline">
                                 <span>Portal APPK OJK (Kontak 157)</span> &rarr;
@@ -827,27 +877,39 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <div class="<?php echo $is_page_produk ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
+                <div class="<?php echo $is_page_produk ? '' : 'hidden'; ?> pl-2 mt-1 space-y-1 mobile-dropdown-content">
                     <!-- Penghimpunan Dana -->
                     <div class="px-3 pt-2 pb-1 text-[10px] font-extrabold text-teal-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Penghimpunan Dana
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        Tabungan Syariah (Tawakal, Pendidikan, Haji, Ukhuwah)
+                    <a href="<?php echo esc_url( home_url( '/produk/tabungan-syariah/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( $req_uri === '/produk/tabungan-syariah' || strpos( $req_uri, '/produk/tabungan' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Tabungan Syariah (Tawakal, Haji, dll)</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah/#tenor' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        Deposito Mudharabah (1-12 Bulan)
+                    <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah/#tenor' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( $req_uri === '/produk/deposito-syariah' || strpos( $req_uri, '/produk/deposito' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Deposito Mudharabah (1-12 Bulan)</span>
                     </a>
 
                     <!-- Penyaluran Dana -->
                     <div class="px-3 pt-3 pb-1 text-[10px] font-extrabold text-primary-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Penyaluran Dana (Lending)
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#pedagang' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
-                        ⭐ 1000 Pedagang & 1000 Guru
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#pedagang' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                        <span class="w-6 h-6 rounded-md bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">1000 Pedagang &amp; 1000 Guru</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#akad-syariah' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
-                        ⚖️ Akad Murabahah, Bagi Hasil, Ijarah
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#akad-syariah' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Akad Murabahah, Bagi Hasil, Ijarah</span>
                     </a>
 
                     <!-- Katalog Brosur Mobile -->
@@ -891,47 +953,86 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <div class="<?php echo $is_page_informasi ? '' : 'hidden'; ?> pl-4 mt-1 space-y-1 mobile-dropdown-content">
+                <div class="<?php echo $is_page_informasi ? '' : 'hidden'; ?> pl-2 mt-1 space-y-1 mobile-dropdown-content">
                     <!-- Regulasi & Kepatuhan -->
                     <div class="px-3 pt-2 pb-1 text-[10px] font-extrabold text-teal-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Regulasi &amp; Kepatuhan
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/informasi/laporan-publikasi/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/laporan' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        ⚖️ Laporan Publikasi &amp; Tata Kelola
+                    <a href="<?php echo esc_url( home_url( '/informasi/laporan-publikasi/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/laporan' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Laporan Publikasi &amp; Tata Kelola</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/pengaduan-konsumen/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/pengaduan' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        🛡️ Layanan Pengaduan Konsumen
+                    <a href="<?php echo esc_url( home_url( '/informasi/pengaduan-konsumen/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/pengaduan' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Layanan Pengaduan Konsumen</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/pengumuman/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/pengumuman' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        📢 Pengumuman Resmi Bank
+                    <a href="<?php echo esc_url( home_url( '/informasi/literasi-keuangan/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/literasi' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.493 1.508 1.333 1.508 2.316V18" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Literasi &amp; Inklusi Syariah</span>
                     </a>
 
                     <!-- Warta & Media -->
                     <div class="px-3 pt-3 pb-1 text-[10px] font-extrabold text-primary-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Warta &amp; Dokumentasi
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/berita/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/berita' ) === 0 ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        📰 Berita &amp; Warta Syariah
+                    <a href="<?php echo esc_url( home_url( '/informasi/pengumuman/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/pengumuman' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.455a20.01 20.01 0 01-1.341-3.67m3.003-.549c.562-.05 1.135-.08 1.716-.08h.277c1.192 0 2.275.642 2.872 1.681l1.109 1.93c.31.54.103 1.232-.444 1.518l-.684.356c-.53.275-1.187.11-1.503-.396l-.99-1.587m-2.357-4.422a21.464 21.464 0 00-.737-2.617m0 0a21.465 21.465 0 01.737-2.618m0 5.235c.24.02.48.035.72.047m-1.44-.094c-.24.02-.48.035-.72.047" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Pengumuman Resmi Bank</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/kegiatan/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/kegiatan' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        📅 Kegiatan &amp; Agenda Bank
+                    <a href="<?php echo esc_url( home_url( '/informasi/lelang/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/lelang' ) !== false || strpos( $req_uri, '/lelang' ) !== false || is_page( 'lelang' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m14 13-7.5 7.5a2.12 2.12 0 1 1-3-3L11 10"/>
+                                <path d="m16 16 6-6"/>
+                                <path d="m8 8 6-6"/>
+                                <path d="m9 7 8 8"/>
+                                <path d="m21 11-8-8"/>
+                            </svg>
+                        </span>
+                        <span class="text-xs font-semibold">Info Lelang Agunan (AYDA)</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/galeri/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/galeri' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        🖼️ Galeri Foto &amp; Video
+                    <a href="<?php echo esc_url( home_url( '/berita/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/berita' ) === 0 ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Berita &amp; Warta Syariah</span>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/informasi/kegiatan/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/kegiatan' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Kegiatan &amp; Agenda Bank</span>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/informasi/galeri/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/galeri' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Galeri Foto &amp; Video</span>
                     </a>
 
                     <!-- Karir & Program -->
                     <div class="px-3 pt-3 pb-1 text-[10px] font-extrabold text-amber-700 dark:text-amber-300 uppercase tracking-widest flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Karir &amp; Program
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> SDM &amp; Karir
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/informasi/karir/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/karir' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        💼 Karir &amp; Rekrutmen
+                    <a href="<?php echo esc_url( home_url( '/informasi/tim-kami/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/tim-kami' ) !== false || strpos( $req_uri, '/tim-kami' ) !== false || is_page( 'tim-kami' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-cyan-50 dark:bg-cyan-950/70 text-cyan-600 dark:text-cyan-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.33a6.721 6.721 0 00-3.169-.78 6.72 6.72 0 00-3.169.78A3.707 3.707 0 004.5 18h7.5a3.707 3.707 0 00-.706-2.295z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Tim Kami &amp; Verifikasi Staf</span>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/literasi-keuangan/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/literasi' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        💡 Literasi &amp; Inklusi Syariah
-                    </a>
-                    <a href="<?php echo esc_url( home_url( '/informasi/nisbah/' ) ); ?>" class="mobile-nav-sublink block px-4 py-2 rounded-lg text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/nisbah' ) !== false ) ? 'text-primary-600 font-bold dark:text-primary-400' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        📈 Informasi Nisbah Bulanan
+                    <a href="<?php echo esc_url( home_url( '/informasi/karir/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/karir' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Karir &amp; Rekrutmen</span>
                     </a>
                 </div>
             </div>

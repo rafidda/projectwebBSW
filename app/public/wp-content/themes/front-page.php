@@ -545,18 +545,63 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
      SECTION 3: TENTANG KAMI (ABOUT PREVIEW)
      ======================================== -->
 <?php
-$about_label    = get_option( 'options_about_label', function_exists( 'get_field' ) ? ( get_field( 'about_label' ) ?: 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' ) : 'Motto: Membangun Kualitas Hidup Berkah Sesuai Syariah' );
-$about_title    = get_option( 'options_about_title', function_exists( 'get_field' ) ? ( get_field( 'about_title' ) ?: 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' ) : 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
-$about_content  = get_option( 'options_about_content', function_exists( 'get_field' ) ? ( get_field( 'about_content' ) ?: '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' ) : '<p class="mb-3">PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), BPRS Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>' );
+// 1. Label & Judul (Sinkronisasi Otomatis dengan Profil: Tentang Kami)
+$about_label = get_option( 'options_about_label', '' );
+if ( empty( $about_label ) ) {
+    $about_label = get_option( 'options_about_page_sec_badge', 'Sekilas Perusahaan' );
+}
 
-$about_img_url  = get_option( 'options_about_image_url', '' );
+$about_title = get_option( 'options_about_title', '' );
+if ( empty( $about_title ) ) {
+    $about_title = get_option( 'options_about_page_sec_title', 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
+}
+$about_title = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $about_title );
+
+// 2. Isi Konten Paragraf
+$about_content = get_option( 'options_about_content', '' );
+if ( empty( $about_content ) ) {
+    $narrative_1 = get_option( 'options_about_page_narrative_1', '' );
+    $narrative_2 = get_option( 'options_about_page_narrative_2', '' );
+    if ( ! empty( $narrative_1 ) || ! empty( $narrative_2 ) ) {
+        $about_content = '';
+        if ( ! empty( $narrative_1 ) ) {
+            $about_content .= '<p class="mb-3">' . esc_html( $narrative_1 ) . '</p>';
+        }
+        if ( ! empty( $narrative_2 ) ) {
+            $about_content .= '<p>' . esc_html( $narrative_2 ) . '</p>';
+        }
+    } else {
+        $about_content = '<p class="mb-3">PT Bank Syariah Wakalumi (BSW) didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) sejak tahun 1989. Kami berkomitmen menyediakan layanan perbankan yang berlandaskan prinsip murni syariah Islam, berkeadilan, dan amanah.</p><p>Dengan fokus pemberdayaan ekonomi umat dan pelaku usaha mikro, kecil, dan menengah (UMKM), Bank Syariah Wakalumi senantiasa berpegang teguh pada nilai <strong>ISHLAH</strong>—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama.</p>';
+    }
+}
+$about_content = str_replace( 'PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi', 'PT Bank Syariah Wakalumi (BSW)', $about_content );
+$about_content = str_replace( 'PT. Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi', 'PT Bank Syariah Wakalumi (BSW)', $about_content );
+$about_content = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $about_content );
+
+// 3. Foto / Gambar Cover
+$about_img_url = get_option( 'options_about_image_url', '' );
+if ( empty( $about_img_url ) ) {
+    $about_img_url = get_option( 'options_about_page_image', '' );
+}
 if ( empty( $about_img_url ) ) {
     $acf_img = function_exists( 'get_field' ) ? get_field( 'about_image' ) : null;
     $about_img_url = $acf_img ? ( $acf_img['sizes']['large'] ?? $acf_img['url'] ) : get_template_directory_uri() . '/assets/img/about-photo.jpg';
 }
 
-$about_cta_text = get_option( 'options_about_cta_text', function_exists( 'get_field' ) ? ( get_field( 'about_cta_text' ) ?: 'Selengkapnya Tentang Kami' ) : 'Selengkapnya Tentang Kami' );
-$about_cta_url  = get_option( 'options_about_cta_url', function_exists( 'get_field' ) ? ( get_field( 'about_cta_url' ) ?: home_url( '/profil/tentang-kami' ) ) : home_url( '/profil/tentang-kami' ) );
+// 4. Statistik Singkat Terpadu dari Halaman Tentang Kami
+$stat_1_val = get_option( 'options_about_page_stat_1_val', '35+' );
+$stat_1_lbl = get_option( 'options_about_page_stat_1_lbl', 'Tahun Pengalaman (1989)' );
+$stat_2_val = get_option( 'options_about_page_stat_2_val', '10.000+' );
+$stat_2_lbl = get_option( 'options_about_page_stat_2_lbl', 'Nasabah Setia' );
+$stat_3_val = get_option( 'options_about_page_stat_3_val', '100%' );
+$stat_3_lbl = get_option( 'options_about_page_stat_3_lbl', 'Prinsip Murni Syariah' );
+
+// 5. Tombol Aksi CTA
+$about_cta_text = get_option( 'options_about_cta_text', 'Selengkapnya Tentang Kami' );
+$about_cta_url  = get_option( 'options_about_cta_url', '' );
+if ( empty( $about_cta_url ) ) {
+    $about_cta_url = home_url( '/profil/tentang-kami/' );
+}
 $about_img_mob  = get_option( 'options_about_img_mobile_mode', 'show_top' );
 
 // Mobile layout order classes
@@ -593,9 +638,26 @@ if ( $about_img_mob === 'hide' ) {
             <div class="<?php echo esc_attr( $text_col_class ); ?>" data-aos="fade-left">
                 <span class="section-label mb-4 inline-block"><?php echo esc_html( $about_label ); ?></span>
                 <h2 class="section-title mb-6"><?php echo esc_html( $about_title ); ?></h2>
-                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none mb-8">
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none mb-6">
                     <?php echo wp_kses_post( $about_content ); ?>
                 </div>
+
+                <!-- Highlights Stats Synchronized with Tentang Kami -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs">
+                        <div class="text-lg sm:text-xl font-extrabold text-teal-600 dark:text-teal-400"><?php echo esc_html( $stat_1_val ); ?></div>
+                        <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $stat_1_lbl ); ?></div>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs">
+                        <div class="text-lg sm:text-xl font-extrabold text-primary-600 dark:text-teal-300"><?php echo esc_html( $stat_2_val ); ?></div>
+                        <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $stat_2_lbl ); ?></div>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs col-span-2 sm:col-span-1">
+                        <div class="text-lg sm:text-xl font-extrabold text-emerald-600 dark:text-emerald-400"><?php echo esc_html( $stat_3_val ); ?></div>
+                        <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $stat_3_lbl ); ?></div>
+                    </div>
+                </div>
+
                 <div class="flex flex-wrap items-center gap-4">
                     <a href="<?php echo esc_url( $about_cta_url ); ?>" class="btn-primary text-sm inline-flex items-center gap-2">
                         <span><?php echo esc_html( $about_cta_text ); ?></span>
@@ -603,7 +665,7 @@ if ( $about_img_mob === 'hide' ) {
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/profil/legalitas' ) ); ?>" class="btn-secondary text-sm inline-flex items-center gap-2">
+                    <a href="<?php echo esc_url( home_url( '/profil/legalitas/' ) ); ?>" class="btn-secondary text-sm inline-flex items-center gap-2">
                         <span>Legalitas Perusahaan</span>
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
@@ -1364,7 +1426,7 @@ if ( $berita_query->have_posts() ) :
         <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-14" data-aos="fade-up">
             <div>
                 <span class="section-label mb-4 inline-block">Berita Terbaru</span>
-                <h2 class="section-title">Kabar dari <span class="text-primary-600 dark:text-primary-300">Wakalumi</span></h2>
+                <h2 class="section-title">Berita dari <span class="text-primary-600 dark:text-primary-300">BSW</span></h2>
             </div>
             <a href="<?php echo esc_url( home_url( '/berita' ) ); ?>"
                class="btn-ghost text-sm whitespace-nowrap">
@@ -1388,7 +1450,7 @@ if ( $berita_query->have_posts() ) :
             else :
                 // Dummy Data HTML fallback
                 $dummy_news = [
-                    ['title' => 'BPRS Wakalumi Raih Penghargaan Bank Syariah Terbaik 2026', 'date' => date('d M Y'), 'cat' => 'Penghargaan', 'excerpt' => 'Penghargaan ini merupakan wujud nyata dari komitmen kami dalam memberikan layanan syariah terbaik...'],
+                    ['title' => 'Bank Syariah Wakalumi Raih Penghargaan Bank Syariah Terbaik 2026', 'date' => date('d M Y'), 'cat' => 'Penghargaan', 'excerpt' => 'Penghargaan ini merupakan wujud nyata dari komitmen kami dalam memberikan layanan syariah terbaik...'],
                     ['title' => 'Peresmian Kantor Cabang Baru di Jakarta Selatan', 'date' => date('d M Y', strtotime('-2 days')), 'cat' => 'Info Perusahaan', 'excerpt' => 'Untuk mendekatkan layanan kepada nasabah, kami meresmikan kantor cabang baru dengan fasilitas modern...'],
                     ['title' => 'Literasi Keuangan Syariah untuk UMKM Kota Tangerang', 'date' => date('d M Y', strtotime('-5 days')), 'cat' => 'Edukasi', 'excerpt' => 'Program CSR kami bulan ini berfokus pada edukasi pengelolaan keuangan berbasis syariah untuk para pelaku usaha mikro...']
                 ];
@@ -1449,12 +1511,13 @@ $pk_url = ! empty( $pk_pages ) ? get_permalink( $pk_pages[0]->ID ) : home_url( '
 // Konten dinamis yang dapat dimodifikasi oleh admin via WP-Admin > Pengaduan Konsumen
 $pk_badge    = ! empty( $pk_cfg['home_badge'] ) ? $pk_cfg['home_badge'] : 'Kepatuhan Regulasi POJK No. 22/2023';
 $pk_title    = ! empty( $pk_cfg['home_title'] ) ? $pk_cfg['home_title'] : 'Layanan Pengaduan & Pelindungan Nasabah';
-$pk_desc     = ! empty( $pk_cfg['home_desc'] ) ? $pk_cfg['home_desc'] : 'BPRS Wakalumi berkomitmen memberikan kepastian dan keadilan bagi setiap nasabah. Sesuai regulasi OJK, mekanisme penanganan pengaduan kami transparan, bebas biaya (gratis), serta menjamin kerahasiaan informasi dengan batas waktu penyelesaian yang terukur.';
+$pk_desc     = ! empty( $pk_cfg['home_desc'] ) ? $pk_cfg['home_desc'] : 'Bank Syariah Wakalumi berkomitmen memberikan kepastian dan keadilan bagi setiap nasabah. Sesuai regulasi OJK, mekanisme penanganan pengaduan kami transparan, bebas biaya (gratis), serta menjamin kerahasiaan informasi dengan batas waktu penyelesaian yang terukur.';
+$pk_desc     = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $pk_desc );
 $pk_btn_text = ! empty( $pk_cfg['home_btn_text'] ) ? $pk_cfg['home_btn_text'] : 'Pelajari Prosedur & Ajukan Pengaduan';
 
 $pk_wa       = ! empty( $pk_cfg['wa'] ) ? $pk_cfg['wa'] : '6281517380388';
 $pk_clean_wa = preg_replace( '/[^0-9]/', '', $pk_wa );
-$pk_wa_url   = 'https://wa.me/' . $pk_clean_wa . '?text=' . rawurlencode( 'Halo Tim Layanan Nasabah BPRS Wakalumi, saya ingin menyampaikan pengaduan terkait layanan perbankan.' );
+$pk_wa_url   = 'https://wa.me/' . $pk_clean_wa . '?text=' . rawurlencode( 'Halo Tim Layanan Nasabah Bank Syariah Wakalumi, saya ingin menyampaikan pengaduan terkait layanan perbankan.' );
 $pk_phone    = ! empty( $pk_cfg['phone'] ) ? $pk_cfg['phone'] : '(021) 7471 4555';
 $pk_clean_tel= preg_replace( '/[^0-9\+]/', '', $pk_phone );
 $pk_sla_l    = ! empty( $pk_cfg['sla_lisan'] ) ? $pk_cfg['sla_lisan'] : '5 Hari Kerja';
@@ -1601,7 +1664,7 @@ $pk_ojk_tel  = ! empty( $pk_cfg['ojk_phone'] ) ? $pk_cfg['ojk_phone'] : '157';
                             <!-- Channel List -->
                             <div class="space-y-2.5 relative z-10">
                                 
-                                <!-- WhatsApp BPRS Wakalumi -->
+                                <!-- WhatsApp Bank Syariah Wakalumi -->
                                 <a href="<?php echo esc_url( $pk_wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="group/ch flex items-center justify-between p-3 rounded-xl bg-white/90 dark:bg-dark-card/90 border border-slate-200/80 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-600 hover:-translate-x-0.5 hover:shadow-sm transition-all duration-200">
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-xs shadow-emerald-500/30 group-hover/ch:scale-105 transition-transform">

@@ -127,7 +127,7 @@ $slide_duration = max( 4, (int)( $toast_settings['toast_duration'] ?? 7 ) ) * 10
                                     <?php endif; ?>
 
                                     <!-- Top Close ✕ (Dismiss All) -->
-                                    <button type="button" class="btn-close-popup-x w-7 h-7 rounded-lg bg-white/10 hover:bg-rose-500/80 text-slate-300 hover:text-white flex items-center justify-center transition-colors ml-1" aria-label="Tutup Pop-up" title="Tutup">
+                                    <button type="button" class="btn-close-popup-x w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors ml-1" aria-label="Tutup Pop-up" title="Tutup">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                                     </button>
                                 </div>
@@ -145,39 +145,52 @@ $slide_duration = max( 4, (int)( $toast_settings['toast_duration'] ?? 7 ) ) * 10
                             </div>
 
                             <!-- Title -->
-                            <h3 class="text-lg sm:text-xl font-black text-white tracking-tight leading-snug mb-3 line-clamp-2">
+                            <h3 class="text-lg sm:text-xl font-black text-white tracking-tight leading-snug mb-2.5 line-clamp-2">
                                 <?php echo esc_html( $p_title ); ?>
                             </h3>
 
                             <!-- Summary -->
-                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6 line-clamp-4">
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4 line-clamp-4">
                                 <?php echo esc_html( $p_summary ); ?>
                             </p>
 
-                            <!-- Bottom Action Buttons -->
-                            <div class="flex flex-col sm:flex-row items-center gap-2.5 pt-4 border-t border-white/10 mt-auto">
-                                <a href="<?php echo esc_url( $ann_page_url . '#' . $p_id ); ?>"
-                                   class="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs sm:text-sm text-center shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-1.5">
-                                    <span>Baca Lengkap</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                                </a>
+                            <!-- Bottom Action Buttons (Minimalist, Single-Line & Non-Wrapping) -->
+                            <div class="flex flex-col gap-2 pt-3.5 border-t border-white/10 mt-auto">
+                                <div class="flex items-center gap-2">
+                                    <a href="<?php echo esc_url( $ann_page_url . '#' . $p_id ); ?>"
+                                       class="flex-1 py-2 px-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-xs sm:text-sm text-center shadow-md shadow-amber-500/20 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                        <span>Baca Lengkap</span>
+                                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                    </a>
+
+                                    <?php if ( $p_link_act && ! empty( $p_link_url ) ) : ?>
+                                        <a href="<?php echo esc_url( $p_link_url ); ?>"
+                                           target="<?php echo esc_attr( $p_link_tgt ); ?>"
+                                           <?php echo ( $p_link_tgt === '_blank' ) ? 'rel="noopener noreferrer"' : ''; ?>
+                                           class="py-2 px-3 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm text-center shadow-md shadow-teal-600/20 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-1 whitespace-nowrap shrink-0">
+                                            <span class="truncate max-w-[120px] sm:max-w-[140px]"><?php echo esc_html( $p_link_txt ); ?></span>
+                                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                        </a>
+                                    <?php endif; ?>
+
+                                    <?php if ( ! $p_link_act || empty( $p_link_url ) ) : ?>
+                                        <!-- Bottom Close Button when no extra link: compact sibling pill -->
+                                        <button type="button" 
+                                                class="btn-dismiss-popup-step py-2 px-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white font-semibold text-xs sm:text-sm text-center border border-white/10 transition-colors whitespace-nowrap shrink-0"
+                                                data-step-index="<?php echo $p_idx; ?>">
+                                            <?php echo ( $total_popups > 1 && $p_idx < $total_popups - 1 ) ? 'Lanjut ›' : 'Tutup'; ?>
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
 
                                 <?php if ( $p_link_act && ! empty( $p_link_url ) ) : ?>
-                                    <a href="<?php echo esc_url( $p_link_url ); ?>"
-                                       target="<?php echo esc_attr( $p_link_tgt ); ?>"
-                                       <?php echo ( $p_link_tgt === '_blank' ) ? 'rel="noopener noreferrer"' : ''; ?>
-                                       class="w-full sm:w-auto py-2.5 px-3.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-xs sm:text-sm text-center shadow-lg shadow-teal-600/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-1.5">
-                                        <span><?php echo esc_html( $p_link_txt ); ?></span>
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                                    </a>
+                                    <!-- Full-width minimalist dismiss row when extra link exists -->
+                                    <button type="button" 
+                                            class="btn-dismiss-popup-step w-full py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-slate-200 font-medium text-[11px] text-center border border-white/10 transition-colors whitespace-nowrap"
+                                            data-step-index="<?php echo $p_idx; ?>">
+                                        <?php echo ( $total_popups > 1 && $p_idx < $total_popups - 1 ) ? 'Lanjut ke Pengumuman Berikutnya ›' : 'Tutup Pengumuman'; ?>
+                                    </button>
                                 <?php endif; ?>
-
-                                <!-- Bottom Close Button: Advances to next popup if available, or closes if last -->
-                                <button type="button" 
-                                        class="btn-dismiss-popup-step w-full sm:w-auto py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs sm:text-sm text-center border border-white/15 transition-colors"
-                                        data-step-index="<?php echo $p_idx; ?>">
-                                    <?php echo ( $total_popups > 1 && $p_idx < $total_popups - 1 ) ? 'Tutup (Lanjut ke-2 ›)' : 'Tutup'; ?>
-                                </button>
                             </div>
 
                         </div>
@@ -271,7 +284,7 @@ $slide_duration = max( 4, (int)( $toast_settings['toast_duration'] ?? 7 ) ) * 10
                 <?php endif; ?>
 
                 <!-- Close / Dismiss Button -->
-                <button type="button" id="btn-close-toast" class="w-6 h-6 rounded-md bg-white/10 hover:bg-rose-500/80 text-slate-300 hover:text-white flex items-center justify-center transition-colors ml-1" aria-label="Tutup Notifikasi">
+                <button type="button" id="btn-close-toast" class="w-6 h-6 rounded-md bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors ml-1" aria-label="Tutup Notifikasi">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -313,9 +326,9 @@ $slide_duration = max( 4, (int)( $toast_settings['toast_duration'] ?? 7 ) ) * 10
                                     🏷️ <?php echo esc_html( $s_cat_info['pill_label'] ?? $s_cat_info['label'] ); ?>
                                 </span>
                                 <?php if ( $s_urgent ) : ?>
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-extrabold uppercase">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
-                                        🚨 PENTING
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-extrabold uppercase tracking-wide">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                        PENTING
                                     </span>
                                 <?php endif; ?>
                                 <span class="text-[11px] text-slate-400 font-medium">📅 <?php echo esc_html( $s_date ); ?></span>
@@ -355,8 +368,8 @@ $slide_duration = max( 4, (int)( $toast_settings['toast_duration'] ?? 7 ) ) * 10
 
                         <div class="flex items-center gap-2 shrink-0">
                             <?php if ( ! empty( $s_pdf ) ) : ?>
-                                <span class="inline-flex items-center gap-1 text-[10px] text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded border border-rose-500/30 font-semibold" title="Ada Dokumen PDF">
-                                    <svg class="w-3 h-3 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                                <span class="inline-flex items-center gap-1 text-[10px] text-teal-300 bg-teal-500/20 px-2 py-0.5 rounded border border-teal-500/30 font-semibold" title="Ada Dokumen PDF">
+                                    <svg class="w-3 h-3 text-teal-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
                                     PDF
                                 </span>
                             <?php endif; ?>

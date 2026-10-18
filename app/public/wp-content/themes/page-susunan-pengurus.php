@@ -131,7 +131,8 @@ $ojk_notice_desc  = get_option( 'options_pengurus_ojk_notice_desc', 'Sesuai deng
 $show_cta      = get_option( 'options_pengurus_cta_show', '1' );
 $cta_badge     = get_option( 'options_pengurus_cta_badge', 'Bergabung Bersama Kami' );
 $cta_title     = get_option( 'options_pengurus_cta_title', 'Siap Mempercayakan Dana Anda pada Kepemimpinan Profesional Syariah?' );
-$cta_desc      = get_option( 'options_pengurus_cta_desc', 'Konsultasikan kebutuhan perbankan syariah Anda bersama tim profesional BPRS Wakalumi, atau temukan solusi simpanan dan pembiayaan yang tepat untuk masa depan finansial Anda.' );
+$cta_desc      = get_option( 'options_pengurus_cta_desc', 'Konsultasikan kebutuhan perbankan syariah Anda bersama tim profesional Bank Syariah Wakalumi, atau temukan solusi simpanan dan pembiayaan yang tepat untuk masa depan finansial Anda.' );
+$cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_desc );
 $cta_btn1_text = get_option( 'options_pengurus_cta_btn1_text', 'Hubungi via WhatsApp' );
 $cta_btn1_url  = get_option( 'options_pengurus_cta_btn1_url', '' );
 $cta_btn2_text = get_option( 'options_pengurus_cta_btn2_text', 'Jelajahi Produk Kami' );
@@ -744,7 +745,7 @@ $total_members = count( $pengurus_list );
         <div class="max-w-4xl mx-auto" data-aos="zoom-in" data-aos-delay="100">
             <div class="rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-xl bg-slate-50 dark:bg-slate-900/95 cursor-pointer group relative" id="orgchart-container">
                 <img src="<?php echo esc_url( $orgchart_image ); ?>" 
-                     alt="Bagan Struktur Organisasi BPRS Wakalumi" 
+                     alt="Bagan Struktur Organisasi Bank Syariah Wakalumi" 
                      class="w-full h-auto group-hover:scale-[1.02] transition-transform duration-500"
                      loading="lazy">
                 <div class="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors flex items-center justify-center pointer-events-none">

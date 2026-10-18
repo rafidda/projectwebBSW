@@ -26,11 +26,11 @@ function wakalumi_register_admin_options_menu() {
         2
     );
 
-    // Submenu 1: Umum & WhatsApp CS
+    // Submenu 1: Umum, Logo & Identitas Website
     add_submenu_page(
         'wakalumi-settings',
-        'Umum & WhatsApp CS',
-        'Umum & WhatsApp',
+        'Umum, Logo & Identitas Website',
+        'Umum & Logo Brand',
         'manage_options',
         'wakalumi-settings',
         'wakalumi_render_general_page'
@@ -81,24 +81,82 @@ add_action( 'admin_menu', 'wakalumi_register_admin_options_menu' );
 
 /**
  * ─────────────────────────────────────────────────────────────
- * 1. RENDER: UMUM & WHATSAPP CS
+ * 1. RENDER: UMUM, LOGO BRAND & WHATSAPP CS
  * ─────────────────────────────────────────────────────────────
  */
 function wakalumi_render_general_page() {
     if ( isset( $_POST['wakalumi_save_general'] ) && check_admin_referer( 'wakalumi_general_nonce' ) ) {
+        // WhatsApp CS
         update_option( 'options_contact_wa', sanitize_text_field( $_POST['options_contact_wa'] ?? '' ) );
         update_option( 'options_contact_wa_message', sanitize_text_field( $_POST['options_contact_wa_message'] ?? '' ) );
 
-        echo '<div class="notice notice-success is-dismissible"><p><strong>Pengaturan Umum & WhatsApp berhasil disimpan!</strong></p></div>';
+        // Brand & Logo
+        $site_logo    = esc_url_raw( $_POST['options_site_logo'] ?? '' );
+        $site_logo_id = intval( $_POST['options_site_logo_id'] ?? 0 );
+        update_option( 'options_site_logo', $site_logo );
+        update_option( 'options_site_logo_id', $site_logo_id );
+
+        $site_logo_dark    = esc_url_raw( $_POST['options_site_logo_dark'] ?? '' );
+        $site_logo_dark_id = intval( $_POST['options_site_logo_dark_id'] ?? 0 );
+        update_option( 'options_site_logo_dark', $site_logo_dark );
+        update_option( 'options_site_logo_dark_id', $site_logo_dark_id );
+
+        $brand_name = sanitize_text_field( $_POST['options_site_brand_name'] ?? '' );
+        update_option( 'options_site_brand_name', $brand_name );
+
+        $brand_tagline = sanitize_text_field( $_POST['options_site_brand_tagline'] ?? '' );
+        update_option( 'options_site_brand_tagline', $brand_tagline );
+
+        $logo_display = sanitize_text_field( $_POST['options_site_logo_display'] ?? 'both' );
+        update_option( 'options_site_logo_display', in_array( $logo_display, [ 'both', 'logo_only', 'text_only' ], true ) ? $logo_display : 'both' );
+
+        $logo_height = intval( $_POST['options_site_logo_height'] ?? 42 );
+        if ( $logo_height < 24 ) $logo_height = 24;
+        if ( $logo_height > 70 ) $logo_height = 70;
+        update_option( 'options_site_logo_height', $logo_height );
+
+        // Favicon (Site Icon)
+        $site_favicon    = esc_url_raw( $_POST['options_site_favicon'] ?? '' );
+        $site_favicon_id = intval( $_POST['options_site_favicon_id'] ?? 0 );
+        update_option( 'options_site_favicon', $site_favicon );
+        update_option( 'options_site_favicon_id', $site_favicon_id );
+
+        // Sinkronisasi dengan WordPress core site_icon (otomatis melayani seluruh ukuran tab & mobile)
+        if ( $site_favicon_id > 0 ) {
+            update_option( 'site_icon', $site_favicon_id );
+        } elseif ( empty( $site_favicon ) ) {
+            delete_option( 'site_icon' );
+        }
+
+        // Sinkronisasi dengan WordPress Customizer (custom_logo theme_mod)
+        if ( $site_logo_id > 0 ) {
+            set_theme_mod( 'custom_logo', $site_logo_id );
+        } elseif ( empty( $site_logo ) ) {
+            remove_theme_mod( 'custom_logo' );
+        }
+
+        echo '<div class="notice notice-success is-dismissible"><p><strong>✅ Pengaturan Identitas Brand, Logo, Favicon & WhatsApp berhasil disimpan!</strong></p></div>';
     }
 
     $wa     = get_option( 'options_contact_wa', '6281517380388' );
     $wa_msg = get_option( 'options_contact_wa_message', 'Halo CS Bank Syariah Wakalumi, saya ingin berkonsultasi mengenai produk perbankan.' );
+    $brand  = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
+        'logo_url'      => get_option( 'options_site_logo', '' ),
+        'logo_id'       => get_option( 'options_site_logo_id', 0 ),
+        'logo_dark_url' => get_option( 'options_site_logo_dark', '' ),
+        'logo_dark_id'  => get_option( 'options_site_logo_dark_id', 0 ),
+        'favicon_url'   => get_option( 'options_site_favicon', '' ),
+        'favicon_id'    => get_option( 'options_site_favicon_id', 0 ),
+        'name'          => get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' ),
+        'tagline'       => get_option( 'options_site_brand_tagline', 'BPRS' ),
+        'display_mode'  => get_option( 'options_site_logo_display', 'both' ),
+        'logo_height'   => get_option( 'options_site_logo_height', 42 ),
+    ];
     ?>
     <div class="wrap" style="max-width: 900px; margin-top: 20px;">
         <h1 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
             <span class="dashicons dashicons-admin-generic" style="font-size: 32px; width: 32px; height: 32px; color: #088395;"></span>
-            Pengaturan Umum & WhatsApp CS
+            Pengaturan Umum, Logo & Identitas Website
         </h1>
 
         <!-- Notice Pengalihan Pengumuman -->
@@ -107,7 +165,7 @@ function wakalumi_render_general_page() {
                 <strong style="color: #0f766e; font-size: 14px;">📢 Pengumuman Website Kini Terpusat</strong>
                 <p style="margin: 4px 0 0 0; color: #334155; font-size: 13px;">
                     Sistem pengumuman resmi, notifikasi mengambang (Toast Notification), dan pop-up darurat kini dikelola lengkap melalui menu 
-                    <strong>Wakalumi Settings &rarr; Pengumuman Resmi</strong>.
+                    <strong>Pengaturan Website &rarr; Pengumuman Resmi</strong>.
                 </p>
             </div>
             <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-pengumuman' ) ); ?>" class="button button-primary" style="background: #088395; border-color: #066e7d; white-space: nowrap;">
@@ -119,7 +177,174 @@ function wakalumi_render_general_page() {
             <form method="post" action="">
                 <?php wp_nonce_field( 'wakalumi_general_nonce' ); ?>
 
-                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                <!-- SEKSI 1: LOGO & IDENTITAS BRAND -->
+                <h2 style="font-size: 16px; margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🏛️ Identitas Brand & Logo Website (Main Navbar & Footer)
+                </h2>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">
+                    Kelola logo resmi dan nama perusahaan untuk navigasi utama (Navbar) dan Footer. Logo menggunakan rasio aspek fleksibel tanpa terpotong (*responsive auto-width*).
+                </p>
+
+                <table class="form-table" style="margin-top: 0;">
+                    <!-- Logo Utama -->
+                    <tr>
+                        <th scope="row">
+                            <label for="options_site_logo">Logo Utama:</label>
+                        </th>
+                        <td>
+                            <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                                <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 10px; display: inline-flex; align-items: center; justify-content: center; min-width: 120px; min-height: 64px;">
+                                    <img id="site_logo_preview" src="<?php echo esc_url( $brand['logo_url'] ); ?>" style="max-height: 52px; max-width: 220px; width: auto; height: auto; object-fit: contain; <?php echo empty( $brand['logo_url'] ) ? 'display:none;' : ''; ?>" alt="Preview Logo" />
+                                    <span class="wkl-placeholder" style="<?php echo ! empty( $brand['logo_url'] ) ? 'display:none;' : ''; ?> color: #94a3b8; font-size: 11px;">Belum ada logo</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="options_site_logo" data-preview="site_logo_preview" data-target-id="options_site_logo_id" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah / Pilih Logo
+                                    </button>
+                                    <button type="button" class="button-link wkl-remove-btn" data-target="options_site_logo" data-preview="site_logo_preview" data-target-id="options_site_logo_id" style="color: #ef4444; font-size: 12px; <?php echo empty( $brand['logo_url'] ) ? 'display:none;' : ''; ?>">
+                                        ✕ Hapus Logo
+                                    </button>
+                                </div>
+                                <input type="hidden" id="options_site_logo" name="options_site_logo" value="<?php echo esc_attr( $brand['logo_url'] ); ?>">
+                                <input type="hidden" id="options_site_logo_id" name="options_site_logo_id" value="<?php echo esc_attr( $brand['logo_id'] ); ?>">
+                            </div>
+                            <p class="description" style="margin-top: 8px;">
+                                Rekomendasi: Gunakan format PNG transparan, WebP, SVG, atau JPG. Rasio aspek bebas (persegi, memanjang/horizontal, maupun bulat) dan <strong>tidak akan terpotong</strong>.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Logo Dark Mode (Opsional) -->
+                    <tr>
+                        <th scope="row">
+                            <label for="options_site_logo_dark">Logo Khusus Dark Mode <span style="font-weight: normal; color: #94a3b8;">(Opsional)</span>:</label>
+                        </th>
+                        <td>
+                            <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                                <div style="background: #0f172a; border: 1px dashed #334155; border-radius: 8px; padding: 10px; display: inline-flex; align-items: center; justify-content: center; min-width: 120px; min-height: 64px;">
+                                    <img id="site_logo_dark_preview" src="<?php echo esc_url( $brand['logo_dark_url'] ); ?>" style="max-height: 52px; max-width: 220px; width: auto; height: auto; object-fit: contain; <?php echo empty( $brand['logo_dark_url'] ) ? 'display:none;' : ''; ?>" alt="Preview Dark Logo" />
+                                    <span class="wkl-placeholder" style="<?php echo ! empty( $brand['logo_dark_url'] ) ? 'display:none;' : ''; ?> color: #64748b; font-size: 11px;">Gunakan Logo Utama</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="options_site_logo_dark" data-preview="site_logo_dark_preview" data-target-id="options_site_logo_dark_id" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah Logo Terang/Putih
+                                    </button>
+                                    <button type="button" class="button-link wkl-remove-btn" data-target="options_site_logo_dark" data-preview="site_logo_dark_preview" data-target-id="options_site_logo_dark_id" style="color: #ef4444; font-size: 12px; <?php echo empty( $brand['logo_dark_url'] ) ? 'display:none;' : ''; ?>">
+                                        ✕ Hapus
+                                    </button>
+                                </div>
+                                <input type="hidden" id="options_site_logo_dark" name="options_site_logo_dark" value="<?php echo esc_attr( $brand['logo_dark_url'] ); ?>">
+                                <input type="hidden" id="options_site_logo_dark_id" name="options_site_logo_dark_id" value="<?php echo esc_attr( $brand['logo_dark_id'] ); ?>">
+                            </div>
+                            <p class="description" style="margin-top: 8px;">
+                                Jika logo Anda memiliki versi berwarna putih/terang untuk latar belakang gelap. Jika dikosongkan, website otomatis menggunakan Logo Utama di semua mode.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Favicon / Icon Tab Browser (Site Icon) -->
+                    <tr style="background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+                        <th scope="row" style="padding: 20px 10px 20px 0;">
+                            <label for="options_site_favicon">Icon Tab Browser (Favicon):</label>
+                        </th>
+                        <td style="padding: 20px 0;">
+                            <!-- Simulasi Visual Tab Browser Modern -->
+                            <div style="margin-bottom: 14px;">
+                                <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 5px;">
+                                    Simulasi Tampilan Tab Browser:
+                                </span>
+                                <div style="display: flex; align-items: flex-end; background: #e2e8f0; padding: 6px 12px 0 12px; border-radius: 8px 8px 0 0; width: fit-content;">
+                                    <div style="display: flex; align-items: center; gap: 8px; background: #ffffff; padding: 7px 16px; border-radius: 6px 6px 0 0; box-shadow: 0 -1px 3px rgba(0,0,0,0.06); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; font-weight: 600; max-width: 280px;">
+                                        <img id="site_favicon_tab_preview" src="<?php echo esc_url( $brand['favicon_url'] ); ?>" style="width: 16px; height: 16px; object-fit: contain; border-radius: 2px; <?php echo empty( $brand['favicon_url'] ) ? 'display:none;' : ''; ?>" alt="Favicon" />
+                                        <span id="site_favicon_tab_placeholder" style="<?php echo ! empty( $brand['favicon_url'] ) ? 'display:none;' : ''; ?> display: inline-block; width: 14px; height: 14px; background: #cbd5e1; border-radius: 2px;"></span>
+                                        <span id="tab_preview_title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;"><?php echo esc_html( $brand['name'] ); ?></span>
+                                        <span style="color: #94a3b8; font-size: 14px; margin-left: 6px; line-height: 1; cursor: default;">&times;</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                                <div style="background: #ffffff; border: 2px dashed #088395; border-radius: 10px; padding: 6px; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                    <img id="site_favicon_preview" src="<?php echo esc_url( $brand['favicon_url'] ); ?>" style="width: 40px; height: 40px; object-fit: contain; <?php echo empty( $brand['favicon_url'] ) ? 'display:none;' : ''; ?>" alt="Preview Favicon" />
+                                    <span class="wkl-placeholder" style="<?php echo ! empty( $brand['favicon_url'] ) ? 'display:none;' : ''; ?> color: #94a3b8; font-size: 10px; text-align: center; line-height: 1.2;">Belum ada</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button type="button" class="button button-primary wkl-upload-btn" data-target="options_site_favicon" data-preview="site_favicon_preview" data-target-id="options_site_favicon_id" style="background: #088395; border-color: #066e7d; display: inline-flex; align-items: center; gap: 5px;">
+                                        <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah / Pilih Favicon
+                                    </button>
+                                    <button type="button" class="button-link wkl-remove-btn" data-target="options_site_favicon" data-preview="site_favicon_preview" data-target-id="options_site_favicon_id" style="color: #ef4444; font-size: 12px; <?php echo empty( $brand['favicon_url'] ) ? 'display:none;' : ''; ?>">
+                                        ✕ Hapus Favicon
+                                    </button>
+                                </div>
+                                <input type="hidden" id="options_site_favicon" name="options_site_favicon" value="<?php echo esc_attr( $brand['favicon_url'] ); ?>">
+                                <input type="hidden" id="options_site_favicon_id" name="options_site_favicon_id" value="<?php echo esc_attr( $brand['favicon_id'] ); ?>">
+                            </div>
+                            <p class="description" style="margin-top: 8px;">
+                                Icon kecil yang tampil di tab browser pengunjung, bookmark, dan pintasan mobile. Rekomendasi gambar: format <strong>PNG transparan, ICO, atau WebP</strong> berbentuk bujur sangkar (1:1), resolusi minimal <strong>512 &times; 512 piksel</strong>.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Tinggi Logo di Navbar -->
+                    <tr>
+                        <th scope="row">
+                            <label for="options_site_logo_height">Tinggi Logo di Navbar:</label>
+                        </th>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" id="options_site_logo_height" name="options_site_logo_height" value="<?php echo esc_attr( $brand['logo_height'] ); ?>" min="24" max="70" step="2" class="small-text" style="width: 75px; text-align: center; font-weight: bold;">
+                                <span style="font-weight: 600; color: #475569;">pixel (px)</span>
+                            </div>
+                            <p class="description">
+                                Default: <strong>42px</strong> (Rekomendasi antara 36px s/d 50px). Lebar akan otomatis menyesuaikan secara proporsional sesuai rasio asli logo tanpa terpotong.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Mode Tampilan Navbar -->
+                    <tr>
+                        <th scope="row">
+                            <label for="options_site_logo_display">Format Tampilan Navbar:</label>
+                        </th>
+                        <td>
+                            <select id="options_site_logo_display" name="options_site_logo_display" style="min-width: 280px;">
+                                <option value="both" <?php selected( $brand['display_mode'], 'both' ); ?>>Logo + Nama Bank &amp; Sub-label (Standar)</option>
+                                <option value="logo_only" <?php selected( $brand['display_mode'], 'logo_only' ); ?>>Hanya Logo (Rekomendasi jika logo sudah memuat teks)</option>
+                                <option value="text_only" <?php selected( $brand['display_mode'], 'text_only' ); ?>>Hanya Teks Nama &amp; Sub-label (Tanpa gambar)</option>
+                            </select>
+                            <p class="description">
+                                Pilih <strong>"Hanya Logo"</strong> jika berkas logo yang Anda unggah sudah merupakan logo horizontal lengkap dengan tulisan nama bank, sehingga teks tidak muncul dua kali.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Nama Bank / Perusahaan -->
+                    <tr>
+                        <th scope="row">
+                            <label for="options_site_brand_name">Nama Perusahaan / Bank:</label>
+                        </th>
+                        <td>
+                            <input type="text" id="options_site_brand_name" name="options_site_brand_name" value="<?php echo esc_attr( $brand['name'] ); ?>" class="regular-text" style="width: 100%; max-width: 450px;" required>
+                            <p class="description">Nama brand utama yang tampil di sebelah logo pada Navbar dan Footer (Contoh: <code>Bank Syariah Wakalumi</code>).</p>
+                        </td>
+                    </tr>
+
+                    <!-- Sub-label / Tagline -->
+                    <tr>
+                        <th scope="row">
+                            <label for="options_site_brand_tagline">Sub-label / Kategori / Tagline:</label>
+                        </th>
+                        <td>
+                            <input type="text" id="options_site_brand_tagline" name="options_site_brand_tagline" value="<?php echo esc_attr( $brand['tagline'] ); ?>" class="regular-text" style="width: 100%; max-width: 450px;">
+                            <p class="description">Teks kecil aksen di bawah nama bank (Contoh: <code>BPRS</code> atau <code>Bank Perekonomian Rakyat Syariah</code>). Kosongkan jika tidak diperlukan.</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <div style="margin: 35px 0 25px 0; border-top: 1px solid #e2e8f0;"></div>
+
+                <!-- SEKSI 2: WHATSAPP CS -->
+                <h2 style="font-size: 16px; margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
                     💬 WhatsApp Customer Service Global
                 </h2>
                 <p style="color: #64748b; font-size: 13px;">
@@ -145,11 +370,33 @@ function wakalumi_render_general_page() {
 
                 <p class="submit" style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
                     <button type="submit" name="wakalumi_save_general" class="button button-primary button-large" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 25px;">
-                        Simpan Pengaturan Umum
+                        Simpan Identitas &amp; Pengaturan Umum
                     </button>
                 </p>
             </form>
         </div>
+
+        <script>
+        jQuery(document).ready(function($) {
+            // Live sync favicon preview on realistic browser tab simulation
+            $('#options_site_favicon').on('change', function() {
+                var v = $(this).val();
+                if (v) {
+                    $('#site_favicon_tab_preview').attr('src', v).show();
+                    $('#site_favicon_tab_placeholder').hide();
+                } else {
+                    $('#site_favicon_tab_preview').attr('src', '').hide();
+                    $('#site_favicon_tab_placeholder').show();
+                }
+            });
+
+            // Live sync tab title when company name is modified
+            $('#options_site_brand_name').on('input', function() {
+                var name = $(this).val().trim();
+                $('#tab_preview_title').text(name || 'Bank Syariah Wakalumi');
+            });
+        });
+        </script>
     </div>
     <?php
 }

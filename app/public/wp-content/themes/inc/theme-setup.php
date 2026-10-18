@@ -53,6 +53,30 @@ function wakalumi_theme_setup() {
 add_action( 'after_setup_theme', 'wakalumi_theme_setup' );
 
 /**
+ * Enable WebP and SVG uploads in WordPress Media Library
+ */
+function wakalumi_allow_webp_upload( $mimes ) {
+    $mimes['webp'] = 'image/webp';
+    $mimes['svg']  = 'image/svg+xml';
+    $mimes['svgz'] = 'image/svg+xml';
+    return $mimes;
+}
+add_filter( 'upload_mimes', 'wakalumi_allow_webp_upload' );
+
+/**
+ * Fix WebP filetype and extension check in WordPress
+ */
+function wakalumi_check_webp_filetype( $data, $file, $filename, $mimes ) {
+    $ext = pathinfo( $filename, PATHINFO_EXTENSION );
+    if ( strtolower( $ext ) === 'webp' ) {
+        $data['type'] = 'image/webp';
+        $data['ext']  = 'webp';
+    }
+    return $data;
+}
+add_filter( 'wp_check_filetype_and_ext', 'wakalumi_check_webp_filetype', 10, 4 );
+
+/**
  * Custom excerpt length.
  */
 function wakalumi_excerpt_length( $length ) {
@@ -236,6 +260,30 @@ function wakalumi_enforce_template_routing( $template ) {
     // 11. Informasi: Pengumuman Resmi & Surat Edaran
     if ( in_array( $slug, [ 'pengumuman', 'pengumuman-resmi', 'surat-edaran' ], true ) || strpos( $req_uri, '/informasi/pengumuman' ) !== false || strpos( $req_uri, '/pengumuman' ) !== false ) {
         $res = $serve_clean_template( 'page-pengumuman.php' );
+        if ( $res ) return $res;
+    }
+
+    // 12. Informasi: Info Lelang Agunan
+    if ( in_array( $slug, [ 'lelang', 'info-lelang', 'lelang-agunan' ], true ) || strpos( $req_uri, '/informasi/lelang' ) !== false || strpos( $req_uri, '/lelang' ) !== false ) {
+        $res = $serve_clean_template( 'page-lelang.php' );
+        if ( $res ) return $res;
+    }
+
+    // 13. Informasi: Tim Kami & Verifikasi Staf
+    if ( in_array( $slug, [ 'tim-kami', 'tim', 'karyawan', 'staf' ], true ) || strpos( $req_uri, '/informasi/tim-kami' ) !== false || strpos( $req_uri, '/tim-kami' ) !== false ) {
+        $res = $serve_clean_template( 'page-tim-kami.php' );
+        if ( $res ) return $res;
+    }
+
+    // 14. Informasi: Kegiatan & Agenda Bank
+    if ( in_array( $slug, [ 'kegiatan', 'agenda', 'kegiatan-dan-agenda', 'agenda-kegiatan' ], true ) || strpos( $req_uri, '/informasi/kegiatan' ) !== false || strpos( $req_uri, '/kegiatan' ) !== false || strpos( $req_uri, '/agenda' ) !== false ) {
+        $res = $serve_clean_template( 'page-kegiatan.php' );
+        if ( $res ) return $res;
+    }
+
+    // 15. Informasi: Galeri Dokumentasi Foto & Video
+    if ( in_array( $slug, [ 'galeri', 'gallery', 'galeri-foto', 'dokumentasi', 'galeri-dokumentasi' ], true ) || strpos( $req_uri, '/informasi/galeri' ) !== false || strpos( $req_uri, '/galeri' ) !== false ) {
+        $res = $serve_clean_template( 'page-galeri.php' );
         if ( $res ) return $res;
     }
 
@@ -581,6 +629,154 @@ function wakalumi_ensure_pengumuman_page() {
 add_action( 'init', 'wakalumi_ensure_pengumuman_page' );
 
 /**
+ * Otomatis pastikan halaman 'Lelang' terdaftar di database dengan template page-lelang.php
+ */
+function wakalumi_ensure_lelang_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $lelang_page = get_page_by_path( 'informasi/lelang' ) ?: get_page_by_path( 'lelang' );
+    if ( ! $lelang_page ) {
+        $l_id = wp_insert_post( [
+            'post_title'   => 'Info Lelang Agunan',
+            'post_name'    => 'lelang',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $l_id && ! is_wp_error( $l_id ) ) {
+            update_post_meta( $l_id, '_wp_page_template', 'page-lelang.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $lelang_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-lelang.php' ) {
+            update_post_meta( $lelang_page->ID, '_wp_page_template', 'page-lelang.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_lelang_page' );
+
+/**
+ * Otomatis pastikan halaman 'Tim Kami' terdaftar di database dengan template page-tim-kami.php
+ */
+function wakalumi_ensure_tim_kami_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $tim_page = get_page_by_path( 'informasi/tim-kami' ) ?: get_page_by_path( 'tim-kami' );
+    if ( ! $tim_page ) {
+        $t_id = wp_insert_post( [
+            'post_title'   => 'Tim Kami & Verifikasi Staf',
+            'post_name'    => 'tim-kami',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $t_id && ! is_wp_error( $t_id ) ) {
+            update_post_meta( $t_id, '_wp_page_template', 'page-tim-kami.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $tim_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-tim-kami.php' ) {
+            update_post_meta( $tim_page->ID, '_wp_page_template', 'page-tim-kami.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_tim_kami_page' );
+
+/**
+ * Otomatis pastikan halaman 'Kegiatan' terdaftar di database dengan template page-kegiatan.php
+ * agar URL /informasi/kegiatan/ atau /kegiatan/ langsung aktif tanpa konfigurasi manual
+ */
+function wakalumi_ensure_kegiatan_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $kegiatan_page = get_page_by_path( 'informasi/kegiatan' ) ?: get_page_by_path( 'kegiatan' );
+    if ( ! $kegiatan_page ) {
+        $k_id = wp_insert_post( [
+            'post_title'   => 'Kegiatan & Agenda Bank',
+            'post_name'    => 'kegiatan',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $k_id && ! is_wp_error( $k_id ) ) {
+            update_post_meta( $k_id, '_wp_page_template', 'page-kegiatan.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $kegiatan_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-kegiatan.php' ) {
+            update_post_meta( $kegiatan_page->ID, '_wp_page_template', 'page-kegiatan.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_kegiatan_page' );
+
+/**
+ * Otomatis pastikan halaman 'Galeri' terdaftar di database dengan template page-galeri.php
+ * agar URL /informasi/galeri/ atau /galeri/ langsung aktif tanpa konfigurasi manual
+ */
+function wakalumi_ensure_galeri_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $galeri_page = get_page_by_path( 'informasi/galeri' ) ?: get_page_by_path( 'galeri' );
+    if ( ! $galeri_page ) {
+        $g_id = wp_insert_post( [
+            'post_title'   => 'Galeri Dokumentasi',
+            'post_name'    => 'galeri',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $g_id && ! is_wp_error( $g_id ) ) {
+            update_post_meta( $g_id, '_wp_page_template', 'page-galeri.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $galeri_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-galeri.php' ) {
+            update_post_meta( $galeri_page->ID, '_wp_page_template', 'page-galeri.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_galeri_page' );
+
+/**
+ * Otomatis pastikan halaman 'Karir & Rekrutmen' terdaftar di database dengan template page-karir.php
+ * agar URL /informasi/karir/ atau /karir/ langsung aktif tanpa konfigurasi manual
+ */
+function wakalumi_ensure_karir_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $karir_page = get_page_by_path( 'informasi/karir' ) ?: get_page_by_path( 'karir' );
+    if ( ! $karir_page ) {
+        $kr_id = wp_insert_post( [
+            'post_title'   => 'Karir & Rekrutmen',
+            'post_name'    => 'karir',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $kr_id && ! is_wp_error( $kr_id ) ) {
+            update_post_meta( $kr_id, '_wp_page_template', 'page-karir.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $karir_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-karir.php' ) {
+            update_post_meta( $karir_page->ID, '_wp_page_template', 'page-karir.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_karir_page' );
+
+/**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
  * dan tampilkan Panduan Visual Pengelolaan Beranda yang ramah pengguna.
  */
@@ -817,4 +1013,91 @@ function wakalumi_check_rewrite_flush() {
     }
 }
 add_action( 'init', 'wakalumi_check_rewrite_flush', 99 );
+
+/**
+ * Helper: Ambil Data Identitas Brand & Logo Website (Universal Helper)
+ * Digunakan secara konsisten di Navbar (header.php) dan Footer (footer.php).
+ *
+ * Mendukung fleksibilitas rasio aspek (tidak terpotong), mode tampilan (logo+teks, logo saja, teks saja),
+ * penyesuaian tinggi logo, dan versi dark mode.
+ *
+ * @return array
+ */
+function wakalumi_get_brand_identity(): array {
+    $logo_url      = get_option( 'options_site_logo', '' );
+    $logo_id       = (int) get_option( 'options_site_logo_id', 0 );
+    $logo_dark_url = get_option( 'options_site_logo_dark', '' );
+    $logo_dark_id  = (int) get_option( 'options_site_logo_dark_id', 0 );
+    $favicon_url   = get_option( 'options_site_favicon', '' );
+    $favicon_id    = (int) get_option( 'options_site_favicon_id', 0 );
+    $name          = get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' );
+    $tagline       = get_option( 'options_site_brand_tagline', 'BSW' );
+    $display_mode  = get_option( 'options_site_logo_display', 'both' );
+    $logo_height   = (int) get_option( 'options_site_logo_height', 42 );
+
+    $name = str_ireplace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $name );
+    if ( strcasecmp( $tagline, 'BPRS' ) === 0 ) {
+        $tagline = 'BSW';
+    }
+
+    // Fallback jika options_site_logo belum diisi tapi custom_logo theme_mod pernah diatur
+    if ( empty( $logo_url ) && has_custom_logo() ) {
+        $logo_id  = (int) get_theme_mod( 'custom_logo' );
+        $logo_src = wp_get_attachment_image_src( $logo_id, 'full' );
+        if ( $logo_src ) {
+            $logo_url = $logo_src[0];
+        }
+    }
+
+    // Fallback default jika masih kosong: gunakan logo-new-1.png dari tema
+    if ( empty( $logo_url ) && file_exists( WAKALUMI_DIR . '/assets/img/logo-new-1.png' ) ) {
+        $logo_url = WAKALUMI_URI . '/assets/img/logo-new-1.png';
+    }
+
+    // Fallback Favicon jika belum diisi: cek core WordPress site_icon
+    if ( empty( $favicon_url ) && function_exists( 'has_site_icon' ) && has_site_icon() ) {
+        $favicon_url = get_site_icon_url();
+        $favicon_id  = (int) get_option( 'site_icon', 0 );
+    }
+
+    // Fallback default favicon jika masih kosong: gunakan logo-new-1.png dari tema
+    if ( empty( $favicon_url ) && file_exists( WAKALUMI_DIR . '/assets/img/logo-new-1.png' ) ) {
+        $favicon_url = WAKALUMI_URI . '/assets/img/logo-new-1.png';
+    }
+
+    if ( empty( $name ) ) {
+        $name = get_bloginfo( 'name' ) ?: 'Bank Syariah Wakalumi';
+    }
+
+    return [
+        'logo_url'      => $logo_url,
+        'logo_id'       => $logo_id,
+        'logo_dark_url' => $logo_dark_url,
+        'logo_dark_id'  => $logo_dark_id,
+        'favicon_url'   => $favicon_url,
+        'favicon_id'    => $favicon_id,
+        'name'          => $name,
+        'tagline'       => $tagline,
+        'display_mode'  => in_array( $display_mode, [ 'both', 'logo_only', 'text_only' ], true ) ? $display_mode : 'both',
+        'logo_height'   => max( 24, min( 70, $logo_height ) ),
+    ];
+}
+
+/**
+ * Output Fallback Favicon di <head> jika WordPress core site_icon belum terkonfigurasi
+ */
+function wakalumi_render_custom_favicon() {
+    // Jika core WordPress site_icon sudah aktif, wp_site_icon() otomatis mengurusnya
+    if ( function_exists( 'has_site_icon' ) && has_site_icon() ) {
+        return;
+    }
+
+    $brand = wakalumi_get_brand_identity();
+    if ( ! empty( $brand['favicon_url'] ) ) {
+        echo '<link rel="icon" href="' . esc_url( $brand['favicon_url'] ) . '" sizes="any" />' . "\n";
+        echo '<link rel="apple-touch-icon" href="' . esc_url( $brand['favicon_url'] ) . '" />' . "\n";
+    }
+}
+add_action( 'wp_head', 'wakalumi_render_custom_favicon', 98 );
+
 
