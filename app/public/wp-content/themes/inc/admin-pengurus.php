@@ -22,6 +22,14 @@ function wakalumi_register_pengurus_page() {
     );
 }
 
+// 1.5 Enqueue Admin Media Assets for Pengurus Page
+add_action( 'admin_enqueue_scripts', 'wakalumi_pengurus_admin_assets' );
+function wakalumi_pengurus_admin_assets( $hook ) {
+    if ( strpos( $hook, 'wakalumi-pengurus' ) !== false ) {
+        wp_enqueue_media();
+    }
+}
+
 // 2. Render Page & Handle Save
 function wakalumi_render_pengurus_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
@@ -272,7 +280,7 @@ function wakalumi_render_pengurus_page() {
                                             ✕ Hapus Foto
                                         </button>
                                     </div>
-                                    <input type="hidden" id="pengurus_foto_input_<?php echo $counter; ?>" name="pengurus_list_foto[]" value="<?php echo esc_attr($m_foto); ?>" class="regular-text">
+                                    <input type="text" id="pengurus_foto_input_<?php echo $counter; ?>" name="pengurus_list_foto[]" value="<?php echo esc_attr($m_foto); ?>" class="regular-text wkl-foto-input" placeholder="...atau tempel URL foto" style="width: 100%; max-width: 190px; font-size: 11px;">
                                 </div>
                             </div>
 
@@ -340,7 +348,9 @@ function wakalumi_render_pengurus_page() {
                         ?>
                     </div>
                     
-                    <button type="button" id="wkl-add-pengurus" class="button button-secondary" style="margin-top: 10px; font-weight: bold;">+ Tambah Pengurus Baru</button>
+                    <button type="button" id="wkl-add-pengurus" class="button button-secondary" style="margin-top: 10px; font-weight: bold; background: #f0fdfa; border-color: #088395; color: #088395; padding: 6px 18px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> Tambah Pengurus Baru
+                    </button>
                     
                 </div>
             </div>
@@ -511,7 +521,7 @@ function wakalumi_render_pengurus_page() {
                             ✕ Hapus Foto
                         </button>
                     </div>
-                    <input type="hidden" id="pengurus_foto_input_{{id}}" name="pengurus_list_foto[]" value="" class="regular-text">
+                    <input type="text" id="pengurus_foto_input_{{id}}" name="pengurus_list_foto[]" value="" class="regular-text wkl-foto-input" placeholder="...atau tempel URL foto" style="width: 100%; max-width: 190px; font-size: 11px;">
                 </div>
             </div>
 
@@ -568,7 +578,7 @@ function wakalumi_render_pengurus_page() {
                     </div>
                     <div>
                         <label style="display: block; font-weight: bold; margin-bottom: 5px;">Urutan Tampil</label>
-                        <input type="number" name="pengurus_list_urutan[]" value="99" class="small-text" style="width: 80px;">
+                        <input type="number" name="pengurus_list_urutan[]" value="{{urutan}}" class="small-text" style="width: 80px;">
                     </div>
                 </div>
             </div>
@@ -584,11 +594,12 @@ function wakalumi_render_pengurus_page() {
             var button = $(this);
             var targetId = button.data('target');
             var previewId = button.data('preview');
-            var removeBtn = button.siblings('.wkl-remove-btn');
+            var wrap = button.closest('.wkl-upload-wrap');
+            var removeBtn = wrap.find('.wkl-remove-btn');
 
             var mediaUploader = wp.media({
-                title: 'Pilih atau Unggah Gambar',
-                button: { text: 'Gunakan Gambar Ini' },
+                title: 'Pilih atau Unggah Foto Pengurus',
+                button: { text: 'Gunakan Foto Ini' },
                 multiple: false
             });
             mediaUploader.on('select', function() {
@@ -610,22 +621,53 @@ function wakalumi_render_pengurus_page() {
             button.hide();
         });
 
-        // --- Repeater Logic ---
-        var counter = <?php echo isset($counter) ? $counter : 999; ?>;
-        
-        $('#wkl-add-pengurus').on('click', function(e){\
-            e.preventDefault();
-            counter++;
-            var template = $('#tmpl-pengurus-card').html();
-            template = template.replace(/{{id}}/g, counter);
-            $('#wakalumi_pengurus_repeater').append(template);
+        // Sync manual URL input with preview
+        $(document).on('input', '.wkl-foto-input', function() {
+            var val = $(this).val().trim();
+            var wrap = $(this).closest('.wkl-upload-wrap');
+            var preview = wrap.find('img');
+            var removeBtn = wrap.find('.wkl-remove-btn');
+            if (val) {
+                preview.attr('src', val).show();
+                removeBtn.show();
+            } else {
+                preview.attr('src', '').hide();
+                removeBtn.hide();
+            }
         });
 
-        $(document).on('click', '.wkl-delete-member', function(e){\
+        // --- Repeater Logic ---
+        var counter = <?php echo isset($counter) ? (int) $counter : 999; ?>;
+        
+        $('#wkl-add-pengurus').on('click', function(e) {
             e.preventDefault();
-            if(confirm('Apakah Anda yakin ingin menghapus pengurus ini?')) {
-                $(this).closest('.pengurus-card').slideUp(300, function(){\
-                    $(this).remove();
+            counter++;
+            var nextUrutan = $('#wakalumi_pengurus_repeater .pengurus-card').length + 1;
+            var template = $('#tmpl-pengurus-card').html();
+            template = template.replace(/{{id}}/g, counter);
+            template = template.replace(/{{urutan}}/g, nextUrutan);
+            var $newCard = $(template).hide();
+            $('#wakalumi_pengurus_repeater').append($newCard);
+            $newCard.fadeIn(300);
+            
+            // Scroll to the new card and focus on the name input
+            $('html, body').animate({
+                scrollTop: $newCard.offset().top - 80
+            }, 300);
+            $newCard.find('input[name="pengurus_list_nama[]"]').focus();
+        });
+
+        $(document).on('click', '.wkl-delete-member', function(e) {
+            e.preventDefault();
+            var card = $(this).closest('.pengurus-card');
+            var totalCards = $('#wakalumi_pengurus_repeater .pengurus-card').length;
+            if (totalCards <= 1) {
+                alert('Minimal harus ada 1 data pengurus di dalam daftar.');
+                return;
+            }
+            if (confirm('Apakah Anda yakin ingin menghapus data pengurus ini?')) {
+                card.slideUp(300, function() {
+                    card.remove();
                 });
             }
         });

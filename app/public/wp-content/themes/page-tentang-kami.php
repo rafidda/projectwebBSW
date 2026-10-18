@@ -46,6 +46,11 @@ if ( empty( $missions ) ) {
 $identity_text  = get_option( 'options_about_page_identity', 'BPRS Wakalumi adalah Lembaga Keuangan Syariah yang memiliki fokus pada jasa keuangan dan pemberdayaan ekonomi umat dan masyarakat sesuai syariah.' );
 $belief_text    = get_option( 'options_about_page_belief', 'BPRS Wakalumi berkomitmen untuk selalu melakukan ISHLAH, yakni kami terus melakukan perbaikan berkelanjutan.' );
 
+$values_badge   = get_option( 'options_about_page_values_badge', "Budaya Kerja 'SAPA'" );
+$values_title   = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)' );
+$values_desc    = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya SAPA yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk hasil optimal dalam aktivitas kerja.' );
+$values_tag     = get_option( 'options_about_page_values_tag', 'Pilar Budaya SAPA' );
+
 $values = get_option( 'options_about_page_values', [] );
 if ( empty( $values ) ) {
     $values = [
@@ -70,7 +75,24 @@ $show_stats     = get_option( 'options_about_page_show_stats', '1' );
 $show_vision    = get_option( 'options_about_page_show_vision', '1' );
 $show_values    = get_option( 'options_about_page_show_values', '1' );
 $show_logo      = get_option( 'options_about_page_show_logo', '1' );
+$show_compro    = get_option( 'options_about_page_compro_show', '1' );
 $show_cta       = get_option( 'options_about_page_show_cta', '1' );
+
+$compro_badge        = get_option( 'options_about_page_compro_badge', 'Dokumen Resmi Perusahaan' );
+$compro_title        = get_option( 'options_about_page_compro_title', 'Unduh Company Profile PT BPRS Wakalumi' );
+$compro_desc         = get_option( 'options_about_page_compro_desc', 'Dapatkan ikhtisar resmi dan komprehensif mengenai profil kelembagaan, landasan syariah, susunan kepemimpinan, kepatuhan tata kelola (GCG), serta pertumbuhan kinerja keuangan BPRS Wakalumi.' );
+$compro_year         = get_option( 'options_about_page_compro_year', 'Edisi 2026' );
+$compro_file         = get_option( 'options_about_page_compro_file', '' );
+$compro_cover        = get_option( 'options_about_page_compro_cover', '' );
+$compro_filesize     = get_option( 'options_about_page_compro_filesize', 'PDF • Dokumen Resmi Terverifikasi' );
+$compro_updated      = get_option( 'options_about_page_compro_updated', 'Pembaruan Tahunan' );
+$compro_btn_dl_text  = get_option( 'options_about_page_compro_btn_dl_text', 'Unduh Company Profile (PDF)' );
+$compro_highlights   = get_option( 'options_about_page_compro_highlights', [
+    'Ikhtisar Profil Lembaga & Legalitas OJK',
+    'Struktur Pengurus & Dewan Pengawas Syariah',
+    'Laporan Kinerja Keuangan & Rasio Kesehatan Bank',
+    'Katalog Portofolio Produk Simpanan & Pembiayaan'
+] );
 $cta_badge      = get_option( 'options_about_page_cta_badge', 'Langkah Nyata Bersama Kami' );
 $cta_title      = get_option( 'options_about_page_cta_title', 'Siap Mengembangkan Usaha & Mengelola Dana Secara Berkah?' );
 $cta_desc       = get_option( 'options_about_page_cta_desc', 'Konsultasikan kebutuhan perbankan syariah Anda bersama tim profesional BPRS Wakalumi, atau temukan solusi simpanan dan pembiayaan yang tepat untuk masa depan finansial Anda.' );
@@ -395,15 +417,21 @@ if ( empty( $cta_btn1_url ) ) {
 <section class="relative z-10 py-16 md:py-24 bg-white dark:bg-dark border-b border-slate-100 dark:border-slate-800/60">
     <div class="container-wide">
         <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16" data-aos="fade-up">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
-                Budaya Kerja 'SAPA'
-            </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Budaya Kerja WAKALUMI
-            </h2>
-            <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3 leading-relaxed">
-                Budaya WAKALUMI dirangkum dalam kata <strong>‘SAPA’ (Skill, Action, Pray, Attitude)</strong> yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk memberikan hasil optimal dalam setiap aktivitas kerja.
-            </p>
+            <?php if ( ! empty( $values_badge ) ) : ?>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
+                    <?php echo esc_html( $values_badge ); ?>
+                </div>
+            <?php endif; ?>
+            <?php if ( ! empty( $values_title ) ) : ?>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <?php echo esc_html( $values_title ); ?>
+                </h2>
+            <?php endif; ?>
+            <?php if ( ! empty( $values_desc ) ) : ?>
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3 leading-relaxed">
+                    <?php echo wp_kses_post( $values_desc ); ?>
+                </p>
+            <?php endif; ?>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -440,10 +468,12 @@ if ( empty( $cta_btn1_url ) ) {
                             <?php echo esc_html( $v_desc ); ?>
                         </p>
 
+                        <?php if ( ! empty( $values_tag ) ) : ?>
                         <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-xs font-semibold text-teal-600 dark:text-teal-400 relative z-10">
-                            <span>Pilar Budaya SAPA</span>
+                            <span><?php echo esc_html( $values_tag ); ?></span>
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -560,7 +590,176 @@ if ( empty( $cta_btn1_url ) ) {
 
 
 <!-- ========================================
-     SECTION 5: AJAKAN BERTINDAK (CALL TO ACTION)
+     SECTION 5: DOKUMEN COMPANY PROFILE RESMI (UNDUH PDF)
+     ======================================== -->
+<?php if ( $show_compro ) : 
+    $compro_has_file      = ! empty( $compro_file );
+    $compro_download_url  = $compro_has_file ? esc_url( $compro_file ) : $cta_btn1_url;
+    $compro_download_attr = $compro_has_file ? 'download="' . esc_attr( basename( parse_url( $compro_file, PHP_URL_PATH ) ) ) . '"' : 'target="_blank" rel="noopener noreferrer"';
+?>
+<section id="company-profile-section" class="relative z-10 py-16 md:py-24 bg-gradient-to-b from-slate-50/80 via-teal-50/20 to-white dark:from-dark-surface/50 dark:via-dark dark:to-dark-surface/50 border-t border-slate-200/60 dark:border-slate-800/60">
+    <div class="container-wide">
+        <!-- Main Card Container -->
+        <div class="spotlight-card relative rounded-3xl p-6 sm:p-10 md:p-14 overflow-hidden bg-white dark:bg-slate-900 border border-teal-200/80 dark:border-slate-800 shadow-xl shadow-teal-500/5 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)]" data-aos="fade-up">
+            
+            <!-- Ambient Glowing Orbs -->
+            <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-teal-500/10 dark:bg-teal-500/15 blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-primary-500/10 dark:bg-primary-500/15 blur-3xl pointer-events-none"></div>
+            
+            <!-- Background Watermark Emblem -->
+            <div class="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 w-80 h-80 opacity-[0.035] dark:opacity-[0.025] pointer-events-none">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png" alt="" class="w-full h-full object-contain">
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+                
+                <!-- Left Column: 3D Booklet Showcase -->
+                <div class="lg:col-span-5 flex flex-col items-center justify-center" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="relative group cursor-pointer">
+                        <!-- Ambient Glow behind booklet -->
+                        <div class="absolute -inset-2 bg-gradient-to-tr from-teal-500/20 to-primary-500/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-700"></div>
+
+                        <!-- 3D Booklet Presentation Container -->
+                        <div class="relative w-56 sm:w-64 md:w-72 aspect-[3/4.2] rounded-2xl overflow-hidden shadow-2xl shadow-primary-950/30 dark:shadow-black/70 border-y border-r border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-br from-slate-900 via-primary-950 to-slate-950 flex flex-col justify-between text-white transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:rotate-1">
+                            
+                            <!-- Book Spine Accent (Left Edge) -->
+                            <div class="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-teal-700 via-teal-500 to-teal-400 shadow-inner z-20"></div>
+
+                            <?php if ( ! empty( $compro_cover ) ) : ?>
+                                <!-- Custom Uploaded Cover Image -->
+                                <img src="<?php echo esc_url( $compro_cover ); ?>" 
+                                     alt="Cover Company Profile <?php echo esc_attr( $compro_year ); ?>" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                
+                                <!-- Subtle Gradient Overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none"></div>
+                                
+                                <!-- Floating Edition Badge on Cover -->
+                                <div class="absolute top-4 right-4 z-20">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/85 backdrop-blur-md text-amber-300 border border-amber-400/50 text-[10px] font-black uppercase tracking-wider shadow-lg">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                                        <?php echo esc_html( $compro_year ); ?>
+                                    </span>
+                                </div>
+
+                                <div class="absolute bottom-4 left-6 right-4 z-20 text-left">
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-teal-300 block">Profil Resmi</span>
+                                    <h4 class="text-sm sm:text-base font-extrabold text-white leading-tight">PT BPRS Wakalumi</h4>
+                                </div>
+                            <?php else : ?>
+                                <!-- High-End Procedural Booklet Cover -->
+                                <div class="relative z-10 p-6 pl-8 h-full flex flex-col justify-between">
+                                    <!-- Top: Logo & Watermark -->
+                                    <div>
+                                        <div class="flex items-center justify-between mb-4">
+                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo-new-1.png" alt="Wakalumi Logo" class="h-6 sm:h-7 object-contain brightness-0 invert">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[9px] font-black uppercase tracking-wider">
+                                                <?php echo esc_html( $compro_year ); ?>
+                                            </span>
+                                        </div>
+                                        <div class="w-8 h-0.5 bg-gradient-to-r from-teal-400 to-amber-400 rounded-full mb-3"></div>
+                                    </div>
+
+                                    <!-- Center: Big Typography & Emblem -->
+                                    <div class="my-auto py-2">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-[0.25em] text-teal-300 block mb-1">DOKUMEN RESMI</span>
+                                        <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight uppercase leading-snug">
+                                            COMPANY<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-emerald-400">PROFILE</span>
+                                        </h3>
+                                        <p class="text-[10px] text-slate-400 tracking-wider uppercase mt-1">Bank Perekonomian Rakyat Syariah</p>
+                                    </div>
+
+                                    <!-- Bottom: Certification & Seal -->
+                                    <div class="pt-3 border-t border-white/10 flex items-center justify-center text-[9px] text-slate-400">
+                                        <span>Terdaftar & Diawasi Otoritas Jasa Keuangan (OJK)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Subtle Golden Sheen on Hover -->
+                                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none group-hover:via-white/10 transition-all duration-700"></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Booklet Metadata Strip -->
+                    <div class="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
+                            <svg class="w-3.5 h-3.5 text-rose-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+                            <span><?php echo esc_html( $compro_filesize ); ?></span>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-800/60">
+                            <svg class="w-3.5 h-3.5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span><?php echo esc_html( $compro_updated ); ?></span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Editorial & Actions -->
+                <div class="lg:col-span-7 flex flex-col justify-between" data-aos="fade-left" data-aos-delay="200">
+                    <div>
+                        <!-- Kicker Badge -->
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
+                            <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                            <span><?php echo esc_html( $compro_badge ); ?></span>
+                        </div>
+
+                        <!-- Main Heading -->
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug mb-4">
+                            <?php echo esc_html( $compro_title ); ?>
+                        </h2>
+
+                        <!-- Description -->
+                        <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                            <?php echo nl2br( esc_html( $compro_desc ) ); ?>
+                        </p>
+
+                        <!-- 4 Highlights Grid -->
+                        <?php if ( ! empty( $compro_highlights ) ) : ?>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                                <?php foreach ( $compro_highlights as $hl ) : ?>
+                                    <div class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/60">
+                                        <div class="w-5 h-5 rounded-md bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        </div>
+                                        <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+                                            <?php echo esc_html( $hl ); ?>
+                                        </span>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div>
+                        <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+                            <!-- Primary: Download Button -->
+                            <a href="<?php echo $compro_download_url; ?>" 
+                               <?php echo $compro_download_attr; ?>
+                               class="btn-primary text-xs sm:text-sm px-7 py-3.5 rounded-xl shadow-lg shadow-teal-500/20 inline-flex items-center justify-center gap-2.5 font-bold hover:scale-[1.02] transition-transform">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                <span><?php echo esc_html( $compro_btn_dl_text ); ?></span>
+                            </a>
+                        </div>
+
+                        <!-- Micro Info Guarantee -->
+                        <p class="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 mt-4 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-teal-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Dokumen resmi terverifikasi format PDF. Selalu diperbarui setiap siklus tahun buku baru.</span>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+
+<!-- ========================================
+     SECTION 6: AJAKAN BERTINDAK (CALL TO ACTION)
      ======================================== -->
 <?php if ( $show_cta ) : ?>
 <section class="relative z-10 py-16 md:py-24 bg-white dark:bg-dark border-t border-slate-200/60 dark:border-slate-800/60">

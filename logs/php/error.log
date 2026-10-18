@@ -26,3 +26,4 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\Users\arifr\Local Sites\wakalumibprscoid\app\public\wp-content\themes\wakalumi-theme\pdf-view.php on line 28
+[05-Oct-2026 10:22:18 UTC] Cron reschedule event error for hook: wp_privacy_delete_old_export_files, Error code: could_not_set, Error message: The cron event list could not be saved., Data: {"schedule":"hourly","args":[],"interval":3600}

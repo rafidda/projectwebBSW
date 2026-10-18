@@ -1007,7 +1007,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
      ======================================================================== -->
 <div 
     id="brosur-preview-modal" 
-    class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 md:p-6" 
+    class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto" 
     role="dialog" 
     aria-modal="true" 
     aria-labelledby="brosur-modal-title"
@@ -1021,7 +1021,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
     <!-- Modal Container -->
     <div 
         id="brosur-modal-container" 
-        class="relative w-full max-w-5xl h-[92vh] md:h-[88vh] bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-slate-200 dark:border-dark-border flex flex-col overflow-hidden scale-95 opacity-0 transition-all duration-300 z-10"
+        class="relative w-full max-w-5xl h-[92vh] md:h-[88vh] my-auto bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-slate-200 dark:border-dark-border flex flex-col overflow-hidden scale-95 opacity-0 transition-all duration-300 z-10"
     >
         <!-- Modal Top Header Bar -->
         <div class="px-5 py-3.5 sm:px-6 sm:py-4 bg-slate-50 dark:bg-dark-surface-alt border-b border-slate-200 dark:border-dark-border flex items-center justify-between gap-4 flex-shrink-0">

@@ -968,7 +968,7 @@ img:not([loading="lazy"]) {
   visibility: visible;
   pointer-events: auto;
   transform: scale(1);
-  padding: 1.25rem;
+  padding: 0;
   transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
               transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
               visibility 0.55s;

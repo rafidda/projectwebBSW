@@ -233,6 +233,12 @@ function wakalumi_enforce_template_routing( $template ) {
         if ( $res ) return $res;
     }
 
+    // 11. Informasi: Pengumuman Resmi & Surat Edaran
+    if ( in_array( $slug, [ 'pengumuman', 'pengumuman-resmi', 'surat-edaran' ], true ) || strpos( $req_uri, '/informasi/pengumuman' ) !== false || strpos( $req_uri, '/pengumuman' ) !== false ) {
+        $res = $serve_clean_template( 'page-pengumuman.php' );
+        if ( $res ) return $res;
+    }
+
     return $template;
 }
 add_filter( 'template_include', 'wakalumi_enforce_template_routing', 99 );
@@ -544,6 +550,35 @@ function wakalumi_ensure_laporan_page() {
     }
 }
 add_action( 'init', 'wakalumi_ensure_laporan_page' );
+
+/**
+ * Otomatis pastikan halaman 'Pengumuman' terdaftar di database dengan template page-pengumuman.php
+ */
+function wakalumi_ensure_pengumuman_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $pengumuman_page = get_page_by_path( 'informasi/pengumuman' ) ?: get_page_by_path( 'pengumuman' );
+    if ( ! $pengumuman_page ) {
+        $p_id = wp_insert_post( [
+            'post_title'   => 'Pengumuman Resmi',
+            'post_name'    => 'pengumuman',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $p_id && ! is_wp_error( $p_id ) ) {
+            update_post_meta( $p_id, '_wp_page_template', 'page-pengumuman.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $pengumuman_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-pengumuman.php' ) {
+            update_post_meta( $pengumuman_page->ID, '_wp_page_template', 'page-pengumuman.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_pengumuman_page' );
 
 /**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda

@@ -24,7 +24,160 @@ function wakalumi_register_pengaduan_page() {
     );
 }
 
-// ── 2. HELPER GET DATA PENGADUAN ───────────────────────────────────
+// ── 2. HELPER TEMA WARNA KARTU PENGADUAN ───────────────────────────
+
+if ( ! function_exists( 'wakalumi_get_pengaduan_color_theme' ) ) {
+    /**
+     * Helper konfigurasi palet warna untuk Card Pengaduan Konsumen
+     */
+    function wakalumi_get_pengaduan_color_theme( $color = 'red' ) {
+        $themes = [
+            'red' => [
+                'name'         => 'red',
+                'label'        => '🔴 Merah Resmi OJK (Regulator)',
+                'border'       => 'border-red-200/90 dark:border-dark-border hover:border-red-400 dark:hover:border-red-500',
+                'hover_shadow' => 'hover:shadow-red-500/15',
+                'top_line'     => 'from-red-600 via-rose-500 to-amber-500',
+                'header_bg'    => 'from-red-50/90 via-rose-50/50 to-white/10 dark:from-red-950/40 dark:via-dark-card dark:to-dark-card border-b border-red-100/90 dark:border-dark-border',
+                'badge'        => 'bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-300 border border-red-300/60 dark:border-red-700/60',
+                'ping_dot'     => 'bg-red-500',
+                'tag'          => 'text-red-700 dark:text-red-300 border-red-200/80 dark:border-red-800/80',
+                'title_hover'  => 'group-hover:text-red-600 dark:group-hover:text-red-400',
+                'pill_icon'    => 'text-red-600 dark:text-red-400',
+                'channel_bg'   => 'bg-red-50/70 dark:bg-red-950/30 border-red-200/70 dark:border-red-900/40 hover:border-red-400 dark:hover:border-red-700',
+                'channel_icon' => 'bg-red-600 text-white shadow-red-600/30',
+                'channel_link' => 'text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200',
+                'status_tag'   => 'text-red-600 dark:text-red-400',
+                'sub_icon'     => 'text-red-600 dark:text-red-400',
+                'sub_link'     => 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300',
+                'btn_action'   => 'bg-red-600 hover:bg-red-700 text-white shadow-red-600/30 hover:shadow-red-600/40',
+            ],
+            'blue' => [
+                'name'         => 'blue',
+                'label'        => '🔷 Biru Finansial & Regulator',
+                'border'       => 'border-blue-200/90 dark:border-dark-border hover:border-blue-400 dark:hover:border-blue-500',
+                'hover_shadow' => 'hover:shadow-blue-500/15',
+                'top_line'     => 'from-blue-600 via-indigo-500 to-cyan-500',
+                'header_bg'    => 'from-blue-50/90 via-indigo-50/50 to-white/10 dark:from-blue-950/40 dark:via-dark-card dark:to-dark-card border-b border-blue-100/90 dark:border-dark-border',
+                'badge'        => 'bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-300 border border-blue-300/60 dark:border-blue-700/60',
+                'ping_dot'     => 'bg-blue-500',
+                'tag'          => 'text-blue-700 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/80',
+                'title_hover'  => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+                'pill_icon'    => 'text-blue-600 dark:text-blue-400',
+                'channel_bg'   => 'bg-blue-50/70 dark:bg-blue-950/30 border-blue-200/70 dark:border-blue-900/40 hover:border-blue-400 dark:hover:border-blue-700',
+                'channel_icon' => 'bg-blue-600 text-white shadow-blue-600/30',
+                'channel_link' => 'text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200',
+                'status_tag'   => 'text-blue-600 dark:text-blue-400',
+                'sub_icon'     => 'text-blue-600 dark:text-blue-400',
+                'sub_link'     => 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300',
+                'btn_action'   => 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30 hover:shadow-blue-600/40',
+            ],
+            'emerald' => [
+                'name'         => 'emerald',
+                'label'        => '🟢 Hijau Zamrud (Karakter Syariah)',
+                'border'       => 'border-emerald-200/90 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500',
+                'hover_shadow' => 'hover:shadow-emerald-500/15',
+                'top_line'     => 'from-emerald-500 via-teal-400 to-cyan-500',
+                'header_bg'    => 'from-emerald-50/90 via-teal-50/50 to-white/10 dark:from-emerald-950/40 dark:via-dark-card dark:to-dark-card border-b border-emerald-100/90 dark:border-dark-border',
+                'badge'        => 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60',
+                'ping_dot'     => 'bg-emerald-500',
+                'tag'          => 'text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/80',
+                'title_hover'  => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+                'pill_icon'    => 'text-emerald-600 dark:text-emerald-400',
+                'channel_bg'   => 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200/70 dark:border-emerald-900/40 hover:border-emerald-400 dark:hover:border-emerald-700',
+                'channel_icon' => 'bg-emerald-500 text-white shadow-emerald-500/30',
+                'channel_link' => 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200',
+                'status_tag'   => 'text-emerald-600 dark:text-emerald-400',
+                'sub_icon'     => 'text-emerald-600 dark:text-emerald-400',
+                'sub_link'     => 'text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300',
+                'btn_action'   => 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/30 hover:shadow-emerald-600/40',
+            ],
+            'teal' => [
+                'name'         => 'teal',
+                'label'        => '🌊 Toska Wakalumi (Identitas Brand)',
+                'border'       => 'border-teal-200/90 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-500',
+                'hover_shadow' => 'hover:shadow-teal-500/15',
+                'top_line'     => 'from-teal-600 via-cyan-500 to-emerald-500',
+                'header_bg'    => 'from-teal-50/90 via-cyan-50/50 to-white/10 dark:from-teal-950/40 dark:via-dark-card dark:to-dark-card border-b border-teal-100/90 dark:border-dark-border',
+                'badge'        => 'bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300 border border-teal-300/60 dark:border-teal-700/60',
+                'ping_dot'     => 'bg-teal-500',
+                'tag'          => 'text-teal-700 dark:text-teal-300 border-teal-200/80 dark:border-teal-800/80',
+                'title_hover'  => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                'pill_icon'    => 'text-teal-600 dark:text-teal-400',
+                'channel_bg'   => 'bg-teal-50/70 dark:bg-teal-950/30 border-teal-200/70 dark:border-teal-900/40 hover:border-teal-400 dark:hover:border-teal-700',
+                'channel_icon' => 'bg-teal-600 text-white shadow-teal-600/30',
+                'channel_link' => 'text-teal-700 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-200',
+                'status_tag'   => 'text-teal-600 dark:text-teal-400',
+                'sub_icon'     => 'text-teal-600 dark:text-teal-400',
+                'sub_link'     => 'text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300',
+                'btn_action'   => 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-600/30 hover:shadow-teal-600/40',
+            ],
+            'amber' => [
+                'name'         => 'amber',
+                'label'        => '👑 Emas / Oranye (Prestisius)',
+                'border'       => 'border-amber-200/90 dark:border-dark-border hover:border-amber-400 dark:hover:border-amber-500',
+                'hover_shadow' => 'hover:shadow-amber-500/15',
+                'top_line'     => 'from-amber-500 via-orange-500 to-yellow-400',
+                'header_bg'    => 'from-amber-50/90 via-orange-50/50 to-white/10 dark:from-amber-950/40 dark:via-dark-card dark:to-dark-card border-b border-amber-100/90 dark:border-dark-border',
+                'badge'        => 'bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60',
+                'ping_dot'     => 'bg-amber-500',
+                'tag'          => 'text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/80',
+                'title_hover'  => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+                'pill_icon'    => 'text-amber-600 dark:text-amber-400',
+                'channel_bg'   => 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200/70 dark:border-amber-900/40 hover:border-amber-400 dark:hover:border-amber-700',
+                'channel_icon' => 'bg-amber-600 text-white shadow-amber-600/30',
+                'channel_link' => 'text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200',
+                'status_tag'   => 'text-amber-600 dark:text-amber-400',
+                'sub_icon'     => 'text-amber-600 dark:text-amber-400',
+                'sub_link'     => 'text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300',
+                'btn_action'   => 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-600/30 hover:shadow-amber-600/40',
+            ],
+            'purple' => [
+                'name'         => 'purple',
+                'label'        => '🟣 Ungu (Modern Eksklusif)',
+                'border'       => 'border-purple-200/90 dark:border-dark-border hover:border-purple-400 dark:hover:border-purple-500',
+                'hover_shadow' => 'hover:shadow-purple-500/15',
+                'top_line'     => 'from-purple-600 via-indigo-500 to-pink-500',
+                'header_bg'    => 'from-purple-50/90 via-indigo-50/50 to-white/10 dark:from-purple-950/40 dark:via-dark-card dark:to-dark-card border-b border-purple-100/90 dark:border-dark-border',
+                'badge'        => 'bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-300 border border-purple-300/60 dark:border-purple-700/60',
+                'ping_dot'     => 'bg-purple-500',
+                'tag'          => 'text-purple-700 dark:text-purple-300 border-purple-200/80 dark:border-purple-800/80',
+                'title_hover'  => 'group-hover:text-purple-600 dark:group-hover:text-purple-400',
+                'pill_icon'    => 'text-purple-600 dark:text-purple-400',
+                'channel_bg'   => 'bg-purple-50/70 dark:bg-purple-950/30 border-purple-200/70 dark:border-purple-900/40 hover:border-purple-400 dark:hover:border-purple-700',
+                'channel_icon' => 'bg-purple-600 text-white shadow-purple-600/30',
+                'channel_link' => 'text-purple-700 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-200',
+                'status_tag'   => 'text-purple-600 dark:text-purple-400',
+                'sub_icon'     => 'text-purple-600 dark:text-purple-400',
+                'sub_link'     => 'text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300',
+                'btn_action'   => 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-600/30 hover:shadow-purple-600/40',
+            ],
+        ];
+
+        return $themes[ $color ] ?? $themes['red'];
+    }
+}
+
+if ( ! function_exists( 'wakalumi_render_pengaduan_color_options' ) ) {
+    function wakalumi_render_pengaduan_color_options( $current = 'red' ) {
+        $colors = [
+            'red'     => '🔴 Merah Resmi OJK (Regulator)',
+            'blue'    => '🔷 Biru Finansial & Regulator',
+            'emerald' => '🟢 Hijau Zamrud (Karakter Syariah)',
+            'teal'    => '🌊 Toska Wakalumi (Identitas Brand)',
+            'amber'   => '👑 Emas / Oranye (Prestisius)',
+            'purple'  => '🟣 Ungu (Modern Eksklusif)',
+        ];
+        $html = '';
+        foreach ( $colors as $key => $label ) {
+            $sel = selected( $current, $key, false );
+            $html .= "<option value='{$key}' {$sel}>{$label}</option>";
+        }
+        return $html;
+    }
+}
+
+// ── 3. HELPER GET DATA PENGADUAN ───────────────────────────────────
 
 if ( ! function_exists( 'wakalumi_get_pengaduan_settings' ) ) {
     function wakalumi_get_pengaduan_settings() {
@@ -67,6 +220,25 @@ if ( ! function_exists( 'wakalumi_get_pengaduan_settings' ) ) {
             // Berkas Formulir PDF Fisik
             'form_pdf_url'  => get_option( 'options_pengaduan_form_pdf_url', '' ),
 
+            // Kustomisasi Card A (Saluran Internal Bank)
+            'card_a_color'       => get_option( 'options_pengaduan_card_a_color', 'emerald' ),
+            'card_a_badge'       => get_option( 'options_pengaduan_card_a_badge', 'Saluran Resmi BPRS Wakalumi' ),
+            'card_a_tag'         => get_option( 'options_pengaduan_card_a_tag', 'Bebas Biaya (Gratis)' ),
+            'card_a_title'       => get_option( 'options_pengaduan_card_a_title', 'Hubungi Tim Layanan Nasabah' ),
+            'card_a_desc'        => get_option( 'options_pengaduan_card_a_desc', 'Sampaikan keluhan transaksi, rekening, pembiayaan, atau pelayanan secara langsung. Tim Kepatuhan dan Customer Care kami siap menindaklanjuti secara seksama.' ),
+            'card_a_status_wa'   => get_option( 'options_pengaduan_card_a_status_wa', 'Chat Aktif' ),
+            'card_a_btn_wa'      => get_option( 'options_pengaduan_card_a_btn_wa', 'Kirim Pengaduan via WA' ),
+            'card_a_btn_email'   => get_option( 'options_pengaduan_card_a_btn_email', 'Kirim Email Resmi' ),
+
+            // Kustomisasi Card B (Saluran Eksternal Regulator OJK / APPK)
+            'card_b_color'       => get_option( 'options_pengaduan_card_b_color', 'red' ), // Default RED (Merah OJK)
+            'card_b_badge'       => get_option( 'options_pengaduan_card_b_badge', 'Portal Resmi Regulator OJK' ),
+            'card_b_tag'         => get_option( 'options_pengaduan_card_b_tag', 'Eskalasi Eksternal' ),
+            'card_b_title'       => get_option( 'options_pengaduan_card_b_title', 'Portal APPK OJK (Kontak 157)' ),
+            'card_b_desc'        => get_option( 'options_pengaduan_card_b_desc', 'Sesuai regulasi POJK, jika proses penanganan belum mencapai kesepakatan atau Anda membutuhkan perlindungan otoritas, Anda dapat mengakses portal terpadu APPK OJK.' ),
+            'card_b_status_appk' => get_option( 'options_pengaduan_card_b_status_appk', '' ), // Default KOSONG (menghilangkan '24 Jam Online')
+            'card_b_btn_text'    => get_option( 'options_pengaduan_card_b_btn_text', 'Buka Portal APPK OJK' ),
+
             // Pratinjau Halaman Utama (Beranda)
             'home_badge'    => get_option( 'options_pengaduan_home_badge', 'Kepatuhan Regulasi POJK No. 22/2023' ),
             'home_title'    => get_option( 'options_pengaduan_home_title', 'Layanan Pengaduan & Pelindungan Nasabah' ),
@@ -98,6 +270,25 @@ function wakalumi_render_pengaduan_page() {
         update_option( 'options_pengaduan_email', sanitize_email( $_POST['options_pengaduan_email'] ?? '' ) );
         update_option( 'options_pengaduan_hours', sanitize_text_field( $_POST['options_pengaduan_hours'] ?? '' ) );
         update_option( 'options_pengaduan_location_desc', sanitize_text_field( $_POST['options_pengaduan_location_desc'] ?? '' ) );
+
+        // Card A Customization
+        update_option( 'options_pengaduan_card_a_color', sanitize_key( $_POST['options_pengaduan_card_a_color'] ?? 'emerald' ) );
+        update_option( 'options_pengaduan_card_a_badge', sanitize_text_field( $_POST['options_pengaduan_card_a_badge'] ?? '' ) );
+        update_option( 'options_pengaduan_card_a_tag', sanitize_text_field( $_POST['options_pengaduan_card_a_tag'] ?? '' ) );
+        update_option( 'options_pengaduan_card_a_title', sanitize_text_field( $_POST['options_pengaduan_card_a_title'] ?? '' ) );
+        update_option( 'options_pengaduan_card_a_desc', sanitize_textarea_field( $_POST['options_pengaduan_card_a_desc'] ?? '' ) );
+        update_option( 'options_pengaduan_card_a_status_wa', sanitize_text_field( $_POST['options_pengaduan_card_a_status_wa'] ?? '' ) );
+        update_option( 'options_pengaduan_card_a_btn_wa', sanitize_text_field( $_POST['options_pengaduan_card_a_btn_wa'] ?? '' ) );
+        update_option( 'options_pengaduan_card_a_btn_email', sanitize_text_field( $_POST['options_pengaduan_card_a_btn_email'] ?? '' ) );
+
+        // Card B Customization
+        update_option( 'options_pengaduan_card_b_color', sanitize_key( $_POST['options_pengaduan_card_b_color'] ?? 'red' ) );
+        update_option( 'options_pengaduan_card_b_badge', sanitize_text_field( $_POST['options_pengaduan_card_b_badge'] ?? '' ) );
+        update_option( 'options_pengaduan_card_b_tag', sanitize_text_field( $_POST['options_pengaduan_card_b_tag'] ?? '' ) );
+        update_option( 'options_pengaduan_card_b_title', sanitize_text_field( $_POST['options_pengaduan_card_b_title'] ?? '' ) );
+        update_option( 'options_pengaduan_card_b_desc', sanitize_textarea_field( $_POST['options_pengaduan_card_b_desc'] ?? '' ) );
+        update_option( 'options_pengaduan_card_b_status_appk', sanitize_text_field( $_POST['options_pengaduan_card_b_status_appk'] ?? '' ) );
+        update_option( 'options_pengaduan_card_b_btn_text', sanitize_text_field( $_POST['options_pengaduan_card_b_btn_text'] ?? '' ) );
 
         update_option( 'options_pengaduan_ojk_appk_url', esc_url_raw( $_POST['options_pengaduan_ojk_appk_url'] ?? '' ) );
         update_option( 'options_pengaduan_ojk_phone', sanitize_text_field( $_POST['options_pengaduan_ojk_phone'] ?? '' ) );
@@ -212,15 +403,67 @@ function wakalumi_render_pengaduan_page() {
                 </div>
             </div>
 
-            <!-- KARTU 1: SALURAN PENGADUAN INTERNAL BPRS WAKALUMI -->
+            <!-- KARTU 1: SALURAN PENGADUAN INTERNAL BPRS WAKALUMI (CARD A) -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-top: 4px solid #088395; border-radius: 10px; padding: 22px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                 <h2 style="font-size: 16px; font-weight: 800; color: #088395; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
-                    <span>🏢</span> 1. Saluran Pengaduan Langsung ke BPRS Wakalumi
+                    <span>🏢</span> 1. Kartu A: Saluran Pengaduan Langsung ke BPRS Wakalumi
                 </h2>
                 <p style="font-size: 12px; color: #64748b; margin-top: -10px; margin-bottom: 18px;">
-                    Kontak resmi yang akan dihubungi nasabah saat mengklik tombol Call to Action (CTA) di halaman depan.
+                    Atur konten judul, deskripsi, badge, tombol aksi, dan saluran kontak resmi pengaduan internal bank.
                 </p>
 
+                <!-- Sub-grup: Kustomisasi Header & Teks Card A -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
+                    <div style="font-weight: 700; font-size: 12px; color: #088395; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+                        📌 Teks &amp; Label Tampilan Kartu A
+                    </div>
+                    <div style="margin-bottom: 14px; background: #ffffff; padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        <label style="font-size: 12px; font-weight: 700; color: #088395; display: block; margin-bottom: 5px;">🎨 Tema Warna Aksen Kartu A</label>
+                        <select name="options_pengaduan_card_a_color" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: 600;">
+                            <?php echo wakalumi_render_pengaduan_color_options( $cfg['card_a_color'] ?? 'emerald' ); ?>
+                        </select>
+                        <small style="color: #64748b; font-size: 11px; display: block; margin-top: 3px;">Pilih warna aksen batas tepi, gradien atas, badge, tombol utama, dan sorotan hover.</small>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Judul Kartu A</label>
+                            <input type="text" name="options_pengaduan_card_a_title" value="<?php echo esc_attr( $cfg['card_a_title'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: bold;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Badge Kiri</label>
+                            <input type="text" name="options_pengaduan_card_a_badge" value="<?php echo esc_attr( $cfg['card_a_badge'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Tag Kanan Header</label>
+                            <input type="text" name="options_pengaduan_card_a_tag" value="<?php echo esc_attr( $cfg['card_a_tag'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Status Tag WhatsApp</label>
+                            <input type="text" name="options_pengaduan_card_a_status_wa" value="<?php echo esc_attr( $cfg['card_a_status_wa'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;" placeholder="Chat Aktif (kosongkan jika tidak ingin ditampilkan)">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Deskripsi / Paragraf Pengantar Kartu A</label>
+                        <textarea name="options_pengaduan_card_a_desc" rows="2" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;"><?php echo esc_textarea( $cfg['card_a_desc'] ); ?></textarea>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Tombol WA</label>
+                            <input type="text" name="options_pengaduan_card_a_btn_wa" value="<?php echo esc_attr( $cfg['card_a_btn_wa'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: bold;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Tombol Email</label>
+                            <input type="text" name="options_pengaduan_card_a_btn_email" value="<?php echo esc_attr( $cfg['card_a_btn_email'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: bold;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-grup: Saluran Kontak Fisik & Digital -->
+                <div style="font-weight: 700; font-size: 12px; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+                    📞 Detail Saluran Kontak &amp; Operasional
+                </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Nomor WhatsApp Pengaduan (Format: 628xxx)</label>
@@ -251,15 +494,63 @@ function wakalumi_render_pengaduan_page() {
                 </div>
             </div>
 
-            <!-- KARTU 2: SALURAN REGULATOR (PORTAL APPK OJK & LAPS SJK) -->
+            <!-- KARTU 2: SALURAN REGULATOR (PORTAL APPK OJK & LAPS SJK) (CARD B) -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-top: 4px solid #2563eb; border-radius: 10px; padding: 22px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                 <h2 style="font-size: 16px; font-weight: 800; color: #2563eb; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
-                    <span>⚖️</span> 2. Saluran Resmi Regulator (OJK &amp; LAPS SJK)
+                    <span>⚖️</span> 2. Kartu B: Saluran Resmi Regulator (Portal APPK OJK &amp; LAPS SJK)
                 </h2>
                 <p style="font-size: 12px; color: #64748b; margin-top: -10px; margin-bottom: 18px;">
-                    Tautan dan nomor kontak regulator resmi jika konsumen memilih opsi eskalasi atau ingin melapor melalui portal APPK OJK.
+                    Atur konten judul, deskripsi, badge, status operasional APPK, tautan, dan tombol aksi eskalasi regulator.
                 </p>
 
+                <!-- Sub-grup: Kustomisasi Header & Teks Card B -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 18px;">
+                    <div style="font-weight: 700; font-size: 12px; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+                        📌 Teks &amp; Label Tampilan Kartu B
+                    </div>
+                    <div style="margin-bottom: 14px; background: #ffffff; padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        <label style="font-size: 12px; font-weight: 700; color: #dc2626; display: block; margin-bottom: 5px;">🎨 Tema Warna Aksen Kartu B (Regulator)</label>
+                        <select name="options_pengaduan_card_b_color" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: 600;">
+                            <?php echo wakalumi_render_pengaduan_color_options( $cfg['card_b_color'] ?? 'red' ); ?>
+                        </select>
+                        <small style="color: #64748b; font-size: 11px; display: block; margin-top: 3px;">Pilih tema warna kartu regulator. Disarankan: <strong>Merah Resmi OJK</strong>.</small>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Judul Kartu B</label>
+                            <input type="text" name="options_pengaduan_card_b_title" value="<?php echo esc_attr( $cfg['card_b_title'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: bold;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Badge Kiri</label>
+                            <input type="text" name="options_pengaduan_card_b_badge" value="<?php echo esc_attr( $cfg['card_b_badge'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Tag Kanan Header</label>
+                            <input type="text" name="options_pengaduan_card_b_tag" value="<?php echo esc_attr( $cfg['card_b_tag'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">
+                                Status Tag APPK <span style="font-weight: normal; color: #94a3b8;">(Kosongkan untuk menghilangkan "24 Jam Online")</span>
+                            </label>
+                            <input type="text" name="options_pengaduan_card_b_status_appk" value="<?php echo esc_attr( $cfg['card_b_status_appk'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;" placeholder="Kosongkan jika tidak ingin menampilkan status">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Deskripsi / Paragraf Pengantar Kartu B</label>
+                        <textarea name="options_pengaduan_card_b_desc" rows="2" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;"><?php echo esc_textarea( $cfg['card_b_desc'] ); ?></textarea>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Tombol Aksi Utama</label>
+                        <input type="text" name="options_pengaduan_card_b_btn_text" value="<?php echo esc_attr( $cfg['card_b_btn_text'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: bold;">
+                    </div>
+                </div>
+
+                <!-- Sub-grup: Detail Saluran Regulator -->
+                <div style="font-weight: 700; font-size: 12px; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+                    🌐 Tautan &amp; Kontak Resmi Regulator
+                </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">URL Portal APPK OJK</label>

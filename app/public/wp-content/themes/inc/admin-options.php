@@ -26,10 +26,10 @@ function wakalumi_register_admin_options_menu() {
         2
     );
 
-    // Submenu 1: Umum & Pengumuman
+    // Submenu 1: Umum & WhatsApp CS
     add_submenu_page(
         'wakalumi-settings',
-        'Umum & Pengumuman Bar',
+        'Umum & WhatsApp CS',
         'Umum & WhatsApp',
         'manage_options',
         'wakalumi-settings',
@@ -81,86 +81,43 @@ add_action( 'admin_menu', 'wakalumi_register_admin_options_menu' );
 
 /**
  * ─────────────────────────────────────────────────────────────
- * 1. RENDER: UMUM & PENGUMUMAN (Announcement Bar & WhatsApp CS)
+ * 1. RENDER: UMUM & WHATSAPP CS
  * ─────────────────────────────────────────────────────────────
  */
 function wakalumi_render_general_page() {
     if ( isset( $_POST['wakalumi_save_general'] ) && check_admin_referer( 'wakalumi_general_nonce' ) ) {
-        update_option( 'options_announcement_active', isset( $_POST['options_announcement_active'] ) ? '1' : '0' );
-        update_option( 'options_announcement_text', sanitize_text_field( $_POST['options_announcement_text'] ?? '' ) );
-        update_option( 'options_announcement_link_text', sanitize_text_field( $_POST['options_announcement_link_text'] ?? '' ) );
-        update_option( 'options_announcement_link_url', esc_url_raw( $_POST['options_announcement_link_url'] ?? '' ) );
-        update_option( 'options_announcement_type', sanitize_text_field( $_POST['options_announcement_type'] ?? 'info' ) );
         update_option( 'options_contact_wa', sanitize_text_field( $_POST['options_contact_wa'] ?? '' ) );
         update_option( 'options_contact_wa_message', sanitize_text_field( $_POST['options_contact_wa_message'] ?? '' ) );
 
-        echo '<div class="notice notice-success is-dismissible"><p><strong>Pengaturan Umum & Pengumuman berhasil disimpan!</strong></p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p><strong>Pengaturan Umum & WhatsApp berhasil disimpan!</strong></p></div>';
     }
 
-    $ann_active    = get_option( 'options_announcement_active', '0' );
-    $ann_text      = get_option( 'options_announcement_text', 'Selamat Datang di Portal Resmi PT BPRS Wakalumi' );
-    $ann_link_text = get_option( 'options_announcement_link_text', 'Pelajari Selengkapnya' );
-    $ann_link_url  = get_option( 'options_announcement_link_url', '' );
-    $ann_type      = get_option( 'options_announcement_type', 'info' );
-    $wa            = get_option( 'options_contact_wa', '6281517380388' );
-    $wa_msg        = get_option( 'options_contact_wa_message', 'Halo CS Bank Syariah Wakalumi, saya ingin berkonsultasi mengenai produk perbankan.' );
+    $wa     = get_option( 'options_contact_wa', '6281517380388' );
+    $wa_msg = get_option( 'options_contact_wa_message', 'Halo CS Bank Syariah Wakalumi, saya ingin berkonsultasi mengenai produk perbankan.' );
     ?>
     <div class="wrap" style="max-width: 900px; margin-top: 20px;">
         <h1 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-            <span class="dashicons dashicons-megaphone" style="font-size: 32px; width: 32px; height: 32px; color: #088395;"></span>
-            Pengaturan Umum & Pengumuman Bar
+            <span class="dashicons dashicons-admin-generic" style="font-size: 32px; width: 32px; height: 32px; color: #088395;"></span>
+            Pengaturan Umum & WhatsApp CS
         </h1>
+
+        <!-- Notice Pengalihan Pengumuman -->
+        <div style="background: #f0fdfa; border-left: 4px solid #088395; padding: 14px 18px; margin-bottom: 20px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div>
+                <strong style="color: #0f766e; font-size: 14px;">📢 Pengumuman Website Kini Terpusat</strong>
+                <p style="margin: 4px 0 0 0; color: #334155; font-size: 13px;">
+                    Sistem pengumuman resmi, notifikasi mengambang (Toast Notification), dan pop-up darurat kini dikelola lengkap melalui menu 
+                    <strong>Wakalumi Settings &rarr; Pengumuman Resmi</strong>.
+                </p>
+            </div>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-pengumuman' ) ); ?>" class="button button-primary" style="background: #088395; border-color: #066e7d; white-space: nowrap;">
+                Buka Pengumuman Resmi &rarr;
+            </a>
+        </div>
 
         <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <form method="post" action="">
                 <?php wp_nonce_field( 'wakalumi_general_nonce' ); ?>
-
-                <h2 style="font-size: 16px; margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    📢 Bilah Pengumuman Atas (Announcement Bar)
-                </h2>
-                <p style="color: #64748b; font-size: 13px;">
-                    Bilah ini muncul di bagian paling atas halaman website (di atas navbar). Sangat cocok untuk pengumuman libur operasional, promo nisbah, atau peringatan penting.
-                </p>
-
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><label for="options_announcement_active">Status Pengumuman:</label></th>
-                        <td>
-                            <label style="font-weight: bold; cursor: pointer;">
-                                <input type="checkbox" id="options_announcement_active" name="options_announcement_active" value="1" <?php checked( $ann_active, '1' ); ?>>
-                                Aktifkan & Tampilkan Pengumuman di Website
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_announcement_text">Isi Pengumuman:</label></th>
-                        <td>
-                            <input type="text" id="options_announcement_text" name="options_announcement_text" value="<?php echo esc_attr( $ann_text ); ?>" class="large-text" placeholder="Contoh: Kantor beroperasi normal selama bulan Ramadhan">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_announcement_link_text">Teks Link (Opsional):</label></th>
-                        <td>
-                            <input type="text" id="options_announcement_link_text" name="options_announcement_link_text" value="<?php echo esc_attr( $ann_link_text ); ?>" class="regular-text" placeholder="Contoh: Lihat Jadwal">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_announcement_link_url">URL Link (Opsional):</label></th>
-                        <td>
-                            <input type="url" id="options_announcement_link_url" name="options_announcement_link_url" value="<?php echo esc_attr( $ann_link_url ); ?>" class="large-text" placeholder="https:// atau /halaman-tujuan">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_announcement_type">Tipe / Warna Banner:</label></th>
-                        <td>
-                            <select id="options_announcement_type" name="options_announcement_type" style="padding: 4px 10px;">
-                                <option value="info" <?php selected( $ann_type, 'info' ); ?>>Info (Teal / Biru Syariah)</option>
-                                <option value="success" <?php selected( $ann_type, 'success' ); ?>>Sukses (Hijau Segar)</option>
-                                <option value="warning" <?php selected( $ann_type, 'warning' ); ?>>Peringatan (Emas / Amber)</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
                     💬 WhatsApp Customer Service Global

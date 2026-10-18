@@ -1024,7 +1024,7 @@ const ExecutiveParallax = {
       this.currentMode = 'overview';
       this.setStageMode('overview');
 
-      const gap = 2; // % gap between cards
+      const gap = n > 4 ? 1.4 : 2; // % gap between cards
       const w = (100 - gap * (n - 1)) / n;
 
       this.cards.forEach((card, i) => {
@@ -2720,8 +2720,34 @@ const BrosurModule = {
   },
 
   initPdfModal() {
+    // Clean up any stale modal from previous SPA transitions in document.body
+    const existingModals = document.querySelectorAll('#brosur-preview-modal');
+    if (existingModals.length > 1) {
+      for (let m = 0; m < existingModals.length - 1; m++) {
+        existingModals[m].remove();
+      }
+    }
+
     const modal = document.getElementById('brosur-preview-modal');
     if (!modal) return;
+
+    // CRITICAL: Teleport modal directly to document.body so that Swup's #swup
+    // (.transition-fade with CSS transform: translateY(0)) does not trap position: fixed.
+    // This ensures the preview modal is ALWAYS centered in the user's visible viewport wherever clicked.
+    if (modal.parentNode !== document.body) {
+      document.body.appendChild(modal);
+    }
+
+    // Swup cleanup: remove teleported modal when navigating away
+    if (window.swup && window.swup.hooks && !this._brosurSwupCleanBound) {
+      this._brosurSwupCleanBound = true;
+      window.swup.hooks.once('visit:start', () => {
+        this._brosurSwupCleanBound = false;
+        const stale = document.getElementById('brosur-preview-modal');
+        if (stale) stale.remove();
+        document.body.style.overflow = '';
+      });
+    }
 
     const backdrop = document.getElementById('brosur-modal-backdrop');
     const container = document.getElementById('brosur-modal-container');
@@ -2778,6 +2804,7 @@ const BrosurModule = {
       pdfViewer.load(pdfUrl);
 
       // Animasi Buka Modal
+      if (modal) modal.scrollTop = 0;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.body.style.overflow = 'hidden';
@@ -2831,6 +2858,14 @@ const BrosurModule = {
     if (backdrop && !backdrop._brosurBound) {
       backdrop._brosurBound = true;
       backdrop.addEventListener('click', closeModal);
+    }
+    if (modal && !modal._brosurOuterBound) {
+      modal._brosurOuterBound = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
     }
 
     if (!this._escBound) {
@@ -3191,10 +3226,22 @@ const LaporanModule = {
       const periode = (card.getAttribute('data-periode') || '').trim();
       const keywords = (card.getAttribute('data-keywords') || '').trim();
       const title = (card.getAttribute('data-title') || '').trim();
+      const cardTW = (card.getAttribute('data-tw') || '').trim();
+
+      // Helper fallback jika data-tw belum ada di atribut
+      const resolvedTW = (() => {
+        if (cardTW) return cardTW;
+        const s = (periode + ' ' + title).toLowerCase();
+        if (/\b(triwulan\s*iv|tw\s*iv|tw\s*4|triwulan\s*4|q4)\b/i.test(s)) return 'tw4';
+        if (/\b(triwulan\s*iii|tw\s*iii|tw\s*3|triwulan\s*3|q3)\b/i.test(s)) return 'tw3';
+        if (/\b(triwulan\s*ii|tw\s*ii|tw\s*2|triwulan\s*2|q2)\b/i.test(s)) return 'tw2';
+        if (/\b(triwulan\s*i|tw\s*i|tw\s*1|triwulan\s*1|q1)\b/i.test(s)) return 'tw1';
+        return '';
+      })();
 
       const matchTab = (curTab === 'all' || kat === curTab || (curTab === 'berkelanjutan' && (kat === 'lkb' || kat === 'berkelanjutan')));
       const matchYear = (curYear === 'all' || tahun === curYear);
-      const matchTW = (curTab !== 'triwulan' || curTW === 'all' || periode.includes(curTW));
+      const matchTW = (curTab !== 'triwulan' || curTW === 'all' || resolvedTW === curTW);
       const matchSearch = !query || keywords.includes(query) || title.includes(query);
 
       if (matchTab && matchYear && matchTW && matchSearch) {
@@ -3220,6 +3267,8 @@ const LaporanModule = {
         if (descEl) {
           if (query) {
             descEl.textContent = `Tidak ditemukan dokumen laporan yang cocok dengan pencarian "${query}".`;
+          } else if (this.activeTW !== 'all' && this.activeYear !== 'all') {
+            descEl.textContent = `Tidak ada dokumen laporan untuk tahun ${this.activeYear} pada triwulan yang dipilih. Silakan ubah filter triwulan atau tahun.`;
           } else if (this.activeYear !== 'all') {
             descEl.textContent = `Tidak ada dokumen laporan untuk tahun ${this.activeYear} pada kategori yang dipilih. Silakan klik tombol di bawah untuk melihat arsip lengkap tahun lainnya.`;
           } else {
@@ -3242,8 +3291,34 @@ const LaporanModule = {
   },
 
   initPdfModal() {
+    // Clean up any stale modal from previous SPA transitions in document.body
+    const existingModals = document.querySelectorAll('#laporan-preview-modal');
+    if (existingModals.length > 1) {
+      for (let m = 0; m < existingModals.length - 1; m++) {
+        existingModals[m].remove();
+      }
+    }
+
     const modal = document.getElementById('laporan-preview-modal');
     if (!modal) return;
+
+    // CRITICAL: Teleport modal directly to document.body so that Swup's #swup
+    // (.transition-fade with CSS transform: translateY(0)) does not trap position: fixed.
+    // This ensures the preview modal is ALWAYS centered in the user's visible viewport wherever clicked.
+    if (modal.parentNode !== document.body) {
+      document.body.appendChild(modal);
+    }
+
+    // Swup cleanup: remove teleported modal when navigating away
+    if (window.swup && window.swup.hooks && !this._laporanSwupCleanBound) {
+      this._laporanSwupCleanBound = true;
+      window.swup.hooks.once('visit:start', () => {
+        this._laporanSwupCleanBound = false;
+        const stale = document.getElementById('laporan-preview-modal');
+        if (stale) stale.remove();
+        document.body.style.overflow = '';
+      });
+    }
 
     const backdrop = document.getElementById('laporan-modal-backdrop');
     const container = document.getElementById('laporan-modal-container');
@@ -3299,6 +3374,7 @@ const LaporanModule = {
 
       pdfViewer.load(pdfUrl);
 
+      if (modal) modal.scrollTop = 0;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.body.style.overflow = 'hidden';
@@ -3346,6 +3422,14 @@ const LaporanModule = {
       backdrop._laporanBound = true;
       backdrop.addEventListener('click', closeModal);
     }
+    if (modal && !modal._laporanOuterBound) {
+      modal._laporanOuterBound = true;
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+    }
 
     if (!this._escBound) {
       this._escBound = true;
@@ -3361,6 +3445,500 @@ const LaporanModule = {
 window.LaporanModule = LaporanModule;
 
 // ========================================================================
+// HYBRID ANNOUNCEMENT TOAST NOTIFICATION & POPUP (Homepage)
+// ========================================================================
+const AnnouncementHybrid = {
+  slideTimer: null,
+  openTimeout: null,
+  popupTimeout: null,
+  currentSlide: 0,
+  totalSlides: 0,
+  currentPopupSlide: 0,
+  totalPopupSlides: 0,
+  isPaused: false,
+  isMinimized: false,
+  isTransitioning: false,
+  isPopupTransitioning: false,
+  toastEl: null,
+  popupEl: null,
+  launcherBtn: null,
+  slides: [],
+  popupSlides: [],
+
+  init() {
+    // 0. Safety cleanup of any stale teleported elements in body before re-initializing
+    this.cleanup(false);
+
+    // 1. Locate elements
+    this.popupEl = document.getElementById('wakalumi-emergency-popup');
+    this.toastEl = document.getElementById('wakalumi-ann-toast');
+    this.launcherBtn = document.getElementById('wakalumi-toast-launcher');
+
+    if (!this.toastEl && !this.popupEl) return;
+
+    // Teleport to document.body so that Swup's #swup CSS transform does not trap position: fixed
+    if (this.popupEl && this.popupEl.parentElement !== document.body) {
+      document.body.appendChild(this.popupEl);
+    }
+    if (this.toastEl && this.toastEl.parentElement !== document.body) {
+      document.body.appendChild(this.toastEl);
+    }
+    if (this.launcherBtn && this.launcherBtn.parentElement !== document.body) {
+      document.body.appendChild(this.launcherBtn);
+    }
+
+    // 2. Initialize Emergency Popup Modal
+    if (this.popupEl) {
+      this.initPopup();
+    }
+
+    // 3. Initialize Floating Toast & Slider
+    if (this.toastEl) {
+      this.initToast();
+    }
+  },
+
+  initPopup() {
+    this.popupSlides = Array.from(this.popupEl.querySelectorAll('.popup-slide-item'));
+    if (this.popupSlides.length === 0) return;
+
+    const popupBackdrop = document.getElementById('emergency-popup-backdrop');
+    const popupCard = document.getElementById('emergency-popup-card');
+
+    this.totalPopupSlides = this.popupSlides.length;
+    this.isPopupTransitioning = false;
+
+    // Find first undismissed slide index
+    let firstUndismissedIndex = -1;
+    let anyUndismissed = false;
+
+    this.popupSlides.forEach((slide, idx) => {
+      const pId = slide.getAttribute('data-popup-id') || ('pop_' + idx);
+      const isDismissed = sessionStorage.getItem('wkl_dismissed_popup_' + pId);
+      if (!isDismissed) {
+        anyUndismissed = true;
+        if (firstUndismissedIndex === -1) {
+          firstUndismissedIndex = idx;
+        }
+      }
+    });
+
+    // If all active popups have already been dismissed in this session, do not show
+    if (!anyUndismissed) {
+      return;
+    }
+
+    this.currentPopupSlide = firstUndismissedIndex >= 0 ? firstUndismissedIndex : 0;
+
+    // Set initial slide active state
+    this.popupSlides.forEach((s, idx) => {
+      if (idx === this.currentPopupSlide) {
+        s.className = 'popup-slide-item col-start-1 row-start-1 w-full transition-all duration-300 ease-out is-active opacity-100 translate-x-0 visible pointer-events-auto z-10';
+        s.style.opacity = '1';
+        s.style.transform = 'translateX(0)';
+        s.style.zIndex = '2';
+      } else {
+        s.className = 'popup-slide-item col-start-1 row-start-1 w-full transition-all duration-300 ease-out opacity-0 translate-x-6 invisible pointer-events-none z-0';
+        s.style.opacity = '0';
+        s.style.zIndex = '0';
+      }
+    });
+
+    // Open popup after 800ms
+    clearTimeout(this.popupTimeout);
+    this.popupTimeout = setTimeout(() => {
+      if (!this.popupEl) return;
+      this.popupEl.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        if (popupBackdrop) popupBackdrop.classList.remove('opacity-0');
+        if (popupCard) {
+          popupCard.classList.remove('scale-95', 'opacity-0');
+          popupCard.classList.add('scale-100', 'opacity-100');
+        }
+      });
+    }, 800);
+
+    const closeAllEmergencyPopups = () => {
+      if (popupBackdrop) popupBackdrop.classList.add('opacity-0');
+      if (popupCard) {
+        popupCard.classList.remove('scale-100', 'opacity-100');
+        popupCard.classList.add('scale-95', 'opacity-0');
+      }
+      setTimeout(() => {
+        if (this.popupEl) this.popupEl.classList.add('hidden');
+      }, 250);
+
+      // Dismiss all popups in this session
+      this.popupSlides.forEach((slide, idx) => {
+        const pId = slide.getAttribute('data-popup-id') || ('pop_' + idx);
+        sessionStorage.setItem('wkl_dismissed_popup_' + pId, '1');
+      });
+    };
+
+    // Bind Top Close ✕ (Dismiss all)
+    const closeBtns = this.popupEl.querySelectorAll('.btn-close-popup-x');
+    closeBtns.forEach((btn) => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        closeAllEmergencyPopups();
+      };
+    });
+
+    if (popupBackdrop) {
+      popupBackdrop.onclick = () => {
+        closeAllEmergencyPopups();
+      };
+    }
+
+    // Bind Prev & Next navigation
+    const prevBtns = this.popupEl.querySelectorAll('.btn-popup-prev');
+    prevBtns.forEach((btn) => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const prev = (this.currentPopupSlide - 1 + this.totalPopupSlides) % this.totalPopupSlides;
+        this.showPopupSlide(prev, 'prev');
+      };
+    });
+
+    const nextBtns = this.popupEl.querySelectorAll('.btn-popup-next');
+    nextBtns.forEach((btn) => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const next = (this.currentPopupSlide + 1) % this.totalPopupSlides;
+        this.showPopupSlide(next, 'next');
+      };
+    });
+
+    // Bind Bottom "Tutup / Lanjut" step buttons
+    const stepBtns = this.popupEl.querySelectorAll('.btn-dismiss-popup-step');
+    stepBtns.forEach((btn) => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const stepIdx = parseInt(btn.getAttribute('data-step-index'), 10);
+        const currentSlideEl = this.popupSlides[stepIdx];
+        if (currentSlideEl) {
+          const pId = currentSlideEl.getAttribute('data-popup-id') || ('pop_' + stepIdx);
+          sessionStorage.setItem('wkl_dismissed_popup_' + pId, '1');
+        }
+
+        // If there is another popup slide, smoothly advance to it!
+        if (stepIdx < this.totalPopupSlides - 1) {
+          this.showPopupSlide(stepIdx + 1, 'next');
+        } else {
+          // Last popup closed -> close modal completely!
+          closeAllEmergencyPopups();
+        }
+      };
+    });
+  },
+
+  showPopupSlide(index, direction = 'next') {
+    if (this.isPopupTransitioning) return;
+    if (index === this.currentPopupSlide && this.popupSlides[index]?.classList.contains('is-active')) return;
+    this.isPopupTransitioning = true;
+
+    const prevIndex = this.currentPopupSlide;
+    const dir = direction === 'none' ? 'none' : (direction || (index > prevIndex ? 'next' : 'prev'));
+    const outgoing = this.popupSlides[prevIndex];
+    const incoming = this.popupSlides[index];
+
+    this.popupSlides.forEach((s, idx) => {
+      if (idx !== index && idx !== prevIndex) {
+        s.classList.remove('is-active', 'visible', 'pointer-events-auto');
+        s.classList.add('invisible', 'pointer-events-none');
+        s.style.opacity = '0';
+        s.style.zIndex = '0';
+      }
+    });
+
+    if (outgoing && outgoing !== incoming && dir !== 'none') {
+      outgoing.classList.remove('is-active', 'pointer-events-auto');
+      outgoing.classList.add('pointer-events-none');
+      outgoing.style.zIndex = '1';
+      outgoing.style.transition = 'opacity 250ms ease-out, transform 250ms cubic-bezier(0.16, 1, 0.3, 1)';
+      outgoing.style.transform = dir === 'next' ? 'translateX(-25px)' : 'translateX(25px)';
+      outgoing.style.opacity = '0';
+
+      setTimeout(() => {
+        outgoing.classList.remove('visible');
+        outgoing.classList.add('invisible');
+      }, 250);
+    }
+
+    if (incoming) {
+      incoming.classList.remove('invisible', 'pointer-events-none');
+      incoming.classList.add('visible', 'pointer-events-auto', 'is-active');
+      incoming.style.zIndex = '2';
+
+      if (dir === 'none') {
+        incoming.style.transition = 'none';
+        incoming.style.transform = 'translateX(0)';
+        incoming.style.opacity = '1';
+      } else {
+        incoming.style.transition = 'none';
+        incoming.style.transform = dir === 'next' ? 'translateX(25px)' : 'translateX(-25px)';
+        incoming.style.opacity = '0';
+
+        void incoming.offsetWidth; // force reflow
+
+        incoming.style.transition = 'opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1)';
+        incoming.style.transform = 'translateX(0)';
+        incoming.style.opacity = '1';
+      }
+    }
+
+    this.currentPopupSlide = index;
+
+    // Update counter in incoming slide if present
+    const currNum = incoming ? incoming.querySelector('.popup-curr-num') : null;
+    if (currNum) currNum.textContent = String(this.currentPopupSlide + 1);
+
+    setTimeout(() => {
+      this.isPopupTransitioning = false;
+    }, 280);
+  },
+
+  initToast() {
+    this.slides = Array.from(this.toastEl.querySelectorAll('.toast-slide-item'));
+    if (this.slides.length === 0) return;
+
+    this.currentSlide = 0;
+    this.totalSlides = this.slides.length;
+    this.isPaused = false;
+    this.isMinimized = false;
+    this.isTransitioning = false;
+
+    const rawDuration = this.toastEl.getAttribute('data-duration');
+    const slideDuration = rawDuration ? parseInt(rawDuration, 10) : 7000;
+
+    const btnCloseToast = document.getElementById('btn-close-toast');
+    const btnPrevToast = document.getElementById('btn-toast-prev');
+    const btnNextToast = document.getElementById('btn-toast-next');
+    const currIdxEl = document.getElementById('toast-curr-idx');
+
+    // Reset slide visibility: ensure slide 0 is active and rest invisible
+    this.slides.forEach((s, idx) => {
+      if (idx === 0) {
+        s.className = 'toast-slide-item col-start-1 row-start-1 w-full transition-all duration-300 ease-out is-active opacity-100 translate-x-0 visible pointer-events-auto z-10';
+        s.style.opacity = '1';
+        s.style.transform = 'translateX(0)';
+        s.style.zIndex = '2';
+      } else {
+        s.className = 'toast-slide-item col-start-1 row-start-1 w-full transition-all duration-300 ease-out opacity-0 translate-x-4 invisible pointer-events-none z-0';
+        s.style.opacity = '0';
+        s.style.zIndex = '0';
+      }
+    });
+
+    if (currIdxEl) currIdxEl.textContent = '1';
+
+    const openToast = () => {
+      this.isMinimized = false;
+      if (this.launcherBtn) {
+        this.launcherBtn.classList.remove('flex');
+        this.launcherBtn.classList.add('hidden');
+      }
+      const waBtn = document.getElementById('wakalumi-wa-floating');
+      if (waBtn) waBtn.style.bottom = '';
+
+      if (this.toastEl) {
+        this.toastEl.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          this.toastEl.classList.remove('translate-y-10', 'opacity-0');
+          this.toastEl.classList.add('translate-y-0', 'opacity-100');
+        });
+      }
+      this.startAutoSlide(slideDuration);
+    };
+
+    const minimizeToast = () => {
+      this.isMinimized = true;
+      clearInterval(this.slideTimer);
+      if (this.toastEl) {
+        this.toastEl.classList.remove('translate-y-0', 'opacity-100');
+        this.toastEl.classList.add('translate-y-10', 'opacity-0');
+      }
+
+      setTimeout(() => {
+        if (this.toastEl) this.toastEl.classList.add('hidden');
+        if (this.launcherBtn) {
+          this.launcherBtn.classList.remove('hidden');
+          this.launcherBtn.classList.add('flex');
+        }
+        const waBtn = document.getElementById('wakalumi-wa-floating');
+        if (waBtn) {
+          waBtn.style.bottom = '4.75rem';
+        }
+      }, 350);
+    };
+
+    if (btnCloseToast) {
+      btnCloseToast.onclick = (e) => {
+        e.stopPropagation();
+        minimizeToast();
+      };
+    }
+
+    if (this.launcherBtn) {
+      this.launcherBtn.onclick = () => {
+        openToast();
+      };
+    }
+
+    const showSlide = (index, direction) => {
+      if (index === this.currentSlide && this.slides[index]?.classList.contains('is-active')) return;
+      if (this.isTransitioning) return;
+      this.isTransitioning = true;
+
+      const prevIndex = this.currentSlide;
+      const dir = direction || (index > prevIndex ? 'next' : 'prev');
+      const outgoing = this.slides[prevIndex];
+      const incoming = this.slides[index];
+
+      this.slides.forEach((s, idx) => {
+        if (idx !== index && idx !== prevIndex) {
+          s.classList.remove('is-active', 'visible', 'pointer-events-auto');
+          s.classList.add('invisible', 'pointer-events-none');
+          s.style.opacity = '0';
+          s.style.zIndex = '0';
+        }
+      });
+
+      if (outgoing) {
+        outgoing.classList.remove('is-active', 'pointer-events-auto');
+        outgoing.classList.add('pointer-events-none');
+        outgoing.style.zIndex = '1';
+        outgoing.style.transition = 'opacity 300ms ease-out, transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
+        outgoing.style.transform = dir === 'next' ? 'translateX(-20px)' : 'translateX(20px)';
+        outgoing.style.opacity = '0';
+
+        setTimeout(() => {
+          outgoing.classList.remove('visible');
+          outgoing.classList.add('invisible');
+        }, 300);
+      }
+
+      if (incoming) {
+        incoming.classList.remove('invisible', 'pointer-events-none');
+        incoming.classList.add('visible', 'pointer-events-auto', 'is-active');
+        incoming.style.zIndex = '2';
+        incoming.style.transition = 'none';
+        incoming.style.transform = dir === 'next' ? 'translateX(20px)' : 'translateX(-20px)';
+        incoming.style.opacity = '0';
+
+        void incoming.offsetWidth;
+
+        incoming.style.transition = 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
+        incoming.style.transform = 'translateX(0)';
+        incoming.style.opacity = '1';
+      }
+
+      this.currentSlide = index;
+      if (currIdxEl) currIdxEl.textContent = String(this.currentSlide + 1);
+
+      setTimeout(() => {
+        this.isTransitioning = false;
+      }, 320);
+    };
+
+    const nextSlide = () => {
+      const next = (this.currentSlide + 1) % this.totalSlides;
+      showSlide(next, 'next');
+    };
+
+    const prevSlide = () => {
+      const prev = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+      showSlide(prev, 'prev');
+    };
+
+    const resetAutoSlide = () => {
+      clearInterval(this.slideTimer);
+      this.startAutoSlide(slideDuration);
+    };
+
+    if (btnNextToast) {
+      btnNextToast.onclick = (e) => {
+        e.stopPropagation();
+        nextSlide();
+        resetAutoSlide();
+      };
+    }
+
+    if (btnPrevToast) {
+      btnPrevToast.onclick = (e) => {
+        e.stopPropagation();
+        prevSlide();
+        resetAutoSlide();
+      };
+    }
+
+    this.toastEl.onmouseenter = () => { this.isPaused = true; };
+    this.toastEl.onmouseleave = () => { this.isPaused = false; };
+    this.toastEl.ontouchstart = () => { this.isPaused = true; };
+
+    // Reveal toast after initial intro delay (1.8s)
+    clearTimeout(this.openTimeout);
+    this.openTimeout = setTimeout(() => {
+      if (!this.isMinimized) {
+        openToast();
+      }
+    }, 1800);
+  },
+
+  startAutoSlide(duration) {
+    if (this.totalSlides <= 1) return;
+    clearInterval(this.slideTimer);
+    this.slideTimer = setInterval(() => {
+      if (!this.isPaused && !this.isMinimized && this.toastEl && !this.toastEl.classList.contains('hidden')) {
+        const btnNext = document.getElementById('btn-toast-next');
+        if (btnNext) {
+          btnNext.click();
+        }
+      }
+    }, duration);
+  },
+
+  cleanup(resetWa = true) {
+    clearInterval(this.slideTimer);
+    clearTimeout(this.openTimeout);
+    clearTimeout(this.popupTimeout);
+    this.slideTimer = null;
+    this.openTimeout = null;
+    this.popupTimeout = null;
+    this.isTransitioning = false;
+    this.isPopupTransitioning = false;
+
+    // Remove any teleported elements from document.body
+    const p = document.getElementById('wakalumi-emergency-popup');
+    const t = document.getElementById('wakalumi-ann-toast');
+    const l = document.getElementById('wakalumi-toast-launcher');
+
+    if (p && p.parentElement === document.body) {
+      p.remove();
+    }
+    if (t && t.parentElement === document.body) {
+      t.remove();
+    }
+    if (l && l.parentElement === document.body) {
+      l.remove();
+    }
+
+    if (resetWa) {
+      const waBtn = document.getElementById('wakalumi-wa-floating');
+      if (waBtn) waBtn.style.bottom = '';
+    }
+
+    this.toastEl = null;
+    this.popupEl = null;
+    this.launcherBtn = null;
+    this.slides = [];
+    this.popupSlides = [];
+  }
+};
+
+window.AnnouncementHybrid = AnnouncementHybrid;
+
+// ========================================================================
 // INITIALIZE ALL MODULES
 // ========================================================================
 function initAllModules() {
@@ -3371,6 +3949,7 @@ function initAllModules() {
   InstagramSlider.init();
   VideoModal.init();
   AnnouncementBar.init();
+  AnnouncementHybrid.init();
   Counter.init();
   SpotlightTilt.init();
   CopyClipboard.init();
@@ -3408,9 +3987,12 @@ function initSwup() {
       }),
     ],
   });
+  window.swup = swup;
 
-  // Page navigation start: trigger preloader & loading line, close mobile & desktop menus
+  // Page navigation start: trigger preloader & loading line, close mobile & desktop menus, clean up teleported modals
   swup.hooks.on('visit:start', (visit) => {
+    AnnouncementHybrid.cleanup();
+
     const overlay = document.getElementById('mobile-menu-overlay');
     const panel = document.getElementById('mobile-menu-panel');
     if (panel && panel.classList.contains('active')) {

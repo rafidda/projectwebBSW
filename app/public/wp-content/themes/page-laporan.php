@@ -400,10 +400,10 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
                     >
                         Semua TW
                     </button>
-                    <button type="button" data-tw="triwulan i" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW I</button>
-                    <button type="button" data-tw="triwulan ii" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW II</button>
-                    <button type="button" data-tw="triwulan iii" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW III</button>
-                    <button type="button" data-tw="triwulan iv" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW IV</button>
+                    <button type="button" data-tw="tw1" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW I</button>
+                    <button type="button" data-tw="tw2" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW II</button>
+                    <button type="button" data-tw="tw3" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW III</button>
+                    <button type="button" data-tw="tw4" class="laporan-tw-btn px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/50 hover:text-emerald-950 dark:hover:text-emerald-100 cursor-pointer">TW IV</button>
                 </div>
 
             </div>
@@ -439,11 +439,28 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
                 $periode    = $item['periode'] ?? '';
                 $judul      = $item['judul'] ?? 'Laporan Keuangan Publikasi';
                 $file_url   = $item['file_url'] ?? '';
-                $file_size  = ! empty( $item['file_size'] ) ? $item['file_size'] : 'PDF • 2.0 MB';
+                if ( function_exists( 'wakalumi_auto_detect_file_size' ) ) {
+                    $file_size = wakalumi_auto_detect_file_size( $file_url, $item['file_size'] ?? '' );
+                } else {
+                    $file_size  = ! empty( $item['file_size'] ) ? $item['file_size'] : 'PDF • 2.0 MB';
+                }
                 $tgl_pub    = ! empty( $item['tgl_publikasi'] ) ? $item['tgl_publikasi'] : 'Dipublikasikan';
                 $audit      = ! empty( $item['status_audit'] ) ? $item['status_audit'] : 'Resmi OJK';
                 $keterangan = ! empty( $item['keterangan'] ) ? $item['keterangan'] : 'Publikasi resmi transparansi keuangan dan kinerja BPRS Wakalumi.';
                 $theme      = wakalumi_get_laporan_theme( $kategori );
+
+                // Deteksi akurat kode triwulan (tw1, tw2, tw3, tw4)
+                $tw_code = '';
+                $p_search = strtolower( $periode . ' ' . $judul );
+                if ( preg_match( '/\b(triwulan\s*iv|tw\s*iv|tw\s*4|triwulan\s*4|q4)\b/i', $p_search ) ) {
+                    $tw_code = 'tw4';
+                } elseif ( preg_match( '/\b(triwulan\s*iii|tw\s*iii|tw\s*3|triwulan\s*3|q3)\b/i', $p_search ) ) {
+                    $tw_code = 'tw3';
+                } elseif ( preg_match( '/\b(triwulan\s*ii|tw\s*ii|tw\s*2|triwulan\s*2|q2)\b/i', $p_search ) ) {
+                    $tw_code = 'tw2';
+                } elseif ( preg_match( '/\b(triwulan\s*i|tw\s*i|tw\s*1|triwulan\s*1|q1)\b/i', $p_search ) ) {
+                    $tw_code = 'tw1';
+                }
 
                 // Keywords untuk live search
                 $search_meta = strtolower( $judul . ' ' . $kategori . ' ' . $tahun . ' ' . $periode . ' ' . $audit . ' ' . $keterangan );
@@ -454,6 +471,7 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
                     data-kategori="<?php echo esc_attr( $kategori ); ?>"
                     data-tahun="<?php echo esc_attr( $tahun ); ?>"
                     data-periode="<?php echo esc_attr( strtolower( $periode ) ); ?>"
+                    data-tw="<?php echo esc_attr( $tw_code ); ?>"
                     data-title="<?php echo esc_attr( strtolower( $judul ) ); ?>"
                     data-keywords="<?php echo esc_attr( $search_meta ); ?>"
                 >
@@ -643,7 +661,7 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
      ======================================================================== -->
 <div 
     id="laporan-preview-modal" 
-    class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 md:p-6" 
+    class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto" 
     role="dialog" 
     aria-modal="true" 
     aria-labelledby="laporan-modal-title"
@@ -657,7 +675,7 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
     <!-- Modal Container -->
     <div 
         id="laporan-modal-container" 
-        class="relative w-full max-w-5xl h-[92vh] md:h-[88vh] bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-slate-200 dark:border-dark-border flex flex-col overflow-hidden scale-95 opacity-0 transition-all duration-300 z-10"
+        class="relative w-full max-w-5xl h-[92vh] md:h-[88vh] my-auto bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-slate-200 dark:border-dark-border flex flex-col overflow-hidden scale-95 opacity-0 transition-all duration-300 z-10"
     >
         <!-- Modal Top Header Bar -->
         <div class="px-4 py-3 sm:px-6 sm:py-3.5 bg-slate-50 dark:bg-dark-surface-alt border-b border-slate-200 dark:border-dark-border flex items-center justify-between gap-3 flex-shrink-0">

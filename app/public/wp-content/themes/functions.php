@@ -33,6 +33,7 @@ require_once WAKALUMI_DIR . '/inc/admin-produk.php';
 require_once WAKALUMI_DIR . '/inc/admin-pembiayaan.php';
 require_once WAKALUMI_DIR . '/inc/admin-laporan.php';
 require_once WAKALUMI_DIR . '/inc/admin-pengaduan.php';
+require_once WAKALUMI_DIR . '/inc/admin-pengumuman.php';
 require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 
 // ────────────────────────────────────────────────

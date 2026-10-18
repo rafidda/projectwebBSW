@@ -154,10 +154,18 @@ if ( ! empty( $cfg['sla_note'] ) ) {
             </div>
 
             <!-- 2 Core Action Cards (Dual-Tone Design) -->
+            <?php
+            $theme_a = function_exists( 'wakalumi_get_pengaduan_color_theme' ) 
+                ? wakalumi_get_pengaduan_color_theme( $cfg['card_a_color'] ?? 'emerald' ) 
+                : [];
+            $theme_b = function_exists( 'wakalumi_get_pengaduan_color_theme' ) 
+                ? wakalumi_get_pengaduan_color_theme( $cfg['card_b_color'] ?? 'red' ) 
+                : [];
+            ?>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
                 <!-- CARD A: PENGADUAN INTERNAL BPRS WAKALUMI (DUAL-TONE) -->
-                <div class="spotlight-card group relative rounded-3xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-emerald-200/90 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500 shadow-md hover:shadow-2xl hover:shadow-emerald-500/15 hover:-translate-y-1.5 transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="50">
+                <div class="spotlight-card group relative rounded-3xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border <?php echo esc_attr( $theme_a['border'] ?? 'border-emerald-200/90 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500' ); ?> shadow-md hover:shadow-2xl <?php echo esc_attr( $theme_a['hover_shadow'] ?? 'hover:shadow-emerald-500/15' ); ?> hover:-translate-y-1.5 transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="50">
                     
                     <!-- Decorative Watermark Logo (Interactive Hover: Left 3/4 -> Right 1/2 Full Card) -->
                     <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
@@ -172,45 +180,45 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                     </div>
 
                     <!-- Top Accent Line -->
-                    <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 relative z-10"></div>
+                    <div class="h-1.5 w-full bg-gradient-to-r <?php echo esc_attr( $theme_a['top_line'] ?? 'from-emerald-500 via-teal-400 to-cyan-500' ); ?> relative z-10"></div>
 
                     <!-- TONE 1: TINTED HEADER BAR -->
-                    <div class="p-6 sm:p-7 bg-gradient-to-br from-emerald-50/90 via-teal-50/50 to-white/10 dark:from-emerald-950/40 dark:via-dark-card dark:to-dark-card border-b border-emerald-100/90 dark:border-dark-border relative overflow-hidden z-10">
+                    <div class="p-6 sm:p-7 bg-gradient-to-br <?php echo esc_attr( $theme_a['header_bg'] ?? 'from-emerald-50/90 via-teal-50/50 to-white/10 dark:from-emerald-950/40 dark:via-dark-card dark:to-dark-card border-b border-emerald-100/90 dark:border-dark-border' ); ?> relative overflow-hidden z-10">
 
                         <!-- Badge Row -->
                         <div class="flex items-center justify-between gap-2 mb-3 relative z-10">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60 shadow-xs">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                                Saluran Resmi BPRS Wakalumi
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider <?php echo esc_attr( $theme_a['badge'] ?? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60' ); ?> shadow-xs">
+                                <span class="w-2 h-2 rounded-full <?php echo esc_attr( $theme_a['ping_dot'] ?? 'bg-emerald-500' ); ?> animate-ping"></span>
+                                <?php echo esc_html( $cfg['card_a_badge'] ?? 'Saluran Resmi BPRS Wakalumi' ); ?>
                             </span>
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-dark-surface text-emerald-700 dark:text-emerald-300 text-[11px] font-bold border border-emerald-200/80 dark:border-emerald-800/80 shadow-xs">
-                                <svg class="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                                Bebas Biaya (Gratis)
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-dark-surface <?php echo esc_attr( $theme_a['tag'] ?? 'text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/80' ); ?> text-[11px] font-bold border shadow-xs">
+                                <svg class="w-3 h-3 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                <?php echo esc_html( $cfg['card_a_tag'] ?? 'Bebas Biaya (Gratis)' ); ?>
                             </span>
                         </div>
 
                         <!-- Title & Description -->
                         <div class="relative z-10">
-                            <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                                Hubungi Tim Layanan Nasabah
+                            <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2 <?php echo esc_attr( $theme_a['title_hover'] ?? 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400' ); ?> transition-colors">
+                                <?php echo esc_html( $cfg['card_a_title'] ?? 'Hubungi Tim Layanan Nasabah' ); ?>
                             </h3>
                             <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                Sampaikan keluhan transaksi, rekening, pembiayaan, atau pelayanan secara langsung. Tim Kepatuhan dan Customer Care kami siap menindaklanjuti secara seksama.
+                                <?php echo esc_html( $cfg['card_a_desc'] ?? 'Sampaikan keluhan transaksi, rekening, pembiayaan, atau pelayanan secara langsung. Tim Kepatuhan dan Customer Care kami siap menindaklanjuti secara seksama.' ); ?>
                             </p>
                         </div>
 
                         <!-- Informative Pill Badges (Professional SVG Icons) -->
                         <div class="flex flex-wrap items-center gap-2 mt-4 relative z-10">
                             <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/90 dark:bg-dark-card/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-dark-border flex items-center gap-1.5 shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                                <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_a['pill_icon'] ?? 'text-emerald-600 dark:text-emerald-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
                                 <span>Kerahasiaan Terjamin</span>
                             </span>
                             <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/90 dark:bg-dark-card/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-dark-border flex items-center gap-1.5 shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                                <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_a['pill_icon'] ?? 'text-emerald-600 dark:text-emerald-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
                                 <span>Respon Cepat</span>
                             </span>
                             <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/90 dark:bg-dark-card/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-dark-border flex items-center gap-1.5 shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_a['pill_icon'] ?? 'text-emerald-600 dark:text-emerald-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <span>Berkeadilan Syariah</span>
                             </span>
                         </div>
@@ -222,18 +230,20 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                         <!-- Channel List -->
                         <div class="space-y-3">
                             <!-- WhatsApp -->
-                            <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-900/40 hover:border-emerald-400 dark:hover:border-emerald-700 transition-all hover:translate-x-1">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-500/30 group-hover/item:scale-105 transition-transform">
+                            <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl <?php echo esc_attr( $theme_a['channel_bg'] ?? 'bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-900/40 hover:border-emerald-400 dark:hover:border-emerald-700' ); ?> transition-all hover:translate-x-1">
+                                <div class="w-10 h-10 rounded-xl <?php echo esc_attr( $theme_a['channel_icon'] ?? 'bg-emerald-500 text-white shadow-emerald-500/30' ); ?> flex items-center justify-center flex-shrink-0 shadow-md group-hover/item:scale-105 transition-transform">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.966-.941 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between">
                                         <span class="text-xs font-bold text-slate-500 dark:text-slate-400">WhatsApp Layanan Nasabah</span>
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Chat Aktif
-                                        </span>
+                                        <?php if ( ! empty( $cfg['card_a_status_wa'] ) ) : ?>
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-extrabold <?php echo esc_attr( $theme_a['status_tag'] ?? 'text-emerald-600 dark:text-emerald-400' ); ?> uppercase tracking-wider">
+                                                <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $theme_a['ping_dot'] ?? 'bg-emerald-500' ); ?> animate-pulse"></span> <?php echo esc_html( $cfg['card_a_status_wa'] ); ?>
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
-                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="text-sm font-extrabold text-emerald-700 dark:text-emerald-300 hover:underline block mt-0.5">
+                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="text-sm font-extrabold <?php echo esc_attr( $theme_a['channel_link'] ?? 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200' ); ?> hover:underline block mt-0.5">
                                         +<?php echo esc_html( $cfg['wa'] ); ?>
                                     </a>
                                 </div>
@@ -268,7 +278,7 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                             <!-- Loket Tatap Muka & Jam Kerja -->
                             <div class="p-3.5 rounded-2xl bg-slate-50/90 dark:bg-dark-surface-alt border border-slate-200/80 dark:border-dark-border text-xs text-slate-600 dark:text-slate-300">
                                 <div class="flex items-center gap-2 font-bold text-slate-900 dark:text-white mb-1">
-                                    <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.75a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 011.5 1.5V21"/></svg>
+                                    <svg class="w-4 h-4 <?php echo esc_attr( $theme_a['pill_icon'] ?? 'text-emerald-600 dark:text-emerald-400' ); ?> flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.75a1.5 1.5 0 011.5-1.5h1.5a1.5 1.5 0 011.5 1.5V21"/></svg>
                                     <span><?php echo esc_html( $cfg['location_desc'] ); ?></span>
                                 </div>
                                 <div class="text-[11px] text-slate-500 dark:text-slate-400 pl-6 leading-relaxed">
@@ -283,24 +293,24 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                                 href="<?php echo esc_url( $wa_url ); ?>" 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                class="w-full sm:flex-1 py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-extrabold shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2.5 text-center"
+                                class="w-full sm:flex-1 py-3.5 px-6 rounded-2xl <?php echo esc_attr( $theme_a['btn_action'] ?? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/30 hover:shadow-emerald-600/40' ); ?> text-white text-sm font-extrabold shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2.5 text-center"
                             >
                                 <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.966-.941 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                                <span>Kirim Pengaduan via WA</span>
+                                <span><?php echo esc_html( $cfg['card_a_btn_wa'] ?? 'Kirim Pengaduan via WA' ); ?></span>
                             </a>
                             <a 
                                 href="mailto:<?php echo esc_attr( $cfg['email'] ); ?>?subject=<?php echo rawurlencode( 'Pengaduan Nasabah - BPRS Wakalumi' ); ?>" 
                                 class="w-full sm:w-auto py-3.5 px-5 rounded-2xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:border-emerald-400 text-slate-700 dark:text-slate-200 text-sm font-bold shadow-xs hover:-translate-y-0.5 transition-all text-center flex items-center justify-center gap-2"
                             >
-                                <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-                                <span>Kirim Email Resmi</span>
+                                <svg class="w-4 h-4 <?php echo esc_attr( $theme_a['pill_icon'] ?? 'text-emerald-600 dark:text-emerald-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                                <span><?php echo esc_html( $cfg['card_a_btn_email'] ?? 'Kirim Email Resmi' ); ?></span>
                             </a>
                         </div>
                     </div>
                 </div>
 
                 <!-- CARD B: PORTAL APPK OJK & LAPS SJK (DUAL-TONE ESKALASI REGULATOR) -->
-                <div class="spotlight-card group relative rounded-3xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-blue-200/90 dark:border-dark-border hover:border-blue-400 dark:hover:border-blue-500 shadow-md hover:shadow-2xl hover:shadow-blue-500/15 hover:-translate-y-1.5 transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="150">
+                <div class="spotlight-card group relative rounded-3xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border <?php echo esc_attr( $theme_b['border'] ?? 'border-red-200/90 dark:border-dark-border hover:border-red-400 dark:hover:border-red-500' ); ?> shadow-md hover:shadow-2xl <?php echo esc_attr( $theme_b['hover_shadow'] ?? 'hover:shadow-red-500/15' ); ?> hover:-translate-y-1.5 transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="150">
                     
                     <!-- Decorative Watermark Logo (Interactive Hover: Left 3/4 -> Right 1/2 Full Card) -->
                     <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
@@ -315,44 +325,44 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                     </div>
 
                     <!-- Top Accent Line -->
-                    <div class="h-1.5 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 relative z-10"></div>
+                    <div class="h-1.5 w-full bg-gradient-to-r <?php echo esc_attr( $theme_b['top_line'] ?? 'from-red-600 via-rose-500 to-amber-500' ); ?> relative z-10"></div>
 
                     <!-- TONE 1: TINTED HEADER BAR -->
-                    <div class="p-6 sm:p-7 bg-gradient-to-br from-blue-50/90 via-indigo-50/50 to-white/10 dark:from-blue-950/40 dark:via-dark-card dark:to-dark-card border-b border-blue-100/90 dark:border-dark-border relative overflow-hidden z-10">
+                    <div class="p-6 sm:p-7 bg-gradient-to-br <?php echo esc_attr( $theme_b['header_bg'] ?? 'from-red-50/90 via-rose-50/50 to-white/10 dark:from-red-950/40 dark:via-dark-card dark:to-dark-card border-b border-red-100/90 dark:border-dark-border' ); ?> relative overflow-hidden z-10">
 
                         <!-- Badge Row -->
                         <div class="flex items-center justify-between gap-2 mb-3 relative z-10">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-300 border border-blue-300/60 dark:border-blue-700/60 shadow-xs">
-                                <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
-                                Portal Resmi Regulator OJK
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider <?php echo esc_attr( $theme_b['badge'] ?? 'bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-300 border border-red-300/60 dark:border-red-700/60' ); ?> shadow-xs">
+                                <span class="w-2 h-2 rounded-full <?php echo esc_attr( $theme_b['ping_dot'] ?? 'bg-red-500' ); ?> animate-ping"></span>
+                                <?php echo esc_html( $cfg['card_b_badge'] ?? 'Portal Resmi Regulator OJK' ); ?>
                             </span>
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-dark-surface text-blue-700 dark:text-blue-300 text-[11px] font-bold border border-blue-200/80 dark:border-blue-800/80 shadow-xs">
-                                Eskalasi Eksternal
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/80 dark:bg-dark-surface <?php echo esc_attr( $theme_b['tag'] ?? 'text-red-700 dark:text-red-300 border-red-200/80 dark:border-red-800/80' ); ?> text-[11px] font-bold border shadow-xs">
+                                <?php echo esc_html( $cfg['card_b_tag'] ?? 'Eskalasi Eksternal' ); ?>
                             </span>
                         </div>
 
                         <!-- Title & Description -->
                         <div class="relative z-10">
-                            <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                Portal APPK OJK (Kontak 157)
+                            <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2 <?php echo esc_attr( $theme_b['title_hover'] ?? 'group-hover:text-red-600 dark:group-hover:text-red-400' ); ?> transition-colors">
+                                <?php echo esc_html( $cfg['card_b_title'] ?? 'Portal APPK OJK (Kontak 157)' ); ?>
                             </h3>
                             <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                Sesuai regulasi POJK, jika proses penanganan belum mencapai kesepakatan atau Anda membutuhkan perlindungan otoritas, Anda dapat mengakses portal terpadu APPK OJK.
+                                <?php echo esc_html( $cfg['card_b_desc'] ?? 'Sesuai regulasi POJK, jika proses penanganan belum mencapai kesepakatan atau Anda membutuhkan perlindungan otoritas, Anda dapat mengakses portal terpadu APPK OJK.' ); ?>
                             </p>
                         </div>
 
                         <!-- Informative Pill Badges (Professional SVG Icons) -->
                         <div class="flex flex-wrap items-center gap-2 mt-4 relative z-10">
                             <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/90 dark:bg-dark-card/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-dark-border flex items-center gap-1.5 shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5m-15 10.5V10.5"/></svg>
+                                <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_b['pill_icon'] ?? 'text-red-600 dark:text-red-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5m-15 10.5V10.5"/></svg>
                                 <span>Otoritas Jasa Keuangan</span>
                             </span>
                             <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/90 dark:bg-dark-card/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-dark-border flex items-center gap-1.5 shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_b['pill_icon'] ?? 'text-red-600 dark:text-red-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                 <span>Lacak Status Online</span>
                             </span>
                             <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/90 dark:bg-dark-card/90 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-dark-border flex items-center gap-1.5 shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97zM6.75 4.97L4.13 15.696c-.121.499.107 1.028.59 1.202a5.988 5.988 0 002.031.352 5.988 5.988 0 002.031-.352c.483-.174.711-.703.589-1.202L6.75 4.97z"/></svg>
+                                <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_b['pill_icon'] ?? 'text-red-600 dark:text-red-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97zM6.75 4.97L4.13 15.696c-.121.499.107 1.028.59 1.202a5.988 5.988 0 002.031.352 5.988 5.988 0 002.031-.352c.483-.174.711-.703.589-1.202L6.75 4.97z"/></svg>
                                 <span>Alternatif Sengketa LAPS</span>
                             </span>
                         </div>
@@ -364,26 +374,28 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                         <!-- Channel List -->
                         <div class="space-y-3">
                             <!-- Portal Daring APPK -->
-                            <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-900/40 hover:border-blue-400 dark:hover:border-blue-700 transition-all hover:translate-x-1">
-                                <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-600/30 group-hover/item:scale-105 transition-transform">
+                            <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl <?php echo esc_attr( $theme_b['channel_bg'] ?? 'bg-red-50/70 dark:bg-red-950/30 border border-red-200/70 dark:border-red-900/40 hover:border-red-400 dark:hover:border-red-700' ); ?> transition-all hover:translate-x-1">
+                                <div class="w-10 h-10 rounded-xl <?php echo esc_attr( $theme_b['channel_icon'] ?? 'bg-red-600 text-white shadow-red-600/30' ); ?> flex items-center justify-center flex-shrink-0 shadow-md group-hover/item:scale-105 transition-transform">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253"/></svg>
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between">
                                         <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Portal APPK Kontak 157</span>
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                                            24 Jam Online
-                                        </span>
+                                        <?php if ( ! empty( $cfg['card_b_status_appk'] ) ) : ?>
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-extrabold <?php echo esc_attr( $theme_b['status_tag'] ?? 'text-red-600 dark:text-red-400' ); ?> uppercase tracking-wider">
+                                                <?php echo esc_html( $cfg['card_b_status_appk'] ); ?>
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
-                                    <a href="<?php echo esc_url( $cfg['ojk_appk_url'] ); ?>" target="_blank" rel="noopener noreferrer" class="text-sm font-extrabold text-blue-700 dark:text-blue-300 hover:underline block mt-0.5">
+                                    <a href="<?php echo esc_url( $cfg['ojk_appk_url'] ); ?>" target="_blank" rel="noopener noreferrer" class="text-sm font-extrabold <?php echo esc_attr( $theme_b['channel_link'] ?? 'text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200' ); ?> hover:underline block mt-0.5">
                                         <?php echo esc_html( preg_replace( '#^https?://#', '', $cfg['ojk_appk_url'] ) ); ?> ↗
                                     </a>
                                 </div>
                             </div>
 
                             <!-- Kontak OJK 157 -->
-                            <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface-alt border border-slate-200/80 dark:border-dark-border hover:border-indigo-400 dark:hover:border-indigo-700 transition-all hover:translate-x-1">
-                                <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-indigo-600/30 group-hover/item:scale-105 transition-transform">
+                            <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface-alt border border-slate-200/80 dark:border-dark-border hover:border-slate-400 dark:hover:border-slate-600 transition-all hover:translate-x-1">
+                                <div class="w-10 h-10 rounded-xl bg-slate-700 text-white flex items-center justify-center flex-shrink-0 shadow-md group-hover/item:scale-105 transition-transform">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                                 </div>
                                 <div class="min-w-0 flex-1">
@@ -394,16 +406,14 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                                 </div>
                             </div>
 
-
-
                             <!-- LAPS SJK -->
                             <div class="p-3.5 rounded-2xl bg-slate-50/90 dark:bg-dark-surface-alt border border-slate-200/80 dark:border-dark-border text-xs text-slate-600 dark:text-slate-300">
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                                        <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97zM6.75 4.97L4.13 15.696c-.121.499.107 1.028.59 1.202a5.988 5.988 0 002.031.352 5.988 5.988 0 002.031-.352c.483-.174.711-.703.589-1.202L6.75 4.97z"/></svg>
+                                        <svg class="w-3.5 h-3.5 <?php echo esc_attr( $theme_b['sub_icon'] ?? 'text-red-600 dark:text-red-400' ); ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97zM6.75 4.97L4.13 15.696c-.121.499.107 1.028.59 1.202a5.988 5.988 0 002.031.352 5.988 5.988 0 002.031-.352c.483-.174.711-.703.589-1.202L6.75 4.97z"/></svg>
                                         <span>LAPS Sektor Jasa Keuangan</span>
                                     </span>
-                                    <a href="<?php echo esc_url( $cfg['laps_url'] ); ?>" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 font-bold hover:underline">
+                                    <a href="<?php echo esc_url( $cfg['laps_url'] ); ?>" target="_blank" rel="noopener noreferrer" class="<?php echo esc_attr( $theme_b['sub_link'] ?? 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300' ); ?> font-bold hover:underline">
                                         lapssjk.id ↗
                                     </a>
                                 </div>
@@ -416,9 +426,9 @@ if ( ! empty( $cfg['sla_note'] ) ) {
                                 href="<?php echo esc_url( $cfg['ojk_appk_url'] ); ?>" 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                class="w-full py-3.5 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-extrabold shadow-lg shadow-blue-600/30 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 text-center"
+                                class="w-full py-3.5 px-6 rounded-2xl <?php echo esc_attr( $theme_b['btn_action'] ?? 'bg-red-600 hover:bg-red-700 text-white shadow-red-600/30 hover:shadow-red-600/40' ); ?> text-white text-sm font-extrabold shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 text-center"
                             >
-                                <span>Buka Portal APPK OJK</span>
+                                <span><?php echo esc_html( $cfg['card_b_btn_text'] ?? 'Buka Portal APPK OJK' ); ?></span>
                                 <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                             </a>
                         </div>

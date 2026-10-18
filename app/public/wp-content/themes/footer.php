@@ -335,6 +335,7 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
 
 <!-- Floating WhatsApp Button -->
 <a href="<?php echo esc_url( $wa_url ); ?>"
+   id="wakalumi-wa-floating"
    target="_blank" rel="noopener noreferrer"
    class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full
           bg-emerald-500 hover:bg-emerald-600 text-white

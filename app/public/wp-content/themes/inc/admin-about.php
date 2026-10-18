@@ -29,6 +29,8 @@ add_action( 'admin_menu', 'wakalumi_register_about_admin_menu', 20 );
  * Render Halaman Admin Profil: Tentang Kami
  */
 function wakalumi_render_about_admin_page() {
+    wp_enqueue_media();
+
     // ── PROSES SIMPAN DATA ──────────────────────────────────────────
     if ( isset( $_POST['wakalumi_save_about'] ) && check_admin_referer( 'wakalumi_about_nonce' ) ) {
         // 1. Header Banner
@@ -71,7 +73,13 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_identity', sanitize_textarea_field( $_POST['options_about_page_identity'] ?? '' ) );
         update_option( 'options_about_page_belief', sanitize_textarea_field( $_POST['options_about_page_belief'] ?? '' ) );
 
-        // 4. Nilai Budaya (Core Values) Repeater
+        // 4. Nilai Budaya (Core Values)
+        update_option( 'options_about_page_values_badge', sanitize_text_field( $_POST['options_about_page_values_badge'] ?? '' ) );
+        update_option( 'options_about_page_values_title', sanitize_text_field( $_POST['options_about_page_values_title'] ?? '' ) );
+        update_option( 'options_about_page_values_desc', wp_kses_post( $_POST['options_about_page_values_desc'] ?? '' ) );
+        update_option( 'options_about_page_values_tag', sanitize_text_field( $_POST['options_about_page_values_tag'] ?? '' ) );
+
+        // Nilai Budaya Repeater
         $raw_v_acronym = $_POST['about_val_acronym'] ?? [];
         $raw_v_title   = $_POST['about_val_title'] ?? [];
         $raw_v_desc    = $_POST['about_val_desc'] ?? [];
@@ -94,7 +102,29 @@ function wakalumi_render_about_admin_page() {
             update_option( "options_about_page_logo_p{$lp}_desc", sanitize_textarea_field( $_POST["options_about_page_logo_p{$lp}_desc"] ?? '' ) );
         }
 
-        // 6. Banner Ajakan Bertindak (Call to Action)
+        // 6. Dokumen Company Profile Resmi (Unduh PDF)
+        update_option( 'options_about_page_compro_show', isset( $_POST['options_about_page_compro_show'] ) ? '1' : '0' );
+        update_option( 'options_about_page_compro_badge', sanitize_text_field( $_POST['options_about_page_compro_badge'] ?? '' ) );
+        update_option( 'options_about_page_compro_title', sanitize_text_field( $_POST['options_about_page_compro_title'] ?? '' ) );
+        update_option( 'options_about_page_compro_desc', sanitize_textarea_field( $_POST['options_about_page_compro_desc'] ?? '' ) );
+        update_option( 'options_about_page_compro_year', sanitize_text_field( $_POST['options_about_page_compro_year'] ?? '' ) );
+        update_option( 'options_about_page_compro_file', esc_url_raw( $_POST['options_about_page_compro_file'] ?? '' ) );
+        update_option( 'options_about_page_compro_cover', esc_url_raw( $_POST['options_about_page_compro_cover'] ?? '' ) );
+        update_option( 'options_about_page_compro_filesize', sanitize_text_field( $_POST['options_about_page_compro_filesize'] ?? '' ) );
+        update_option( 'options_about_page_compro_updated', sanitize_text_field( $_POST['options_about_page_compro_updated'] ?? '' ) );
+        update_option( 'options_about_page_compro_btn_dl_text', sanitize_text_field( $_POST['options_about_page_compro_btn_dl_text'] ?? '' ) );
+        update_option( 'options_about_page_compro_btn_view_text', sanitize_text_field( $_POST['options_about_page_compro_btn_view_text'] ?? '' ) );
+
+        $compro_highlights = [];
+        for ( $h = 1; $h <= 4; $h++ ) {
+            $h_val = sanitize_text_field( $_POST["options_about_page_compro_hl_{$h}"] ?? '' );
+            if ( ! empty( $h_val ) ) {
+                $compro_highlights[] = $h_val;
+            }
+        }
+        update_option( 'options_about_page_compro_highlights', $compro_highlights );
+
+        // 7. Banner Ajakan Bertindak (Call to Action)
         update_option( 'options_about_page_cta_badge', sanitize_text_field( $_POST['options_about_page_cta_badge'] ?? '' ) );
         update_option( 'options_about_page_cta_title', sanitize_text_field( $_POST['options_about_page_cta_title'] ?? '' ) );
         update_option( 'options_about_page_cta_desc', sanitize_textarea_field( $_POST['options_about_page_cta_desc'] ?? '' ) );
@@ -103,11 +133,12 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_cta_btn2_text', sanitize_text_field( $_POST['options_about_page_cta_btn2_text'] ?? '' ) );
         update_option( 'options_about_page_cta_btn2_url', esc_url_raw( $_POST['options_about_page_cta_btn2_url'] ?? '' ) );
 
-        // 7. Saklar Tampilan
+        // 8. Saklar Tampilan
         update_option( 'options_about_page_show_stats', isset( $_POST['options_about_page_show_stats'] ) ? '1' : '0' );
         update_option( 'options_about_page_show_vision', isset( $_POST['options_about_page_show_vision'] ) ? '1' : '0' );
         update_option( 'options_about_page_show_values', isset( $_POST['options_about_page_show_values'] ) ? '1' : '0' );
         update_option( 'options_about_page_show_logo', isset( $_POST['options_about_page_show_logo'] ) ? '1' : '0' );
+        update_option( 'options_about_page_compro_show', isset( $_POST['options_about_page_compro_show'] ) ? '1' : '0' );
         update_option( 'options_about_page_show_cta', isset( $_POST['options_about_page_show_cta'] ) ? '1' : '0' );
 
         echo '<div class="notice notice-success is-dismissible"><p><strong>Pengaturan Halaman Profil: Tentang Kami berhasil disimpan!</strong></p></div>';
@@ -151,6 +182,11 @@ function wakalumi_render_about_admin_page() {
     $identity_text  = get_option( 'options_about_page_identity', 'BPRS Wakalumi adalah Lembaga Keuangan Syariah yang memiliki fokus pada jasa keuangan dan pemberdayaan ekonomi umat dan masyarakat sesuai syariah.' );
     $belief_text    = get_option( 'options_about_page_belief', 'BPRS Wakalumi berkomitmen untuk selalu melakukan ISHLAH, yakni kami terus melakukan perbaikan berkelanjutan.' );
 
+    $values_badge = get_option( 'options_about_page_values_badge', "Budaya Kerja 'SAPA'" );
+    $values_title = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)' );
+    $values_desc  = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya SAPA yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk hasil optimal dalam aktivitas kerja.' );
+    $values_tag   = get_option( 'options_about_page_values_tag', 'Pilar Budaya SAPA' );
+
     $values = get_option( 'options_about_page_values', [] );
     if ( empty( $values ) ) {
         $values = [
@@ -178,6 +214,25 @@ function wakalumi_render_about_admin_page() {
     $cta_btn1_url   = get_option( 'options_about_page_cta_btn1_url', '' );
     $cta_btn2_text  = get_option( 'options_about_page_cta_btn2_text', 'Jelajahi Produk Kami' );
     $cta_btn2_url   = get_option( 'options_about_page_cta_btn2_url', home_url( '/produk' ) );
+
+    // 6. Dokumen Company Profile
+    $compro_show         = get_option( 'options_about_page_compro_show', '1' );
+    $compro_badge        = get_option( 'options_about_page_compro_badge', 'Dokumen Resmi Perusahaan' );
+    $compro_title        = get_option( 'options_about_page_compro_title', 'Unduh Company Profile PT BPRS Wakalumi' );
+    $compro_desc         = get_option( 'options_about_page_compro_desc', 'Dapatkan ikhtisar resmi dan komprehensif mengenai profil kelembagaan, landasan syariah, susunan kepemimpinan, kepatuhan tata kelola (GCG), serta pertumbuhan kinerja keuangan BPRS Wakalumi.' );
+    $compro_year         = get_option( 'options_about_page_compro_year', 'Edisi 2026' );
+    $compro_file         = get_option( 'options_about_page_compro_file', '' );
+    $compro_cover        = get_option( 'options_about_page_compro_cover', '' );
+    $compro_filesize     = get_option( 'options_about_page_compro_filesize', 'PDF • Dokumen Resmi Terverifikasi' );
+    $compro_updated      = get_option( 'options_about_page_compro_updated', 'Pembaruan Tahunan' );
+    $compro_btn_dl_text  = get_option( 'options_about_page_compro_btn_dl_text', 'Unduh Company Profile (PDF)' );
+    $compro_btn_view_text= get_option( 'options_about_page_compro_btn_view_text', 'Pratinjau Dokumen' );
+    $compro_highlights   = get_option( 'options_about_page_compro_highlights', [
+        'Ikhtisar Profil Lembaga & Legalitas OJK',
+        'Struktur Pengurus & Dewan Pengawas Syariah',
+        'Laporan Kinerja Keuangan & Rasio Kesehatan Bank',
+        'Katalog Portofolio Produk Simpanan & Pembiayaan'
+    ] );
 
     $show_stats     = get_option( 'options_about_page_show_stats', '1' );
     $show_vision    = get_option( 'options_about_page_show_vision', '1' );
@@ -380,9 +435,46 @@ function wakalumi_render_about_admin_page() {
             <!-- ── SECTION 4: NILAI BUDAYA PERUSAHAAN (SAPA) ── -->
             <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px;">
                 <h2 style="font-size: 16px; margin: 0 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-heart"></span> 4. Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)
+                    <span class="dashicons dashicons-heart"></span> 4. Budaya Kerja Perusahaan: <?php echo esc_html( ! empty( $values_title ) ? $values_title : 'SAPA (Skill, Action, Pray, Attitude)' ); ?>
                 </h2>
-                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">Nilai-nilai budaya <strong>SAPA</strong> yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk hasil optimal dalam aktivitas kerja.</p>
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">
+                    Kelola badge, judul, narasi filosofi budaya kerja, dan butir-butir nilai karakter perusahaan yang tampil di halaman profil Tentang Kami.
+                </p>
+
+                <table class="form-table" role="presentation" style="margin-bottom: 20px;">
+                    <tr>
+                        <th scope="row"><label for="options_about_page_values_badge">Badge Seksi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_values_badge" name="options_about_page_values_badge" value="<?php echo esc_attr( $values_badge ); ?>" class="regular-text" placeholder="Contoh: Budaya Kerja 'SAPA'">
+                            <p class="description">Badge kecil di atas judul utama seksi budaya kerja.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_values_title">Judul Budaya Kerja</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_values_title" name="options_about_page_values_title" value="<?php echo esc_attr( $values_title ); ?>" class="large-text" placeholder="Contoh: Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)">
+                            <p class="description">Judul utama seksi budaya kerja perusahaan.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_values_desc">Uraian / Narasi Budaya Kerja</label></th>
+                        <td>
+                            <textarea id="options_about_page_values_desc" name="options_about_page_values_desc" rows="3" class="large-text" placeholder="Nilai-nilai budaya SAPA yang menghadirkan kebersamaan..."><?php echo esc_textarea( $values_desc ); ?></textarea>
+                            <p class="description">Uraian narasi budaya kerja perusahaan. Mendukung pemformatan teks atau tag HTML seperti &lt;strong&gt;.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_values_tag">Label Tag Bawah Kartu</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_values_tag" name="options_about_page_values_tag" value="<?php echo esc_attr( $values_tag ); ?>" class="regular-text" placeholder="Contoh: Pilar Budaya SAPA">
+                            <p class="description">Label teks di bagian bawah setiap kartu nilai budaya (di samping tanda centang).</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <h3 style="font-size: 14px; margin: 20px 0 10px 0; color: #1e293b; font-weight: 700; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+                    Daftar Butir Nilai &amp; Karakter Budaya Kerja
+                </h3>
 
                 <table class="widefat fixed striped" style="border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
                     <thead>
@@ -470,10 +562,127 @@ function wakalumi_render_about_admin_page() {
                 </table>
             </div>
 
-            <!-- ── SECTION 6: AJAKAN BERTINDAK (CTA BANNER) ───────────── -->
+            <!-- ── SECTION 6: DOKUMEN COMPANY PROFILE RESMI (UNDUH PDF) ───── -->
+            <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <h2 style="font-size: 16px; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-pdf" style="font-size: 20px; width: 20px; height: 20px;"></span> 6. Dokumen Company Profile Resmi (Unduh PDF Dinamis)
+                    </h2>
+                    <label style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; color: #1e293b; background: #f0fdf4; border: 1px solid #86efac; padding: 4px 10px; border-radius: 6px;">
+                        <input type="checkbox" name="options_about_page_compro_show" value="1" <?php checked( $compro_show, '1' ); ?>> Aktifkan Seksi di Halaman
+                    </label>
+                </div>
+                
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #475569; display: flex; align-items: flex-start; gap: 10px;">
+                    <span class="dashicons dashicons-info" style="color: #088395; margin-top: 2px;"></span>
+                    <div>
+                        <strong>Pemberitahuan:</strong> Bagian ini menampilkan <strong>1 dokumen resmi Company Profile utama</strong> (non-multi) agar nasabah dan stakeholder tidak ambigu saat mengunduh profil perusahaan terbaru. Anda dapat memperbarui file PDF ini setiap periode tahunan secara dinamis.
+                    </div>
+                </div>
+
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_file">Berkas PDF Company Profile</label></th>
+                        <td>
+                            <div class="wkl-upload-wrap" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <input type="text" id="options_about_page_compro_file" name="options_about_page_compro_file" value="<?php echo esc_attr( $compro_file ); ?>" class="large-text" placeholder="https://.../wakalumi-company-profile-2026.pdf" style="flex: 1; min-width: 260px;">
+                                <button type="button" class="button wkl-upload-pdf-btn" data-target="options_about_page_compro_file" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap;">
+                                    <span class="dashicons dashicons-upload" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah / Pilih PDF
+                                </button>
+                                <?php if ( ! empty( $compro_file ) ) : ?>
+                                    <a href="<?php echo esc_url( $compro_file ); ?>" target="_blank" class="button button-secondary" style="display: inline-flex; align-items: center; gap: 4px;" title="Lihat berkas saat ini">
+                                        <span class="dashicons dashicons-external"></span> Cek PDF
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                            <p class="description" style="margin-top: 6px;">Unggah dokumen PDF Company Profile resmi via Media Library WordPress. Format berkas: <strong>.pdf</strong>.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_cover">Gambar Sampul / Mockup Booklet (Opsional)</label></th>
+                        <td>
+                            <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <img id="compro_cover_preview" src="<?php echo esc_url( $compro_cover ); ?>" style="max-width: 100px; max-height: 140px; border-radius: 8px; border: 1px solid #e2e8f0; object-fit: cover; <?php echo empty( $compro_cover ) ? 'display:none;' : ''; ?>" />
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button type="button" class="button wkl-upload-btn" data-target="options_about_page_compro_cover" data-preview="compro_cover_preview" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <span class="dashicons dashicons-format-image" style="font-size:16px; width:16px; height:16px;"></span> Unggah Cover Sampul
+                                    </button>
+                                    <button type="button" class="button-link wkl-remove-btn" data-target="options_about_page_compro_cover" data-preview="compro_cover_preview" style="color: #ef4444; font-size: 12px; <?php echo empty( $compro_cover ) ? 'display:none;' : ''; ?>">
+                                        ✕ Hapus Gambar
+                                    </button>
+                                </div>
+                                <input type="text" id="options_about_page_compro_cover" name="options_about_page_compro_cover" value="<?php echo esc_attr( $compro_cover ); ?>" class="regular-text" placeholder="...atau tempel URL gambar sampul" style="flex: 1; min-width: 220px;">
+                            </div>
+                            <p class="description" style="margin-top: 6px;">Jika dikosongkan, sistem secara otomatis merender mockup 3D buku Company Profile BPRS Wakalumi premium secara prosedural.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_badge">Badge Kicker</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_compro_badge" name="options_about_page_compro_badge" value="<?php echo esc_attr( $compro_badge ); ?>" class="regular-text" placeholder="Dokumen Resmi Perusahaan">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_title">Judul Seksi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_compro_title" name="options_about_page_compro_title" value="<?php echo esc_attr( $compro_title ); ?>" class="large-text" style="font-weight: 600;" placeholder="Unduh Company Profile PT BPRS Wakalumi">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_year">Edisi / Periode Tahun</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_compro_year" name="options_about_page_compro_year" value="<?php echo esc_attr( $compro_year ); ?>" class="regular-text" placeholder="Contoh: Edisi 2026 atau Tahun Buku 2025/2026">
+                            <p class="description">Label edisi yang tampil mencolok pada cover dan kartu dokumen.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_desc">Uraian / Deskripsi Ringkas</label></th>
+                        <td>
+                            <textarea id="options_about_page_compro_desc" name="options_about_page_compro_desc" rows="3" class="large-text"><?php echo esc_textarea( $compro_desc ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_filesize">Format & Keterangan Berkas</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_compro_filesize" name="options_about_page_compro_filesize" value="<?php echo esc_attr( $compro_filesize ); ?>" class="regular-text" placeholder="Contoh: PDF • 4.8 MB (Resmi)">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_updated">Keterangan Pembaruan</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_compro_updated" name="options_about_page_compro_updated" value="<?php echo esc_attr( $compro_updated ); ?>" class="regular-text" placeholder="Contoh: Diperbarui: Januari 2026">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">4 Poin Sorotan Isi Dokumen</th>
+                        <td>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 800px;">
+                                <?php for ( $h = 1; $h <= 4; $h++ ) : 
+                                    $hl_text = $compro_highlights[$h - 1] ?? '';
+                                ?>
+                                    <div>
+                                        <label style="font-size: 11px; font-weight: bold; color: #64748b; display: block; margin-bottom: 2px;">Sorotan <?php echo $h; ?>:</label>
+                                        <input type="text" name="options_about_page_compro_hl_<?php echo $h; ?>" value="<?php echo esc_attr( $hl_text ); ?>" class="regular-text" style="width: 100%;" placeholder="Poin sorotan dokumen...">
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
+                            <p class="description" style="margin-top: 6px;">4 poin penting yang akan ditampilkan sebagai fitur ringkas isi dokumen.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_compro_btn_dl_text">Label Tombol Unduh (Download)</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_compro_btn_dl_text" name="options_about_page_compro_btn_dl_text" value="<?php echo esc_attr( $compro_btn_dl_text ); ?>" class="regular-text" placeholder="Unduh Company Profile (PDF)">
+                            <p class="description">Teks yang ditampilkan pada tombol unduh berkas PDF resmi.</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- ── SECTION 7: AJAKAN BERTINDAK (CTA BANNER) ───────────── -->
             <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px;">
                 <h2 style="font-size: 16px; margin: 0 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-megaphone"></span> 6. Ajakan Bertindak (CTA Banner di Bawah Makna Logo)
+                    <span class="dashicons dashicons-megaphone"></span> 7. Ajakan Bertindak (CTA Banner WhatsApp & Produk)
                 </h2>
                 <table class="form-table" role="presentation">
                     <tr>
@@ -511,10 +720,10 @@ function wakalumi_render_about_admin_page() {
                 </table>
             </div>
 
-            <!-- ── SECTION 7: SAKLAR VISIBILITAS BAGIAN ───────────── -->
+            <!-- ── SECTION 8: SAKLAR VISIBILITAS BAGIAN ───────────── -->
             <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px;">
                 <h2 style="font-size: 16px; margin: 0 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-visibility"></span> 7. Pengaturan Tampilan Bagian (Visibility)
+                    <span class="dashicons dashicons-visibility"></span> 8. Pengaturan Tampilan Bagian (Visibility)
                 </h2>
                 <table class="form-table" role="presentation">
                     <tr>
@@ -525,6 +734,7 @@ function wakalumi_render_about_admin_page() {
                                 <label><input type="checkbox" name="options_about_page_show_vision" value="1" <?php checked( $show_vision, '1' ); ?>> Seksi Visi & Misi Perusahaan</label>
                                 <label><input type="checkbox" name="options_about_page_show_values" value="1" <?php checked( $show_values, '1' ); ?>> Seksi Nilai-Nilai Budaya Perusahaan (Core Values)</label>
                                 <label><input type="checkbox" name="options_about_page_show_logo" value="1" <?php checked( $show_logo, '1' ); ?>> Seksi Makna & Filosofi Logo</label>
+                                <label><input type="checkbox" name="options_about_page_compro_show" value="1" <?php checked( $compro_show, '1' ); ?>> Seksi Company Profile Resmi (Unduh Dokumen PDF)</label>
                                 <label><input type="checkbox" name="options_about_page_show_cta" value="1" <?php checked( $show_cta, '1' ); ?>> Seksi Ajakan Bertindak (CTA Banner WhatsApp & Produk)</label>
                             </fieldset>
                         </td>
@@ -587,6 +797,33 @@ function wakalumi_render_about_admin_page() {
                 '<td style="text-align: center; vertical-align: middle;"><button type="button" class="button button-link-delete wkl-del-row" style="color: #ef4444;">✕ Hapus</button></td>' +
                 '</tr>';
             $('#values-tbody').append(rowHtml);
+        });
+
+        // Upload PDF Company Profile (WordPress Media Library)
+        $(document).on('click', '.wkl-upload-pdf-btn', function(e) {
+            e.preventDefault();
+            var targetId = $(this).data('target');
+            var $input   = $('#' + targetId);
+
+            var pdfFrame = wp.media({
+                title:    'Pilih atau Unggah Dokumen PDF Company Profile',
+                button:   { text: 'Gunakan Dokumen Ini' },
+                multiple: false,
+                library:  { type: 'application/pdf' }
+            });
+
+            pdfFrame.on('select', function() {
+                var attachment = pdfFrame.state().get('selection').first().toJSON();
+                $input.val(attachment.url).trigger('change');
+
+                // Otomatis isi ukuran file jika ada info filesize
+                var $sizeInput = $('#options_about_page_compro_filesize');
+                if ($sizeInput.length && attachment.filesizeHumanReadable) {
+                    $sizeInput.val('PDF • ' + attachment.filesizeHumanReadable);
+                }
+            });
+
+            pdfFrame.open();
         });
     });
     </script>

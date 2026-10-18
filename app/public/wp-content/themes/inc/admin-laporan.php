@@ -211,6 +211,52 @@ if ( ! function_exists( 'wakalumi_render_laporan_color_options' ) ) {
     }
 }
 
+if ( ! function_exists( 'wakalumi_auto_detect_file_size' ) ) {
+    /**
+     * Mendeteksi ukuran file PDF secara otomatis dari URL jika belum diisi manual.
+     *
+     * @param string $file_url
+     * @param string $manual_size
+     * @return string
+     */
+    function wakalumi_auto_detect_file_size( $file_url = '', $manual_size = '' ) {
+        $manual = trim( (string) $manual_size );
+        if ( ! empty( $manual ) && $manual !== 'PDF •' && $manual !== 'PDF' ) {
+            return $manual;
+        }
+
+        if ( empty( $file_url ) ) {
+            return ! empty( $manual ) ? $manual : 'PDF • -';
+        }
+
+        $uploads = wp_get_upload_dir();
+        $file_path = '';
+
+        if ( preg_match( '#/wp-content/uploads/(.+)$#i', $file_url, $matches ) ) {
+            $potential = $uploads['basedir'] . '/' . ltrim( $matches[1], '/' );
+            if ( file_exists( $potential ) && is_readable( $potential ) ) {
+                $file_path = $potential;
+            }
+        } elseif ( preg_match( '#/wp-content/themes/(.+)$#i', $file_url, $matches ) ) {
+            $potential = get_theme_root() . '/' . ltrim( $matches[1], '/' );
+            if ( file_exists( $potential ) && is_readable( $potential ) ) {
+                $file_path = $potential;
+            }
+        }
+
+        if ( $file_path && file_exists( $file_path ) ) {
+            $bytes = filesize( $file_path );
+            if ( $bytes >= 1048576 ) {
+                return 'PDF • ' . round( $bytes / 1048576, 1 ) . ' MB';
+            } elseif ( $bytes > 0 ) {
+                return 'PDF • ' . round( $bytes / 1024 ) . ' KB';
+            }
+        }
+
+        return ! empty( $manual ) ? $manual : 'PDF • 2.0 MB';
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_laporan_header' ) ) {
     /**
      * Mengambil konfigurasi header banner halaman laporan.
@@ -787,13 +833,16 @@ function wakalumi_render_laporan_page() {
                 $judul = sanitize_text_field( $juduls[$i] ?? '' );
                 if ( empty( $judul ) ) continue;
 
+                $f_url  = esc_url_raw( trim( $file_urls[$i] ?? '' ) );
+                $f_size = sanitize_text_field( $file_sizes[$i] ?? '' );
+
                 $list[] = [
                     'id'            => 'rep-tw-' . ( $i + 1 ) . '-' . sanitize_title( $judul ),
                     'tahun'         => sanitize_text_field( $tahuns[$i] ?? '2026' ),
                     'periode'       => sanitize_text_field( $periodes[$i] ?? '' ),
                     'judul'         => $judul,
-                    'file_url'      => esc_url_raw( trim( $file_urls[$i] ?? '' ) ),
-                    'file_size'     => sanitize_text_field( $file_sizes[$i] ?? 'PDF • 2.0 MB' ),
+                    'file_url'      => $f_url,
+                    'file_size'     => wakalumi_auto_detect_file_size( $f_url, $f_size ),
                     'tgl_publikasi' => sanitize_text_field( $tgl_pubs[$i] ?? '' ),
                     'status_audit'  => sanitize_text_field( $status_audits[$i] ?? 'Unaudited (Resmi OJK)' ),
                     'keterangan'    => sanitize_textarea_field( $keterangans[$i] ?? '' ),
@@ -822,13 +871,16 @@ function wakalumi_render_laporan_page() {
                 $judul = sanitize_text_field( $juduls[$i] ?? '' );
                 if ( empty( $judul ) ) continue;
 
+                $f_url  = esc_url_raw( trim( $file_urls[$i] ?? '' ) );
+                $f_size = sanitize_text_field( $file_sizes[$i] ?? '' );
+
                 $list[] = [
                     'id'            => 'rep-gcg-' . ( $i + 1 ) . '-' . sanitize_title( $judul ),
                     'tahun'         => sanitize_text_field( $tahuns[$i] ?? '2025' ),
                     'periode'       => sanitize_text_field( $periodes[$i] ?? 'Tahunan' ),
                     'judul'         => $judul,
-                    'file_url'      => esc_url_raw( trim( $file_urls[$i] ?? '' ) ),
-                    'file_size'     => sanitize_text_field( $file_sizes[$i] ?? 'PDF • 3.0 MB' ),
+                    'file_url'      => $f_url,
+                    'file_size'     => wakalumi_auto_detect_file_size( $f_url, $f_size ),
                     'tgl_publikasi' => sanitize_text_field( $tgl_pubs[$i] ?? '' ),
                     'status_audit'  => sanitize_text_field( $status_audits[$i] ?? 'Self Assessment Terdaftar OJK' ),
                     'keterangan'    => sanitize_textarea_field( $keterangans[$i] ?? '' ),
@@ -857,13 +909,16 @@ function wakalumi_render_laporan_page() {
                 $judul = sanitize_text_field( $juduls[$i] ?? '' );
                 if ( empty( $judul ) ) continue;
 
+                $f_url  = esc_url_raw( trim( $file_urls[$i] ?? '' ) );
+                $f_size = sanitize_text_field( $file_sizes[$i] ?? '' );
+
                 $list[] = [
                     'id'            => 'rep-ar-' . ( $i + 1 ) . '-' . sanitize_title( $judul ),
                     'tahun'         => sanitize_text_field( $tahuns[$i] ?? '2025' ),
                     'periode'       => sanitize_text_field( $periodes[$i] ?? 'Tahunan' ),
                     'judul'         => $judul,
-                    'file_url'      => esc_url_raw( trim( $file_urls[$i] ?? '' ) ),
-                    'file_size'     => sanitize_text_field( $file_sizes[$i] ?? 'PDF • 5.0 MB' ),
+                    'file_url'      => $f_url,
+                    'file_size'     => wakalumi_auto_detect_file_size( $f_url, $f_size ),
                     'tgl_publikasi' => sanitize_text_field( $tgl_pubs[$i] ?? '' ),
                     'status_audit'  => sanitize_text_field( $status_audits[$i] ?? 'Audited & Disahkan RUPS' ),
                     'keterangan'    => sanitize_textarea_field( $keterangans[$i] ?? '' ),
@@ -892,13 +947,16 @@ function wakalumi_render_laporan_page() {
                 $judul = sanitize_text_field( $juduls[$i] ?? '' );
                 if ( empty( $judul ) ) continue;
 
+                $f_url  = esc_url_raw( trim( $file_urls[$i] ?? '' ) );
+                $f_size = sanitize_text_field( $file_sizes[$i] ?? '' );
+
                 $list[] = [
                     'id'            => 'rep-lkb-' . ( $i + 1 ) . '-' . sanitize_title( $judul ),
                     'tahun'         => sanitize_text_field( $tahuns[$i] ?? '2025' ),
                     'periode'       => sanitize_text_field( $periodes[$i] ?? 'Tahunan' ),
                     'judul'         => $judul,
-                    'file_url'      => esc_url_raw( trim( $file_urls[$i] ?? '' ) ),
-                    'file_size'     => sanitize_text_field( $file_sizes[$i] ?? 'PDF • 2.0 MB' ),
+                    'file_url'      => $f_url,
+                    'file_size'     => wakalumi_auto_detect_file_size( $f_url, $f_size ),
                     'tgl_publikasi' => sanitize_text_field( $tgl_pubs[$i] ?? '' ),
                     'status_audit'  => sanitize_text_field( $status_audits[$i] ?? 'Kepatuhan POJK Keuangan Berkelanjutan' ),
                     'keterangan'    => sanitize_textarea_field( $keterangans[$i] ?? '' ),
@@ -927,13 +985,16 @@ function wakalumi_render_laporan_page() {
                 $judul = sanitize_text_field( $juduls[$i] ?? '' );
                 if ( empty( $judul ) ) continue;
 
+                $f_url  = esc_url_raw( trim( $file_urls[$i] ?? '' ) );
+                $f_size = sanitize_text_field( $file_sizes[$i] ?? '' );
+
                 $list[] = [
                     'id'            => 'rep-lainnya-' . ( $i + 1 ) . '-' . sanitize_title( $judul ),
                     'tahun'         => sanitize_text_field( $tahuns[$i] ?? '2025' ),
                     'periode'       => sanitize_text_field( $periodes[$i] ?? 'Laporan Khusus' ),
                     'judul'         => $judul,
-                    'file_url'      => esc_url_raw( trim( $file_urls[$i] ?? '' ) ),
-                    'file_size'     => sanitize_text_field( $file_sizes[$i] ?? 'PDF • 2.0 MB' ),
+                    'file_url'      => $f_url,
+                    'file_size'     => wakalumi_auto_detect_file_size( $f_url, $f_size ),
                     'tgl_publikasi' => sanitize_text_field( $tgl_pubs[$i] ?? '' ),
                     'status_audit'  => sanitize_text_field( $status_audits[$i] ?? 'Resmi OJK & Lembaga Pengawas' ),
                     'keterangan'    => sanitize_textarea_field( $keterangans[$i] ?? '' ),
@@ -1121,7 +1182,7 @@ function wakalumi_render_laporan_page() {
                                     <input type="text" name="tw_judul[]" value="<?php echo esc_attr( $judul ); ?>" placeholder="Contoh: Laporan Keuangan Publikasi Triwulan II 2026" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: bold;">
                                 </div>
                                 <div>
-                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                                     <input type="text" name="tw_file_size[]" value="<?php echo esc_attr( $file_size ); ?>" placeholder="Contoh: PDF • 2.1 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                             </div>
@@ -1233,7 +1294,7 @@ function wakalumi_render_laporan_page() {
                                     <input type="text" name="gcg_status_audit[]" value="<?php echo esc_attr( $status_audit ); ?>" placeholder="Contoh: Komposit Sangat Baik" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                                 <div>
-                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                                     <input type="text" name="gcg_file_size[]" value="<?php echo esc_attr( $file_size ); ?>" placeholder="Contoh: PDF • 3.2 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                             </div>
@@ -1345,7 +1406,7 @@ function wakalumi_render_laporan_page() {
                                     <input type="text" name="ar_status_audit[]" value="<?php echo esc_attr( $status_audit ); ?>" placeholder="Contoh: Audited & Disahkan RUPS" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                                 <div>
-                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                                     <input type="text" name="ar_file_size[]" value="<?php echo esc_attr( $file_size ); ?>" placeholder="Contoh: PDF • 5.8 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                             </div>
@@ -1457,7 +1518,7 @@ function wakalumi_render_laporan_page() {
                                     <input type="text" name="lkb_status_audit[]" value="<?php echo esc_attr( $status_audit ); ?>" placeholder="Contoh: Kepatuhan POJK Keuangan Berkelanjutan" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                                 <div>
-                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                                     <input type="text" name="lkb_file_size[]" value="<?php echo esc_attr( $file_size ); ?>" placeholder="Contoh: PDF • 2.4 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                             </div>
@@ -1569,7 +1630,7 @@ function wakalumi_render_laporan_page() {
                                     <input type="text" name="lainnya_status_audit[]" value="<?php echo esc_attr( $status_audit ); ?>" placeholder="Contoh: Resmi OJK & Lembaga Pengawas" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                                 <div>
-                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                                     <input type="text" name="lainnya_file_size[]" value="<?php echo esc_attr( $file_size ); ?>" placeholder="Contoh: PDF • 1.8 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                                 </div>
                             </div>
@@ -1719,6 +1780,23 @@ function wakalumi_render_laporan_page() {
             mediaUploader.on('select', function() {
                 var attachment = mediaUploader.state().get('selection').first().toJSON();
                 $input.val(attachment.url);
+
+                // Otomatis isi ukuran file jika attachment memiliki data ukuran
+                var sizeText = '';
+                if (attachment.filesizeHumanReadable) {
+                    sizeText = 'PDF • ' + attachment.filesizeHumanReadable;
+                } else if (attachment.filesizeInBytes) {
+                    var bytes = attachment.filesizeInBytes;
+                    if (bytes >= 1048576) {
+                        sizeText = 'PDF • ' + (bytes / 1048576).toFixed(1) + ' MB';
+                    } else if (bytes > 0) {
+                        sizeText = 'PDF • ' + Math.round(bytes / 1024) + ' KB';
+                    }
+                }
+                if (sizeText) {
+                    var $card = $btn.closest('.wkl-laporan-card');
+                    $card.find('input[name$="_file_size[]"]').val(sizeText);
+                }
             });
 
             mediaUploader.open();
@@ -1840,7 +1918,7 @@ function wakalumi_render_laporan_page() {
                     <input type="text" name="tw_status_audit[]" value="Unaudited (Resmi OJK)" placeholder="Contoh: Audited / Unaudited" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
                 <div>
-                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                     <input type="text" name="tw_file_size[]" value="PDF • 2.0 MB" placeholder="Contoh: PDF • 2.1 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
             </div>
@@ -1893,7 +1971,7 @@ function wakalumi_render_laporan_page() {
                     <input type="text" name="gcg_status_audit[]" value="Self Assessment Terdaftar OJK" placeholder="Contoh: Komposit Sangat Baik" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
                 <div>
-                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                     <input type="text" name="gcg_file_size[]" value="PDF • 3.0 MB" placeholder="Contoh: PDF • 3.2 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
             </div>
@@ -1946,7 +2024,7 @@ function wakalumi_render_laporan_page() {
                     <input type="text" name="ar_status_audit[]" value="Audited & Disahkan RUPS" placeholder="Contoh: Audited & Disahkan RUPS" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
                 <div>
-                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                     <input type="text" name="ar_file_size[]" value="PDF • 5.0 MB" placeholder="Contoh: PDF • 5.8 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
             </div>
@@ -1999,7 +2077,7 @@ function wakalumi_render_laporan_page() {
                     <input type="text" name="lkb_status_audit[]" value="Kepatuhan POJK Keuangan Berkelanjutan" placeholder="Contoh: Kepatuhan POJK Keuangan Berkelanjutan" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
                 <div>
-                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                     <input type="text" name="lkb_file_size[]" value="PDF • 2.0 MB" placeholder="Contoh: PDF • 2.4 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
             </div>
@@ -2052,7 +2130,7 @@ function wakalumi_render_laporan_page() {
                     <input type="text" name="lainnya_status_audit[]" value="Resmi OJK & Lembaga Pengawas" placeholder="Contoh: Resmi OJK & Lembaga Pengawas" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
                 <div>
-                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF</label>
+                    <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ukuran File PDF <span style="font-weight: normal; color: #94a3b8;">(Otomatis terisi saat unggah / opsional)</span></label>
                     <input type="text" name="lainnya_file_size[]" value="PDF • 2.0 MB" placeholder="Contoh: PDF • 1.8 MB" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
                 </div>
             </div>

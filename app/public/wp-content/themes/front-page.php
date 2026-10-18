@@ -22,43 +22,7 @@ $wa_number = get_option( 'options_contact_wa', '6281517380388' );
 $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 ?>
 
-<!-- ========================================
-     SECTION 0: ANNOUNCEMENT BAR (toggleable via ACF options)
-     ======================================== -->
-<?php
-$ann_active    = get_option( 'options_announcement_active', '0' );
-$ann_text      = get_option( 'options_announcement_text', '' );
-$ann_link_text = get_option( 'options_announcement_link_text', '' );
-$ann_link_url  = get_option( 'options_announcement_link_url', '' );
-$ann_type      = get_option( 'options_announcement_type', 'info' );
-$ann_hash      = md5( $ann_text ); // reset dismissal when text changes
 
-if ( $ann_active && $ann_text ) :
-?>
-<div id="announcement-bar"
-     data-hash="<?php echo esc_attr( $ann_hash ); ?>"
-     class="announcement-bar <?php echo 'announcement-' . esc_attr( $ann_type ); ?>">
-    <div class="container-wide py-3 flex items-center justify-center gap-3 text-sm">
-        <!-- Icon -->
-        <svg class="w-4 h-4 text-white/80 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46" />
-        </svg>
-        <span class="text-white font-medium"><?php echo esc_html( $ann_text ); ?></span>
-        <?php if ( $ann_link_text && $ann_link_url ) : ?>
-            <a href="<?php echo esc_url( $ann_link_url ); ?>"
-               class="text-white font-bold underline underline-offset-2 hover:text-white/80 transition-colors">
-                <?php echo esc_html( $ann_link_text ); ?>
-            </a>
-        <?php endif; ?>
-        <!-- Dismiss button -->
-        <button id="announcement-dismiss" class="ml-2 text-white/60 hover:text-white transition-colors flex-shrink-0" aria-label="Tutup pengumuman">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-    </div>
-</div>
-<?php endif; ?>
 
 
 <!-- ========================================
@@ -1764,5 +1728,10 @@ $cta_button_secondary_url  = get_field( 'cta_button_secondary_url' ) ?: '/profil
 </section>
 
 </div> <!-- End sticky wrapper -->
+
+<?php
+// Hybrid Announcement System (Floating Toast Slider & Emergency Pop-up)
+get_template_part( 'template-parts/announcement-hybrid' );
+?>
 
 <?php get_footer(); ?>

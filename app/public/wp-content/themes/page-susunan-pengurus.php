@@ -88,30 +88,30 @@ foreach ( $pengurus_list as $p ) {
     elseif ( $kat === 'Direksi' ) $count_dir++;
 }
 
-// Category styling config
+// Category styling config (Seragam & Konsisten: Brand Wakalumi Teal & Emerald)
 $cat_config = [
     'Dewan Pengawas Syariah' => [
-        'color'      => 'emerald',
-        'badge_bg'   => 'bg-emerald-500/10 dark:bg-emerald-400/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20',
-        'glow'       => 'shadow-emerald-500/20',
-        'ring'       => 'ring-emerald-400',
-        'accent_bar' => 'from-emerald-400 to-teal-500',
+        'color'      => 'teal',
+        'badge_bg'   => 'bg-teal-500/10 dark:bg-teal-400/10 text-teal-700 dark:text-teal-300 border-teal-500/20',
+        'glow'       => 'shadow-teal-500/20',
+        'ring'       => 'ring-teal-400',
+        'accent_bar' => 'from-teal-400 via-primary-500 to-teal-600',
         'abbr'       => 'DPS',
     ],
     'Dewan Komisaris' => [
         'color'      => 'teal',
-        'badge_bg'   => 'bg-primary-500/10 dark:bg-primary-400/10 text-primary-700 dark:text-teal-300 border-primary-500/20',
-        'glow'       => 'shadow-primary-500/20',
-        'ring'       => 'ring-primary-400',
-        'accent_bar' => 'from-teal-400 to-primary-600',
+        'badge_bg'   => 'bg-teal-500/10 dark:bg-teal-400/10 text-teal-700 dark:text-teal-300 border-teal-500/20',
+        'glow'       => 'shadow-teal-500/20',
+        'ring'       => 'ring-teal-400',
+        'accent_bar' => 'from-teal-400 via-primary-500 to-teal-600',
         'abbr'       => 'KOM',
     ],
     'Direksi' => [
-        'color'      => 'amber',
-        'badge_bg'   => 'bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 border-amber-500/20',
-        'glow'       => 'shadow-amber-500/20',
-        'ring'       => 'ring-amber-400',
-        'accent_bar' => 'from-amber-400 to-orange-500',
+        'color'      => 'teal',
+        'badge_bg'   => 'bg-teal-500/10 dark:bg-teal-400/10 text-teal-700 dark:text-teal-300 border-teal-500/20',
+        'glow'       => 'shadow-teal-500/20',
+        'ring'       => 'ring-teal-400',
+        'accent_bar' => 'from-teal-400 via-primary-500 to-teal-600',
         'abbr'       => 'DIR',
     ],
 ];
@@ -207,18 +207,18 @@ $total_members = count( $pengurus_list );
             <!-- DPS -->
             <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-2 group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
                 </div>
                 <div class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     <?php echo esc_html( $count_dps ); ?>
                 </div>
-                <div class="text-xs md:text-sm text-slate-600 dark:text-slate-200 font-medium mt-1">Pengawas Syariah</div>
+                <div class="text-xs md:text-sm text-slate-600 dark:text-slate-200 font-medium mt-1">Dewan Pengawas Syariah</div>
             </div>
 
             <!-- Komisaris -->
             <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal-500/10 text-primary-600 dark:text-teal-400 mb-2 group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/></svg>
                 </div>
                 <div class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     <?php echo esc_html( $count_kom ); ?>
@@ -226,15 +226,15 @@ $total_members = count( $pengurus_list );
                 <div class="text-xs md:text-sm text-slate-600 dark:text-slate-200 font-medium mt-1">Dewan Komisaris</div>
             </div>
 
-            <!-- Direksi (Proses OJK) -->
-            <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-amber-200/60 dark:border-amber-700/60 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
-                <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 mb-2 group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <!-- Direksi (Dynamic & Seragam) -->
+            <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal-500/10 text-primary-600 dark:text-teal-400 mb-2 group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
                 </div>
-                <div class="text-lg md:text-xl font-bold text-amber-600 dark:text-amber-400 tracking-tight leading-tight mt-1">
-                    Izin OJK
+                <div class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <?php echo esc_html( $count_dir ); ?>
                 </div>
-                <div class="text-xs text-amber-600/90 dark:text-amber-300 font-medium mt-1.5">Fit & Proper Test</div>
+                <div class="text-xs md:text-sm text-slate-600 dark:text-slate-200 font-medium mt-1">Direksi</div>
             </div>
         </div>
     </div>
@@ -274,7 +274,7 @@ $total_members = count( $pengurus_list );
     <div id="executive-sticky-stage" 
          class="is-overview sticky top-20 h-[calc(100vh-5rem)] flex flex-col justify-center overflow-hidden py-4 z-10">
 
-        <div class="container-wide w-full max-w-7xl mx-auto px-4 flex flex-col justify-between h-[650px] relative z-10">
+        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between h-[650px] relative z-10">
 
             <!-- ══════════════════════════════════════════════════════════════════════════
                  TOP STAGE HEADER: OVERVIEW TITLE vs SPOTLIGHT CONTROLS
@@ -285,7 +285,13 @@ $total_members = count( $pengurus_list );
                     <div class="flex items-center gap-3">
                         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 dark:bg-primary-400/10 border border-primary-500/20 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-teal-300">
                             <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
-                            Dewan Pengawas Syariah & Dewan Komisaris
+                            <?php 
+                            $org_titles = [];
+                            if ( $count_dps > 0 ) $org_titles[] = 'DPS';
+                            if ( $count_kom > 0 ) $org_titles[] = 'Dewan Komisaris';
+                            if ( $count_dir > 0 ) $org_titles[] = 'Direksi';
+                            echo ! empty( $org_titles ) ? esc_html( implode( ' • ', $org_titles ) ) : 'Susunan Pengurus';
+                            ?>
                         </span>
                         <span class="text-xs text-slate-300 dark:text-slate-700 hidden xl:inline">|</span>
                         <span class="text-xs font-bold text-slate-600 dark:text-slate-300 hidden xl:inline">Jajaran Pimpinan Berintegritas</span>
@@ -307,8 +313,15 @@ $total_members = count( $pengurus_list );
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kategori:</span>
                         <div id="exec-category-pills" class="flex items-center gap-2">
                             <button type="button" class="exec-filter-btn active px-3 py-1 rounded-full text-xs font-semibold transition-all bg-primary-600 text-white shadow-sm" data-filter="all">Semua (<?php echo $total_members; ?>)</button>
-                            <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Komisaris">Komisaris</button>
-                            <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Pengawas Syariah">DPS</button>
+                            <?php if ( $count_kom > 0 ) : ?>
+                                <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Komisaris">Komisaris (<?php echo $count_kom; ?>)</button>
+                            <?php endif; ?>
+                            <?php if ( $count_dps > 0 ) : ?>
+                                <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Pengawas Syariah">DPS (<?php echo $count_dps; ?>)</button>
+                            <?php endif; ?>
+                            <?php if ( $count_dir > 0 ) : ?>
+                                <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Direksi">Direksi (<?php echo $count_dir; ?>)</button>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -337,7 +350,7 @@ $total_members = count( $pengurus_list );
                  ══════════════════════════════════════════════════════════════════════════ -->
             <div id="exec-morph-stage" class="exec-morph-stage">
                 <?php 
-                $gap_pct    = 2.0;
+                $gap_pct    = ( $total_members > 4 ) ? 1.4 : 2.0;
                 $card_w_pct = ( 100.0 - ( $gap_pct * ( $total_members - 1 ) ) ) / $total_members;
                 
                 foreach ( $pengurus_list as $index => $item ) : 
@@ -345,7 +358,7 @@ $total_members = count( $pengurus_list );
                     $cfg       = $cat_config[ $kategori ] ?? $cat_config['Dewan Komisaris'];
                     $init_left = $index * ( $card_w_pct + $gap_pct );
                 ?>
-                <div class="exec-morph-card rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-lg"
+                <div class="exec-morph-card group rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-lg hover:shadow-2xl transition-all duration-300"
                      id="exec-card-<?php echo $index; ?>"
                      data-index="<?php echo $index; ?>"
                      data-kategori="<?php echo esc_attr( $kategori ); ?>"
@@ -353,44 +366,49 @@ $total_members = count( $pengurus_list );
                      style="left: <?php echo esc_attr( $init_left ); ?>%; top: 0%; width: <?php echo esc_attr( $card_w_pct ); ?>%; height: 100%;">
 
                     <!-- Top Gradient Accent Bar for this card -->
-                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r <?php echo $cfg['accent_bar']; ?> z-10"></div>
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r <?php echo $cfg['accent_bar']; ?> z-20"></div>
 
-                    <!-- SUB-VIEW 1: OVERVIEW CARD (Rest / 4-column lineup) -->
-                    <div class="morph-view-overview flex flex-col justify-between">
-                        <!-- Portrait Photo -->
-                        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 mb-3 group-hover:scale-[1.02] transition-transform duration-500">
+                    <!-- SUB-VIEW 1: OVERVIEW CARD (Rest / All-members lineup) -->
+                    <div class="morph-view-overview flex flex-col justify-between h-full">
+                        <!-- Portrait Photo (Flush Edge-to-Edge) -->
+                        <div class="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 shrink-0">
                             <?php if ( ! empty( $item['foto'] ) ) : ?>
                                 <img src="<?php echo esc_url( $item['foto'] ); ?>" 
                                      alt="<?php echo esc_attr( $item['nama'] ); ?>" 
-                                     class="w-full h-full object-cover">
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <?php else : ?>
                                 <div class="w-full h-full flex items-center justify-center text-slate-400 font-bold">
                                     <?php echo esc_html( $cfg['abbr'] ); ?>
                                 </div>
                             <?php endif; ?>
 
+                            <!-- Subtle glass shine gradient -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent pointer-events-none"></div>
+
                             <!-- Category Pill Overlay -->
-                            <div class="absolute top-2.5 left-2.5">
+                            <div class="absolute top-3 left-3 z-10">
                                 <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full backdrop-blur-md shadow-sm <?php echo $cfg['badge_bg']; ?>">
                                     <?php echo esc_html( $cfg['abbr'] ); ?>
                                 </span>
                             </div>
                         </div>
 
-                        <!-- Text Info -->
-                        <div class="text-center px-1">
-                            <div class="text-[11px] font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wide truncate mb-1">
-                                <?php echo esc_html( $item['jabatan'] ); ?>
+                        <!-- Text Info & Action (with clean padding) -->
+                        <div class="flex-1 flex flex-col justify-between p-3.5 sm:p-4 text-center">
+                            <div class="space-y-1">
+                                <div class="text-[11px] font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wide truncate">
+                                    <?php echo esc_html( $item['jabatan'] ); ?>
+                                </div>
+                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white line-clamp-2 leading-snug">
+                                    <?php echo esc_html( $item['nama'] ); ?>
+                                </h3>
                             </div>
-                            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white line-clamp-1">
-                                <?php echo esc_html( $item['nama'] ); ?>
-                            </h3>
-                        </div>
 
-                        <!-- Hover Prompt -->
-                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-                            <span>Lihat Rekam Jejak</span>
-                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            <!-- Hover Prompt -->
+                            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500 group-hover:text-primary-600 dark:group-hover:text-teal-400 transition-colors">
+                                <span>Lihat Rekam Jejak</span>
+                                <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            </div>
                         </div>
                     </div>
 
@@ -660,7 +678,7 @@ $total_members = count( $pengurus_list );
      DIREKSI TRANSPARENCY CARD (OJK STATUS)
      Mandatory governance note on director vacancy (Admin manageable & toggleable)
      ======================================== -->
-<?php if ( '1' === $show_ojk_notice ) : ?>
+<?php if ( '1' === (string) $show_ojk_notice ) : ?>
 <section class="py-12 md:py-16 bg-slate-50 dark:bg-dark-surface border-y border-slate-200/60 dark:border-slate-800/60">
     <div class="container-wide">
         <div class="max-w-4xl mx-auto rounded-3xl overflow-hidden border border-amber-200/80 dark:border-amber-800/40 bg-gradient-to-br from-amber-50/90 via-white to-amber-50/40 dark:from-amber-950/20 dark:via-dark-surface dark:to-amber-950/10 shadow-sm p-6 sm:p-8 md:p-10" data-aos="fade-up">
