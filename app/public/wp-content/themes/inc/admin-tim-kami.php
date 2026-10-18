@@ -157,7 +157,7 @@ if ( ! function_exists( 'wakalumi_get_tim_header' ) ) {
 
         $notice_badge = get_option( 'options_tim_notice_badge', '🛡️ Verifikasi Resmi Karyawan Aktif' );
         $notice_title = get_option( 'options_tim_notice_title', 'Cek Keabsahan & Identitas Resmi Personel BSW' );
-        $notice_desc  = get_option( 'options_tim_notice_desc', 'Seluruh personel yang tercantum pada direktori resmi ini merupakan Karyawan Aktif PT Bank Syariah Wakalumi (BSW). Apabila ada oknum yang mengatasnamakan bank namun identitasnya TIDAK tercantum pada direktori ini, mohon waspada terhadap potensi penipuan dan segera laporkan ke WhatsApp Hotline resmi kami.' );
+        $notice_desc  = get_option( 'options_tim_notice_desc', 'Seluruh personel yang tercantum pada direktori resmi ini merupakan Karyawan Aktif PT BPRS Wakalumi (Bank Syariah Wakalumi). Apabila ada oknum yang mengatasnamakan bank namun identitasnya TIDAK tercantum pada direktori ini, mohon waspada terhadap potensi penipuan dan segera laporkan ke WhatsApp Hotline resmi kami.' );
         $notice_wa    = get_option( 'options_tim_notice_wa', get_option( 'options_contact_wa', '6281517380388' ) );
 
         return [

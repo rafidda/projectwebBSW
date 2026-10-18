@@ -113,7 +113,7 @@ if ( ! function_exists( 'wakalumi_get_karir_antifraud' ) ) {
         return [
             'badge' => get_option( 'options_karir_fraud_badge', 'Himbauan Resmi Bebas Biaya' ),
             'title' => get_option( 'options_karir_fraud_title', 'Waspada Penipuan Mengatasnamakan Rekrutmen BSW' ),
-            'desc'  => get_option( 'options_karir_fraud_desc', 'PT Bank Syariah Wakalumi (BSW) TIDAK PERNAH memungut biaya apapun (termasuk biaya transportasi, akomodasi, maupun biaya administrasi berkas) dalam seluruh tahapan seleksi penerimaan karyawan. Undangan resmi selalu disampaikan melalui saluran email resmi bank atau nomor kontak resmi Divisi Personalia. Waspadai segala bentuk penipuan yang mengatasnamakan Bank Syariah Wakalumi.' ),
+            'desc'  => get_option( 'options_karir_fraud_desc', 'PT BPRS Wakalumi (Bank Syariah Wakalumi) TIDAK PERNAH memungut biaya apapun (termasuk biaya transportasi, akomodasi, maupun biaya administrasi berkas) dalam seluruh tahapan seleksi penerimaan karyawan. Undangan resmi selalu disampaikan melalui saluran email resmi bank atau nomor kontak resmi Divisi Personalia. Waspadai segala bentuk penipuan yang mengatasnamakan Bank Syariah Wakalumi.' ),
         ];
     }
 }

@@ -423,9 +423,19 @@ function wakalumi_clean_maps_embed_url( $raw ) {
  */
 function wakalumi_render_contact_page() {
     if ( isset( $_POST['wakalumi_save_contact'] ) && check_admin_referer( 'wakalumi_contact_nonce' ) ) {
+        update_option( 'options_contact_page_badge', sanitize_text_field( $_POST['options_contact_page_badge'] ?? '' ) );
+        update_option( 'options_contact_page_title', sanitize_text_field( $_POST['options_contact_page_title'] ?? '' ) );
+        update_option( 'options_contact_page_desc', sanitize_textarea_field( $_POST['options_contact_page_desc'] ?? '' ) );
+
+        update_option( 'options_contact_wa', sanitize_text_field( $_POST['options_contact_wa'] ?? '' ) );
         update_option( 'options_contact_phone', sanitize_text_field( $_POST['options_contact_phone'] ?? '' ) );
         update_option( 'options_contact_email', sanitize_email( $_POST['options_contact_email'] ?? '' ) );
         update_option( 'options_contact_address', sanitize_textarea_field( $_POST['options_contact_address'] ?? '' ) );
+
+        update_option( 'options_social_instagram', esc_url_raw( $_POST['options_social_instagram'] ?? '' ) );
+        update_option( 'options_social_facebook', esc_url_raw( $_POST['options_social_facebook'] ?? '' ) );
+        update_option( 'options_social_linkedin', esc_url_raw( $_POST['options_social_linkedin'] ?? '' ) );
+        update_option( 'options_social_youtube', esc_url_raw( $_POST['options_social_youtube'] ?? '' ) );
         
         if ( isset( $_POST['options_maps_embed'] ) ) {
             update_option( 'options_maps_embed', wakalumi_clean_maps_embed_url( $_POST['options_maps_embed'] ) );
@@ -434,35 +444,78 @@ function wakalumi_render_contact_page() {
             update_option( 'options_footer_maps_title', sanitize_text_field( $_POST['options_footer_maps_title'] ) );
         }
 
-        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Kontak & Lokasi Peta Maps berhasil disimpan!</strong></p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Pengaturan Kontak, Media Sosial & Lokasi Peta berhasil disimpan!</strong></p></div>';
     }
 
-    $phone      = get_option( 'options_contact_phone', '(021) 7401667' );
+    $page_badge = get_option( 'options_contact_page_badge', 'Hubungi Kami' );
+    $page_title = get_option( 'options_contact_page_title', 'Kanal Komunikasi & Layanan Resmi' );
+    $page_desc  = get_option( 'options_contact_page_desc', 'Kami siap mendengarkan, melayani, dan memberikan solusi perbankan syariah terbaik untuk Anda. Silakan hubungi kami melalui berbagai saluran resmi yang aman, terpercaya, dan profesional.' );
+
+    $wa         = get_option( 'options_contact_wa', '6281517380388' );
+    $phone      = get_option( 'options_contact_phone', '(021) 7401667 - 7490874' );
     $email      = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
     $address    = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
-    $maps       = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5!2d106.74!3d-6.34!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjAnMjQuMCJTIDEwNsKwNDQnMjQuMCJF!5e0!3m2!1sen!2sid!4v1' );
+
+    $social_ig  = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
+    $social_fb  = get_option( 'options_social_facebook', 'https://facebook.com/bprswakalumi' );
+    $social_li  = get_option( 'options_social_linkedin', 'https://linkedin.com/company/bprswakalumi' );
+    $social_yt  = get_option( 'options_social_youtube', 'https://www.youtube.com/@bprswakalumi' );
+
+    $maps       = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.778980156602!2d106.76267921184164!3d-6.292752361567173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3aa7230643f%3A0xe76da8f0b25c55b0!2sBPR%20Syariah%20Wakalumi.%20PT!5e0!3m2!1sen!2sid!4v1792290594792!5m2!1sen!2sid' );
     $maps_title = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
     ?>
     <div class="wrap" style="max-width: 900px; margin-top: 20px;">
         <h1 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
             <span class="dashicons dashicons-location-alt" style="font-size: 32px; width: 32px; height: 32px; color: #088395;"></span>
-            Pengaturan Kontak & Lokasi Google Maps
+            Pengaturan Kontak, Media Sosial & Lokasi Peta
         </h1>
 
         <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <form method="post" action="">
                 <?php wp_nonce_field( 'wakalumi_contact_nonce' ); ?>
 
+                <!-- BAGIAN 1: HEADER BANNER HALAMAN KONTAK -->
                 <h2 style="font-size: 16px; margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    📞 Informasi Kontak Kantor
+                    🏷️ Banner Header Halaman Kontak (/kontak/)
                 </h2>
-
                 <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_contact_page_badge">Lencana (Badge):</label></th>
+                        <td>
+                            <input type="text" id="options_contact_page_badge" name="options_contact_page_badge" value="<?php echo esc_attr( $page_badge ); ?>" class="regular-text" placeholder="Hubungi Kami">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_page_title">Judul Utama Halaman:</label></th>
+                        <td>
+                            <input type="text" id="options_contact_page_title" name="options_contact_page_title" value="<?php echo esc_attr( $page_title ); ?>" class="large-text" placeholder="Kanal Komunikasi & Layanan Resmi">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_page_desc">Deskripsi Pengantar:</label></th>
+                        <td>
+                            <textarea id="options_contact_page_desc" name="options_contact_page_desc" rows="3" class="large-text"><?php echo esc_textarea( $page_desc ); ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- BAGIAN 2: SALURAN KONTAK UTAMA -->
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    📞 Saluran Kontak Langsung (WhatsApp, Telepon, Email)
+                </h2>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_contact_wa">Nomor WhatsApp CS:</label></th>
+                        <td>
+                            <input type="text" id="options_contact_wa" name="options_contact_wa" value="<?php echo esc_attr( $wa ); ?>" class="regular-text" placeholder="6281517380388">
+                            <p class="description">Format internasional tanpa spasi/tanda hubung, contoh: <code>6281517380388</code>.</p>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row"><label for="options_contact_phone">Nomor Telepon Kantor:</label></th>
                         <td>
                             <input type="text" id="options_contact_phone" name="options_contact_phone" value="<?php echo esc_attr( $phone ); ?>" class="regular-text">
-                            <p class="description">Contoh: <code>(021) 7401667</code></p>
+                            <p class="description">Contoh: <code>(021) 7401667 - 7490874</code></p>
                         </td>
                     </tr>
                     <tr>
@@ -481,8 +534,40 @@ function wakalumi_render_contact_page() {
                     </tr>
                 </table>
 
+                <!-- BAGIAN 3: MEDIA SOSIAL RESMI -->
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    🗺️ Sematan Google Maps (Footer Website)
+                    🌐 Akun Media Sosial Resmi Perseroan
+                </h2>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_social_instagram">URL Akun Instagram:</label></th>
+                        <td>
+                            <input type="url" id="options_social_instagram" name="options_social_instagram" value="<?php echo esc_attr( $social_ig ); ?>" class="large-text" placeholder="https://www.instagram.com/bprswakalumi">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_social_facebook">URL Halaman Facebook:</label></th>
+                        <td>
+                            <input type="url" id="options_social_facebook" name="options_social_facebook" value="<?php echo esc_attr( $social_fb ); ?>" class="large-text" placeholder="https://facebook.com/bprswakalumi">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_social_linkedin">URL Profil LinkedIn:</label></th>
+                        <td>
+                            <input type="url" id="options_social_linkedin" name="options_social_linkedin" value="<?php echo esc_attr( $social_li ); ?>" class="large-text" placeholder="https://linkedin.com/company/bprswakalumi">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_social_youtube">URL Kanal YouTube:</label></th>
+                        <td>
+                            <input type="url" id="options_social_youtube" name="options_social_youtube" value="<?php echo esc_attr( $social_yt ); ?>" class="large-text" placeholder="https://www.youtube.com/@bprswakalumi">
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- BAGIAN 4: SEMATAN GOOGLE MAPS -->
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🗺️ Sematan Google Maps (Halaman Kontak & Footer)
                 </h2>
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
                     <p style="margin: 0; font-size: 13px; color: #166534; line-height: 1.5;">
@@ -492,10 +577,9 @@ function wakalumi_render_contact_page() {
 
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><label for="options_footer_maps_title">Judul Kolom di Footer:</label></th>
+                        <th scope="row"><label for="options_footer_maps_title">Judul Kolom Peta:</label></th>
                         <td>
                             <input type="text" id="options_footer_maps_title" name="options_footer_maps_title" value="<?php echo esc_attr( $maps_title ); ?>" class="regular-text" placeholder="Lokasi Kantor">
-                            <p class="description">Judul heading yang tampil di atas peta pada footer (default: <em>Lokasi Kantor</em>).</p>
                         </td>
                     </tr>
                     <tr>
@@ -520,7 +604,7 @@ function wakalumi_render_contact_page() {
 
                 <p class="submit" style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
                     <button type="submit" name="wakalumi_save_contact" class="button button-primary button-large" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 25px;">
-                        Simpan Kontak & Peta
+                        Simpan Kontak, Media Sosial & Peta
                     </button>
                 </p>
             </form>

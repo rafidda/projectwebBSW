@@ -98,7 +98,7 @@ foreach ( $all_jobs as $j ) {
                                         Portal Rekrutmen Resmi
                                     </span>
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wide">
-                                        PT BSW
+                                        Bank Syariah Wakalumi
                                     </span>
                                 </div>
 
@@ -321,7 +321,7 @@ foreach ( $all_jobs as $j ) {
 
                                 <!-- Narrative Explanation -->
                                 <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-                                    Saat ini seluruh formasi penempatan kerja insan perbankan syariah di lingkungan PT Bank Syariah Wakalumi (BSW) telah terisi penuh. Pembukaan gelombang rekrutmen formasi baru berikutnya akan selalu diumumkan secara transparan melalui portal resmi ini dan saluran media sosial resmi bank.
+                                    Saat ini seluruh formasi penempatan kerja insan perbankan syariah di lingkungan PT BPRS Wakalumi (Bank Syariah Wakalumi) telah terisi penuh. Pembukaan gelombang rekrutmen formasi baru berikutnya akan selalu diumumkan secara transparan melalui portal resmi ini dan saluran media sosial resmi bank.
                                 </p>
 
                                 <!-- 3 Key Principles / Reassurance Cards Inside Centerpiece -->
@@ -563,23 +563,23 @@ foreach ( $all_jobs as $j ) {
          ======================================================================== -->
     <section class="section py-12 sm:py-16 relative z-10 bg-slate-50/70 dark:bg-dark-surface/50 border-b border-slate-200/80 dark:border-dark-border/80">
         <div class="container-narrow mx-auto" data-aos="fade-up">
-            <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-amber-400 via-amber-300 to-yellow-500 shadow-md group">
-                <div class="relative rounded-[22px] p-6 sm:p-8 bg-amber-50/95 dark:bg-amber-950/50 backdrop-blur-xl flex flex-col md:flex-row items-start md:items-center gap-6 overflow-hidden">
+            <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-amber-400/80 via-amber-300/50 to-yellow-500/70 dark:from-amber-400/25 dark:via-dark-border dark:to-amber-500/10 shadow-md shadow-amber-500/5 group">
+                <div class="relative rounded-[22px] p-6 sm:p-8 bg-amber-50/90 dark:bg-dark-card/90 dark:border dark:border-amber-500/20 backdrop-blur-xl flex flex-col md:flex-row items-start md:items-center gap-6 overflow-hidden">
                     <!-- Glass Shine Glint -->
                     <div class="wkl-glass-shine"></div>
 
-                    <div class="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 flex items-center justify-center flex-shrink-0 border border-amber-300/80 dark:border-amber-700 shadow-xs">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-100/80 dark:bg-dark-surface text-amber-700 dark:text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-300/60 dark:border-amber-500/30 shadow-xs">
                         <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286zm0 13.036h.008v.008H12v-.008z"/></svg>
                     </div>
 
                     <div class="space-y-2 flex-1 relative z-10">
-                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-200/90 dark:bg-amber-900 text-amber-950 dark:text-amber-200 border border-amber-300/70">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border border-amber-300/70 dark:border-amber-600/40">
                             <?php echo esc_html( $antifraud['badge'] ); ?>
                         </div>
-                        <h3 class="text-base sm:text-lg font-bold text-amber-950 dark:text-amber-100">
+                        <h3 class="text-base sm:text-lg font-bold text-amber-950 dark:text-white">
                             <?php echo esc_html( $antifraud['title'] ); ?>
                         </h3>
-                        <p class="text-xs sm:text-sm text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
+                        <p class="text-xs sm:text-sm text-amber-900/90 dark:text-slate-300 leading-relaxed">
                             <?php echo esc_html( $antifraud['desc'] ); ?>
                         </p>
                     </div>

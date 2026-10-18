@@ -287,6 +287,24 @@ function wakalumi_enforce_template_routing( $template ) {
         if ( $res ) return $res;
     }
 
+    // 16. Informasi: Karir & Rekrutmen
+    if ( in_array( $slug, [ 'karir', 'rekrutmen', 'lowongan', 'karir-rekrutmen' ], true ) || strpos( $req_uri, '/informasi/karir' ) !== false || strpos( $req_uri, '/karir' ) !== false ) {
+        $res = $serve_clean_template( 'page-karir.php' );
+        if ( $res ) return $res;
+    }
+
+    // 17. Informasi: Literasi & Inklusi Keuangan Syariah
+    if ( in_array( $slug, [ 'literasi-keuangan', 'literasi-dan-inklusi', 'literasi-inklusi', 'literasi', 'inklusi' ], true ) || strpos( $req_uri, '/informasi/literasi' ) !== false || strpos( $req_uri, '/literasi-keuangan' ) !== false ) {
+        $res = $serve_clean_template( 'page-literasi.php' );
+        if ( $res ) return $res;
+    }
+
+    // 18. Kontak & Saluran Komunikasi
+    if ( in_array( $slug, [ 'kontak', 'contact', 'hubungi-kami', 'kontak-kami' ], true ) || strpos( $req_uri, '/kontak' ) !== false || strpos( $req_uri, '/contact' ) !== false ) {
+        $res = $serve_clean_template( 'page-kontak.php' );
+        if ( $res ) return $res;
+    }
+
     return $template;
 }
 add_filter( 'template_include', 'wakalumi_enforce_template_routing', 99 );
@@ -775,6 +793,62 @@ function wakalumi_ensure_karir_page() {
     }
 }
 add_action( 'init', 'wakalumi_ensure_karir_page' );
+
+/**
+ * Otomatis pastikan halaman 'Literasi & Inklusi Keuangan Syariah' terdaftar di database dengan template page-literasi.php
+ * agar URL /informasi/literasi-keuangan/ atau /literasi-keuangan/ langsung aktif
+ */
+function wakalumi_ensure_literasi_page() {
+    $parent_info = get_page_by_path( 'informasi' );
+    $parent_id   = $parent_info ? $parent_info->ID : 0;
+
+    $lit_page = get_page_by_path( 'informasi/literasi-keuangan' ) ?: ( get_page_by_path( 'literasi-keuangan' ) ?: get_page_by_path( 'literasi' ) );
+    if ( ! $lit_page ) {
+        $lit_id = wp_insert_post( [
+            'post_title'   => 'Literasi & Inklusi Keuangan Syariah',
+            'post_name'    => 'literasi-keuangan',
+            'post_parent'  => $parent_id,
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $lit_id && ! is_wp_error( $lit_id ) ) {
+            update_post_meta( $lit_id, '_wp_page_template', 'page-literasi.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $lit_page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-literasi.php' ) {
+            update_post_meta( $lit_page->ID, '_wp_page_template', 'page-literasi.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_literasi_page' );
+
+/**
+ * Otomatis pastikan halaman 'Kontak' terdaftar di database
+ * agar URL /kontak/ langsung aktif dengan page-kontak.php
+ */
+function wakalumi_ensure_kontak_page() {
+    $page = get_page_by_path( 'kontak' ) ?: get_page_by_path( 'contact' );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( [
+            'post_title'   => 'Kontak',
+            'post_name'    => 'kontak',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-kontak.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-kontak.php' ) {
+            update_post_meta( $page->ID, '_wp_page_template', 'page-kontak.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_kontak_page' );
 
 /**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
