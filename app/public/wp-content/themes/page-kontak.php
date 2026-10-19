@@ -35,11 +35,11 @@ if ( strpos( $wa_display, '62' ) === 0 ) {
 $jam_week   = get_option( 'options_jam_operasional_weekday', '08:00 - 15:00 WIB' );
 $jam_end    = get_option( 'options_jam_operasional_weekend', 'Tutup' );
 
-// Media Sosial
-$social_ig  = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
-$social_fb  = get_option( 'options_social_facebook', 'https://facebook.com/bprswakalumi' );
-$social_li  = get_option( 'options_social_linkedin', 'https://linkedin.com/company/bprswakalumi' );
-$social_yt  = get_option( 'options_social_youtube', 'https://www.youtube.com/@bprswakalumi' );
+// Media Sosial (Full CRUD Dinamis)
+$social_list = function_exists( 'wakalumi_get_social_media_list' ) ? wakalumi_get_social_media_list() : [];
+$active_socials = array_values( array_filter( $social_list, function( $item ) {
+    return ( ( $item['status'] ?? 'aktif' ) === 'aktif' ) && ! empty( $item['url'] );
+}) );
 
 // Maps Embed
 $maps_embed = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.778980156602!2d106.76267921184164!3d-6.292752361567173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3aa7230643f%3A0xe76da8f0b25c55b0!2sBPR%20Syariah%20Wakalumi.%20PT!5e0!3m2!1sen!2sid!4v1792290594792!5m2!1sen!2sid' );
@@ -325,8 +325,16 @@ $gmaps_app_url = 'https://maps.google.com/?q=BPR+Syariah+Wakalumi+Ciputat';
     </section>
 
     <!-- ========================================================================
-         SECTION 3: MEDIA SOSIAL RESMI PERSEROAN (SOCIAL MEDIA HUB)
+         SECTION 3: MEDIA SOSIAL RESMI PERSEROAN (SOCIAL MEDIA HUB - FULL CRUD)
          ======================================================================== -->
+    <?php if ( ! empty( $active_socials ) ) : 
+        $soc_count  = count( $active_socials );
+        $grid_class = ( $soc_count <= 2 ) 
+            ? 'grid grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto gap-6 sm:gap-8' 
+            : ( ( $soc_count === 3 ) 
+                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-6 sm:gap-8' 
+                : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6' );
+    ?>
     <section class="section py-16 sm:py-20 relative z-10 bg-slate-50/70 dark:bg-dark-surface/50 border-b border-slate-200/80 dark:border-dark-border/80">
         <div class="container-wide">
             
@@ -342,163 +350,62 @@ $gmaps_app_url = 'https://maps.google.com/?q=BPR+Syariah+Wakalumi+Ciputat';
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6">
+            <div class="<?php echo esc_attr( $grid_class ); ?>">
+                <?php 
+                foreach ( $active_socials as $s_idx => $soc ) : 
+                    $p_key    = esc_attr( $soc['platform'] ?? 'custom' );
+                    $p_config = function_exists( 'wakalumi_get_social_platform_config' ) ? wakalumi_get_social_platform_config( $p_key ) : [];
+                    $title    = ! empty( $soc['title'] ) ? $soc['title'] : ( $p_config['name'] ?? 'Media Sosial' );
+                    $nama     = ! empty( $soc['nama_akun'] ) ? $soc['nama_akun'] : $title;
+                    $subtitle = ! empty( $soc['subtitle'] ) ? $soc['subtitle'] : 'Kanal Resmi Perseroan';
+                    $desc     = ! empty( $soc['desc'] ) ? $soc['desc'] : 'Kunjungi kanal resmi kami untuk informasi terkini seputar Bank Syariah Wakalumi.';
+                    $url      = esc_url( $soc['url'] );
+                    $btn_text = ! empty( $soc['btn_text'] ) ? $soc['btn_text'] : ( 'Kunjungi ' . $title );
+                    $border_g = $p_config['border_grad'] ?? 'from-teal-500/30 via-emerald-500/20 to-cyan-500/30 hover:from-teal-500 hover:to-cyan-500 hover:shadow-teal-500/15';
+                    $icon_bg  = $p_config['icon_bg'] ?? 'bg-teal-600 text-white';
+                    $badge_cl = $p_config['badge_class'] ?? 'bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200/80';
+                    $link_cl  = $p_config['link_class'] ?? 'text-teal-700 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300';
+                    $icon_svg = $p_config['svg'] ?? '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>';
+                ?>
+                    <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br <?php echo esc_attr( $border_g ); ?> hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
+                         data-aos="fade-up" data-aos-delay="<?php echo min( $s_idx * 100, 300 ); ?>">
+                        <div class="relative rounded-[22px] p-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
+                            <div class="wkl-glass-shine"></div>
 
-                <!-- INSTAGRAM CARD -->
-                <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-pink-500/30 via-rose-500/20 to-amber-500/30 hover:from-pink-500 hover:to-amber-500 hover:shadow-xl hover:shadow-pink-500/15 transition-all duration-300 group flex flex-col justify-between"
-                     data-aos="fade-up" data-aos-delay="0">
-                    <div class="relative rounded-[22px] p-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                        <div class="wkl-glass-shine"></div>
-
-                        <div>
-                            <div class="flex items-center justify-between gap-3 mb-5">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                    </svg>
+                            <div>
+                                <div class="flex items-center justify-between gap-3 mb-5">
+                                    <div class="w-12 h-12 rounded-2xl <?php echo esc_attr( $icon_bg ); ?> flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                        <?php echo $icon_svg; ?>
+                                    </div>
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider <?php echo esc_attr( $badge_cl ); ?>">
+                                        <?php echo esc_html( $title ); ?>
+                                    </span>
                                 </div>
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-50 dark:bg-pink-950/70 text-pink-700 dark:text-pink-300 border border-pink-200/80">
-                                    Instagram
-                                </span>
+
+                                <h4 class="text-base font-extrabold text-slate-900 dark:text-white mb-1 truncate" title="<?php echo esc_attr( $nama ); ?>">
+                                    <?php echo esc_html( $nama ); ?>
+                                </h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 truncate">
+                                    <?php echo esc_html( $subtitle ); ?>
+                                </p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                                    <?php echo esc_html( $desc ); ?>
+                                </p>
                             </div>
 
-                            <h4 class="text-base font-extrabold text-slate-900 dark:text-white mb-1">
-                                @bprswakalumi
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                                Warta Visual &amp; Edukasi
-                            </p>
-                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                                Rangkuman infografis produk, tips perencanaan finansial berkah, dan sorotan kegiatan insan BSW.
-                            </p>
+                            <a href="<?php echo $url; ?>" 
+                               target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center justify-between w-full text-xs font-bold <?php echo esc_attr( $link_cl ); ?> pt-3 border-t border-slate-100 dark:border-slate-800">
+                                <span class="truncate pr-2"><?php echo esc_html( $btn_text ); ?></span>
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                            </a>
                         </div>
-
-                        <a href="<?php echo esc_url( $social_ig ); ?>" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center justify-between w-full text-xs font-bold text-pink-700 dark:text-pink-400 hover:text-pink-800 dark:hover:text-pink-300 pt-3 border-t border-slate-100 dark:border-slate-800">
-                            <span>Ikuti @bprswakalumi</span>
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-                        </a>
                     </div>
-                </div>
-
-                <!-- FACEBOOK CARD -->
-                <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-blue-500/30 via-blue-600/20 to-sky-500/30 hover:from-blue-600 hover:to-sky-500 hover:shadow-xl hover:shadow-blue-500/15 transition-all duration-300 group flex flex-col justify-between"
-                     data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative rounded-[22px] p-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                        <div class="wkl-glass-shine"></div>
-
-                        <div>
-                            <div class="flex items-center justify-between gap-3 mb-5">
-                                <div class="w-12 h-12 rounded-2xl bg-[#1877F2] text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                    </svg>
-                                </div>
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200/80">
-                                    Facebook
-                                </span>
-                            </div>
-
-                            <h4 class="text-base font-extrabold text-slate-900 dark:text-white mb-1">
-                                BPR Syariah Wakalumi
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                                Komunitas &amp; CSR
-                            </p>
-                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                                Informasi kegiatan sosial kemasyarakatan, publikasi penyaluran dana CSR, dan artikel keluarga syariah.
-                            </p>
-                        </div>
-
-                        <a href="<?php echo esc_url( $social_fb ); ?>" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center justify-between w-full text-xs font-bold text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 pt-3 border-t border-slate-100 dark:border-slate-800">
-                            <span>Kunjungi Facebook</span>
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- LINKEDIN CARD -->
-                <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-sky-600/30 via-blue-700/20 to-teal-500/30 hover:from-sky-600 hover:to-teal-500 hover:shadow-xl hover:shadow-sky-600/15 transition-all duration-300 group flex flex-col justify-between"
-                     data-aos="fade-up" data-aos-delay="200">
-                    <div class="relative rounded-[22px] p-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                        <div class="wkl-glass-shine"></div>
-
-                        <div>
-                            <div class="flex items-center justify-between gap-3 mb-5">
-                                <div class="w-12 h-12 rounded-2xl bg-[#0A66C2] text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                                    </svg>
-                                </div>
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border border-sky-200/80">
-                                    LinkedIn
-                                </span>
-                            </div>
-
-                            <h4 class="text-base font-extrabold text-slate-900 dark:text-white mb-1">
-                                PT BPRS Wakalumi
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                                Korporasi &amp; Karir
-                            </p>
-                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                                Jejaring profesional perbankan syariah, publikasi tata kelola GCG, dan profil kepemimpinan bank.
-                            </p>
-                        </div>
-
-                        <a href="<?php echo esc_url( $social_li ); ?>" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center justify-between w-full text-xs font-bold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 pt-3 border-t border-slate-100 dark:border-slate-800">
-                            <span>Ikuti di LinkedIn</span>
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- YOUTUBE CARD -->
-                <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-red-500/30 via-rose-600/20 to-amber-500/30 hover:from-red-600 hover:to-amber-500 hover:shadow-xl hover:shadow-red-500/15 transition-all duration-300 group flex flex-col justify-between"
-                     data-aos="fade-up" data-aos-delay="300">
-                    <div class="relative rounded-[22px] p-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                        <div class="wkl-glass-shine"></div>
-
-                        <div>
-                            <div class="flex items-center justify-between gap-3 mb-5">
-                                <div class="w-12 h-12 rounded-2xl bg-[#FF0000] text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                    </svg>
-                                </div>
-                                <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-950/70 text-red-700 dark:text-red-300 border border-red-200/80">
-                                    YouTube
-                                </span>
-                            </div>
-
-                            <h4 class="text-base font-extrabold text-slate-900 dark:text-white mb-1">
-                                Bank Syariah Wakalumi
-                            </h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                                Video Profil &amp; Dokumentasi
-                            </p>
-                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                                Video profil resmi bank, penjelasan produk simpanan, serta liputan seminar dan workshop muamalah.
-                            </p>
-                        </div>
-
-                        <a href="<?php echo esc_url( $social_yt ?: 'https://www.youtube.com' ); ?>" 
-                           target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center justify-between w-full text-xs font-bold text-red-700 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 pt-3 border-t border-slate-100 dark:border-slate-800">
-                            <span>Tonton di YouTube</span>
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
-                        </a>
-                    </div>
-                </div>
-
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- ========================================================================
          SECTION 4: KANTOR PUSAT & PETA LOKASI GOOGLE MAPS

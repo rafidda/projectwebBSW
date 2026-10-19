@@ -269,5 +269,76 @@ function wakalumi_berita_archive_query( $query ) {
 }
 add_action( 'pre_get_posts', 'wakalumi_berita_archive_query' );
 
+// ────────────────────────────────────────────────
+// AUTO-REDIRECT PARENT / EMPTY HUB PAGES TO FIRST ACTIVE CHILD
+// ────────────────────────────────────────────────
+/**
+ * Mengarahkan pengunjung secara otomatis dari halaman induk (parent hub kosong)
+ * ke sub-halaman pertama yang aktif.
+ * Contoh:
+ * - /profil/    -> /profil/tentang-kami/
+ * - /produk/    -> /produk/tabungan-syariah/
+ * - /informasi/ -> /informasi/laporan-publikasi/
+ */
+function wakalumi_redirect_parent_pages() {
+    if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+        return;
+    }
+
+    if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+        return;
+    }
+
+    if ( is_page() ) {
+        global $post;
+        if ( ! $post || ! isset( $post->ID ) ) {
+            return;
+        }
+
+        $slug = strtolower( $post->post_name );
+
+        // 1. Pemetaan eksplisit halaman induk utama website
+        $core_redirects = [
+            'profil'    => home_url( '/profil/tentang-kami/' ),
+            'produk'    => home_url( '/produk/tabungan-syariah/' ),
+            'informasi' => home_url( '/informasi/laporan-publikasi/' ),
+        ];
+
+        if ( isset( $core_redirects[ $slug ] ) ) {
+            $target = $core_redirects[ $slug ];
+            $current_permalink = get_permalink( $post->ID );
+            if ( trailingslashit( $target ) !== trailingslashit( $current_permalink ) ) {
+                wp_safe_redirect( $target, 301 );
+                exit;
+            }
+        }
+
+        // 2. Fallback dinamis untuk halaman induk lain yang tidak memiliki template khusus dan kontennya kosong
+        $template = get_page_template_slug( $post->ID );
+        $has_content = ! empty( trim( strip_tags( $post->post_content ) ) );
+
+        if ( empty( $template ) && ! $has_content ) {
+            $children = get_pages( [
+                'child_of'    => $post->ID,
+                'parent'      => $post->ID,
+                'sort_column' => 'menu_order, post_title',
+                'sort_order'  => 'ASC',
+                'number'      => 1,
+                'post_status' => 'publish',
+            ] );
+
+            if ( ! empty( $children ) && isset( $children[0]->ID ) ) {
+                $child_url = get_permalink( $children[0]->ID );
+                $current_permalink = get_permalink( $post->ID );
+                if ( $child_url && trailingslashit( $child_url ) !== trailingslashit( $current_permalink ) ) {
+                    wp_safe_redirect( $child_url, 301 );
+                    exit;
+                }
+            }
+        }
+    }
+}
+add_action( 'template_redirect', 'wakalumi_redirect_parent_pages' );
+
 
 

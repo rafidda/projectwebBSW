@@ -59,26 +59,26 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_pillars' ) ) {
         return [
             [
                 'id'       => 'pilar_1',
-                'title'    => 'Layanan Jemput Bola (Pick-Up Service)',
-                'sub'      => 'Akses Perbankan Tanpa Batas Ruang & Waktu',
+                'title'    => 'Layanan Jemput Bola Pasar',
+                'sub'      => 'Akses Transaksi Bebas Hambatan',
                 'desc'     => 'Petugas operasional dan Account Officer kami mendatangi langsung pedagang pasar tradisional, warung, dan tempat usaha nasabah untuk transaksi setor/tarik tabungan serta verifikasi pembiayaan mikro syariah tanpa mengganggu waktu berdagang.',
-                'tag'      => 'Inklusi Pasar & Mikro',
+                'tag'      => 'Pasar & Mikro',
                 'icon'     => 'truck',
             ],
             [
                 'id'       => 'pilar_2',
-                'title'    => 'Kemitraan Lembaga Pendidikan & Guru Sekolah',
-                'sub'      => 'Layanan Finansial Berkah Bagi Tenaga Pendidik',
+                'title'    => 'Kemitraan Guru & Sekolah',
+                'sub'      => 'Solusi Finansial Tenaga Pendidik',
                 'desc'     => 'Menyediakan akses layanan simpanan dan pembiayaan syariah bagi para guru dan tenaga kependidikan di sekolah-sekolah, didukung sosialisasi perencanaan keuangan keluarga berakad syariah yang amanah.',
-                'tag'      => 'Inklusi Guru & Sekolah',
+                'tag'      => 'Guru & Sekolah',
                 'icon'     => 'academic-cap',
             ],
             [
                 'id'       => 'pilar_3',
-                'title'    => 'Dukungan Permodalan & Pembinaan UMKM',
-                'sub'      => 'Mempermudah Akses Modal & Mendorong Kemandirian Usaha',
+                'title'    => 'Dukungan Permodalan UMKM',
+                'sub'      => 'Kemudahan Modal Usaha Syariah',
                 'desc'     => 'Mendukung pertumbuhan usaha mikro, kecil, dan menengah melalui skema pembiayaan modal kerja dan investasi syariah yang mudah, transparan, serta mengedepankan prinsip tolong-menolong (ta\'awun) dan bagi hasil yang adil.',
-                'tag'      => 'Pemberdayaan Usaha Mikro',
+                'tag'      => 'Permodalan UMKM',
                 'icon'     => 'sparkles',
             ],
         ];
@@ -113,8 +113,8 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_modules' ) ) {
                 'id'          => 'modul_1',
                 'kategori'    => 'dasar',
                 'kat_label'   => 'Prinsip Dasar Syariah',
-                'sasaran'     => 'Masyarakat Umum & Pemula',
-                'judul'       => 'Prinsip Fikih Muamalah: Mengapa Bank Syariah Bebas Riba?',
+                'sasaran'     => 'Masyarakat Umum',
+                'judul'       => 'Prinsip Fikih Muamalah Bebas Riba',
                 'ringkasan'   => 'Memahami filosofi keadilan ekonomi Islam yang melarang bunga (riba), spekulasi berlebih (maisir), dan ketidakjelasan transaksi (gharar) demi melindungi hak sesama manusia.',
                 'isi_lengkap' => "Perbankan syariah berlandaskan pada prinsip keadilan, keterbukaan, dan kemaslahatan bersama sesuai syariat Islam.\n\nPrinsip Utama yang Ditegakkan:\n1. Bebas Riba (Bunga): Keuntungan diperoleh dari transaksi riil jual-beli (margin) atau bagi hasil usaha nyata (nisbah), bukan dari tambahan bunga atas pinjaman uang.\n2. Bebas Gharar (Ketidakjelasan): Seluruh akad, biaya, hak, dan kewajiban disepakati transparan di awal tanpa ada klausul tersembunyi.\n3. Bebas Maisir (Perjudian/Spekulasi): Dana nasabah tidak dialokasikan untuk aktivitas spekulatif yang merugikan pihak lain.\n4. Investasi Halal & Etis: Bank Syariah Wakalumi hanya menyalurkan dana pembiayaan pada sektor usaha halal yang bermanfaat bagi masyarakat dan lingkungan hidup.",
                 'urutan'      => 1,
@@ -123,8 +123,8 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_modules' ) ) {
                 'id'          => 'modul_2',
                 'kategori'    => 'simpanan',
                 'kat_label'   => 'Simpanan & Tabungan',
-                'sasaran'     => 'Nasabah Penabung & Guru',
-                'judul'       => 'Mengenal Akad Simpanan: Perbedaan Wadiah (Titipan) vs Mudharabah (Bagi Hasil)',
+                'sasaran'     => 'Nasabah & Guru',
+                'judul'       => 'Akad Simpanan: Wadiah vs Mudharabah',
                 'ringkasan'   => 'Panduan memilih produk simpanan syariah yang tepat: Akad Wadiah yang aman murni titipan atau Mudharabah dengan nisbah imbal hasil bagi hasil bulanan.',
                 'isi_lengkap' => "Dalam perbankan syariah, tabungan dan deposito dikelola dengan akad yang jelas sesuai tujuan nasabah:\n\n1. Akad Wadiah Yad Dhamanah (Titipan Bergaransi):\n- Dana nasabah berstatus titipan yang dijamin keamanannya oleh bank dan dapat diambil sewaktu-waktu.\n- Bank dapat memberikan bonus (athaya) sukarela tanpa diperjanjikan di awal.\n- Sangat cocok untuk kebutuhan transaksi harian, tabungan pendidikan, atau tabungan kurban.\n\n2. Akad Mudharabah Mutlaqah (Investasi Bagi Hasil):\n- Nasabah bertindak sebagai pemilik dana (Shahibul Mal) dan bank sebagai pengelola dana (Mudharib).\n- Keuntungan usaha dibagikan setiap bulan berdasarkan porsi bagi hasil (nisbah) yang disepakati di awal (misal 55% nasabah : 45% bank).\n- Sangat cocok untuk Deposito Mudharabah dan tabungan berjangka.",
                 'urutan'      => 2,
@@ -133,8 +133,8 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_modules' ) ) {
                 'id'          => 'modul_3',
                 'kategori'    => 'pembiayaan',
                 'kat_label'   => 'Pembiayaan Syariah',
-                'sasaran'     => 'Pelaku Usaha Mikro & Wirausaha',
-                'judul'       => 'Skema Pembiayaan Syariah: Jual Beli Murabahah vs Modal Kerja Mudharabah',
+                'sasaran'     => 'Pelaku Wirausaha',
+                'judul'       => 'Skema Pembiayaan: Murabahah & Modal Kerja',
                 'ringkasan'   => 'Bagaimana bank syariah menyalurkan modal usaha tanpa bunga: penetapan harga beli dan margin keuntungan tetap, atau kemitraan usaha murni bagi hasil.',
                 'isi_lengkap' => "Penyaluran modal usaha di Bank Syariah Wakalumi tidak menggunakan sistem pinjaman berbunga komersial, melainkan akad-akad kemitraan produktif:\n\n1. Akad Murabahah (Jual Beli dengan Keuntungan Disepakati):\n- Bank membelikan barang kebutuhan usaha/aset yang dibutuhkan nasabah (misal: kendaraan niaga, mesin produksi, renovasi tempat usaha).\n- Bank menjual kepada nasabah sebesar harga beli ditambah margin keuntungan yang disepakati bersama. Angsuran bersifat tetap (fixed) hingga lunas tanpa risiko bunga mengambang.\n\n2. Akad Mudharabah & Musyarakah (Kemitraan Modal & Bagi Hasil):\n- Bank menyediakan permodalan untuk proyek usaha produktif nasabah, dan hasil keuntungan dibagi berdasarkan nisbah riil yang disepakati.\n\n3. Akad Ijarah Multijasa (Sewa Manfaat Jasa):\n- Digunakan untuk pembiayaan kebutuhan biaya pendidikan, porsi haji/umroh, atau kebutuhan konsumtif produktif dengan ujrah (biaya jasa) tetap.",
                 'urutan'      => 3,
@@ -143,8 +143,8 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_modules' ) ) {
                 'id'          => 'modul_4',
                 'kategori'    => 'keuangan',
                 'kat_label'   => 'Manajemen Finansial',
-                'sasaran'     => 'Keluarga & Pengusaha Kecil',
-                'judul'       => 'Tips Cerdas Mengelola Keuangan & Arus Kas Usaha Mikro',
+                'sasaran'     => 'Pengusaha Kecil',
+                'judul'       => 'Manajemen Finansial & Arus Kas UMKM',
                 'ringkasan'   => 'Langkah praktis menyusun anggaran darurat, memisahkan kas pribadi dan modal dagang, serta memanfaatkan pembiayaan syariah yang aman dan terencana.',
                 'isi_lengkap' => "Pengelolaan keuangan yang sehat merupakan kunci keberhasilan dan keberlanjutan usaha mikro dan kecil.\n\nPanduan Mengelola Arus Kas Berkah:\n1. Pisahkan Rekening Usaha dan Pribadi: Selalu gunakan rekening terpisah agar perputaran laba kotor tidak terpakai untuk belanja konsumtif rumah tangga.\n2. Siapkan Pos Dana Cadangan (Dana Darurat): Sisihkan 5-10% dari keuntungan usaha secara berkala ke dalam tabungan syariah berbiaya admin ringan.\n3. Rencanakan Kebutuhan Permodalan dengan Tepat: Pilih skema pembiayaan syariah yang sesuai dengan siklus perputaran usaha, seperti akad Murabahah untuk pengadaan barang atau Mudharabah untuk penambahan modal kerja yang berkeadilan.",
                 'urutan'      => 4,
@@ -153,8 +153,8 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_modules' ) ) {
                 'id'          => 'modul_5',
                 'kategori'    => 'keamanan',
                 'kat_label'   => 'Keamanan Finansial',
-                'sasaran'     => 'Semua Kalangan Masyarakat',
-                'judul'       => 'Waspada Investasi Bodong & Pinjaman Online Ilegal (Prinsip 2L: Legal & Logis)',
+                'sasaran'     => 'Masyarakat Luas',
+                'judul'       => 'Waspada Investasi Bodong & Pinjol Ilegal',
                 'ringkasan'   => 'Panduan resmi mengenali modus penipuan berkedok syariah, bahaya pinjol tanpa izin OJK, serta menjaga keamanan data pribadi perbankan Anda.',
                 'isi_lengkap' => "Otoritas Jasa Keuangan (OJK) bersama Bank Syariah Wakalumi menghimbau masyarakat untuk selalu menerapkan prinsip 2L sebelum menaruh dana atau mengajukan pembiayaan:\n\n1. Legal: Periksa apakah lembaga yang menawarkan investasi atau pinjaman telah memiliki izin usaha resmi dan diawasi oleh OJK/Kemenkop.\n2. Logis: Waspada terhadap janji keuntungan pasti tanpa risiko dalam waktu singkat. Dalam ekonomi syariah, keuntungan selalu berjalan seiring dengan usaha riil (al-ghunmu bil ghurmi).\n\nTips Keamanan Data Perbankan:\n- Jangan pernah membagikan nomor PIN, password, atau kode OTP kepada siapapun, termasuk oknum yang mengaku petugas bank.\n- Selalu verifikasi pesan panggilan atau tawaran pinjaman melalui nomor WhatsApp resmi bank.",
                 'urutan'      => 5,
@@ -163,8 +163,8 @@ if ( ! function_exists( 'wakalumi_get_default_literasi_modules' ) ) {
                 'id'          => 'modul_6',
                 'kategori'    => 'keamanan',
                 'kat_label'   => 'Keamanan Finansial',
-                'sasaran'     => 'Nasabah Deposito & Tabungan',
-                'judul'       => 'Keamanan Simpanan: Mengetahui Hak Jaminan LPS hingga Rp2 Miliar',
+                'sasaran'     => 'Nasabah Simpanan',
+                'judul'       => 'Jaminan Simpanan LPS hingga Rp2 Miliar',
                 'ringkasan'   => 'Simpanan Anda di Bank Syariah Wakalumi aman terlindungi oleh Lembaga Penjamin Simpanan (LPS) dengan memenuhi syarat 3T penjaminan.',
                 'isi_lengkap' => "PT BPRS Wakalumi (Bank Syariah Wakalumi) adalah bank peserta penjaminan Lembaga Penjamin Simpanan (LPS).\n\nKetentuan Penjaminan Simpanan Syariah:\n1. Nilai Maksimal Penjaminan: Simpanan nasabah dijamin hingga Rp2.000.000.000 (Dua Miliar Rupiah) per nasabah per bank.\n2. Kriteria 3T yang Harus Dipenuhi:\n- Tercatat dalam pembukuan bank.\n- Tingkat imbal hasil/bagi hasil wajar sesuai ketentuan batas penjaminan yang ditetapkan LPS.\n- Tidak melakukan tindakan yang merugikan bank (misal: tidak memiliki kredit macet).\n\nDengan perlindungan LPS, nasabah dapat menabung dan berdeposito dengan tenang serta berkah.",
                 'urutan'      => 6,
@@ -206,7 +206,7 @@ if ( ! function_exists( 'wakalumi_get_literasi_form_settings' ) ) {
             'wa_url'    => $wa_url,
             'badge'     => get_option( 'options_literasi_form_badge', 'Kolaborasi Kemitraan Komunitas' ),
             'title'     => get_option( 'options_literasi_form_title', 'Ajukan Sosialisasi & Edukasi Syariah Bersama BSW' ),
-            'desc'      => get_option( 'options_literasi_form_desc', 'Apakah sekolah, komunitas guru, majelis taklim, koperasi, atau asosiasi UMKM Anda ingin mengadakan workshop/edukasi literasi keuangan syariah? Tim edukasi BSW siap hadir memberikan sosialisasi tanpa dipungut biaya (100% Gratis).' ),
+            'desc'      => get_option( 'options_literasi_form_desc', 'Apakah sekolah, komunitas guru, majelis taklim, koperasi, atau asosiasi UMKM Anda ingin mengadakan workshop/edukasi literasi keuangan syariah? Tim edukasi BSW siap hadir memberikan sosialisasi dan koordinasi materi bersama lembaga Anda.' ),
         ];
     }
 }
@@ -405,9 +405,9 @@ function wakalumi_render_literasi_admin_page() {
                 <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Modul Edukasi</div>
                 <div style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 4px;"><?php echo $total_modules; ?> Topik</div>
             </div>
-            <div style="background: #ffffff; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Biaya Sosialisasi Komunitas</div>
-                <div style="font-size: 24px; font-weight: 800; color: #15803d; margin-top: 4px;">100% Gratis</div>
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Program Kemitraan Komunitas</div>
+                <div style="font-size: 24px; font-weight: 800; color: #0f766e; margin-top: 4px;">Siap Kolaborasi</div>
             </div>
         </div>
 

@@ -24,11 +24,16 @@ $tim_list = array_values( array_filter( $all_employees, function( $item ) {
 
 $total_active_emp = count( $tim_list );
 
-// Hitung jumlah karyawan aktif per divisi
-$division_counts = [];
+// Hitung jumlah karyawan aktif per divisi & kelompokkan personel per divisi
+$division_counts  = [];
+$employees_by_div = [];
 foreach ( $tim_list as $emp ) {
     $d = $emp['divisi'] ?? 'operasional';
     $division_counts[ $d ] = ( $division_counts[ $d ] ?? 0 ) + 1;
+    if ( ! isset( $employees_by_div[ $d ] ) ) {
+        $employees_by_div[ $d ] = [];
+    }
+    $employees_by_div[ $d ][] = $emp;
 }
 
 $wa_number  = get_option( 'options_contact_wa', '6281517380388' );
@@ -234,12 +239,68 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
     <section class="relative z-10 py-6">
         <div class="container-wide">
 
-            <!-- EMPLOYEE ID CARD GRID -->
-            <!-- Layout: 2 kolom (mobile) / 3 kolom (tablet) / 4 kolom (desktop) -->
-            <div id="tim-card-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <!-- EMPLOYEE ID CARD DIRECTORY CONTAINER (SEGMENTED BY DIVISION) -->
+            <div id="tim-card-container" class="space-y-12 sm:space-y-16">
                 <?php 
-                foreach ( $tim_list as $index => $emp ) : 
-                    $emp_id       = esc_attr( $emp['id'] ?? ( 'emp_' . $index ) );
+                $rendered_emp_ids = [];
+                $global_card_idx  = 0;
+
+                // Loop setiap divisi dari wp_options (hierarki urutan dinamis dari admin)
+                foreach ( $divisions as $div_key => $div_info ) : 
+                    $div_employees = $employees_by_div[ $div_key ] ?? [];
+                    if ( empty( $div_employees ) ) continue; // Hanya tampilkan divisi yang memiliki personel aktif
+
+                    $div_name     = $div_info['name'] ?? ucfirst( $div_key );
+                    $div_icon     = function_exists( 'wakalumi_get_division_icon_svg' ) 
+                        ? wakalumi_get_division_icon_svg( $div_key, $div_info['icon'] ?? '' ) 
+                        : '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>';
+                    $is_executive = in_array( $div_key, [ 'dps', 'komisaris', 'manajemen' ], true );
+                    $badge_class  = $div_info['badge_class'] ?? 'bg-teal-100 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border-teal-300/60 dark:border-teal-800/60';
+                ?>
+                    <!-- DIVISI SEGMENT: <?php echo esc_html( $div_name ); ?> -->
+                    <div class="tim-division-segment" 
+                         data-division-slug="<?php echo esc_attr( $div_key ); ?>" 
+                         id="divisi-<?php echo esc_attr( $div_key ); ?>">
+
+                        <!-- Division Header Separator Bar -->
+                        <div class="flex items-center justify-between gap-4 mb-6 sm:mb-8 pb-3.5 border-b border-slate-200/90 dark:border-dark-border/90">
+                            <div class="flex items-center gap-3 sm:gap-3.5">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center font-black text-sm shadow-xs border <?php echo esc_attr( $badge_class ); ?>">
+                                    <?php echo $div_icon; ?>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                                        <h3 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                                            <?php echo esc_html( $div_name ); ?>
+                                        </h3>
+                                        <?php if ( $is_executive ) : ?>
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-2xs">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                                Jajaran Eksekutif
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                        Bank Syariah Wakalumi &bull; Direktori Insan Bank
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Member Count Badge -->
+                            <div class="flex items-center gap-2">
+                                <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-teal-700 dark:text-teal-300 shadow-2xs">
+                                    <strong class="font-black"><?php echo count( $div_employees ); ?></strong> Personel
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- ID Cards Sub-Grid: 2 kolom (mobile) / 3 kolom (tablet) / 4 kolom (desktop) -->
+                        <div class="tim-subgrid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                            <?php 
+                            foreach ( $div_employees as $emp ) : 
+                                $global_card_idx++;
+                                $emp_id       = esc_attr( $emp['id'] ?? ( 'emp_' . $global_card_idx ) );
+                                $rendered_emp_ids[] = $emp_id;
                     $emp_nama     = esc_attr( $emp['nama'] ?? '' );
                     $emp_divisi   = esc_attr( $emp['divisi'] ?? 'operasional' );
                     $emp_div_lbl  = esc_attr( $emp['divisi_label'] ?? '' );
@@ -288,7 +349,7 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                          data-division="<?php echo $emp_divisi; ?>"
                          data-keywords="<?php echo esc_attr( $search_keywords ); ?>"
                          data-aos="fade-up" 
-                         data-aos-delay="<?php echo min( ( $index % 4 ) * 80, 240 ); ?>">
+                         data-aos-delay="<?php echo min( ( $global_card_idx % 4 ) * 80, 240 ); ?>">
 
                         <!-- ID Card Container with 1 : 1.56 Aspect Ratio & Glass Shine -->
                         <div class="relative w-full rounded-2xl sm:rounded-3xl transition-all duration-500 cursor-pointer transform group-hover:-translate-y-2 select-none <?php echo $card_wrapper_class; ?>"
@@ -374,7 +435,138 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                         </div>
 
                     </div>
+                            <?php endforeach; ?>
+                        </div><!-- /.tim-subgrid -->
+
+                    </div><!-- /.tim-division-segment -->
                 <?php endforeach; ?>
+
+                <?php 
+                // Fallback: Jika ada personel aktif yang divisinya belum terdaftar dalam $divisions
+                $orphan_employees = array_filter( $tim_list, function( $item ) use ( $rendered_emp_ids ) {
+                    $id = $item['id'] ?? '';
+                    return ! in_array( $id, $rendered_emp_ids, true );
+                });
+
+                if ( ! empty( $orphan_employees ) ) : 
+                ?>
+                    <!-- DIVISI SEGMENT: LAINNYA -->
+                    <div class="tim-division-segment" 
+                         data-division-slug="lainnya" 
+                         id="divisi-lainnya">
+
+                        <!-- Division Header Separator Bar -->
+                        <div class="flex items-center justify-between gap-4 mb-6 sm:mb-8 pb-3.5 border-b border-slate-200/90 dark:border-dark-border/90">
+                            <div class="flex items-center gap-3 sm:gap-3.5">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center font-black text-sm shadow-xs border bg-teal-100 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border-teal-300/60 dark:border-teal-800/60">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                                        Divisi / Bagian Lainnya
+                                    </h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                        Bank Syariah Wakalumi &bull; Direktori Insan Bank
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Member Count Badge -->
+                            <div class="flex items-center gap-2">
+                                <span class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-teal-700 dark:text-teal-300 shadow-2xs">
+                                    <strong class="font-black"><?php echo count( $orphan_employees ); ?></strong> Personel
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- ID Cards Sub-Grid -->
+                        <div class="tim-subgrid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                            <?php 
+                            foreach ( $orphan_employees as $emp ) : 
+                                $global_card_idx++;
+                                $emp_id       = esc_attr( $emp['id'] ?? ( 'emp_' . $global_card_idx ) );
+                                $emp_nama     = esc_attr( $emp['nama'] ?? '' );
+                                $emp_divisi   = esc_attr( $emp['divisi'] ?? 'operasional' );
+                                $emp_div_lbl  = esc_attr( $emp['divisi_label'] ?? 'Umum' );
+                                $emp_jabatan  = esc_attr( $emp['jabatan'] ?? '' );
+                                $emp_nip      = esc_attr( $emp['nip'] ?? '' );
+                                $emp_img      = esc_url( $emp['idcard_image'] ?? '' );
+                                $emp_tingkat  = esc_attr( $emp['tingkat'] ?? 'staff' );
+                                $emp_short_tag = esc_attr( $emp['short_tag'] ?? 'STF' );
+                                $emp_quote    = esc_attr( $emp['quote'] ?? '' );
+                                $emp_status   = esc_attr( $emp['status'] ?? 'aktif' );
+                                $placeholder  = wakalumi_generate_idcard_placeholder( $emp_nama, $emp_jabatan, $emp_div_lbl, $emp_nip, $emp_tingkat, $emp_short_tag );
+                                $card_image   = ! empty( $emp_img ) ? $emp_img : $placeholder;
+                                $search_keywords = strtolower( $emp_nama . ' ' . $emp_nip . ' ' . $emp_jabatan . ' ' . $emp_div_lbl . ' ' . $emp_divisi );
+                                $card_wrapper_class = 'p-[1.5px] bg-gradient-to-br from-teal-200/60 via-slate-200/70 to-emerald-100/50 dark:from-teal-900/40 dark:via-dark-border dark:to-teal-950/40 group-hover:from-teal-500 group-hover:to-emerald-500 shadow-xs hover:shadow-xl hover:shadow-teal-500/20';
+                                $subtitle_color     = 'text-slate-500 dark:text-slate-400 font-medium';
+                            ?>
+                                <div class="tim-employee-card group flex flex-col"
+                                     data-division="<?php echo $emp_divisi; ?>"
+                                     data-keywords="<?php echo esc_attr( $search_keywords ); ?>"
+                                     data-aos="fade-up" 
+                                     data-aos-delay="<?php echo min( ( $global_card_idx % 4 ) * 80, 240 ); ?>">
+
+                                    <div class="relative w-full rounded-2xl sm:rounded-3xl transition-all duration-500 cursor-pointer transform group-hover:-translate-y-2 select-none <?php echo $card_wrapper_class; ?>"
+                                         style="aspect-ratio: 1 / 1.56;"
+                                         data-modal-open="idcard-zoom-modal"
+                                         data-emp-name="<?php echo $emp_nama; ?>"
+                                         data-emp-nip="<?php echo $emp_nip; ?>"
+                                         data-emp-divisi="<?php echo $emp_div_lbl; ?>"
+                                         data-emp-jabatan="<?php echo $emp_jabatan; ?>"
+                                         data-emp-tingkat="<?php echo $emp_tingkat; ?>"
+                                         data-emp-tag="<?php echo $emp_short_tag; ?>"
+                                         data-emp-quote="<?php echo $emp_quote; ?>"
+                                         data-emp-img="<?php echo esc_url( $card_image ); ?>">
+
+                                        <div class="relative w-full h-full rounded-[14px] sm:rounded-[22px] overflow-hidden bg-white dark:bg-dark-card flex flex-col">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></div>
+                                            <div class="wkl-glass-shine"></div>
+                                            <img src="<?php echo esc_url( $card_image ); ?>" 
+                                                 alt="<?php echo esc_attr( 'ID Card ' . $emp_nama ); ?>" 
+                                                 class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                                 loading="lazy">
+                                            <div class="absolute top-2.5 sm:top-3 right-2.5 sm:right-3 z-10 pointer-events-none flex items-center gap-1.5">
+                                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-bold bg-slate-900/75 text-emerald-300 border border-white/20 shadow-xs backdrop-blur-md">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                                    Aktif
+                                                </span>
+                                            </div>
+                                            <div class="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 z-10 pointer-events-none max-w-[65%]">
+                                                <span class="inline-block truncate px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-bold bg-slate-900/75 text-white/90 backdrop-blur-md border border-white/20">
+                                                    <?php echo esc_html( $emp_div_lbl ); ?>
+                                                </span>
+                                            </div>
+                                            <div class="absolute bottom-3 left-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 flex items-center justify-center">
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-600/95 text-white text-[11px] sm:text-xs font-bold shadow-lg backdrop-blur-md">
+                                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"/></svg>
+                                                    Perbesar ID Card
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2.5 text-center px-1">
+                                        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-tight truncate group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                                            <?php echo esc_html( $emp_nama ); ?>
+                                        </h4>
+                                        <?php if ( ! empty( $emp_jabatan ) ) : ?>
+                                            <p class="text-[11px] <?php echo $subtitle_color; ?> truncate mt-0.5">
+                                                <?php echo esc_html( $emp_jabatan ); ?>
+                                            </p>
+                                        <?php endif; ?>
+                                        <?php if ( ! empty( $emp_nip ) ) : ?>
+                                            <p class="text-[10px] text-slate-400 dark:text-slate-500 font-mono tracking-wider truncate mt-0.5">
+                                                <?php echo esc_html( $emp_nip ); ?>
+                                            </p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div><!-- /.tim-subgrid -->
+
+                    </div><!-- /.tim-division-segment -->
+                <?php endif; ?>
             </div>
 
             <!-- EMPTY STATE IF SEARCH YIELDS 0 -->
@@ -553,10 +745,11 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
 <script>
 (function() {
     function initTimKamiPage() {
-        const grid          = document.getElementById('tim-card-grid');
-        if (!grid) return;
+        const container     = document.getElementById('tim-card-container');
+        if (!container) return;
 
-        const cards         = Array.from(grid.querySelectorAll('.tim-employee-card'));
+        const segments      = Array.from(container.querySelectorAll('.tim-division-segment'));
+        const cards         = Array.from(container.querySelectorAll('.tim-employee-card'));
         const tabBtns       = document.querySelectorAll('.tim-tab-btn');
         const searchInput   = document.getElementById('tim-search-input');
         const searchClear   = document.getElementById('tim-search-clear');
@@ -571,35 +764,53 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
         let searchQuery     = '';
 
         function filterCards() {
-            let visible = 0;
+            let totalVisible = 0;
             const q = searchQuery.toLowerCase().trim();
 
-            cards.forEach(card => {
-                const cardDiv = card.getAttribute('data-division') || '';
-                const cardKw  = card.getAttribute('data-keywords') || '';
+            segments.forEach(segment => {
+                const segSlug = segment.getAttribute('data-division-slug') || '';
+                const segCards = Array.from(segment.querySelectorAll('.tim-employee-card'));
+                const matchesDivision = (currentDivision === 'all') || (segSlug === currentDivision);
 
-                const matchesDiv = (currentDivision === 'all') || (cardDiv === currentDivision);
-                const matchesKw  = !q || cardKw.includes(q);
+                if (!matchesDivision) {
+                    segment.style.display = 'none';
+                    segCards.forEach(card => card.style.display = 'none');
+                    return;
+                }
 
-                if (matchesDiv && matchesKw) {
-                    card.style.display = '';
-                    visible++;
+                // If segment matches the active division filter, filter cards within segment by search query
+                let segVisibleCount = 0;
+                segCards.forEach(card => {
+                    const cardKw = card.getAttribute('data-keywords') || '';
+                    const matchesKw = !q || cardKw.includes(q);
+
+                    if (matchesKw) {
+                        card.style.display = '';
+                        segVisibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (segVisibleCount > 0) {
+                    segment.style.display = '';
+                    totalVisible += segVisibleCount;
                 } else {
-                    card.style.display = 'none';
+                    segment.style.display = 'none';
                 }
             });
 
             if (visibleCount) {
-                visibleCount.textContent = visible;
+                visibleCount.textContent = totalVisible;
             }
 
             if (emptyState) {
-                if (visible === 0) {
+                if (totalVisible === 0) {
                     emptyState.classList.remove('hidden');
-                    grid.classList.add('hidden');
+                    container.classList.add('hidden');
                 } else {
                     emptyState.classList.add('hidden');
-                    grid.classList.remove('hidden');
+                    container.classList.remove('hidden');
                 }
             }
         }
@@ -630,6 +841,14 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
 
                 currentDivision = this.getAttribute('data-division') || 'all';
                 filterCards();
+
+                // If a specific division was selected, smoothly scroll to that division's segment header
+                if (currentDivision !== 'all') {
+                    const targetSegment = document.getElementById('divisi-' + currentDivision);
+                    if (targetSegment) {
+                        targetSegment.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
             });
         });
 
@@ -809,7 +1028,7 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
         }
 
         // Bind clicks to card triggers
-        grid.querySelectorAll('[data-modal-open="idcard-zoom-modal"]').forEach(trigger => {
+        container.querySelectorAll('[data-modal-open="idcard-zoom-modal"]').forEach(trigger => {
             trigger.addEventListener('click', function(e) {
                 e.preventDefault();
                 openModal(this);

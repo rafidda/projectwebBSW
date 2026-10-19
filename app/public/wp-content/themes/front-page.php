@@ -422,55 +422,67 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
      SECTION 2: LAYANAN CEPAT (Glassmorphism Cards)
      ======================================== -->
 <?php
-// Card configurations
+// Card configurations (Pintu Masuk Utama / Main Discovery Gateways)
 $quick_cards_config = [
     1 => [
-        'color'       => 'primary',
-        'default_t'   => 'Pembiayaan',
-        'default_d'   => 'Solusi modal usaha & konsumtif syariah.',
-        'default_u'   => home_url( '/produk/pembiayaan' ),
-        'default_i'   => 'financing',
-        'grad_blob'   => 'bg-primary-400/20 group-hover:bg-primary-400/40',
-        'grad_box'    => 'from-primary-400 to-primary-600 shadow-primary-500/30',
-        'text_color'  => 'text-primary-600 dark:text-primary-400',
-        'hover_text'  => 'group-hover:text-primary-600 dark:group-hover:text-primary-400',
-        'hover_shad'  => 'hover:shadow-primary-500/20',
+        'color'         => 'primary',
+        'default_t'     => 'Pembiayaan Syariah',
+        'default_d'     => 'Solusi modal usaha UMKM, investasi & multiguna tanpa riba.',
+        'default_u'     => home_url( '/produk/pembiayaan/' ),
+        'default_i'     => 'financing',
+        'default_badge' => 'Solusi Usaha',
+        'grad_blob'     => 'bg-emerald-400/20 group-hover:bg-emerald-400/35',
+        'grad_box'      => 'from-emerald-500 via-teal-600 to-teal-700 shadow-emerald-500/25',
+        'border_grad'   => 'from-emerald-400/40 via-teal-300/30 to-emerald-200/20 dark:from-emerald-500/30 dark:via-teal-500/20 dark:to-transparent',
+        'badge_class'   => 'bg-emerald-100/90 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-700/60',
+        'text_color'    => 'text-emerald-600 dark:text-emerald-400',
+        'hover_text'    => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+        'hover_shad'    => 'hover:shadow-emerald-500/20',
     ],
     2 => [
-        'color'       => 'teal',
-        'default_t'   => 'Produk Dana',
-        'default_d'   => 'Tabungan & deposito aman penuh berkah.',
-        'default_u'   => home_url( '/produk/pendanaan' ),
-        'default_i'   => 'savings',
-        'grad_blob'   => 'bg-teal-400/20 group-hover:bg-teal-400/40',
-        'grad_box'    => 'from-teal-400 to-teal-600 shadow-teal-500/30',
-        'text_color'  => 'text-teal-600 dark:text-teal-400',
-        'hover_text'  => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
-        'hover_shad'  => 'hover:shadow-teal-500/20',
+        'color'         => 'teal',
+        'default_t'     => 'Tabungan Syariah',
+        'default_d'     => 'Simpanan amanah berbasis Wadiah & Mudharabah bebas riba.',
+        'default_u'     => home_url( '/produk/tabungan-syariah/' ),
+        'default_i'     => 'savings',
+        'default_badge' => 'Bebas Biaya Adm',
+        'grad_blob'     => 'bg-teal-400/20 group-hover:bg-teal-400/35',
+        'grad_box'      => 'from-teal-400 via-teal-600 to-cyan-600 shadow-teal-500/25',
+        'border_grad'   => 'from-teal-400/40 via-cyan-300/30 to-teal-200/20 dark:from-teal-500/30 dark:via-cyan-500/20 dark:to-transparent',
+        'badge_class'   => 'bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300/60 dark:border-teal-700/60',
+        'text_color'    => 'text-teal-600 dark:text-teal-400',
+        'hover_text'    => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+        'hover_shad'    => 'hover:shadow-teal-500/20',
     ],
     3 => [
-        'color'       => 'amber',
-        'default_t'   => 'Simulasi',
-        'default_d'   => 'Hitung estimasi margin & angsuran mudah.',
-        'default_u'   => home_url( '/simulasi' ),
-        'default_i'   => 'calculator',
-        'grad_blob'   => 'bg-amber-400/20 group-hover:bg-amber-400/40',
-        'grad_box'    => 'from-amber-400 to-amber-600 shadow-amber-500/30',
-        'text_color'  => 'text-amber-600 dark:text-amber-400',
-        'hover_text'  => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
-        'hover_shad'  => 'hover:shadow-amber-500/20',
+        'color'         => 'cyan',
+        'default_t'     => 'Deposito Syariah',
+        'default_d'     => 'Investasi berjangka bagi hasil optimal, aman & dijamin LPS.',
+        'default_u'     => home_url( '/produk/deposito-syariah/' ),
+        'default_i'     => 'deposit',
+        'default_badge' => 'Bagi Hasil & LPS',
+        'grad_blob'     => 'bg-cyan-400/20 group-hover:bg-cyan-400/35',
+        'grad_box'      => 'from-cyan-500 via-blue-500 to-indigo-600 shadow-cyan-500/25',
+        'border_grad'   => 'from-cyan-400/40 via-blue-300/30 to-cyan-200/20 dark:from-cyan-500/30 dark:via-blue-500/20 dark:to-transparent',
+        'badge_class'   => 'bg-cyan-100/90 dark:bg-cyan-950/80 text-cyan-800 dark:text-cyan-300 border border-cyan-300/60 dark:border-cyan-700/60',
+        'text_color'    => 'text-cyan-600 dark:text-cyan-400',
+        'hover_text'    => 'group-hover:text-cyan-600 dark:group-hover:text-cyan-400',
+        'hover_shad'    => 'hover:shadow-cyan-500/20',
     ],
     4 => [
-        'color'       => 'blue',
-        'default_t'   => 'Laporan',
-        'default_d'   => 'Akses laporan kinerja transparansi Bank.',
-        'default_u'   => home_url( '/informasi/laporan' ),
-        'default_i'   => 'report',
-        'grad_blob'   => 'bg-blue-400/20 group-hover:bg-blue-400/40',
-        'grad_box'    => 'from-blue-400 to-blue-600 shadow-blue-500/30',
-        'text_color'  => 'text-blue-600 dark:text-blue-400',
-        'hover_text'  => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
-        'hover_shad'  => 'hover:shadow-blue-500/20',
+        'color'         => 'amber',
+        'default_t'     => 'Simulasi Angsuran',
+        'default_d'     => 'Hitung estimasi plafon, tenor & angsuran bulanan transparan.',
+        'default_u'     => home_url( '/produk/pembiayaan/#kalkulator' ),
+        'default_i'     => 'calculator',
+        'default_badge' => 'Kalkulator Cepat',
+        'grad_blob'     => 'bg-amber-400/20 group-hover:bg-amber-400/35',
+        'grad_box'      => 'from-amber-400 via-orange-500 to-amber-600 shadow-amber-500/25',
+        'border_grad'   => 'from-amber-400/40 via-orange-300/30 to-amber-200/20 dark:from-amber-500/30 dark:via-orange-500/20 dark:to-transparent',
+        'badge_class'   => 'bg-amber-100/90 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300/60 dark:border-amber-700/60',
+        'text_color'    => 'text-amber-600 dark:text-amber-400',
+        'hover_text'    => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+        'hover_shad'    => 'hover:shadow-amber-500/20',
     ],
 ];
 
@@ -484,31 +496,31 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
     function wakalumi_render_card_icon( string $icon_key = 'financing' ): string {
         switch ( $icon_key ) {
             case 'card':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3" stroke-width="2" /><path stroke-linecap="round" stroke-linejoin="round" d="M2 10h20" stroke-width="2" /><rect x="5" y="14" width="4" height="2.5" rx="0.5" fill="currentColor" fill-opacity="0.35" stroke-width="0.75" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 15h3" stroke-width="1.75" opacity="0.8" /></svg>';
             case 'calculator':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="2.5" width="17" height="19" rx="3" stroke-width="2" /><rect x="6.5" y="5" width="11" height="4" rx="1" fill="currentColor" fill-opacity="0.35" stroke-width="1.2" /><path stroke-linecap="round" stroke-linejoin="round" d="M7 12h2m2.5 0h2m-4.5 3h2m2.5 0h2m-4.5 3h2m2.5 0h2" stroke-width="2" /></svg>';
             case 'report':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5v3m3-5v5m3-2v2" stroke-width="2" /></svg>';
             case 'savings':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v1.5m0 7v1.5" stroke-width="1.5" opacity="0.8" /></svg>';
             case 'deposit':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333A12.022 12.022 0 0012 9c-2.485 0-4.793.754-6.75 2.033V21h13.5z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5h6" stroke-width="1.5" opacity="0.8" /></svg>';
             case 'transfer':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>';
             case 'shield':
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>';
             case 'financing':
             case 'chart':
             case 'investment':
             default:
-                return '<svg class="w-8 h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>';
+                return '<svg class="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18h14" stroke-width="1.5" opacity="0.6" /></svg>';
         }
     }
 }
 ?>
-<section class="relative z-10 -mt-16 md:-mt-24 bg-slate-50 dark:bg-dark-surface rounded-t-[2rem] md:rounded-t-[4rem] shadow-[0_-20px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_-20px_40px_rgba(0,0,0,0.5)] pb-16 pt-10 md:pt-16">
+<section class="relative z-10 -mt-16 md:-mt-24 bg-slate-50 dark:bg-dark-surface rounded-t-[2rem] md:rounded-t-[4rem] shadow-[0_-20px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_-20px_40px_rgba(0,0,0,0.45)] pb-16 pt-10 md:pt-16">
     <div class="container-wide">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 md:gap-6" data-aos="fade-up" data-aos-delay="100">
             <?php for ( $i = 1; $i <= 4; $i++ ) :
                 $cfg        = $quick_cards_config[$i];
                 $c_title    = get_option( "options_quick_card_{$i}_title", $cfg['default_t'] );
@@ -516,24 +528,85 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
                 $c_url      = get_option( "options_quick_card_{$i}_url", $cfg['default_u'] );
                 $c_icon     = get_option( "options_quick_card_{$i}_icon", $cfg['default_i'] );
                 $c_image    = get_option( "options_quick_card_{$i}_image", '' );
+
+                // Intelligent dynamic micro-badge fallback
+                $c_badge = get_option( "options_quick_card_{$i}_badge", '' );
+                if ( empty( $c_badge ) ) {
+                    if ( stripos( $c_title, 'tabungan' ) !== false ) {
+                        $c_badge = 'Bebas Biaya Adm';
+                    } elseif ( stripos( $c_title, 'deposito' ) !== false ) {
+                        $c_badge = 'Bagi Hasil Optimal';
+                    } elseif ( stripos( $c_title, 'pembiayaan' ) !== false ) {
+                        $c_badge = 'Solusi Usaha';
+                    } elseif ( stripos( $c_title, 'simulasi' ) !== false || stripos( $c_title, 'kalkulator' ) !== false ) {
+                        $c_badge = 'Kalkulator Cepat';
+                    } elseif ( stripos( $c_title, 'laporan' ) !== false ) {
+                        $c_badge = 'Transparansi GCG';
+                    } else {
+                        $c_badge = $cfg['default_badge'] ?? 'Layanan Bank';
+                    }
+                }
             ?>
                 <!-- Card <?php echo $i; ?>: <?php echo esc_html( $c_title ); ?> -->
-                <a href="<?php echo esc_url( $c_url ); ?>" class="group block relative rounded-3xl p-1 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl <?php echo esc_attr( $cfg['hover_shad'] ); ?>">
-                    <div class="absolute inset-0 bg-gradient-to-br from-white/60 to-white/10 dark:from-white/10 dark:to-white/5 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-3xl transition-colors group-hover:bg-white/80 dark:group-hover:bg-white/20"></div>
-                    <div class="relative h-full bg-white/40 dark:bg-dark-surface/40 backdrop-blur-md rounded-[22px] p-6 flex flex-col items-center text-center overflow-hidden">
-                        <div class="absolute -top-10 -right-10 w-32 h-32 <?php echo esc_attr( $cfg['grad_blob'] ); ?> rounded-full blur-2xl transition-colors"></div>
-                        <div class="w-16 h-16 mb-5 relative transform group-hover:scale-110 transition-transform duration-500 flex items-center justify-center">
-                            <div class="absolute inset-0 bg-gradient-to-br <?php echo esc_attr( $cfg['grad_box'] ); ?> rounded-2xl rotate-6 opacity-70 group-hover:rotate-12 transition-transform shadow-lg"></div>
-                            <div class="absolute inset-0 bg-gradient-to-tl from-white to-slate-50 dark:from-slate-800 dark:to-dark rounded-2xl -rotate-3 group-hover:rotate-0 transition-transform shadow-inner flex items-center justify-center <?php echo esc_attr( $cfg['text_color'] ); ?>">
+                <a href="<?php echo esc_url( $c_url ); ?>" 
+                   class="group block relative rounded-2xl sm:rounded-3xl p-[1.5px] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl <?php echo esc_attr( $cfg['hover_shad'] ); ?> bg-gradient-to-br <?php echo esc_attr( $cfg['border_grad'] ); ?>">
+                    
+                    <!-- Inner Glass Card Container -->
+                    <div class="relative h-full rounded-[15px] sm:rounded-[22px] bg-white/70 dark:bg-dark-surface/85 backdrop-blur-xl p-4 sm:p-5 md:p-6 flex flex-col items-center text-center overflow-hidden border border-white/60 dark:border-white/10 shadow-xs transition-colors duration-500 group-hover:bg-white/90 dark:group-hover:bg-dark-card/90">
+                        
+                        <!-- Signature Diagonal Glass Glare Sweep -->
+                        <div class="wkl-glass-shine"></div>
+
+                        <!-- Ambient Color Glow Blob (Top Right) -->
+                        <div class="absolute -top-12 -right-12 w-32 sm:w-36 h-32 sm:h-36 <?php echo esc_attr( $cfg['grad_blob'] ); ?> rounded-full blur-2xl sm:blur-3xl transition-opacity duration-500 pointer-events-none"></div>
+
+                        <!-- Top Floating Micro Badge -->
+                        <div class="mb-3 sm:mb-4 flex items-center justify-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider <?php echo esc_attr( $cfg['badge_class'] ); ?> shadow-2xs backdrop-blur-md">
+                                <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
+                                <?php echo esc_html( $c_badge ); ?>
+                            </span>
+                        </div>
+
+                        <!-- Central 3D Glass Podium Emblem -->
+                        <div class="relative w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 mb-3.5 sm:mb-4 flex items-center justify-center">
+                            <!-- Glowing Halo -->
+                            <div class="absolute inset-0 bg-gradient-to-br <?php echo esc_attr( $cfg['grad_box'] ); ?> rounded-2xl blur-lg opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-500"></div>
+
+                            <!-- Beveled Outer Glass Frame -->
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/90 via-white/50 to-white/20 dark:from-white/15 dark:via-white/5 dark:to-transparent border border-white/80 dark:border-white/20 shadow-md backdrop-blur-md rotate-3 group-hover:rotate-6 transition-transform duration-500"></div>
+
+                            <!-- Inner Elevated Metallic Tile -->
+                            <div class="relative w-13 h-13 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br <?php echo esc_attr( $cfg['grad_box'] ); ?> shadow-inner flex items-center justify-center text-white transform group-hover:scale-105 group-hover:-rotate-3 transition-all duration-500">
+                                <!-- Specular glossy glass highlight -->
+                                <div class="absolute inset-0 rounded-xl bg-gradient-to-t from-transparent via-white/10 to-white/40 pointer-events-none"></div>
+
                                 <?php if ( ! empty( $c_image ) ) : ?>
-                                    <img src="<?php echo esc_url( $c_image ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" class="w-8 h-8 object-contain drop-shadow-md">
+                                    <img src="<?php echo esc_url( $c_image ); ?>" alt="<?php echo esc_attr( $c_title ); ?>" class="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 object-contain drop-shadow-md relative z-10">
                                 <?php else : ?>
-                                    <?php echo wakalumi_render_card_icon( $c_icon ); ?>
+                                    <div class="relative z-10 drop-shadow-md">
+                                        <?php echo wakalumi_render_card_icon( $c_icon ); ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <h3 class="text-base md:text-lg font-extrabold text-slate-800 dark:text-white mb-2 <?php echo esc_attr( $cfg['hover_text'] ); ?> transition-colors leading-tight"><?php echo esc_html( $c_title ); ?></h3>
-                        <p class="text-[11px] md:text-xs text-slate-500 dark:text-slate-400 font-medium"><?php echo esc_html( $c_desc ); ?></p>
+
+                        <!-- Card Titles & Description -->
+                        <h3 class="text-sm sm:text-base md:text-lg font-extrabold text-slate-900 dark:text-white mb-1.5 <?php echo esc_attr( $cfg['hover_text'] ); ?> transition-colors leading-snug tracking-tight">
+                            <?php echo esc_html( $c_title ); ?>
+                        </h3>
+                        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed line-clamp-2">
+                            <?php echo esc_html( $c_desc ); ?>
+                        </p>
+
+                        <!-- Subtle Interactive Action Gateway Footer -->
+                        <div class="mt-auto pt-3.5 sm:pt-4 w-full border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
+                            <span>Akses Layanan</span>
+                            <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-100 dark:bg-dark-card flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white dark:group-hover:bg-teal-400 dark:group-hover:text-slate-950 transition-all duration-300 transform group-hover:translate-x-1 shadow-2xs">
+                                <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                            </span>
+                        </div>
+
                     </div>
                 </a>
             <?php endfor; ?>
@@ -1520,8 +1593,8 @@ $pk_clean_wa = preg_replace( '/[^0-9]/', '', $pk_wa );
 $pk_wa_url   = 'https://wa.me/' . $pk_clean_wa . '?text=' . rawurlencode( 'Halo Tim Layanan Nasabah Bank Syariah Wakalumi, saya ingin menyampaikan pengaduan terkait layanan perbankan.' );
 $pk_phone    = ! empty( $pk_cfg['phone'] ) ? $pk_cfg['phone'] : '(021) 7471 4555';
 $pk_clean_tel= preg_replace( '/[^0-9\+]/', '', $pk_phone );
-$pk_sla_l    = ! empty( $pk_cfg['sla_lisan'] ) ? $pk_cfg['sla_lisan'] : '5 Hari Kerja';
-$pk_sla_t    = ! empty( $pk_cfg['sla_tertulis'] ) ? $pk_cfg['sla_tertulis'] : '10 Hari Kerja';
+$pk_sla_l    = ! empty( $pk_cfg['sla_card1_time'] ) ? $pk_cfg['sla_card1_time'] : '20 Hari Kerja';
+$pk_sla_t    = ! empty( $pk_cfg['sla_card2_time'] ) ? $pk_cfg['sla_card2_time'] : 'Perpanjangan Maks. 20 Hari Kerja';
 $pk_appk_url = ! empty( $pk_cfg['ojk_appk_url'] ) ? $pk_cfg['ojk_appk_url'] : 'https://kontak157.ojk.go.id';
 $pk_ojk_tel  = ! empty( $pk_cfg['ojk_phone'] ) ? $pk_cfg['ojk_phone'] : '157';
 ?>

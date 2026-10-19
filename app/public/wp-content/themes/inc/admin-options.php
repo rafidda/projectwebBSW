@@ -418,25 +418,236 @@ function wakalumi_clean_maps_embed_url( $raw ) {
 
 /**
  * ─────────────────────────────────────────────────────────────
+ * 2. DATA HELPERS: MEDIA SOSIAL PERSEROAN
+ * ─────────────────────────────────────────────────────────────
+ */
+
+if ( ! function_exists( 'wakalumi_get_default_social_media_list' ) ) {
+    /**
+     * Default resmi media sosial Bank Syariah Wakalumi (Instagram, Facebook, LinkedIn - tanpa YouTube default).
+     *
+     * @return array
+     */
+    function wakalumi_get_default_social_media_list() {
+        return [
+            [
+                'id'        => 'soc_ig',
+                'platform'  => 'instagram',
+                'title'     => 'Instagram',
+                'nama_akun' => '@bprswakalumi',
+                'subtitle'  => 'Warta Visual & Edukasi',
+                'desc'      => 'Rangkuman infografis produk, tips perencanaan finansial berkah, dan sorotan kegiatan insan BSW.',
+                'url'       => get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' ),
+                'btn_text'  => 'Ikuti @bprswakalumi',
+                'urutan'    => 1,
+                'status'    => 'aktif',
+            ],
+            [
+                'id'        => 'soc_fb',
+                'platform'  => 'facebook',
+                'title'     => 'Facebook',
+                'nama_akun' => 'BPR Syariah Wakalumi',
+                'subtitle'  => 'Komunitas & CSR',
+                'desc'      => 'Informasi kegiatan sosial kemasyarakatan, publikasi penyaluran dana CSR, dan artikel keluarga syariah.',
+                'url'       => get_option( 'options_social_facebook', 'https://facebook.com/bprswakalumi' ),
+                'btn_text'  => 'Kunjungi Facebook',
+                'urutan'    => 2,
+                'status'    => 'aktif',
+            ],
+            [
+                'id'        => 'soc_li',
+                'platform'  => 'linkedin',
+                'title'     => 'LinkedIn',
+                'nama_akun' => 'PT BPRS Wakalumi',
+                'subtitle'  => 'Korporasi & Karir',
+                'desc'      => 'Jejaring profesional perbankan syariah, publikasi tata kelola GCG, dan profil kepemimpinan bank.',
+                'url'       => get_option( 'options_social_linkedin', 'https://linkedin.com/company/bprswakalumi' ),
+                'btn_text'  => 'Ikuti di LinkedIn',
+                'urutan'    => 3,
+                'status'    => 'aktif',
+            ],
+        ];
+    }
+}
+
+if ( ! function_exists( 'wakalumi_get_social_media_list' ) ) {
+    /**
+     * Mengambil daftar media sosial resmi dari wp_options (Full CRUD dinamis).
+     *
+     * @return array
+     */
+    function wakalumi_get_social_media_list() {
+        $saved = get_option( 'options_social_media_list', null );
+        if ( is_array( $saved ) && ! empty( $saved ) ) {
+            uasort( $saved, fn( $a, $b ) => ( (int)( $a['urutan'] ?? 0 ) ) <=> ( (int)( $b['urutan'] ?? 0 ) ) );
+            return array_values( $saved );
+        }
+        $defaults = wakalumi_get_default_social_media_list();
+        update_option( 'options_social_media_list', $defaults );
+        return $defaults;
+    }
+}
+
+if ( ! function_exists( 'wakalumi_get_social_platform_config' ) ) {
+    /**
+     * Konfigurasi styling visual, warna border, ikon SVG, dan badge per platform media sosial.
+     *
+     * @param string $platform
+     * @return array
+     */
+    function wakalumi_get_social_platform_config( $platform = 'custom' ) {
+        $configs = [
+            'instagram' => [
+                'name'         => 'Instagram',
+                'icon_bg'      => 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white',
+                'border_grad'  => 'from-pink-500/30 via-rose-500/20 to-amber-500/30 hover:from-pink-500 hover:to-amber-500 hover:shadow-pink-500/15',
+                'badge_class'  => 'bg-pink-50 dark:bg-pink-950/70 text-pink-700 dark:text-pink-300 border-pink-200/80',
+                'link_class'   => 'text-pink-700 dark:text-pink-400 hover:text-pink-800 dark:hover:text-pink-300',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+            ],
+            'facebook' => [
+                'name'         => 'Facebook',
+                'icon_bg'      => 'bg-[#1877F2] text-white',
+                'border_grad'  => 'from-blue-500/30 via-blue-600/20 to-sky-500/30 hover:from-blue-600 hover:to-sky-500 hover:shadow-blue-500/15',
+                'badge_class'  => 'bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border-blue-200/80',
+                'link_class'   => 'text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+            ],
+            'linkedin' => [
+                'name'         => 'LinkedIn',
+                'icon_bg'      => 'bg-[#0A66C2] text-white',
+                'border_grad'  => 'from-sky-600/30 via-blue-700/20 to-teal-500/30 hover:from-sky-600 hover:to-teal-500 hover:shadow-sky-600/15',
+                'badge_class'  => 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200/80',
+                'link_class'   => 'text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>',
+            ],
+            'youtube' => [
+                'name'         => 'YouTube',
+                'icon_bg'      => 'bg-[#FF0000] text-white',
+                'border_grad'  => 'from-red-500/30 via-rose-600/20 to-amber-500/30 hover:from-red-600 hover:to-amber-500 hover:shadow-red-500/15',
+                'badge_class'  => 'bg-red-50 dark:bg-red-950/70 text-red-700 dark:text-red-300 border-red-200/80',
+                'link_class'   => 'text-red-700 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+            ],
+            'tiktok' => [
+                'name'         => 'TikTok',
+                'icon_bg'      => 'bg-slate-950 text-white',
+                'border_grad'  => 'from-slate-800/40 via-rose-500/20 to-cyan-400/30 hover:from-cyan-500 hover:to-rose-500 hover:shadow-cyan-500/15',
+                'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700',
+                'link_class'   => 'text-slate-800 dark:text-cyan-400 hover:text-black dark:hover:text-cyan-300',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-1.01-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>',
+            ],
+            'x' => [
+                'name'         => 'X (Twitter)',
+                'icon_bg'      => 'bg-black text-white',
+                'border_grad'  => 'from-slate-700/40 via-slate-600/30 to-slate-800/40 hover:from-slate-700 hover:to-slate-900 hover:shadow-slate-500/15',
+                'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700',
+                'link_class'   => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white',
+                'svg'          => '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+            ],
+            'threads' => [
+                'name'         => 'Threads',
+                'icon_bg'      => 'bg-slate-900 text-white',
+                'border_grad'  => 'from-slate-800/40 via-zinc-600/30 to-slate-900/40 hover:from-zinc-700 hover:to-slate-900 hover:shadow-zinc-500/15',
+                'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700',
+                'link_class'   => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.212-8.184-3.534C2.277 18.252 1.5 15.347 1.5 11.968 1.5 8.59 2.277 5.684 3.995 3.39 5.845 1.069 8.598-.119 12.179-.095c3.604.024 6.376 1.229 8.24 3.582 1.704 2.152 2.471 5.039 2.471 8.58 0 .414-.336.75-.75.75s-.75-.336-.75-.75c0-3.238-.688-5.834-2.17-7.705-1.637-2.067-4.103-3.136-7.332-3.157-3.197-.021-5.632.997-7.237 3.027-1.526 1.93-2.227 4.542-2.227 7.766 0 3.224.701 5.836 2.227 7.766 1.605 2.03 4.04 3.048 7.237 3.027 2.378-.016 4.318-.621 5.766-1.799 1.488-1.211 2.327-2.935 2.427-4.985H12.19c-2.482 0-4.636-1.554-5.361-3.866-.827-2.639.299-5.409 2.678-6.589 1.309-.649 2.8-.829 4.2-.507 1.334.307 2.471 1.085 3.203 2.19.467.705.787 1.521.954 2.417.378-.073.743-.167 1.092-.284.453-.153.882-.338 1.282-.553-.393-2.05-1.341-3.791-2.748-5.042-1.921-1.708-4.524-2.585-7.739-2.607-4.047-.027-7.147 1.353-9.215 4.101C-1.02 13.911-1.02 17.519.539 20.301c1.947 3.475 5.373 5.309 9.907 5.309.414 0 .75-.336.75-.75s-.336-.75-.75-.75z"/></svg>',
+            ],
+            'telegram' => [
+                'name'         => 'Telegram',
+                'icon_bg'      => 'bg-[#229ED9] text-white',
+                'border_grad'  => 'from-sky-500/30 via-cyan-500/20 to-blue-500/30 hover:from-sky-500 hover:to-cyan-500 hover:shadow-sky-500/15',
+                'badge_class'  => 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200/80',
+                'link_class'   => 'text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300',
+                'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.943z"/></svg>',
+            ],
+            'custom' => [
+                'name'         => 'Lainnya / Website',
+                'icon_bg'      => 'bg-teal-600 text-white',
+                'border_grad'  => 'from-teal-500/30 via-emerald-500/20 to-cyan-500/30 hover:from-teal-500 hover:to-cyan-500 hover:shadow-teal-500/15',
+                'badge_class'  => 'bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border-teal-200/80',
+                'link_class'   => 'text-teal-700 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300',
+                'svg'          => '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>',
+            ],
+        ];
+
+        return $configs[ $platform ] ?? $configs['custom'];
+    }
+}
+
+/**
+ * ─────────────────────────────────────────────────────────────
  * 2. RENDER: KONTAK & PETA MAPS
  * ─────────────────────────────────────────────────────────────
  */
 function wakalumi_render_contact_page() {
     if ( isset( $_POST['wakalumi_save_contact'] ) && check_admin_referer( 'wakalumi_contact_nonce' ) ) {
+        // 1. Header Banner
         update_option( 'options_contact_page_badge', sanitize_text_field( $_POST['options_contact_page_badge'] ?? '' ) );
         update_option( 'options_contact_page_title', sanitize_text_field( $_POST['options_contact_page_title'] ?? '' ) );
         update_option( 'options_contact_page_desc', sanitize_textarea_field( $_POST['options_contact_page_desc'] ?? '' ) );
 
+        // 2. Kontak Langsung
         update_option( 'options_contact_wa', sanitize_text_field( $_POST['options_contact_wa'] ?? '' ) );
         update_option( 'options_contact_phone', sanitize_text_field( $_POST['options_contact_phone'] ?? '' ) );
         update_option( 'options_contact_email', sanitize_email( $_POST['options_contact_email'] ?? '' ) );
         update_option( 'options_contact_address', sanitize_textarea_field( $_POST['options_contact_address'] ?? '' ) );
 
-        update_option( 'options_social_instagram', esc_url_raw( $_POST['options_social_instagram'] ?? '' ) );
-        update_option( 'options_social_facebook', esc_url_raw( $_POST['options_social_facebook'] ?? '' ) );
-        update_option( 'options_social_linkedin', esc_url_raw( $_POST['options_social_linkedin'] ?? '' ) );
-        update_option( 'options_social_youtube', esc_url_raw( $_POST['options_social_youtube'] ?? '' ) );
+        // 3. Media Sosial Repeater (Full CRUD)
+        $soc_ids       = $_POST['soc_id'] ?? [];
+        $soc_platforms = $_POST['soc_platform'] ?? [];
+        $soc_titles    = $_POST['soc_title'] ?? [];
+        $soc_namas     = $_POST['soc_nama_akun'] ?? [];
+        $soc_subtitles = $_POST['soc_subtitle'] ?? [];
+        $soc_descs     = $_POST['soc_desc'] ?? [];
+        $soc_urls      = $_POST['soc_url'] ?? [];
+        $soc_btn_texts = $_POST['soc_btn_text'] ?? [];
+        $soc_urutans   = $_POST['soc_urutan'] ?? [];
+        $soc_statuses  = $_POST['soc_status'] ?? [];
+
+        $new_social_list = [];
+        for ( $s = 0; $s < count( $soc_platforms ); $s++ ) {
+            $platform = sanitize_key( $soc_platforms[$s] ?? 'instagram' );
+            $url      = esc_url_raw( $soc_urls[$s] ?? '' );
+            $title    = sanitize_text_field( $soc_titles[$s] ?? '' );
+            if ( empty( $title ) ) {
+                $p_config = wakalumi_get_social_platform_config( $platform );
+                $title    = $p_config['name'];
+            }
+
+            $new_social_list[] = [
+                'id'        => sanitize_key( $soc_ids[$s] ?? ( 'soc_' . uniqid() ) ),
+                'platform'  => $platform,
+                'title'     => $title,
+                'nama_akun' => sanitize_text_field( $soc_namas[$s] ?? '' ),
+                'subtitle'  => sanitize_text_field( $soc_subtitles[$s] ?? '' ),
+                'desc'      => sanitize_textarea_field( $soc_descs[$s] ?? '' ),
+                'url'       => $url,
+                'btn_text'  => sanitize_text_field( $soc_btn_texts[$s] ?? '' ),
+                'urutan'    => intval( $soc_urutans[$s] ?? ( $s + 1 ) ),
+                'status'    => ( isset( $soc_statuses[$s] ) && $soc_statuses[$s] === 'nonaktif' ) ? 'nonaktif' : 'aktif',
+            ];
+        }
+
+        uasort( $new_social_list, fn( $a, $b ) => ( (int)( $a['urutan'] ?? 0 ) ) <=> ( (int)( $b['urutan'] ?? 0 ) ) );
+        update_option( 'options_social_media_list', array_values( $new_social_list ) );
+
+        // Sinkronisasi kompatibilitas dengan opsi legacy (footer & header)
+        $legacy_map = [ 'instagram' => '', 'facebook' => '', 'linkedin' => '', 'youtube' => '' ];
+        foreach ( $new_social_list as $item ) {
+            if ( ( $item['status'] ?? 'aktif' ) === 'aktif' && ! empty( $item['url'] ) ) {
+                $p = $item['platform'];
+                if ( array_key_exists( $p, $legacy_map ) && empty( $legacy_map[$p] ) ) {
+                    $legacy_map[$p] = $item['url'];
+                }
+            }
+        }
+        update_option( 'options_social_instagram', $legacy_map['instagram'] );
+        update_option( 'options_social_facebook', $legacy_map['facebook'] );
+        update_option( 'options_social_linkedin', $legacy_map['linkedin'] );
+        update_option( 'options_social_youtube', $legacy_map['youtube'] );
         
+        // 4. Google Maps Embed
         if ( isset( $_POST['options_maps_embed'] ) ) {
             update_option( 'options_maps_embed', wakalumi_clean_maps_embed_url( $_POST['options_maps_embed'] ) );
         }
@@ -444,34 +655,43 @@ function wakalumi_render_contact_page() {
             update_option( 'options_footer_maps_title', sanitize_text_field( $_POST['options_footer_maps_title'] ) );
         }
 
-        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Pengaturan Kontak, Media Sosial & Lokasi Peta berhasil disimpan!</strong></p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Pengaturan Kontak, Media Sosial (Full CRUD) & Lokasi Peta berhasil disimpan!</strong></p></div>';
     }
 
-    $page_badge = get_option( 'options_contact_page_badge', 'Hubungi Kami' );
-    $page_title = get_option( 'options_contact_page_title', 'Kanal Komunikasi & Layanan Resmi' );
-    $page_desc  = get_option( 'options_contact_page_desc', 'Kami siap mendengarkan, melayani, dan memberikan solusi perbankan syariah terbaik untuk Anda. Silakan hubungi kami melalui berbagai saluran resmi yang aman, terpercaya, dan profesional.' );
+    $page_badge  = get_option( 'options_contact_page_badge', 'Hubungi Kami' );
+    $page_title  = get_option( 'options_contact_page_title', 'Kanal Komunikasi & Layanan Resmi' );
+    $page_desc   = get_option( 'options_contact_page_desc', 'Kami siap mendengarkan, melayani, dan memberikan solusi perbankan syariah terbaik untuk Anda. Silakan hubungi kami melalui berbagai saluran resmi yang aman, terpercaya, dan profesional.' );
 
-    $wa         = get_option( 'options_contact_wa', '6281517380388' );
-    $phone      = get_option( 'options_contact_phone', '(021) 7401667 - 7490874' );
-    $email      = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
-    $address    = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
+    $wa          = get_option( 'options_contact_wa', '6281517380388' );
+    $phone       = get_option( 'options_contact_phone', '(021) 7401667 - 7490874' );
+    $email       = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
+    $address     = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
 
-    $social_ig  = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
-    $social_fb  = get_option( 'options_social_facebook', 'https://facebook.com/bprswakalumi' );
-    $social_li  = get_option( 'options_social_linkedin', 'https://linkedin.com/company/bprswakalumi' );
-    $social_yt  = get_option( 'options_social_youtube', 'https://www.youtube.com/@bprswakalumi' );
+    $social_list = wakalumi_get_social_media_list();
 
-    $maps       = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.778980156602!2d106.76267921184164!3d-6.292752361567173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3aa7230643f%3A0xe76da8f0b25c55b0!2sBPR%20Syariah%20Wakalumi.%20PT!5e0!3m2!1sen!2sid!4v1792290594792!5m2!1sen!2sid' );
-    $maps_title = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
+    $maps        = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.778980156602!2d106.76267921184164!3d-6.292752361567173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3aa7230643f%3A0xe76da8f0b25c55b0!2sBPR%20Syariah%20Wakalumi.%20PT!5e0!3m2!1sen!2sid!4v1792290594792!5m2!1sen!2sid' );
+    $maps_title  = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
+
+    $platform_options = [
+        'instagram' => 'Instagram',
+        'facebook'  => 'Facebook',
+        'linkedin'  => 'LinkedIn',
+        'youtube'   => 'YouTube',
+        'tiktok'    => 'TikTok',
+        'x'         => 'X (Twitter)',
+        'threads'   => 'Threads',
+        'telegram'  => 'Telegram',
+        'custom'    => 'Lainnya / Website',
+    ];
     ?>
-    <div class="wrap" style="max-width: 900px; margin-top: 20px;">
+    <div class="wrap" style="max-width: 960px; margin-top: 20px;">
         <h1 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
             <span class="dashicons dashicons-location-alt" style="font-size: 32px; width: 32px; height: 32px; color: #088395;"></span>
-            Pengaturan Kontak, Media Sosial & Lokasi Peta
+            Pengaturan Kontak, Media Sosial (Full CRUD) &amp; Lokasi Peta
         </h1>
 
         <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <form method="post" action="">
+            <form method="post" action="" id="wakalumi-contact-form">
                 <?php wp_nonce_field( 'wakalumi_contact_nonce' ); ?>
 
                 <!-- BAGIAN 1: HEADER BANNER HALAMAN KONTAK -->
@@ -534,39 +754,111 @@ function wakalumi_render_contact_page() {
                     </tr>
                 </table>
 
-                <!-- BAGIAN 3: MEDIA SOSIAL RESMI -->
-                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    🌐 Akun Media Sosial Resmi Perseroan
-                </h2>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><label for="options_social_instagram">URL Akun Instagram:</label></th>
-                        <td>
-                            <input type="url" id="options_social_instagram" name="options_social_instagram" value="<?php echo esc_attr( $social_ig ); ?>" class="large-text" placeholder="https://www.instagram.com/bprswakalumi">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_social_facebook">URL Halaman Facebook:</label></th>
-                        <td>
-                            <input type="url" id="options_social_facebook" name="options_social_facebook" value="<?php echo esc_attr( $social_fb ); ?>" class="large-text" placeholder="https://facebook.com/bprswakalumi">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_social_linkedin">URL Profil LinkedIn:</label></th>
-                        <td>
-                            <input type="url" id="options_social_linkedin" name="options_social_linkedin" value="<?php echo esc_attr( $social_li ); ?>" class="large-text" placeholder="https://linkedin.com/company/bprswakalumi">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_social_youtube">URL Kanal YouTube:</label></th>
-                        <td>
-                            <input type="url" id="options_social_youtube" name="options_social_youtube" value="<?php echo esc_attr( $social_yt ); ?>" class="large-text" placeholder="https://www.youtube.com/@bprswakalumi">
-                        </td>
-                    </tr>
-                </table>
+                <!-- BAGIAN 3: MEDIA SOSIAL RESMI (FULL CRUD REPEATER) -->
+                <div style="margin-top: 35px; padding-top: 15px; border-top: 1px solid #eee;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                        <div>
+                            <h2 style="font-size: 16px; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
+                                <span>🌐</span> Akun Media Sosial Resmi Perseroan (Full CRUD)
+                            </h2>
+                            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">
+                                Kelola kartu media sosial secara dinamis (tambah akun baru, ganti platform, atur urutan, atau hapus). Saluran yang belum memiliki akun (seperti YouTube) dapat dihapus atau dinonaktifkan, dan akan otomatis hilang dari website.
+                            </p>
+                        </div>
+                        <button type="button" id="btn-add-social" class="button button-secondary" style="font-weight: 700; color: #088395; border-color: #088395; border-radius: 6px; padding: 4px 14px;">
+                            + Tambah Media Sosial
+                        </button>
+                    </div>
+
+                    <div id="social-repeater-container" style="display: flex; flex-direction: column; gap: 14px;">
+                        <?php 
+                        foreach ( $social_list as $s_idx => $s_item ) : 
+                            $s_id       = esc_attr( $s_item['id'] ?? ( 'soc_' . $s_idx ) );
+                            $s_platform = esc_attr( $s_item['platform'] ?? 'instagram' );
+                            $s_title    = esc_attr( $s_item['title'] ?? ucfirst( $s_platform ) );
+                            $s_nama     = esc_attr( $s_item['nama_akun'] ?? '' );
+                            $s_subtitle = esc_attr( $s_item['subtitle'] ?? '' );
+                            $s_desc     = esc_textarea( $s_item['desc'] ?? '' );
+                            $s_url      = esc_url( $s_item['url'] ?? '' );
+                            $s_btn      = esc_attr( $s_item['btn_text'] ?? '' );
+                            $s_urutan   = intval( $s_item['urutan'] ?? ( $s_idx + 1 ) );
+                            $s_status   = esc_attr( $s_item['status'] ?? 'aktif' );
+                            $is_active  = ( $s_status === 'aktif' );
+                        ?>
+                            <div class="social-card-item" data-index="<?php echo $s_idx; ?>" style="background: <?php echo $is_active ? '#f8fafc' : '#f1f5f9'; ?>; border: 1px solid #cbd5e1; border-left: 4px solid <?php echo $is_active ? '#088395' : '#94a3b8'; ?>; border-radius: 8px; padding: 16px;">
+                                <input type="hidden" name="soc_id[]" value="<?php echo $s_id; ?>">
+
+                                <!-- Header Kartu -->
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <span style="font-weight: 800; font-size: 13px; color: #0f172a;">
+                                            #<span class="soc-order-num"><?php echo $s_urutan; ?></span> — <span class="soc-title-preview"><?php echo $s_title; ?></span>
+                                        </span>
+                                        <span class="soc-platform-badge" style="font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: #e0f2fe; color: #0369a1;">
+                                            <?php echo strtoupper( $s_platform ); ?>
+                                        </span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <label style="font-size: 12px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                            <input type="checkbox" name="soc_status[<?php echo $s_idx; ?>]" value="aktif" <?php checked( $is_active ); ?> class="soc-status-toggle">
+                                            <span>Tampilkan di Website</span>
+                                        </label>
+                                        <button type="button" class="button-link btn-del-social" style="color: #ef4444; font-size: 12px; text-decoration: none; font-weight: 600;">
+                                            ✕ Hapus
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Grid Input Fields -->
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Platform:</label>
+                                        <select name="soc_platform[]" class="soc-platform-select" style="width: 100%; font-size: 12px;">
+                                            <?php foreach ( $platform_options as $p_val => $p_lbl ) : ?>
+                                                <option value="<?php echo esc_attr( $p_val ); ?>" <?php selected( $s_platform, $p_val ); ?>><?php echo esc_html( $p_lbl ); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Judul Platform:</label>
+                                        <input type="text" name="soc_title[]" value="<?php echo $s_title; ?>" class="soc-title-input" placeholder="Contoh: Instagram" style="width: 100%; font-size: 12px;" required>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Nama Akun / Handle:</label>
+                                        <input type="text" name="soc_nama_akun[]" value="<?php echo $s_nama; ?>" placeholder="Contoh: @bprswakalumi" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Kategori / Subtitle:</label>
+                                        <input type="text" name="soc_subtitle[]" value="<?php echo $s_subtitle; ?>" placeholder="Contoh: Warta Visual & Edukasi" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 2fr 1fr 70px; gap: 12px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">URL Akun / Kanal:</label>
+                                        <input type="url" name="soc_url[]" value="<?php echo $s_url; ?>" placeholder="https://..." style="width: 100%; font-size: 12px;" required>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Teks Tombol Tautan:</label>
+                                        <input type="text" name="soc_btn_text[]" value="<?php echo $s_btn; ?>" placeholder="Contoh: Ikuti Akun" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Urutan:</label>
+                                        <input type="number" name="soc_urutan[]" value="<?php echo $s_urutan; ?>" class="soc-urutan-input" style="width: 100%; font-size: 12px; text-align: center;">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Deskripsi Singkat Kartu:</label>
+                                    <textarea name="soc_desc[]" rows="2" style="width: 100%; font-size: 12px;" placeholder="Deskripsi materi/konten yang dibagikan pada kanal ini..."><?php echo $s_desc; ?></textarea>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
                 <!-- BAGIAN 4: SEMATAN GOOGLE MAPS -->
-                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                <h2 style="font-size: 16px; margin-top: 35px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
                     🗺️ Sematan Google Maps (Halaman Kontak & Footer)
                 </h2>
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
@@ -610,6 +902,151 @@ function wakalumi_render_contact_page() {
             </form>
         </div>
     </div>
+
+    <!-- JavaScript Dinamis untuk Repeater Media Sosial -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('social-repeater-container');
+        const btnAdd    = document.getElementById('btn-add-social');
+        if (!container || !btnAdd) return;
+
+        function bindSocialCard(card) {
+            const titleInput = card.querySelector('.soc-title-input');
+            const titlePrev  = card.querySelector('.soc-title-preview');
+            const platSelect = card.querySelector('.soc-platform-select');
+            const platBadge  = card.querySelector('.soc-platform-badge');
+            const btnDel     = card.querySelector('.btn-del-social');
+            const urutInput  = card.querySelector('.soc-urutan-input');
+            const orderNum   = card.querySelector('.soc-order-num');
+            const statToggle = card.querySelector('.soc-status-toggle');
+
+            if (titleInput && titlePrev) {
+                titleInput.addEventListener('input', function() {
+                    titlePrev.textContent = this.value.trim() || 'Media Sosial Baru';
+                });
+            }
+
+            if (platSelect && platBadge) {
+                platSelect.addEventListener('change', function() {
+                    platBadge.textContent = this.value.toUpperCase();
+                    if (titleInput && !titleInput.value) {
+                        titleInput.value = this.options[this.selectedIndex].text;
+                        if (titlePrev) titlePrev.textContent = titleInput.value;
+                    }
+                });
+            }
+
+            if (urutInput && orderNum) {
+                urutInput.addEventListener('input', function() {
+                    orderNum.textContent = this.value || '1';
+                });
+            }
+
+            if (statToggle) {
+                statToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        card.style.background = '#f8fafc';
+                        card.style.borderLeftColor = '#088395';
+                    } else {
+                        card.style.background = '#f1f5f9';
+                        card.style.borderLeftColor = '#94a3b8';
+                    }
+                });
+            }
+
+            if (btnDel) {
+                btnDel.addEventListener('click', function() {
+                    if (confirm('Apakah Anda yakin ingin menghapus kartu media sosial ini?')) {
+                        card.remove();
+                    }
+                });
+            }
+        }
+
+        container.querySelectorAll('.social-card-item').forEach(bindSocialCard);
+
+        btnAdd.addEventListener('click', function() {
+            const count = container.querySelectorAll('.social-card-item').length;
+            const newIndex = count;
+            const newOrder = count + 1;
+            const newId = 'soc_' + Date.now();
+
+            const cardHtml = `
+                <div class="social-card-item" data-index="${newIndex}" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #088395; border-radius: 8px; padding: 16px;">
+                    <input type="hidden" name="soc_id[]" value="${newId}">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-weight: 800; font-size: 13px; color: #0f172a;">
+                                #<span class="soc-order-num">${newOrder}</span> — <span class="soc-title-preview">Media Sosial Baru</span>
+                            </span>
+                            <span class="soc-platform-badge" style="font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: #e0f2fe; color: #0369a1;">
+                                INSTAGRAM
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="font-size: 12px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" name="soc_status[${newIndex}]" value="aktif" checked class="soc-status-toggle">
+                                <span>Tampilkan di Website</span>
+                            </label>
+                            <button type="button" class="button-link btn-del-social" style="color: #ef4444; font-size: 12px; text-decoration: none; font-weight: 600;">
+                                ✕ Hapus
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 10px;">
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Platform:</label>
+                            <select name="soc_platform[]" class="soc-platform-select" style="width: 100%; font-size: 12px;">
+                                <option value="instagram" selected>Instagram</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="linkedin">LinkedIn</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="x">X (Twitter)</option>
+                                <option value="threads">Threads</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="custom">Lainnya / Website</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Judul Platform:</label>
+                            <input type="text" name="soc_title[]" value="Instagram" class="soc-title-input" placeholder="Contoh: Instagram" style="width: 100%; font-size: 12px;" required>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Nama Akun / Handle:</label>
+                            <input type="text" name="soc_nama_akun[]" value="" placeholder="Contoh: @bprswakalumi" style="width: 100%; font-size: 12px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Kategori / Subtitle:</label>
+                            <input type="text" name="soc_subtitle[]" value="" placeholder="Contoh: Warta Visual & Edukasi" style="width: 100%; font-size: 12px;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 70px; gap: 12px; margin-bottom: 10px;">
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">URL Akun / Kanal:</label>
+                            <input type="url" name="soc_url[]" value="" placeholder="https://..." style="width: 100%; font-size: 12px;" required>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Teks Tombol Tautan:</label>
+                            <input type="text" name="soc_btn_text[]" value="" placeholder="Contoh: Ikuti Akun" style="width: 100%; font-size: 12px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Urutan:</label>
+                            <input type="number" name="soc_urutan[]" value="${newOrder}" class="soc-urutan-input" style="width: 100%; font-size: 12px; text-align: center;">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Deskripsi Singkat Kartu:</label>
+                        <textarea name="soc_desc[]" rows="2" style="width: 100%; font-size: 12px;" placeholder="Deskripsi materi/konten yang dibagikan pada kanal ini..."></textarea>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHtml);
+            const newCard = container.querySelector(`[data-index="${newIndex}"]`);
+            if (newCard) bindSocialCard(newCard);
+        });
+    });
+    </script>
     <?php
 }
 
@@ -695,10 +1132,10 @@ function wakalumi_render_media_page() {
     // Default Quick Cards
     $cards = [];
     $default_cards = [
-        1 => [ 'title' => 'Pembiayaan', 'desc' => 'Solusi modal usaha & konsumtif syariah.', 'url' => home_url( '/produk/pembiayaan' ), 'icon' => 'financing', 'image' => '' ],
-        2 => [ 'title' => 'Produk Dana', 'desc' => 'Tabungan & deposito aman penuh berkah.', 'url' => home_url( '/produk/pendanaan' ), 'icon' => 'savings', 'image' => '' ],
-        3 => [ 'title' => 'Simulasi', 'desc' => 'Hitung estimasi margin & angsuran mudah.', 'url' => home_url( '/simulasi' ), 'icon' => 'calculator', 'image' => '' ],
-        4 => [ 'title' => 'Laporan', 'desc' => 'Akses laporan kinerja transparansi Bank.', 'url' => home_url( '/informasi/laporan' ), 'icon' => 'report', 'image' => '' ],
+        1 => [ 'title' => 'Pembiayaan Syariah', 'desc' => 'Solusi permodalan usaha UMKM, investasi & multiguna tanpa riba.', 'url' => home_url( '/produk/pembiayaan/' ), 'icon' => 'financing', 'image' => '' ],
+        2 => [ 'title' => 'Tabungan Syariah', 'desc' => 'Simpanan amanah berbasis Wadiah & Mudharabah bebas riba.', 'url' => home_url( '/produk/tabungan-syariah/' ), 'icon' => 'savings', 'image' => '' ],
+        3 => [ 'title' => 'Deposito Syariah', 'desc' => 'Investasi berjangka bagi hasil optimal, aman & dijamin LPS.', 'url' => home_url( '/produk/deposito-syariah/' ), 'icon' => 'deposit', 'image' => '' ],
+        4 => [ 'title' => 'Simulasi Angsuran', 'desc' => 'Hitung estimasi plafon, tenor & angsuran bulanan transparan.', 'url' => home_url( '/produk/pembiayaan/#kalkulator' ), 'icon' => 'calculator', 'image' => '' ],
     ];
     for ( $i = 1; $i <= 4; $i++ ) {
         $cards[$i] = [
