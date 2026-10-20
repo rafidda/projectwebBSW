@@ -8,8 +8,8 @@
 get_header();
 ?>
 
-<article class="section-sm">
-    <div class="container-narrow">
+<article class="wkl-page-hero section-sm relative z-10 overflow-hidden">
+    <div class="container-narrow relative z-10">
         <?php while ( have_posts() ) : the_post(); ?>
             <!-- Post Header -->
             <header class="text-center mb-12" data-aos="fade-up">

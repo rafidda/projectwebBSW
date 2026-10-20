@@ -25,6 +25,17 @@ $dep_tenor_kicker  = get_option( 'options_deposito_tenor_kicker', 'Fleksibilitas
 $dep_tenor_title   = get_option( 'options_deposito_tenor_title', 'Pilihan Tenor Fleksibel Sesuai Kebutuhan' );
 $dep_tenor_desc    = get_option( 'options_deposito_tenor_desc', 'Pilih jangka waktu penempatan yang paling cocok untuk rencana likuiditas pribadi maupun perusahaan.' );
 $dep_tenor_cards   = function_exists( 'wakalumi_get_deposito_tenor_cards' ) ? wakalumi_get_deposito_tenor_cards() : [];
+$dep_main_image    = get_option( 'options_deposito_main_image', '' );
+if ( empty( $dep_main_image ) && ! empty( $dep_tenor_cards ) && is_array( $dep_tenor_cards ) ) {
+    foreach ( $dep_tenor_cards as $dc_item ) {
+        if ( ! empty( $dc_item['image'] ) ) {
+            $dep_main_image = $dc_item['image'];
+            break;
+        }
+    }
+}
+$dep_akad_label    = get_option( 'options_deposito_akad', 'Mudharabah Muthlaqah' );
+$dep_min_label     = get_option( 'options_deposito_min_penempatan', 'Rp 5.000.000' );
 
 $dep_t1_badge      = get_option( 'options_deposito_t1_badge', 'Tenor Singkat' );
 $dep_t1_desc       = get_option( 'options_deposito_t1_desc', 'Likuiditas cepat dan fleksibel untuk perputaran dana jangka sangat pendek.' );
@@ -146,7 +157,7 @@ if ( empty( $deposito_nisbah ) ) {
 <!-- ========================================
      HEADER BANNER & BREADCRUMBS
      ======================================== -->
-<section class="relative z-10 pt-8 pb-12 md:pb-16 overflow-hidden bg-transparent border-b border-slate-200/60 dark:border-slate-800/60">
+<section class="wkl-page-hero">
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
     <div class="container-wide relative z-10">
@@ -175,45 +186,61 @@ if ( empty( $deposito_nisbah ) ) {
                     <?php echo esc_html( $dep_page_sub ); ?>
                 </p>
 
-                <!-- Quote Box Resmi -->
-                <div class="p-4 sm:p-5 rounded-2xl bg-white/80 dark:bg-slate-800/80 border-l-4 border-teal-600 border border-slate-200/80 dark:border-slate-700 shadow-sm text-xs sm:text-sm text-slate-700 dark:text-slate-300 italic leading-relaxed">
-                    <?php echo esc_html( $dep_quote ); ?>
+                <!-- Quote Box Resmi (Dual-Tone Minimalist Card) -->
+                <div class="group/quote relative overflow-hidden rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-300/80 dark:hover:border-teal-700/70 transition-all duration-500">
+                    <div class="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-teal-50/80 via-slate-50/70 to-transparent dark:from-teal-950/40 dark:via-slate-800/50 dark:to-transparent border-b border-slate-100 dark:border-slate-800/80 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-teal-800 dark:text-teal-300">Prinsip Akad Mudharabah Muthlaqah</span>
+                    </div>
+                    <div class="p-4 sm:p-5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 italic leading-relaxed">
+                        <?php echo esc_html( $dep_quote ); ?>
+                    </div>
                 </div>
             </div>
 
-            <!-- LPS & Security Badge (4 Kolom) - Enhanced Animation & Holographic Badge -->
+            <!-- LPS & Security Badge (4 Kolom) - Dual-Tone Executive Card -->
             <div class="lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-slate-900/90 border border-teal-200/80 dark:border-teal-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 via-cyan-400 to-teal-600">
-                    <!-- Interactive Slide Watermark Emblem -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                    <div class="wkl-glass-shine"></div>
 
-                    <!-- Holographic Shield Icon with Glow -->
-                    <div class="relative w-16 h-16 rounded-2xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto shadow-lg shadow-teal-500/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
-                        <div class="absolute inset-0 rounded-2xl bg-teal-400/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <svg class="w-8 h-8 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                        </svg>
-                    </div>
+                    <!-- Top Dual-Tone Zone -->
+                    <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                        <!-- Subtle Top Accent Line -->
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-sky-400 to-emerald-500 opacity-85"></div>
 
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                            <?php echo esc_html( $dep_lps_tag ); ?>
+                        <!-- Interactive Slide Watermark Emblem -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <h4 class="text-lg font-black text-slate-900 dark:text-white"><?php echo esc_html( $dep_lps_title ); ?></h4>
+
+                        <!-- Shield Icon with Soft Dual-Tone Ring -->
+                        <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                            <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <?php echo esc_html( $dep_lps_tag ); ?>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $dep_lps_title ); ?></h4>
+                        </div>
                     </div>
 
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                        <?php echo esc_html( $dep_lps_desc ); ?>
-                    </p>
+                    <!-- Bottom Dual-Tone Zone -->
+                    <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            <?php echo esc_html( $dep_lps_desc ); ?>
+                        </p>
 
-                    <div class="pt-2 relative z-10">
-                        <a href="#simulasi" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-teal-600 hover:text-teal-700 dark:text-teal-300 dark:hover:text-teal-200 transition-colors">
-                            <span><?php echo esc_html( $dep_lps_btn ); ?></span>
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                        </a>
+                        <div class="pt-1">
+                            <a href="#simulasi" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/lpsbtn">
+                                <span><?php echo esc_html( $dep_lps_btn ); ?></span>
+                                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -240,74 +267,144 @@ if ( empty( $deposito_nisbah ) ) {
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16" data-aos="fade-up">
-            <?php foreach ( $dep_tenor_cards as $c_idx => $card ) : 
+            <?php 
+            // Palet Dual-Tone Lembut & Profesional (Tidak Gonjreng) untuk tiap kartu tenor
+            $tenor_palettes = [
+                0 => [
+                    'card_border' => 'border-slate-200/85 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-700/80',
+                    'card_shadow' => 'shadow-sm hover:shadow-xl hover:shadow-sky-500/8',
+                    'top_bg'      => 'bg-gradient-to-br from-sky-50/85 via-slate-50/50 to-white dark:from-sky-950/35 dark:via-slate-900 dark:to-slate-900 border-b border-sky-100/80 dark:border-sky-900/40',
+                    'top_bar'     => 'from-sky-400 to-teal-400',
+                    'icon_box'    => 'bg-white dark:bg-slate-800 border-sky-200/80 dark:border-sky-800/60 text-sky-600 dark:text-sky-300 group-hover:bg-sky-600 group-hover:text-white group-hover:border-sky-600',
+                    'badge_text'  => 'text-sky-700 dark:text-sky-300',
+                    'title_hover' => 'group-hover:text-sky-700 dark:group-hover:text-sky-300',
+                    'rate_box'    => 'bg-gradient-to-br from-sky-50/75 to-slate-50/80 dark:from-sky-950/35 dark:to-slate-800/70 border-sky-200/60 dark:border-sky-800/50 group-hover:border-sky-300 dark:group-hover:border-sky-700',
+                    'rate_label'  => 'text-sky-700 dark:text-sky-300',
+                    'rate_val'    => 'text-slate-900 dark:text-white group-hover:text-sky-800 dark:group-hover:text-sky-200',
+                    'cta_text'    => 'text-sky-700 dark:text-sky-300',
+                    'cta_Arrow'   => 'bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-300 group-hover:bg-sky-600 group-hover:text-white',
+                ],
+                1 => [
+                    'card_border' => 'border-slate-200/85 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-700/80',
+                    'card_shadow' => 'shadow-sm hover:shadow-xl hover:shadow-teal-500/8',
+                    'top_bg'      => 'bg-gradient-to-br from-teal-50/85 via-slate-50/50 to-white dark:from-teal-950/35 dark:via-slate-900 dark:to-slate-900 border-b border-teal-100/80 dark:border-teal-900/40',
+                    'top_bar'     => 'from-teal-500 to-cyan-400',
+                    'icon_box'    => 'bg-white dark:bg-slate-800 border-teal-200/80 dark:border-teal-800/60 text-teal-600 dark:text-teal-300 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600',
+                    'badge_text'  => 'text-teal-700 dark:text-teal-300',
+                    'title_hover' => 'group-hover:text-teal-700 dark:group-hover:text-teal-300',
+                    'rate_box'    => 'bg-gradient-to-br from-teal-50/75 to-slate-50/80 dark:from-teal-950/35 dark:to-slate-800/70 border-teal-200/60 dark:border-teal-800/50 group-hover:border-teal-300 dark:group-hover:border-teal-700',
+                    'rate_label'  => 'text-teal-700 dark:text-teal-300',
+                    'rate_val'    => 'text-slate-900 dark:text-white group-hover:text-teal-800 dark:group-hover:text-teal-200',
+                    'cta_text'    => 'text-teal-700 dark:text-teal-300',
+                    'cta_Arrow'   => 'bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-300 group-hover:bg-teal-600 group-hover:text-white',
+                ],
+                2 => [
+                    'card_border' => 'border-slate-200/85 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-700/80',
+                    'card_shadow' => 'shadow-sm hover:shadow-xl hover:shadow-emerald-500/8',
+                    'top_bg'      => 'bg-gradient-to-br from-emerald-50/85 via-slate-50/50 to-white dark:from-emerald-950/35 dark:via-slate-900 dark:to-slate-900 border-b border-emerald-100/80 dark:border-emerald-900/40',
+                    'top_bar'     => 'from-emerald-500 to-teal-400',
+                    'icon_box'    => 'bg-white dark:bg-slate-800 border-emerald-200/80 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-300 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600',
+                    'badge_text'  => 'text-emerald-700 dark:text-emerald-300',
+                    'title_hover' => 'group-hover:text-emerald-700 dark:group-hover:text-emerald-300',
+                    'rate_box'    => 'bg-gradient-to-br from-emerald-50/75 to-slate-50/80 dark:from-emerald-950/35 dark:to-slate-800/70 border-emerald-200/60 dark:border-emerald-800/50 group-hover:border-emerald-300 dark:group-hover:border-emerald-700',
+                    'rate_label'  => 'text-emerald-700 dark:text-emerald-300',
+                    'rate_val'    => 'text-slate-900 dark:text-white group-hover:text-emerald-800 dark:group-hover:text-emerald-200',
+                    'cta_text'    => 'text-emerald-700 dark:text-emerald-300',
+                    'cta_Arrow'   => 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 group-hover:bg-emerald-600 group-hover:text-white',
+                ],
+                3 => [
+                    'card_border' => 'border-teal-300/90 dark:border-teal-700/80 hover:border-teal-500 dark:hover:border-teal-500',
+                    'card_shadow' => 'shadow-md hover:shadow-xl hover:shadow-teal-500/12',
+                    'top_bg'      => 'bg-gradient-to-br from-teal-50/95 via-amber-50/45 to-white dark:from-teal-950/50 dark:via-amber-950/20 dark:to-slate-900 border-b border-teal-200/70 dark:border-teal-800/50',
+                    'top_bar'     => 'from-teal-600 via-teal-500 to-amber-400',
+                    'icon_box'    => 'bg-white dark:bg-slate-800 border-amber-200/90 dark:border-amber-700/60 text-amber-600 dark:text-amber-300 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600',
+                    'badge_text'  => 'text-teal-800 dark:text-teal-300',
+                    'title_hover' => 'group-hover:text-teal-700 dark:group-hover:text-teal-300',
+                    'rate_box'    => 'bg-gradient-to-br from-teal-50/90 via-amber-50/35 to-white dark:from-teal-950/45 dark:via-slate-800/80 dark:to-slate-800 border-teal-200/80 dark:border-teal-700/60 group-hover:border-teal-400',
+                    'rate_label'  => 'text-teal-800 dark:text-teal-300',
+                    'rate_val'    => 'text-teal-900 dark:text-teal-100',
+                    'cta_text'    => 'text-teal-700 dark:text-teal-300',
+                    'cta_Arrow'   => 'bg-teal-100/80 dark:bg-teal-900/70 text-teal-700 dark:text-teal-200 group-hover:bg-teal-600 group-hover:text-white',
+                ],
+            ];
+
+            foreach ( $dep_tenor_cards as $c_idx => $card ) : 
                 $t_num      = intval( $card['tenor_num'] ?? ( $c_idx + 1 ) );
                 $is_pop     = ! empty( $card['is_popular'] );
-                $c_img      = ! empty( $card['image'] ) ? $card['image'] : '';
                 $c_badge    = ! empty( $card['badge'] ) ? $card['badge'] : 'Deposito Syariah';
                 $c_high     = ! empty( $card['highlight'] ) ? $card['highlight'] : '';
                 $c_aro      = ! empty( $card['aro'] ) ? $card['aro'] : 'ARO Tersedia';
-                // Rate display: custom if set, or fallback to $dep_rates[$t_num]['equiv']
                 $c_equiv    = ! empty( $card['equiv'] ) ? $card['equiv'] : ( $dep_rates[ $t_num ]['equiv'] ?? ( $dep_rates[12]['equiv'] ?? '4.23%' ) );
-                $border_cls = $is_pop ? 'border-2 border-teal-500/60 dark:border-teal-500/60' : 'border border-slate-200/80 dark:border-slate-800';
-                $bar_cls    = $is_pop ? 'before:h-1.5 before:bg-gradient-to-r before:from-teal-600 via-primary-500 to-cyan-400 before:scale-x-90' : 'before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75';
+                $pal        = $is_pop ? $tenor_palettes[3] : ( $tenor_palettes[ $c_idx % 4 ] ?? $tenor_palettes[1] );
             ?>
-            <div id="tenor-<?php echo esc_attr( $t_num ); ?>" class="hub-product-card scroll-mt-28 relative rounded-3xl bg-white dark:bg-slate-900 <?php echo esc_attr( $border_cls ); ?> shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden group cursor-pointer flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 <?php echo esc_attr( $bar_cls ); ?> group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out" onclick="window.wklSelectTenor && window.wklSelectTenor(<?php echo esc_attr( $t_num ); ?>)">
+            <div id="tenor-<?php echo esc_attr( $t_num ); ?>" class="hub-product-card scroll-mt-28 relative rounded-3xl bg-white dark:bg-slate-900 border <?php echo esc_attr( $pal['card_border'] . ' ' . $pal['card_shadow'] ); ?> hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden group cursor-pointer flex flex-col justify-between" onclick="window.wklSelectTenor && window.wklSelectTenor(<?php echo esc_attr( $t_num ); ?>)">
                 
+                <!-- Subtle Glass Glare Sweep -->
+                <div class="wkl-glass-shine"></div>
+
+                <!-- Top Gradient Accent Line -->
+                <div class="h-1 w-full bg-gradient-to-r <?php echo esc_attr( $pal['top_bar'] ); ?> opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
+
                 <!-- Sliding Watermark -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-28 h-28 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                <div class="absolute right-0 bottom-4 translate-x-[22%] w-28 h-28 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-700 ease-out group-hover:scale-110 group-hover:-translate-x-2 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                 </div>
 
-                <!-- Top Graphic Slot: Flush edge-to-edge ("ngepas") if image exists -->
-                <?php if ( ! empty( $c_img ) ) : ?>
-                    <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
-                        <img src="<?php echo esc_url( $c_img ); ?>" alt="<?php echo esc_attr( $card['tenor'] ); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                        <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
-                            <?php if ( ! empty( $c_high ) ) : ?>
-                                <span class="px-2.5 py-0.5 rounded-full bg-teal-500 text-white text-[10px] font-black uppercase tracking-wider shadow-sm">
-                                    <?php echo esc_html( $c_high ); ?>
-                                </span>
-                            <?php endif; ?>
-                            <span class="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm text-teal-800 dark:text-teal-300 border-teal-200 dark:border-teal-800">
-                                <?php echo esc_html( $c_badge ); ?>
+                <!-- ZONE 1: Dual-Tone Header Band -->
+                <div class="relative px-6 pt-5 pb-4 <?php echo esc_attr( $pal['top_bg'] ); ?> transition-colors duration-500">
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="text-[11px] font-bold uppercase tracking-wider <?php echo esc_attr( $pal['badge_text'] ); ?> block">
+                            <?php echo esc_html( $c_badge ); ?>
+                        </span>
+                        <?php if ( ! empty( $c_high ) ) : ?>
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-50/90 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/70 text-[10px] font-extrabold uppercase tracking-wider shadow-2xs">
+                                <?php echo esc_html( $c_high ); ?>
                             </span>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Card Body with clean padding -->
-                <div class="p-6 flex flex-col justify-between flex-1 relative z-10 <?php echo ! empty( $c_img ) ? 'pt-5' : ''; ?>">
-                    <div>
-                        <?php if ( empty( $c_img ) ) : ?>
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block"><?php echo esc_html( $c_badge ); ?></span>
-                                <?php if ( ! empty( $c_high ) ) : ?>
-                                    <span class="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/80 text-[10px] font-black uppercase tracking-wider shadow-sm">
-                                        <?php echo esc_html( $c_high ); ?>
-                                    </span>
-                                <?php endif; ?>
-                            </div>
                         <?php endif; ?>
+                    </div>
 
-                        <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
+                    <div class="flex items-center justify-between gap-3">
+                        <h4 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white <?php echo esc_attr( $pal['title_hover'] ); ?> transition-colors duration-300">
                             <?php echo esc_html( $card['tenor'] ); ?>
                         </h4>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                            <?php echo esc_html( $card['desc'] ); ?>
-                        </p>
-                    </div>
-
-                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                        <div class="py-2 px-3 rounded-xl <?php echo $is_pop ? 'bg-teal-50/90 dark:bg-teal-950/40 border border-teal-200/70 dark:border-teal-800/60' : 'bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60'; ?> text-center">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 block">Indikasi Eqv. Rate (*Estimasi)</span>
-                            <span class="text-lg font-black text-teal-800 dark:text-teal-200"><?php echo esc_html( $c_equiv ); ?> p.a.</span>
+                        <div class="w-10 h-10 rounded-2xl border <?php echo esc_attr( $pal['icon_box'] ); ?> flex items-center justify-center flex-shrink-0 shadow-2xs group-hover:scale-105 group-hover:-rotate-3 transition-all duration-500">
+                            <?php if ( $is_pop ) : ?>
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
+                            <?php else : ?>
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <?php endif; ?>
                         </div>
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-bold text-slate-600 dark:text-slate-400"><?php echo esc_html( $c_aro ); ?></span>
-                            <span class="text-teal-600 dark:text-teal-300 font-bold inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                                Hitung &rarr;
+                    </div>
+                </div>
+
+                <!-- ZONE 2: Clean Body & Soft Dual-Tone Rate Box -->
+                <div class="p-6 pt-4 flex flex-col justify-between flex-1 relative z-10 bg-white dark:bg-slate-900">
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-5">
+                        <?php echo esc_html( $card['desc'] ); ?>
+                    </p>
+
+                    <div class="space-y-3 mt-auto">
+                        <div class="py-2.5 px-3.5 rounded-2xl border <?php echo esc_attr( $pal['rate_box'] ); ?> flex items-center justify-between transition-all duration-300">
+                            <div class="text-left">
+                                <span class="text-[10px] font-bold uppercase tracking-wider <?php echo esc_attr( $pal['rate_label'] ); ?> block">Indikasi Eqv. Rate</span>
+                                <span class="text-[10px] text-slate-400 dark:text-slate-500 block">*Estimasi bagi hasil</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-lg sm:text-xl font-black <?php echo esc_attr( $pal['rate_val'] ); ?> transition-colors"><?php echo esc_html( $c_equiv ); ?></span>
+                                <span class="text-[10px] font-bold text-slate-400 block">p.a.</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+                            <span class="inline-flex items-center gap-1.5 font-semibold text-slate-500 dark:text-slate-400">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <?php echo esc_html( $c_aro ); ?>
+                            </span>
+                            <span class="<?php echo esc_attr( $pal['cta_text'] ); ?> font-bold inline-flex items-center gap-1.5">
+                                <span>Simulasi</span>
+                                <span class="w-6 h-6 rounded-full <?php echo esc_attr( $pal['cta_Arrow'] ); ?> inline-flex items-center justify-center transition-all duration-300 group-hover:translate-x-0.5">
+                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                </span>
                             </span>
                         </div>
                     </div>
@@ -316,54 +413,119 @@ if ( empty( $deposito_nisbah ) ) {
             <?php endforeach; ?>
         </div>
 
-        <!-- 6 Keunggulan List Card (Enhanced Executive Card Header & Numbered Badges) -->
-        <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xl group" data-aos="fade-up">
+        <!-- 6 Keunggulan List Card (Dual-Tone Architecture) + 1 Foto Perwakilan Produk Deposito -->
+        <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-[0_12px_36px_-12px_rgba(15,23,42,0.08)] hover:shadow-[0_20px_48px_-12px_rgba(13,148,136,0.14)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group" data-aos="fade-up">
             <!-- Sliding Watermark -->
-            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-48 h-48 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-48 h-48 opacity-[0.03] dark:opacity-[0.025] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.06] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
             </div>
 
-            <!-- Top Header Bar -->
-            <div class="relative z-10 bg-slate-50/90 dark:bg-slate-800/80 border-b border-slate-200/80 dark:border-slate-700/80 px-6 sm:px-8 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-11 h-11 rounded-2xl bg-teal-100/80 dark:bg-teal-900/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 shadow-md shadow-teal-500/10 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+            <!-- Dual-Tone Top Header Bar -->
+            <div class="relative z-10 bg-gradient-to-r from-teal-50/90 via-cyan-50/50 to-slate-50/90 dark:from-teal-950/45 dark:via-slate-800/80 dark:to-slate-900/90 border-b border-teal-100/80 dark:border-slate-800 px-6 sm:px-8 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                         </svg>
                     </div>
                     <div>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-teal-600 dark:text-teal-400 mb-0.5">
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-0.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
                             <?php echo esc_html( $dep_keung_kicker ); ?>
                         </span>
-                        <h4 class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900 dark:text-white transition-colors duration-300 group-hover:text-teal-600 dark:group-hover:text-teal-300">
+                        <h4 class="text-base sm:text-lg lg:text-xl font-extrabold text-slate-900 dark:text-white transition-colors duration-300 group-hover:text-teal-700 dark:group-hover:text-teal-300">
                             <?php echo esc_html( $dep_keung_title ); ?>
                         </h4>
                     </div>
                 </div>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-teal-700 dark:text-teal-300 text-xs font-extrabold shadow-sm w-fit">
-                    <svg class="w-3.5 h-3.5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 border border-teal-200/80 dark:border-teal-800/70 text-teal-700 dark:text-teal-300 text-xs font-extrabold shadow-sm w-fit">
+                    <span class="w-4 h-4 rounded-full bg-teal-50 dark:bg-teal-900/70 flex items-center justify-center text-teal-600 dark:text-teal-300">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    </span>
                     <span><?php echo esc_html( $dep_keung_badge ); ?></span>
                 </div>
             </div>
 
-            <!-- Content Grid -->
-            <div class="relative z-10 p-6 sm:p-8">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <?php 
-                    $k_num = 1;
-                    foreach ( $dep_keunggulan_arr as $item ) : 
-                    ?>
-                        <div class="group/item flex items-start gap-3.5 p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 hover:-translate-y-1 hover:border-teal-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:shadow-teal-500/5 transition-all duration-300 cursor-default">
-                            <div class="w-7 h-7 rounded-xl bg-teal-100/90 dark:bg-teal-900/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:bg-teal-600 group-hover/item:text-white group-hover/item:scale-110 group-hover/item:rotate-6 transition-all duration-300 shadow-sm">
-                                <span class="text-[11px] font-black"><?php echo sprintf( '%02d', $k_num++ ); ?></span>
+            <!-- Dual-Tone Bottom Body Grid -->
+            <div class="relative z-10 p-6 sm:p-8 bg-white dark:bg-slate-900">
+                <?php 
+                // Palet aksen lembut bergantian untuk item keunggulan (tidak gonjreng)
+                $keung_tones = array(
+                    array(
+                        'card_bg'    => 'bg-gradient-to-br from-slate-50/90 via-white to-teal-50/35 dark:from-slate-800/70 dark:via-slate-900 dark:to-teal-950/20',
+                        'border'     => 'border-slate-200/80 dark:border-slate-700/70 hover:border-teal-300 dark:hover:border-teal-700',
+                        'badge_idle' => 'bg-teal-50 dark:bg-teal-900/60 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60',
+                        'badge_hov'  => 'group-hover/item:bg-teal-600 group-hover/item:text-white group-hover/item:border-teal-600',
+                    ),
+                    array(
+                        'card_bg'    => 'bg-gradient-to-br from-slate-50/90 via-white to-sky-50/35 dark:from-slate-800/70 dark:via-slate-900 dark:to-sky-950/20',
+                        'border'     => 'border-slate-200/80 dark:border-slate-700/70 hover:border-sky-300 dark:hover:border-sky-700',
+                        'badge_idle' => 'bg-sky-50 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 border border-sky-200/70 dark:border-sky-800/60',
+                        'badge_hov'  => 'group-hover/item:bg-sky-600 group-hover/item:text-white group-hover/item:border-sky-600',
+                    ),
+                    array(
+                        'card_bg'    => 'bg-gradient-to-br from-slate-50/90 via-white to-emerald-50/35 dark:from-slate-800/70 dark:via-slate-900 dark:to-emerald-950/20',
+                        'border'     => 'border-slate-200/80 dark:border-slate-700/70 hover:border-emerald-300 dark:hover:border-emerald-700',
+                        'badge_idle' => 'bg-emerald-50 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/60',
+                        'badge_hov'  => 'group-hover/item:bg-emerald-600 group-hover/item:text-white group-hover/item:border-emerald-600',
+                    ),
+                );
+                ?>
+                <?php if ( ! empty( $dep_main_image ) ) : ?>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+                        <!-- Kolom Kiri (5 Cols): 1 Foto Perwakilan Produk Deposito -->
+                        <div class="lg:col-span-5">
+                            <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-md group/depimg">
+                                <img src="<?php echo esc_url( $dep_main_image ); ?>" alt="<?php echo esc_attr( $dep_page_title ); ?>" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/depimg:scale-105" loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-slate-950/15 to-transparent opacity-70 group-hover/depimg:opacity-80 transition-opacity duration-500"></div>
+                                <div class="wkl-glass-shine"></div>
+                                <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 border border-slate-200/90 dark:border-slate-700 text-[10px] font-bold shadow-sm backdrop-blur-md">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                        Akad: <?php echo esc_html( $dep_akad_label ); ?>
+                                    </span>
+                                    <span class="inline-block px-2.5 py-1 rounded-full bg-teal-600/95 text-white text-[10px] font-bold shadow-sm backdrop-blur-md">
+                                        Min. <?php echo esc_html( $dep_min_label ); ?>
+                                    </span>
+                                </div>
                             </div>
-                            <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed group-hover/item:text-slate-900 dark:group-hover/item:text-white transition-colors">
-                                <?php echo esc_html( $item ); ?>
-                            </span>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                        <!-- Kolom Kanan (7 Cols): Poin Keunggulan -->
+                        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <?php 
+                            $k_num = 1;
+                            foreach ( $dep_keunggulan_arr as $k_idx => $item ) : 
+                                $kt = $keung_tones[ $k_idx % count( $keung_tones ) ];
+                            ?>
+                                <div class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl <?php echo esc_attr( $kt['card_bg'] . ' ' . $kt['border'] ); ?> border hover:-translate-y-1 hover:shadow-md transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-default">
+                                    <div class="w-8 h-8 rounded-xl <?php echo esc_attr( $kt['badge_idle'] . ' ' . $kt['badge_hov'] ); ?> flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:scale-110 group-hover/item:rotate-3 transition-all duration-400 shadow-sm">
+                                        <span class="text-[11px] font-black"><?php echo sprintf( '%02d', $k_num++ ); ?></span>
+                                    </div>
+                                    <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed group-hover/item:text-slate-900 dark:group-hover/item:text-white transition-colors">
+                                        <?php echo esc_html( $item ); ?>
+                                    </span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php else : ?>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <?php 
+                        $k_num = 1;
+                        foreach ( $dep_keunggulan_arr as $k_idx => $item ) : 
+                            $kt = $keung_tones[ $k_idx % count( $keung_tones ) ];
+                        ?>
+                            <div class="group/item flex items-start gap-3.5 p-4 rounded-2xl <?php echo esc_attr( $kt['card_bg'] . ' ' . $kt['border'] ); ?> border hover:-translate-y-1 hover:shadow-md transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-default">
+                                <div class="w-8 h-8 rounded-xl <?php echo esc_attr( $kt['badge_idle'] . ' ' . $kt['badge_hov'] ); ?> flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:scale-110 group-hover/item:rotate-3 transition-all duration-400 shadow-sm">
+                                    <span class="text-[11px] font-black"><?php echo sprintf( '%02d', $k_num++ ); ?></span>
+                                </div>
+                                <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed group-hover/item:text-slate-900 dark:group-hover/item:text-white transition-colors">
+                                    <?php echo esc_html( $item ); ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -387,7 +549,7 @@ if ( empty( $deposito_nisbah ) ) {
             </p>
         </div>
 
-        <div class="wkl-nisbah-table-wrap max-w-5xl mx-auto overflow-hidden rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-xl bg-white dark:bg-slate-900 relative" data-aos="fade-up">
+        <div class="wkl-nisbah-table-wrap max-w-5xl mx-auto overflow-hidden rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-[0_14px_40px_-12px_rgba(15,23,42,0.1)] bg-white dark:bg-slate-900 relative" data-aos="fade-up">
             <!-- Background Subtle Watermark -->
             <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 w-64 h-64 opacity-[0.03] dark:opacity-[0.025] pointer-events-none">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain">
@@ -396,16 +558,16 @@ if ( empty( $deposito_nisbah ) ) {
             <div class="overflow-x-auto relative z-10">
                 <table class="w-full text-left text-sm">
                     <thead>
-                        <tr class="bg-slate-100/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700">
-                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider">Jangka Waktu</th>
-                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider hidden md:table-cell">Akad &amp; Pengelolaan</th>
-                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-teal-800 dark:text-teal-300">Porsi Nisbah (Nasabah : Bank)</th>
-                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-teal-700 dark:text-teal-300">Indikasi Eqv. Rate (*Estimasi)</th>
-                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-center">Aksi</th>
+                        <tr class="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 text-white border-b border-slate-800">
+                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-slate-200">Jangka Waktu</th>
+                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-slate-200 hidden md:table-cell">Akad &amp; Pengelolaan</th>
+                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-teal-300">Porsi Nisbah (Nasabah : Bank)</th>
+                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-amber-300">Indikasi Eqv. Rate (*Estimasi)</th>
+                            <th class="p-4 sm:p-5 font-bold text-xs uppercase tracking-wider text-center text-slate-200">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                        <?php foreach ( $deposito_nisbah as $row ) : 
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
+                        <?php foreach ( $deposito_nisbah as $r_idx => $row ) : 
                             $p_name    = $row['nisbah_produk'] ?? 'Deposito';
                             $nasabah_p = floatval( $row['nisbah_nasabah'] ?? '40' );
                             $bank_p    = floatval( $row['nisbah_bank'] ?? '60' );
@@ -424,14 +586,14 @@ if ( empty( $deposito_nisbah ) ) {
                             elseif ( strpos( strtolower( $p_name ), '3 bulan' ) !== false ) $tenor_num = 3;
                             elseif ( strpos( strtolower( $p_name ), '6 bulan' ) !== false ) $tenor_num = 6;
                         ?>
-                            <tr class="hover:bg-teal-50/30 dark:hover:bg-slate-800/50 transition-colors group">
+                            <tr class="hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/25 hover:to-transparent dark:hover:from-teal-950/30 dark:hover:to-slate-800/40 transition-all duration-300 group">
                                 <td class="p-4 sm:p-5 font-bold text-slate-900 dark:text-white">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-xl bg-teal-50/90 dark:bg-teal-900/60 border border-teal-200/80 dark:border-teal-800/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-teal-100 dark:group-hover:bg-teal-900/90 group-hover:text-teal-700 dark:group-hover:text-teal-200 group-hover:border-teal-300 dark:group-hover:border-teal-700 transition-all duration-300 shadow-sm">
                                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
                                         </div>
                                         <div>
-                                            <span class="text-sm sm:text-base font-extrabold block"><?php echo esc_html( $p_name ); ?></span>
+                                            <span class="text-sm sm:text-base font-extrabold block group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors"><?php echo esc_html( $p_name ); ?></span>
                                             <span class="text-[11px] text-slate-400 font-medium md:hidden block">Mudharabah Muthlaqah</span>
                                         </div>
                                     </div>
@@ -447,26 +609,26 @@ if ( empty( $deposito_nisbah ) ) {
                                             <span class="text-slate-500 dark:text-slate-400">Bank: <span class="wkl-counter" data-target="<?php echo esc_attr( $bank_p ); ?>" data-suffix="%">0%</span></span>
                                         </div>
                                         <!-- Visual Segmented Bar (Animated Width on Scroll) -->
-                                        <div class="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex">
+                                        <div class="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex p-0.5 gap-0.5">
                                             <div class="wkl-ratio-bar h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-l-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="<?php echo esc_attr( $nasabah_p ); ?>%"></div>
                                             <div class="wkl-ratio-bar-bank h-full bg-slate-300 dark:bg-slate-600 rounded-r-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="<?php echo esc_attr( $bank_p ); ?>%"></div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="p-4 sm:p-5">
-                                    <div class="text-teal-600 dark:text-teal-300 font-black text-base sm:text-lg">
+                                    <div class="inline-flex items-baseline gap-1 px-2.5 py-1 rounded-xl bg-teal-50/80 dark:bg-teal-950/50 border border-teal-200/60 dark:border-teal-800/60 text-teal-700 dark:text-teal-300 font-black text-base sm:text-lg">
                                         <?php if ( $equiv_val > 0 ) : ?>
                                              <span class="wkl-counter" data-target="<?php echo esc_attr( $equiv_val ); ?>" data-decimals="2" data-suffix="%">0.00%</span>
                                         <?php else : ?>
                                             <?php echo esc_html( $equiv_raw ); ?>
                                         <?php endif; ?>
+                                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-400">p.a.</span>
                                     </div>
-                                    <span class="text-[10px] text-slate-400 block">*Estimasi p.a.</span>
                                 </td>
                                 <td class="p-4 sm:p-5 text-center">
-                                    <button type="button" class="px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-600 text-teal-700 hover:text-white dark:bg-teal-950/60 dark:hover:bg-teal-600 dark:text-teal-300 dark:hover:text-white text-xs font-bold transition-all inline-flex items-center gap-1 shadow-sm" onclick="window.wklSelectTenor && window.wklSelectTenor(<?php echo esc_attr( $tenor_num ); ?>)">
+                                    <button type="button" class="group/simbtn px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-teal-600 text-slate-700 hover:text-white dark:bg-slate-800 dark:hover:bg-teal-600 dark:text-slate-200 dark:hover:text-white border border-slate-200/80 dark:border-slate-700 hover:border-teal-600 text-xs font-bold transition-all duration-300 inline-flex items-center gap-1.5 shadow-sm hover:shadow-md" onclick="window.wklSelectTenor && window.wklSelectTenor(<?php echo esc_attr( $tenor_num ); ?>)">
                                         <span>Simulasi</span>
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                        <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/simbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                                     </button>
                                 </td>
                             </tr>
@@ -476,13 +638,15 @@ if ( empty( $deposito_nisbah ) ) {
             </div>
         </div>
 
-        <!-- Sharia Disclaimer Callout -->
-        <div class="max-w-5xl mx-auto mt-5 p-4 rounded-2xl bg-teal-50/70 dark:bg-teal-950/30 border border-teal-200/60 dark:border-teal-800/50 flex items-start gap-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed" data-aos="fade-up">
-            <div class="w-5 h-5 rounded-lg bg-teal-600 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+        <!-- Sharia Disclaimer Callout (Dual-Tone Banner) -->
+        <div class="max-w-5xl mx-auto mt-5 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-teal-200/70 dark:border-teal-800/60 shadow-sm flex flex-col sm:flex-row items-stretch text-xs text-slate-600 dark:text-slate-300 leading-relaxed" data-aos="fade-up">
+            <div class="bg-gradient-to-br from-teal-50 via-cyan-50/70 to-teal-100/50 dark:from-teal-950/70 dark:to-slate-800 px-4 py-3 sm:py-4 border-b sm:border-b-0 sm:border-r border-teal-200/60 dark:border-teal-800/60 flex items-center gap-2.5 sm:w-56 flex-shrink-0">
+                <div class="w-7 h-7 rounded-xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                </div>
+                <strong class="text-teal-950 dark:text-teal-200 font-extrabold text-xs leading-snug"><?php echo esc_html( $dep_sharia_title ); ?></strong>
             </div>
-            <div>
-                <strong class="text-teal-900 dark:text-teal-200 font-bold block mb-0.5"><?php echo esc_html( $dep_sharia_title ); ?></strong>
+            <div class="p-4 flex items-center">
                 <span><?php echo esc_html( $dep_sharia_desc ); ?></span>
             </div>
         </div>
@@ -667,28 +831,37 @@ if ( empty( $deposito_nisbah ) ) {
                 </button>
             </div>
 
-            <!-- Content Individu (Enhanced Card with Sliding Watermark & Spring Elevation) -->
-            <div id="content-ind" class="hub-product-card relative overflow-hidden p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xl group before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out">
+            <!-- Content Individu (Dual-Tone Card with Top Header Band, Interactive List & Footer Band) -->
+            <div id="content-ind" class="hub-product-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-[0_14px_38px_-12px_rgba(15,23,42,0.08)] group transition-all duration-500">
                 <!-- Sliding Watermark -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-40 h-40 opacity-[0.04] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-40 h-40 opacity-[0.035] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                 </div>
 
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-100 dark:border-slate-800">
-                        <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-                            Persyaratan Deposito <?php echo esc_html( $dep_tab1_label ); ?>:
-                        </h4>
-                        <span class="text-[11px] font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 px-2.5 py-0.5 rounded-full border border-teal-200/60 dark:border-teal-800/60">
-                            <?php echo esc_html( $dep_tab1_badge ); ?>
-                        </span>
+                <!-- Dual-Tone Top Header Band -->
+                <div class="relative z-10 px-6 sm:px-8 py-5 bg-gradient-to-r from-teal-50/90 via-cyan-50/50 to-slate-50/80 dark:from-teal-950/45 dark:via-slate-800/80 dark:to-slate-900 border-b border-teal-100/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center shadow-sm group-hover:bg-teal-600 group-hover:text-white transition-all duration-400">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 block">Dokumen Administrasi</span>
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+                                Persyaratan Deposito <?php echo esc_html( $dep_tab1_label ); ?>
+                            </h4>
+                        </div>
                     </div>
+                    <span class="text-[11px] font-bold text-teal-700 dark:text-teal-300 bg-white/95 dark:bg-slate-800 px-3 py-1 rounded-full border border-teal-200/80 dark:border-teal-800/60 shadow-sm">
+                        <?php echo esc_html( $dep_tab1_badge ); ?>
+                    </span>
+                </div>
 
+                <!-- Dual-Tone Middle Body -->
+                <div class="relative z-10 p-6 sm:p-8">
                     <ul class="space-y-3">
                         <?php foreach ( $dep_syarat_ind_arr as $syarat ) : ?>
-                            <li class="group/item flex items-start gap-3.5 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 hover:border-teal-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all duration-300">
-                                <div class="w-6 h-6 rounded-xl bg-teal-100/90 dark:bg-teal-900/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:scale-110 group-hover/item:bg-teal-600 group-hover/item:text-white transition-all shadow-sm">
+                            <li class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl bg-gradient-to-r from-slate-50/90 via-white to-teal-50/25 dark:from-slate-800/60 dark:via-slate-900 dark:to-teal-950/20 border border-slate-200/70 dark:border-slate-700/70 hover:border-teal-300 dark:hover:border-teal-700 hover:translate-x-1 hover:shadow-md transition-all duration-300 ease-out">
+                                <div class="w-6 h-6 rounded-xl bg-teal-50 dark:bg-teal-900/60 border border-teal-200/70 dark:border-teal-800/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:scale-110 group-hover/item:bg-teal-600 group-hover/item:text-white group-hover/item:border-teal-600 transition-all duration-300 shadow-sm">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                                 </div>
                                 <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed group-hover/item:text-slate-900 dark:group-hover/item:text-white transition-colors">
@@ -697,36 +870,48 @@ if ( empty( $deposito_nisbah ) ) {
                             </li>
                         <?php endforeach; ?>
                     </ul>
+                </div>
 
-                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                        <svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                        <span><?php echo esc_html( $dep_syarat_ind_note ); ?></span>
-                    </div>
+                <!-- Dual-Tone Bottom Footer Band -->
+                <div class="relative z-10 px-6 sm:px-8 py-4 bg-slate-50/90 dark:bg-slate-800/60 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-400">
+                    <span class="w-6 h-6 rounded-lg bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    </span>
+                    <span><?php echo esc_html( $dep_syarat_ind_note ); ?></span>
                 </div>
             </div>
 
-            <!-- Content Lembaga (Enhanced Card with Sliding Watermark & Spring Elevation) -->
-            <div id="content-lem" class="hub-product-card relative overflow-hidden p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xl group before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out hidden">
+            <!-- Content Lembaga (Dual-Tone Card with Top Header Band, Interactive List & Footer Band) -->
+            <div id="content-lem" class="hub-product-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-[0_14px_38px_-12px_rgba(15,23,42,0.08)] group transition-all duration-500 hidden">
                 <!-- Sliding Watermark -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-40 h-40 opacity-[0.04] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-40 h-40 opacity-[0.035] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                 </div>
 
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-100 dark:border-slate-800">
-                        <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-                            Persyaratan Deposito <?php echo esc_html( $dep_tab2_label ); ?>:
-                        </h4>
-                        <span class="text-[11px] font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 px-2.5 py-0.5 rounded-full border border-teal-200/60 dark:border-teal-800/60">
-                            <?php echo esc_html( $dep_tab2_badge ); ?>
-                        </span>
+                <!-- Dual-Tone Top Header Band -->
+                <div class="relative z-10 px-6 sm:px-8 py-5 bg-gradient-to-r from-sky-50/90 via-teal-50/50 to-slate-50/80 dark:from-sky-950/45 dark:via-slate-800/80 dark:to-slate-900 border-b border-sky-100/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-sky-200/80 dark:border-sky-800/70 text-sky-600 dark:text-sky-300 flex items-center justify-center shadow-sm group-hover:bg-sky-600 group-hover:text-white transition-all duration-400">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></svg>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 block">Dokumen Korporasi &amp; Institusi</span>
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+                                Persyaratan Deposito <?php echo esc_html( $dep_tab2_label ); ?>
+                            </h4>
+                        </div>
                     </div>
+                    <span class="text-[11px] font-bold text-sky-700 dark:text-sky-300 bg-white/95 dark:bg-slate-800 px-3 py-1 rounded-full border border-sky-200/80 dark:border-sky-800/60 shadow-sm">
+                        <?php echo esc_html( $dep_tab2_badge ); ?>
+                    </span>
+                </div>
 
+                <!-- Dual-Tone Middle Body -->
+                <div class="relative z-10 p-6 sm:p-8">
                     <ul class="space-y-3">
                         <?php foreach ( $dep_syarat_lem_arr as $syarat ) : ?>
-                            <li class="group/item flex items-start gap-3.5 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 hover:border-teal-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all duration-300">
-                                <div class="w-6 h-6 rounded-xl bg-teal-100/90 dark:bg-teal-900/60 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:scale-110 group-hover/item:bg-teal-600 group-hover/item:text-white transition-all shadow-sm">
+                            <li class="group/item flex items-start gap-3.5 p-3.5 rounded-2xl bg-gradient-to-r from-slate-50/90 via-white to-sky-50/25 dark:from-slate-800/60 dark:via-slate-900 dark:to-sky-950/20 border border-slate-200/70 dark:border-slate-700/70 hover:border-sky-300 dark:hover:border-sky-700 hover:translate-x-1 hover:shadow-md transition-all duration-300 ease-out">
+                                <div class="w-6 h-6 rounded-xl bg-sky-50 dark:bg-sky-900/60 border border-sky-200/70 dark:border-sky-800/60 text-sky-600 dark:text-sky-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:scale-110 group-hover/item:bg-sky-600 group-hover/item:text-white group-hover/item:border-sky-600 transition-all duration-300 shadow-sm">
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                                 </div>
                                 <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed group-hover/item:text-slate-900 dark:group-hover/item:text-white transition-colors">
@@ -735,11 +920,14 @@ if ( empty( $deposito_nisbah ) ) {
                             </li>
                         <?php endforeach; ?>
                     </ul>
+                </div>
 
-                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                        <svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                        <span><?php echo esc_html( $dep_syarat_lem_note ); ?></span>
-                    </div>
+                <!-- Dual-Tone Bottom Footer Band -->
+                <div class="relative z-10 px-6 sm:px-8 py-4 bg-slate-50/90 dark:bg-slate-800/60 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-400">
+                    <span class="w-6 h-6 rounded-lg bg-sky-50 dark:bg-sky-900/50 text-sky-600 dark:text-sky-400 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    </span>
+                    <span><?php echo esc_html( $dep_syarat_lem_note ); ?></span>
                 </div>
             </div>
         </div>

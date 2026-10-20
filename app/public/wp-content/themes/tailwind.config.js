@@ -38,7 +38,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
+        sans: ['"Nunito"', '"Quicksand"', '"Varela Round"', ...defaultTheme.fontFamily.sans],
+        display: ['"Rubik"', '"Nunito"', '"Quicksand"', ...defaultTheme.fontFamily.sans],
+        body: ['"Comfortaa"', '"Nunito"', '"Quicksand"', '"Varela Round"', ...defaultTheme.fontFamily.sans],
+        accent: ['"Quicksand"', '"Varela Round"', '"Nunito"', ...defaultTheme.fontFamily.sans],
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out forwards',

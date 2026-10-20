@@ -213,7 +213,7 @@ const DarkMode = {
 const Navbar = {
   navbar: null,
   lastScroll: 0,
-  scrollThreshold: 50,
+  scrollThreshold: 15,
 
   init() {
     this.navbar = document.getElementById('main-navbar');
@@ -230,6 +230,11 @@ const Navbar = {
     const rawPath = window.location.pathname;
     const currentPath = rawPath.replace(/\/$/, '') || '/';
     const isHome = currentPath === '/' || currentPath === '';
+
+    if (this.navbar) {
+      this.navbar.classList.toggle('is-home-nav', isHome);
+      this.handleScroll();
+    }
 
     // 1. Reset Desktop active states
     const desktopLinks = document.querySelectorAll('#main-navbar .nav-link');

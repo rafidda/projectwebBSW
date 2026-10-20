@@ -31,9 +31,35 @@
     @apply font-sans antialiased transition-colors duration-500;
     @apply bg-white text-slate-900;
     @apply dark:bg-dark dark:text-slate-200;
+    font-family: 'Nunito', 'Quicksand', 'Varela Round', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: clip;
     max-width: 100%;
     position: relative;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rubik', 'Nunito', 'Quicksand', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.015em;
+  }
+
+  p,
+  .prose p {
+    font-family: 'Comfortaa', 'Nunito', 'Quicksand', 'Varela Round', sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  #hero-slider p,
+  .hero-slider p,
+  .wkl-page-hero p,
+  #main-navbar p {
+    font-family: 'Nunito', 'Quicksand', 'Varela Round', sans-serif;
+    letter-spacing: normal;
+  }
+
+  .section-badge,
+  .slide-badge,
+  .section-label {
+    font-family: 'Quicksand', 'Varela Round', 'Nunito', sans-serif;
   }
 
   @supports not (overflow-x: clip) {
@@ -192,17 +218,75 @@
     @apply dark:text-slate-400;
   }
 
+  /* ---- Navbar Seamless Top & Scrolled States ---- */
+  #main-navbar {
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  #main-navbar.is-home-nav:not(.scrolled) {
+    @apply bg-white/80 backdrop-blur-xl border-b border-white/25 dark:bg-dark-surface/75 dark:border-white/10;
+    box-shadow: 0 4px 24px -4px rgba(15, 23, 42, 0.06);
+  }
+
+  .dark #main-navbar.is-home-nav:not(.scrolled) {
+    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.35);
+  }
+
+  #main-navbar.scrolled {
+    @apply bg-white/90 backdrop-blur-2xl border-b border-slate-200/80 shadow-lg shadow-slate-900/5;
+    @apply dark:bg-dark-surface/90 dark:border-dark-border/80 dark:shadow-black/30;
+  }
+
+  /* ---- Unified Internal Page Hero Surface (Seamless Navbar Blend + Solid + Gradient + Subtle Pattern) ---- */
+  .wkl-page-hero {
+    @apply relative z-10 pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 overflow-hidden border-b border-slate-200/80 dark:border-dark-border/80;
+    background-color: #f8fafc;
+    background-image:
+      radial-gradient(at 15% 0%, rgba(20, 184, 166, 0.14) 0px, transparent 55%),
+      radial-gradient(at 85% 10%, rgba(8, 131, 149, 0.10) 0px, transparent 50%),
+      linear-gradient(180deg, rgba(204, 251, 241, 0.65) 0%, rgba(240, 253, 250, 0.55) 42%, #f8fafc 100%);
+  }
+
+  .dark .wkl-page-hero {
+    background-color: #0f172a;
+    background-image:
+      radial-gradient(at 15% 0%, rgba(20, 184, 166, 0.18) 0px, transparent 55%),
+      radial-gradient(at 85% 10%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+      linear-gradient(180deg, rgba(13, 148, 136, 0.22) 0%, rgba(15, 23, 42, 0.85) 48%, #0f172a 100%);
+  }
+
+  .wkl-page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23088395' fill-opacity='1'%3E%3Cpath d='M24 22v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-22V0h-2v2h2zm0 46v2h-2v-2h2zM0 24h2v-2H0v2zm46 0h2v-2h-2v2z'/%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='36' cy='12' r='1'/%3E%3Ccircle cx='12' cy='36' r='1'/%3E%3Ccircle cx='36' cy='36' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0) 100%);
+  }
+
+  .dark .wkl-page-hero::before {
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235DF8D8' fill-opacity='1'%3E%3Cpath d='M24 22v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-22V0h-2v2h2zm0 46v2h-2v-2h2zM0 24h2v-2H0v2zm46 0h2v-2h-2v2z'/%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='36' cy='12' r='1'/%3E%3Ccircle cx='12' cy='36' r='1'/%3E%3Ccircle cx='36' cy='36' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
   /* ---- Navbar ---- */
   .nav-link {
     @apply relative text-[14.5px] font-medium
-           text-slate-600
+           text-slate-700
            hover:text-primary-600
            transition-all duration-300 ease-out;
-    @apply dark:text-slate-300 dark:hover:text-primary-300;
+    @apply dark:text-slate-200 dark:hover:text-primary-300;
   }
 
   .nav-link.active {
-    @apply text-primary-600;
+    @apply text-primary-600 font-semibold;
     @apply dark:text-primary-300;
   }
 

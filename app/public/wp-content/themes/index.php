@@ -17,8 +17,8 @@ if ( is_front_page() ) {
 get_header();
 ?>
 
-<section class="section">
-    <div class="container-wide">
+<section class="wkl-page-hero section relative z-10 overflow-hidden">
+    <div class="container-wide relative z-10">
         <div class="text-center mb-14" data-aos="fade-up">
             <h1 class="section-title mb-4"><?php single_post_title(); ?></h1>
         </div>

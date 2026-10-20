@@ -66,10 +66,18 @@ $logo_desc      = get_option( 'options_about_page_logo_desc', 'Logo BPRS Wakalum
 
 $logo_p1_title  = get_option( 'options_about_page_logo_p1_title', 'Bentuk Gelombang & Aliran Berkah' );
 $logo_p1_desc   = get_option( 'options_about_page_logo_p1_desc', 'Melambangkan kelancaran aliran rezeki, fleksibilitas dalam melayani, serta kesegaran solusi finansial yang menyejukkan perekonomian umat.' );
+$logo_p1_color  = get_option( 'options_about_page_logo_p1_color', 'teal' );
+$p1_theme       = function_exists( 'wakalumi_get_pilar_color_theme' ) ? wakalumi_get_pilar_color_theme( $logo_p1_color ) : [];
+
 $logo_p2_title  = get_option( 'options_about_page_logo_p2_title', 'Warna Ocean Teal & Bright Teal' );
 $logo_p2_desc   = get_option( 'options_about_page_logo_p2_desc', 'Merefleksikan ketenangan, stabilitas finansial yang kokoh, profesionalisme modern, serta komitmen menjaga amanah nasabah.' );
+$logo_p2_color  = get_option( 'options_about_page_logo_p2_color', 'blue' );
+$p2_theme       = function_exists( 'wakalumi_get_pilar_color_theme' ) ? wakalumi_get_pilar_color_theme( $logo_p2_color ) : [];
+
 $logo_p3_title  = get_option( 'options_about_page_logo_p3_title', 'Aksen Mint Glow' );
 $logo_p3_desc   = get_option( 'options_about_page_logo_p3_desc', 'Melambangkan pertumbuhan ekonomi yang berkah, harapan baru bagi UMKM, dan masa depan perbankan syariah yang gemilang.' );
+$logo_p3_color  = get_option( 'options_about_page_logo_p3_color', 'sky' );
+$p3_theme       = function_exists( 'wakalumi_get_pilar_color_theme' ) ? wakalumi_get_pilar_color_theme( $logo_p3_color ) : [];
 
 $show_stats     = get_option( 'options_about_page_show_stats', '1' );
 $show_vision    = get_option( 'options_about_page_show_vision', '1' );
@@ -107,62 +115,110 @@ $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 if ( empty( $cta_btn1_url ) ) {
     $cta_btn1_url = $wa_url;
 }
-
-// Sanitasi otomatis: pastikan tidak ada sisa BPRS
-$page_title    = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $page_title );
-$narrative_1   = str_replace( 'PT. Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi', 'PT Bank Syariah Wakalumi (BSW)', $narrative_1 );
-$narrative_1   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $narrative_1 );
-$narrative_2   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $narrative_2 );
-$vision_desc   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $vision_desc );
-$identity_text = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $identity_text );
-$belief_text   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $belief_text );
-$logo_desc     = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $logo_desc );
-$compro_title  = str_replace( 'PT BPRS Wakalumi', 'PT Bank Syariah Wakalumi', $compro_title );
-$compro_title  = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $compro_title );
-$compro_desc   = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $compro_desc );
-$cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_desc );
 ?>
 
 <!-- ========================================
-     HEADER BANNER & BREADCRUMBS
+     HEADER BANNER & BREADCRUMBS (UNIFIED HERO + BRAND EMBLEM CARD)
      ======================================== -->
-<section class="relative z-10 pt-8 pb-14 md:pb-20 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/60 dark:border-slate-800/60">
+<section class="wkl-page-hero">
     <!-- Subtle Ambient Glow -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-primary-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
     <div class="container-wide relative z-10">
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-6" data-aos="fade-down">
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-primary-600 dark:hover:text-accent transition-colors flex items-center gap-1.5 font-medium">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-primary-600 dark:hover:text-teal-300 transition-colors flex items-center gap-1.5 font-medium">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Beranda
             </a>
             <span class="text-slate-300 dark:text-slate-600">/</span>
             <span class="text-slate-600 dark:text-slate-300 font-medium">Profil</span>
             <span class="text-slate-300 dark:text-slate-600">/</span>
-            <span class="text-primary-600 dark:text-teal-400 font-bold">Tentang Kami</span>
+            <span class="text-teal-600 dark:text-teal-400 font-bold">Tentang Kami</span>
         </nav>
 
-        <div class="max-w-4xl" data-aos="fade-up">
-            <!-- Kicker Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-5 bg-primary-500/10 dark:bg-primary-400/10 border border-primary-500/20 dark:border-primary-400/20">
-                <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
-                <span class="text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-teal-300">
-                    <?php echo esc_html( $page_badge ); ?>
-                </span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <!-- Left Column: Title, Subtitle & Highlights -->
+            <div class="lg:col-span-7 xl:col-span-8" data-aos="fade-up">
+                <!-- Kicker Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-4 bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                    <span><?php echo esc_html( $page_badge ); ?></span>
+                </div>
+
+                <!-- Main Page Title -->
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-4">
+                    <?php echo esc_html( $page_title ); ?>
+                </h1>
+
+                <!-- Subtitle -->
+                <?php if ( ! empty( $page_subtitle ) ) : ?>
+                    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
+                        <?php echo esc_html( $page_subtitle ); ?>
+                    </p>
+                <?php endif; ?>
+
+                <!-- Key Highlights Pills -->
+                <div class="flex flex-wrap items-center gap-3 pt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>Melayani Sejak 1990</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                        <span>Budaya Kerja SAPA &amp; Prinsip Syariah</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span>Berizin OJK &amp; Dijamin LPS</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Main Page Title -->
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-5">
-                <?php echo esc_html( $page_title ); ?>
-            </h1>
+            <!-- Right Column: Corporate Identity & Emblem Badge Card -->
+            <div class="lg:col-span-5 xl:col-span-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-teal-200/80 dark:border-teal-800/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 group cursor-default">
+                    <!-- Top Gradient Accent Bar -->
+                    <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500"></div>
 
-            <!-- Subtitle -->
-            <?php if ( ! empty( $page_subtitle ) ) : ?>
-                <p class="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
-                    <?php echo esc_html( $page_subtitle ); ?>
-                </p>
-            <?php endif; ?>
+                    <!-- Dual-Tone Upper Header -->
+                    <div class="p-6 bg-gradient-to-br from-teal-50/90 via-cyan-50/40 to-white dark:from-teal-950/70 dark:via-slate-900/60 dark:to-slate-900 border-b border-teal-100/80 dark:border-slate-800 relative overflow-hidden text-center">
+                        <!-- Interactive Slide Watermark Emblem -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.055] dark:opacity-[0.04] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] select-none">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                        </div>
+
+                        <!-- Official Company Emblem Icon -->
+                        <div class="relative w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center p-2.5 mx-auto shadow-md shadow-teal-500/10 border border-teal-200/80 dark:border-teal-700/60 group-hover:scale-105 transition-transform duration-300 z-10 mb-3">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Logo Bank Syariah Wakalumi" class="w-full h-full object-contain">
+                        </div>
+
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-100/90 dark:bg-teal-950 text-teal-800 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1 relative z-10">
+                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                            Identitas Korporasi Resmi
+                        </div>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white relative z-10">Bank Syariah Wakalumi</h3>
+                    </div>
+
+                    <!-- Lower Card Body -->
+                    <div class="p-6 space-y-4 bg-white dark:bg-slate-900/95 relative z-10 text-center">
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Berkhidmat sejak tahun 1990 menghadirkan layanan perbankan syariah yang amanah, profesional, dan memberdayakan ekonomi umat.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-3 text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                Diawasi OJK
+                            </span>
+                            <span class="text-slate-300 dark:text-slate-600">•</span>
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                Dijamin LPS
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -288,7 +344,7 @@ $cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_des
                 Arah & Tujuan Strategis
             </div>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Visi & Misi Bank Syariah Wakalumi
+                Visi & Misi BSW
             </h2>
             <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3">
                 Landasan cita-cita luhur dan aksi nyata kami dalam melayani serta menggerakkan roda perekonomian masyarakat secara syariah.
@@ -299,7 +355,7 @@ $cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_des
         <div class="spotlight-card relative rounded-3xl p-8 sm:p-10 md:p-14 overflow-hidden bg-gradient-to-br from-primary-900 via-primary-950 to-slate-950 text-white shadow-2xl shadow-primary-900/20 border border-primary-500/30 mb-10 md:mb-14" data-aos="zoom-in">
             <!-- Background Decorative Watermark Emblem -->
             <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 w-72 h-72 md:w-96 md:h-96 opacity-[0.06] pointer-events-none">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/wm-wkl.png" alt="" class="w-full h-full object-contain">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain">
             </div>
 
             <!-- Glowing Orb -->
@@ -519,7 +575,7 @@ $cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_des
 
                     <div class="relative z-10 mt-6 pt-6 border-t border-white/10 w-full">
                         <span class="text-xs uppercase tracking-widest font-bold text-teal-300">Identitas Visual Resmi</span>
-                        <h4 class="text-base font-bold text-white mt-1">PT Bank Syariah Wakalumi</h4>
+                        <h4 class="text-base font-bold text-white mt-1">Bank Syariah Wakalumi (BSW)</h4>
                     </div>
                 </div>
             </div>
@@ -530,65 +586,74 @@ $cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_des
                     Identitas & Filosofi Brand
                 </div>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug mb-4">
-                    Makna di Balik Lambang Wakalumi
+                    Makna di Balik Lambang BSW
                 </h2>
                 <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8">
                     <?php echo nl2br( esc_html( $logo_desc ) ); ?>
                 </p>
 
-                <div class="space-y-6">
+                <div class="space-y-5">
                     <!-- Pillar 1 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-teal-50/60 via-white to-white dark:from-teal-950/40 dark:via-slate-900/95 dark:to-slate-900/95 border-l-4 border-l-teal-500 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-teal-500/60 transition-all flex items-start gap-4 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p1_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p1_theme['border_l'] ); ?> border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg <?php echo esc_attr( $p1_theme['border_hover'] ); ?> hover:-translate-y-0.5 transition-all duration-300 cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center text-teal-600 dark:text-teal-300 shrink-0 mt-1 shadow-sm relative z-10 group-hover:scale-105 transition-transform">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        </div>
-                        <div class="relative z-10">
-                            <h4 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                                <?php echo esc_html( $logo_p1_title ); ?>
+                        <div class="relative z-10 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider <?php echo esc_attr( $p1_theme['badge_bg'] ); ?> shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $p1_theme['badge_dot'] ); ?> animate-pulse"></span>
+                                    Filosofi 01
+                                </span>
+                            </div>
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
+                                <?php echo wakalumi_dualtone_title( $logo_p1_title, $p1_theme['title_accent'] ); ?>
                             </h4>
-                            <p class="text-sm text-slate-700 dark:text-slate-100 leading-relaxed">
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                                 <?php echo esc_html( $logo_p1_desc ); ?>
                             </p>
                         </div>
                     </div>
 
                     <!-- Pillar 2 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-primary-50/60 via-white to-white dark:from-primary-950/40 dark:via-slate-900/95 dark:to-slate-900/95 border-l-4 border-l-primary-500 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-primary-500/60 transition-all flex items-start gap-4 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p2_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p2_theme['border_l'] ); ?> border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg <?php echo esc_attr( $p2_theme['border_hover'] ); ?> hover:-translate-y-0.5 transition-all duration-300 cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/40 flex items-center justify-center text-primary-600 dark:text-teal-300 shrink-0 mt-1 shadow-sm relative z-10 group-hover:scale-105 transition-transform">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-                        </div>
-                        <div class="relative z-10">
-                            <h4 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-primary-600 dark:group-hover:text-teal-300 transition-colors">
-                                <?php echo esc_html( $logo_p2_title ); ?>
+                        <div class="relative z-10 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider <?php echo esc_attr( $p2_theme['badge_bg'] ); ?> shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $p2_theme['badge_dot'] ); ?> animate-pulse"></span>
+                                    Filosofi 02
+                                </span>
+                            </div>
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
+                                <?php echo wakalumi_dualtone_title( $logo_p2_title, $p2_theme['title_accent'] ); ?>
                             </h4>
-                            <p class="text-sm text-slate-700 dark:text-slate-100 leading-relaxed">
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                                 <?php echo esc_html( $logo_p2_desc ); ?>
                             </p>
                         </div>
                     </div>
 
                     <!-- Pillar 3 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-teal-50/60 via-white to-white dark:from-teal-950/40 dark:via-slate-900/95 dark:to-slate-900/95 border-l-4 border-l-teal-500 border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-teal-500/60 transition-all flex items-start gap-4 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p3_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p3_theme['border_l'] ); ?> border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg <?php echo esc_attr( $p3_theme['border_hover'] ); ?> hover:-translate-y-0.5 transition-all duration-300 cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center text-teal-600 dark:text-teal-300 shrink-0 mt-1 shadow-sm relative z-10 group-hover:scale-105 transition-transform">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                        </div>
-                        <div class="relative z-10">
-                            <h4 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
-                                <?php echo esc_html( $logo_p3_title ); ?>
+                        <div class="relative z-10 space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider <?php echo esc_attr( $p3_theme['badge_bg'] ); ?> shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $p3_theme['badge_dot'] ); ?> animate-pulse"></span>
+                                    Filosofi 03
+                                </span>
+                            </div>
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
+                                <?php echo wakalumi_dualtone_title( $logo_p3_title, $p3_theme['title_accent'] ); ?>
                             </h4>
-                            <p class="text-sm text-slate-700 dark:text-slate-100 leading-relaxed">
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                                 <?php echo esc_html( $logo_p3_desc ); ?>
                             </p>
                         </div>
@@ -658,7 +723,7 @@ $cta_desc      = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $cta_des
 
                                 <div class="absolute bottom-4 left-6 right-4 z-20 text-left">
                                     <span class="text-[10px] uppercase font-bold tracking-widest text-teal-300 block">Profil Resmi</span>
-                                    <h4 class="text-sm sm:text-base font-extrabold text-white leading-tight">PT Bank Syariah Wakalumi</h4>
+                                    <h4 class="text-sm sm:text-base font-extrabold text-white leading-tight">Bank Syariah Wakalumi</h4>
                                 </div>
                             <?php else : ?>
                                 <!-- High-End Procedural Booklet Cover -->

@@ -30,11 +30,11 @@ if ( in_array( $slug, [ 'legalitas', 'legalitas-perusahaan' ], true ) ) {
 get_header();
 ?>
 
-<section class="section">
-    <div class="container-narrow">
+<section class="wkl-page-hero relative z-10 overflow-hidden">
+    <div class="container-narrow relative z-10">
         <?php while ( have_posts() ) : the_post(); ?>
             <!-- Page Header -->
-            <div class="text-center mb-14" data-aos="fade-up">
+            <div class="text-center mb-10" data-aos="fade-up">
                 <h1 class="section-title mb-4"><?php the_title(); ?></h1>
             </div>
 

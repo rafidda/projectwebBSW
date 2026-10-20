@@ -98,8 +98,10 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_logo_img', esc_url_raw( $_POST['options_about_page_logo_img'] ?? '' ) );
         update_option( 'options_about_page_logo_desc', sanitize_textarea_field( $_POST['options_about_page_logo_desc'] ?? '' ) );
         for ( $lp = 1; $lp <= 3; $lp++ ) {
+            $default_lp_color = ( $lp === 2 ) ? 'blue' : ( ( $lp === 3 ) ? 'sky' : 'teal' );
             update_option( "options_about_page_logo_p{$lp}_title", sanitize_text_field( $_POST["options_about_page_logo_p{$lp}_title"] ?? '' ) );
             update_option( "options_about_page_logo_p{$lp}_desc", sanitize_textarea_field( $_POST["options_about_page_logo_p{$lp}_desc"] ?? '' ) );
+            update_option( "options_about_page_logo_p{$lp}_color", sanitize_key( $_POST["options_about_page_logo_p{$lp}_color"] ?? $default_lp_color ) );
         }
 
         // 6. Dokumen Company Profile Resmi (Unduh PDF)
@@ -202,10 +204,15 @@ function wakalumi_render_about_admin_page() {
 
     $logo_p1_title  = get_option( 'options_about_page_logo_p1_title', 'Bentuk Gelombang & Aliran Berkah' );
     $logo_p1_desc   = get_option( 'options_about_page_logo_p1_desc', 'Melambangkan kelancaran aliran rezeki, fleksibilitas dalam melayani, serta kesegaran solusi finansial yang menyejukkan perekonomian umat.' );
+    $logo_p1_color  = get_option( 'options_about_page_logo_p1_color', 'teal' );
+
     $logo_p2_title  = get_option( 'options_about_page_logo_p2_title', 'Warna Ocean Teal & Bright Teal' );
     $logo_p2_desc   = get_option( 'options_about_page_logo_p2_desc', 'Merefleksikan ketenangan, stabilitas finansial yang kokoh, profesionalisme modern, serta komitmen menjaga amanah nasabah.' );
+    $logo_p2_color  = get_option( 'options_about_page_logo_p2_color', 'blue' );
+
     $logo_p3_title  = get_option( 'options_about_page_logo_p3_title', 'Aksen Mint Glow' );
     $logo_p3_desc   = get_option( 'options_about_page_logo_p3_desc', 'Melambangkan pertumbuhan ekonomi yang berkah, harapan baru bagi UMKM, dan masa depan perbankan syariah yang gemilang.' );
+    $logo_p3_color  = get_option( 'options_about_page_logo_p3_color', 'sky' );
 
     $cta_badge      = get_option( 'options_about_page_cta_badge', 'Langkah Nyata Bersama Kami' );
     $cta_title      = get_option( 'options_about_page_cta_title', 'Siap Mengembangkan Usaha & Mengelola Dana Secara Berkah?' );
@@ -536,26 +543,71 @@ function wakalumi_render_about_admin_page() {
                         <th scope="row"><label for="options_about_page_logo_desc">Pengantar Makna Logo</label></th>
                         <td>
                             <textarea id="options_about_page_logo_desc" name="options_about_page_logo_desc" rows="2" class="large-text"><?php echo esc_textarea( $logo_desc ); ?></textarea>
+                            <p class="description" style="margin-top: 4px; color: #088395; font-weight: 500;">
+                                💡 <strong>Tip Dual-Tone:</strong> Gunakan tanda bintang <code>*kata*</code> pada judul pilar untuk memberi warna aksen berbeda (Contoh: <code>Bentuk Gelombang &amp; *Aliran Berkah*</code>). Jika tanpa tanda bintang, kata terakhir otomatis diberi aksen warna.
+                            </p>
                         </td>
                     </tr>
+                    <?php
+                    $pilar_color_options = [
+                        'teal'    => 'Teal (Hijau Toska)',
+                        'blue'    => 'Biru Samudera (Ocean Blue)',
+                        'sky'     => 'Sky Blue (Biru Langit / Cyan)',
+                        'indigo'  => 'Indigo (Biru Gelap / Royal Navy)',
+                        'emerald' => 'Emerald (Hijau Zamrud / Mint)',
+                        'amber'   => 'Amber (Kuning Keemasan)',
+                        'purple'  => 'Purple (Ungu Elegan)',
+                        'rose'    => 'Rose (Merah Muda Elegan)',
+                    ];
+                    ?>
                     <tr>
                         <th scope="row">Pilar Filosofi 1</th>
                         <td>
-                            <input type="text" name="options_about_page_logo_p1_title" value="<?php echo esc_attr( $logo_p1_title ); ?>" class="large-text" style="font-weight: 600; margin-bottom: 5px;" placeholder="Judul Pilar 1">
+                            <div style="display: flex; gap: 10px; margin-bottom: 6px; align-items: center; flex-wrap: wrap;">
+                                <input type="text" name="options_about_page_logo_p1_title" value="<?php echo esc_attr( $logo_p1_title ); ?>" class="regular-text" style="font-weight: 600; flex: 1; min-width: 220px;" placeholder="Judul Pilar 1">
+                                <label style="font-size: 13px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px;">
+                                    <span>Tema Warna:</span>
+                                    <select name="options_about_page_logo_p1_color" style="min-width: 180px;">
+                                        <?php foreach ( $pilar_color_options as $c_val => $c_label ) : ?>
+                                            <option value="<?php echo esc_attr( $c_val ); ?>" <?php selected( $logo_p1_color, $c_val ); ?>><?php echo esc_html( $c_label ); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </label>
+                            </div>
                             <textarea name="options_about_page_logo_p1_desc" rows="2" class="large-text" placeholder="Uraian makna pilar 1"><?php echo esc_textarea( $logo_p1_desc ); ?></textarea>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Pilar Filosofi 2</th>
                         <td>
-                            <input type="text" name="options_about_page_logo_p2_title" value="<?php echo esc_attr( $logo_p2_title ); ?>" class="large-text" style="font-weight: 600; margin-bottom: 5px;" placeholder="Judul Pilar 2">
+                            <div style="display: flex; gap: 10px; margin-bottom: 6px; align-items: center; flex-wrap: wrap;">
+                                <input type="text" name="options_about_page_logo_p2_title" value="<?php echo esc_attr( $logo_p2_title ); ?>" class="regular-text" style="font-weight: 600; flex: 1; min-width: 220px;" placeholder="Judul Pilar 2">
+                                <label style="font-size: 13px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px;">
+                                    <span>Tema Warna:</span>
+                                    <select name="options_about_page_logo_p2_color" style="min-width: 180px;">
+                                        <?php foreach ( $pilar_color_options as $c_val => $c_label ) : ?>
+                                            <option value="<?php echo esc_attr( $c_val ); ?>" <?php selected( $logo_p2_color, $c_val ); ?>><?php echo esc_html( $c_label ); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </label>
+                            </div>
                             <textarea name="options_about_page_logo_p2_desc" rows="2" class="large-text" placeholder="Uraian makna pilar 2"><?php echo esc_textarea( $logo_p2_desc ); ?></textarea>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Pilar Filosofi 3</th>
                         <td>
-                            <input type="text" name="options_about_page_logo_p3_title" value="<?php echo esc_attr( $logo_p3_title ); ?>" class="large-text" style="font-weight: 600; margin-bottom: 5px;" placeholder="Judul Pilar 3">
+                            <div style="display: flex; gap: 10px; margin-bottom: 6px; align-items: center; flex-wrap: wrap;">
+                                <input type="text" name="options_about_page_logo_p3_title" value="<?php echo esc_attr( $logo_p3_title ); ?>" class="regular-text" style="font-weight: 600; flex: 1; min-width: 220px;" placeholder="Judul Pilar 3">
+                                <label style="font-size: 13px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px;">
+                                    <span>Tema Warna:</span>
+                                    <select name="options_about_page_logo_p3_color" style="min-width: 180px;">
+                                        <?php foreach ( $pilar_color_options as $c_val => $c_label ) : ?>
+                                            <option value="<?php echo esc_attr( $c_val ); ?>" <?php selected( $logo_p3_color, $c_val ); ?>><?php echo esc_html( $c_label ); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </label>
+                            </div>
                             <textarea name="options_about_page_logo_p3_desc" rows="2" class="large-text" placeholder="Uraian makna pilar 3"><?php echo esc_textarea( $logo_p3_desc ); ?></textarea>
                         </td>
                     </tr>

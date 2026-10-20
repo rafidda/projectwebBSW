@@ -47,10 +47,10 @@ require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 // ENQUEUE SCRIPTS & STYLES
 // ────────────────────────────────────────────────
 function wakalumi_enqueue_assets() {
-    // Google Fonts — Plus Jakarta Sans
+    // Google Fonts — Rubik (Headings/Display), Comfortaa (Paragraphs/Details), Nunito, Quicksand & Varela Round (UI/Badges)
     wp_enqueue_style(
         'wakalumi-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap',
+        'https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Quicksand:wght@500;600;700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Varela+Round&display=swap',
         [],
         null
     );
@@ -340,5 +340,168 @@ function wakalumi_redirect_parent_pages() {
 }
 add_action( 'template_redirect', 'wakalumi_redirect_parent_pages' );
 
+// ────────────────────────────────────────────────
+// PRODUCTION MIGRATION GUARD: AUTO-NORMALIZE LOCAL DOMAIN URLS
+// Secara otomatis mengubah sisa URL 'wakalumibprscoid.local' di wp_options / konten
+// menjadi domain produksi aktif (home_url) saat website di-online-kan ke hosting.
+// ────────────────────────────────────────────────
+function wakalumi_normalize_domain_deep( $value ) {
+    static $live_origin = null;
+    static $needs_replace = null;
 
+    if ( null === $live_origin ) {
+        $live_origin   = untrailingslashit( home_url() );
+        $needs_replace = ( stripos( $live_origin, 'wakalumibprscoid.local' ) === false );
+    }
 
+    if ( ! $needs_replace ) {
+        return $value;
+    }
+
+    if ( is_string( $value ) ) {
+        if ( stripos( $value, 'wakalumibprscoid.local' ) !== false ) {
+            $value = str_ireplace(
+                [ 'https://wakalumibprscoid.local', 'http://wakalumibprscoid.local' ],
+                $live_origin,
+                $value
+            );
+        }
+        return $value;
+    }
+
+    if ( is_array( $value ) ) {
+        foreach ( $value as $k => $v ) {
+            $value[ $k ] = wakalumi_normalize_domain_deep( $v );
+        }
+        return $value;
+    }
+
+    return $value;
+}
+
+function wakalumi_register_domain_normalizer_filters() {
+    $live_origin = untrailingslashit( home_url() );
+    if ( stripos( $live_origin, 'wakalumibprscoid.local' ) !== false ) {
+        return; // Masih di environment local, tidak perlu filter
+    }
+
+    $all_options = wp_load_alloptions();
+    if ( is_array( $all_options ) ) {
+        foreach ( array_keys( $all_options ) as $opt_name ) {
+            if ( strpos( $opt_name, 'options_' ) === 0 || strpos( $opt_name, 'wakalumi_' ) === 0 ) {
+                add_filter( "option_{$opt_name}", 'wakalumi_normalize_domain_deep', 20 );
+            }
+        }
+    }
+
+    add_filter( 'the_content', 'wakalumi_normalize_domain_deep', 20 );
+    add_filter( 'wp_get_attachment_url', 'wakalumi_normalize_domain_deep', 20 );
+}
+add_action( 'init', 'wakalumi_register_domain_normalizer_filters', 1 );
+
+// ────────────────────────────────────────────────
+// BUILT-IN SMART SEO ENGINE (Meta Description, Open Graph WhatsApp & Schema.org JSON-LD)
+// Otomatis aktif dan menghormati plugin SEO pihak ketiga (Yoast / Rank Math) jika terpasang.
+// ────────────────────────────────────────────────
+function wakalumi_render_seo_meta_tags() {
+    // Jika Yoast SEO atau Rank Math aktif, biarkan plugin menangani meta tag agar tidak duplikat
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+
+    $site_name   = get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' );
+    $default_desc = get_option(
+        'options_seo_meta_desc',
+        'PT BPRS Wakalumi (Bank Syariah Wakalumi / BSW) — Bank Perekonomian Rakyat Syariah terpercaya di Ciputat, Tangerang Selatan & Depok. Solusi Tabungan Syariah, Deposito Mudharabah bagi hasil kompetitif, dan Pembiayaan Syariah mudah, amanah, berizin & diawasi OJK serta dijamin LPS.'
+    );
+    $keywords    = get_option(
+        'options_seo_keywords',
+        'Bank Syariah Wakalumi, BPRS Wakalumi, BSW, Bank Syariah Ciputat, Bank Syariah Tangerang Selatan, Bank Syariah Depok, Tabungan Syariah, Deposito Syariah, Pembiayaan Syariah, BPRS OJK LPS'
+    );
+    $google_ver  = trim( (string) get_option( 'options_seo_google_verify', '' ) );
+
+    $meta_title = wp_get_document_title();
+    $meta_desc  = $default_desc;
+    $og_type    = 'website';
+    $og_url     = home_url( add_query_arg( [], $GLOBALS['wp']->request ?? '' ) );
+
+    if ( is_front_page() || is_home() ) {
+        $og_url = home_url( '/' );
+    } elseif ( is_singular() ) {
+        global $post;
+        if ( $post ) {
+            $og_url  = get_permalink( $post );
+            $og_type = ( $post->post_type === 'berita' || $post->post_type === 'post' ) ? 'article' : 'website';
+            $excerpt = wp_strip_all_tags( get_the_excerpt( $post ) );
+            if ( ! empty( $excerpt ) && strlen( $excerpt ) > 30 ) {
+                $meta_desc = wp_trim_words( $excerpt, 28, '...' );
+            }
+        }
+    }
+
+    // OG Image: Prioritaskan Featured Image artikel -> OG Image Admin -> Logo Bank -> Default Emblem
+    $og_image = get_option( 'options_seo_og_image', '' );
+    if ( is_singular() && has_post_thumbnail() ) {
+        $thumb_url = get_the_post_thumbnail_url( null, 'large' );
+        if ( $thumb_url ) {
+            $og_image = $thumb_url;
+        }
+    }
+    if ( empty( $og_image ) ) {
+        $og_image = get_option( 'options_site_logo', '' );
+    }
+    if ( empty( $og_image ) ) {
+        $og_image = WAKALUMI_URI . '/assets/img/untitled3.png';
+    }
+
+    echo "\n<!-- Wakalumi Built-in SEO & Open Graph Engine -->\n";
+    echo '<meta name="description" content="' . esc_attr( $meta_desc ) . '">' . "\n";
+    if ( ! empty( $keywords ) ) {
+        echo '<meta name="keywords" content="' . esc_attr( $keywords ) . '">' . "\n";
+    }
+    echo '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">' . "\n";
+    echo '<link rel="canonical" href="' . esc_url( trailingslashit( $og_url ) ) . '">' . "\n";
+
+    if ( ! empty( $google_ver ) ) {
+        echo '<meta name="google-site-verification" content="' . esc_attr( $google_ver ) . '">' . "\n";
+    }
+
+    // Open Graph (WhatsApp, Facebook, LinkedIn)
+    echo '<meta property="og:locale" content="id_ID">' . "\n";
+    echo '<meta property="og:type" content="' . esc_attr( $og_type ) . '">' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr( $site_name ) . '">' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr( $meta_title ) . '">' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr( $meta_desc ) . '">' . "\n";
+    echo '<meta property="og:url" content="' . esc_url( trailingslashit( $og_url ) ) . '">' . "\n";
+    echo '<meta property="og:image" content="' . esc_url( $og_image ) . '">' . "\n";
+
+    // Twitter / X Card
+    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+    echo '<meta name="twitter:title" content="' . esc_attr( $meta_title ) . '">' . "\n";
+    echo '<meta name="twitter:description" content="' . esc_attr( $meta_desc ) . '">' . "\n";
+    echo '<meta name="twitter:image" content="' . esc_url( $og_image ) . '">' . "\n";
+
+    // Schema.org JSON-LD FinancialService / BankOrCreditUnion
+    $phone   = get_option( 'options_contact_phone', '(021) 7490801' );
+    $address = get_option( 'options_contact_address', 'Jl. K.H. Dewantara No. 11A, Ciputat, Kota Tangerang Selatan, Banten' );
+    $schema  = [
+        '@context'    => 'https://schema.org',
+        '@type'       => 'BankOrCreditUnion',
+        'name'        => 'PT BPRS Wakalumi (' . $site_name . ')',
+        'alternateName' => 'Bank Syariah Wakalumi (BSW)',
+        'url'         => home_url( '/' ),
+        'logo'        => $og_image,
+        'description' => $default_desc,
+        'telephone'   => $phone,
+        'address'     => [
+            '@type'           => 'PostalAddress',
+            'streetAddress'   => $address,
+            'addressLocality' => 'Tangerang Selatan',
+            'addressRegion'   => 'Banten',
+            'addressCountry'  => 'ID',
+        ],
+    ];
+    echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "</script>\n";
+    echo "<!-- /Wakalumi Built-in SEO Engine -->\n\n";
+}
+add_action( 'wp_head', 'wakalumi_render_seo_meta_tags', 2 );

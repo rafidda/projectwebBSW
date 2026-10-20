@@ -71,7 +71,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
 <!-- ========================================
      NAVBAR
      ======================================== -->
-<header id="main-navbar" class="fixed top-0 left-0 right-0 z-[100] transition-all duration-300 glass-strong border-b border-white/10 shadow-sm">
+<header id="main-navbar" class="fixed top-0 left-0 right-0 z-[100] transition-all duration-300 <?php echo is_front_page() ? 'is-home-nav' : ''; ?>">
     <div class="container-wide">
         <nav class="flex items-center justify-between h-16 md:h-20">
 
@@ -292,12 +292,14 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
 
                                         <!-- Deposito Mudharabah -->
                                         <?php
-                                        $dep_cards_sample = function_exists( 'wakalumi_get_deposito_tenor_cards' ) ? wakalumi_get_deposito_tenor_cards() : [];
-                                        $dep_sample_img   = '';
-                                        foreach ( $dep_cards_sample as $dc ) {
-                                            if ( ! empty( $dc['image'] ) ) {
-                                                $dep_sample_img = $dc['image'];
-                                                break;
+                                        $dep_sample_img = get_option( 'options_deposito_main_image', '' );
+                                        if ( empty( $dep_sample_img ) ) {
+                                            $dep_cards_sample = function_exists( 'wakalumi_get_deposito_tenor_cards' ) ? wakalumi_get_deposito_tenor_cards() : [];
+                                            foreach ( $dep_cards_sample as $dc ) {
+                                                if ( ! empty( $dc['image'] ) ) {
+                                                    $dep_sample_img = $dc['image'];
+                                                    break;
+                                                }
                                             }
                                         }
                                         ?>
@@ -1058,9 +1060,6 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
      SWUP CONTENT CONTAINER
      ======================================== -->
 <div id="swup" class="transition-fade flex-1 overflow-x-clip max-w-full">
-    <!-- Spacer for fixed navbar -->
-    <div class="h-16 md:h-20"></div>
-
     <!-- Container Grid: Memadukan 1 Sticky Background Emblem Watermark dengan alur scroll <main> -->
     <div class="grid grid-cols-1 grid-rows-1 relative">
         <!-- ========================================

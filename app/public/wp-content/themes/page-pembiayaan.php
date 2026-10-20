@@ -32,8 +32,17 @@ $calc_sub       = get_option( 'options_pembiayaan_calc_sub', 'Hitung estimasi an
 $calc_min       = get_option( 'options_pembiayaan_calc_min', '5000000' );
 $calc_max       = get_option( 'options_pembiayaan_calc_max', '500000000' );
 $calc_default   = get_option( 'options_pembiayaan_calc_default', '25000000' );
-$calc_rate      = get_option( 'options_pembiayaan_calc_rate', '11.5' );
-$calc_note      = get_option( 'options_pembiayaan_calc_note', '*Estimasi indikatif dengan formula perhitungan margin setara flat per tahun. Perhitungan riil disepakati saat akad resmi.' );
+$saved_rate_unit = get_option( 'options_pembiayaan_calc_rate_unit', null );
+$calc_rate_unit  = in_array( $saved_rate_unit, [ 'bulan', 'tahun' ], true ) ? $saved_rate_unit : 'bulan';
+$calc_rate       = get_option( 'options_pembiayaan_calc_rate', ( $calc_rate_unit === 'bulan' ? '1.0' : '11.5' ) );
+if ( $saved_rate_unit === null && $calc_rate === '11.5' ) {
+    $calc_rate = '1.0';
+}
+$calc_rate_label = ( $calc_rate_unit === 'tahun' ) ? '% p.a.' : '% / bln';
+$calc_note      = get_option( 'options_pembiayaan_calc_note', '*Estimasi indikatif dengan formula perhitungan margin setara flat per bulan. Perhitungan riil disepakati saat akad resmi.' );
+if ( $calc_rate_unit === 'bulan' && strpos( $calc_note, 'per tahun' ) !== false ) {
+    $calc_note = str_replace( 'per tahun', 'per bulan', $calc_note );
+}
 $calc_btn_text  = get_option( 'options_pembiayaan_calc_btn_text', 'Ajukan Pembiayaan via WhatsApp' );
 $calc_presets   = function_exists( 'wakalumi_get_pembiayaan_calc_presets' ) ? wakalumi_get_pembiayaan_calc_presets() : [];
 
@@ -277,7 +286,7 @@ $color_themes = [
 <!-- ========================================
      HEADER BANNER & BREADCRUMBS
      ======================================== -->
-<section class="relative z-10 pt-8 pb-12 md:pb-16 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/60 dark:border-slate-800/60">
+<section class="wkl-page-hero">
     <!-- Ambient Blur Background -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -426,13 +435,13 @@ $color_themes = [
                         <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 group/img">
                             <img src="<?php echo esc_url( $p_img ); ?>" alt="<?php echo esc_attr( $prod['nama'] ); ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-                            <div class="absolute top-3.5 right-3.5 flex flex-col items-end gap-1.5 z-10">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md bg-white/90 dark:bg-slate-900/90 shadow-sm <?php echo esc_attr( $c_theme['badge_bg'] ); ?>">
+                            <div class="absolute top-2.5 right-2.5 flex flex-col items-end gap-1 z-10">
+                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] leading-tight font-bold border backdrop-blur-md bg-white/95 dark:bg-slate-900/90 shadow-xs <?php echo esc_attr( $c_theme['badge_bg'] ); ?>">
                                     <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $c_theme['accent_dot'] ); ?>"></span>
                                     <?php echo esc_html( $prod['badge'] ?? 'Pembiayaan' ); ?>
                                 </span>
                                 <?php if ( ! empty( $prod['akad'] ) ) : ?>
-                                    <span class="text-2xs font-bold uppercase tracking-wider text-white drop-shadow-md">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] leading-tight font-bold uppercase tracking-wider bg-white/95 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 border border-slate-200/90 dark:border-slate-700/80 backdrop-blur-md shadow-xs">
                                         Akad: <?php echo esc_html( $prod['akad'] ); ?>
                                     </span>
                                 <?php endif; ?>
@@ -799,7 +808,7 @@ $color_themes = [
                                         <strong class="text-white font-semibold">Rp <span id="pem-calc-pokok">0</span> / bln</strong>
                                     </div>
                                     <div class="flex justify-between items-center text-slate-300">
-                                        <span class="font-normal text-slate-400">Estimasi Margin (<span id="pem-calc-rate-display"><?php echo esc_html( $calc_rate ); ?></span>% p.a.):</span>
+                                        <span class="font-normal text-slate-400">Estimasi Margin (<span id="pem-calc-rate-display"><?php echo esc_html( $calc_rate ); ?></span><?php echo esc_html( $calc_rate_label ); ?>):</span>
                                         <strong class="text-teal-300 font-semibold">Rp <span id="pem-calc-margin">0</span> / bln</strong>
                                     </div>
                                     <div class="flex justify-between items-center text-slate-300">
@@ -1125,7 +1134,8 @@ $color_themes = [
         var waBtn        = document.getElementById('pem-calc-wa-btn');
         var rateDisplay  = document.getElementById('pem-calc-rate-display');
 
-        var annualRate   = parseFloat("<?php echo esc_js( $calc_rate ); ?>") || 11.5;
+        var rateVal      = parseFloat("<?php echo esc_js( $calc_rate ); ?>") || 1.0;
+        var rateUnit     = "<?php echo esc_js( $calc_rate_unit ); ?>";
         var cleanWa      = "<?php echo esc_js( $clean_wa ); ?>";
 
         function formatRupiah(num) {
@@ -1149,8 +1159,10 @@ $color_themes = [
             // Pokok per bulan
             var pokokBulan = plafon / tenor;
 
-            // Margin flat setara per tahun = (plafon * (rate / 100) * (tenor / 12)) / tenor = (plafon * (rate / 100)) / 12
-            var marginBulan = (plafon * (annualRate / 100)) / 12;
+            // Margin bulanan: jika 'tahun' (% p.a.) maka dibagi 12, jika 'bulan' (% / bln) maka langsung dikali plafon
+            var marginBulan = (rateUnit === 'tahun')
+                ? (plafon * (rateVal / 100)) / 12
+                : (plafon * (rateVal / 100));
 
             var totalAngsuran = pokokBulan + marginBulan;
             var grandTotal = totalAngsuran * tenor;

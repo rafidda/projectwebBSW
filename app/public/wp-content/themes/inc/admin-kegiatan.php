@@ -169,7 +169,7 @@ if ( ! function_exists( 'wakalumi_get_kegiatan_list' ) ) {
                 'link_text'          => 'Konfirmasi Kehadiran',
                 'gambar'             => '',
                 'ringkasan'          => 'Penyampaian laporan pertanggungjawaban direksi, laporan pengawasan dewan komisaris dan DPS, serta penetapan dividen tahun buku.',
-                'isi_lengkap'        => "Agenda resmi Rapat Umum Pemegang Saham (RUPS) Tahunan PT Bank Syariah Wakalumi.\n\nAgenda RUPS mencakup:\n1. Persetujuan Laporan Tahunan dan Pengesahan Laporan Keuangan Audited.\n2. Laporan Pengawasan Dewan Pengawas Syariah atas kesesuaian operasional produk syariah.\n3. Penetapan penggunaan laba bersih dan pembagian dividen.\n4. Rencana kerja strategis dan arah ekspansi digitalisasi layanan perbankan tahun berikutnya.\n\n*Hadirin terbatas untuk Pemegang Saham, Dewan Komisaris, Direksi, Notaris, serta undangan resmi regulator.",
+                'isi_lengkap'        => "Agenda resmi Rapat Umum Pemegang Saham (RUPS) Tahunan Bank Syariah Wakalumi.\n\nAgenda RUPS mencakup:\n1. Persetujuan Laporan Tahunan dan Pengesahan Laporan Keuangan Audited.\n2. Laporan Pengawasan Dewan Pengawas Syariah atas kesesuaian operasional produk syariah.\n3. Penetapan penggunaan laba bersih dan pembagian dividen.\n4. Rencana kerja strategis dan arah ekspansi digitalisasi layanan perbankan tahun berikutnya.\n\n*Hadirin terbatas untuk Pemegang Saham, Dewan Komisaris, Direksi, Notaris, serta undangan resmi regulator.",
                 'dokumentasi_url'    => '',
                 'status'             => 'aktif',
                 'urutan'             => 2,

@@ -39,12 +39,12 @@ $cta          = function_exists( 'wakalumi_get_berita_cta' ) ? wakalumi_get_beri
 $display_author = ( $is_external && ! empty( $external_source ) ) ? $external_source : $penulis;
 ?>
 
-<div class="min-h-screen bg-transparent text-slate-800 dark:text-dark-text pb-24">
+<div class="min-h-screen bg-transparent text-slate-800 dark:text-slate-200 pb-24">
 
     <!-- ========================================================================
          ARTICLE HEADER & BREADCRUMBS
          ======================================================================== -->
-    <header class="relative z-10 pt-8 sm:pt-10 pb-10 bg-slate-50 dark:bg-dark-surface border-b border-slate-200/80 dark:border-dark-border/80 shadow-xs overflow-hidden">
+    <header class="wkl-page-hero pb-10">
         <!-- Ambient Glow -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-64 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -440,7 +440,7 @@ $display_author = ( $is_external && ! empty( $external_source ) ) ? $external_so
 
                     <!-- Trust Footer Text -->
                     <div class="pt-4 flex items-center justify-center gap-3 text-xs text-slate-400">
-                        <span>PT Bank Syariah Wakalumi terdaftar &amp; diawasi oleh OJK</span>
+                        <span>PT BPRS Wakalumi terdaftar &amp; diawasi oleh OJK</span>
                         <span>•</span>
                         <span>Peserta Penjaminan LPS</span>
                     </div>

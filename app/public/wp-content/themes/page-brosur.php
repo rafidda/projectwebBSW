@@ -313,7 +313,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
 <!-- ========================================================================
      HEADER BANNER & BREADCRUMBS (WITH SECURITY BADGE & WATERMARK PASS-THROUGH)
      ======================================================================== -->
-<section class="relative z-10 pt-8 pb-12 md:pb-16 overflow-hidden bg-transparent border-b border-slate-200/60 dark:border-dark-border/60">
+<section class="wkl-page-hero">
     <!-- Ambient Blur Glow -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 

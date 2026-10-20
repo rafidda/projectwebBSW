@@ -36,12 +36,12 @@ if ( strpos( $pic_wa, '0' ) === 0 ) {
 $wa_url = 'https://wa.me/' . $pic_wa;
 ?>
 
-<div class="min-h-screen bg-transparent text-slate-800 dark:text-dark-text pb-20">
+<div class="min-h-screen bg-transparent text-slate-800 dark:text-slate-200 pb-20">
 
     <!-- ========================================================================
          SECTION 1: HERO HEADER BANNER & SHARIA GOVERNANCE BADGE CARD
          ======================================================================== -->
-    <section class="relative z-10 pt-8 sm:pt-10 pb-14 md:pb-18 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/80 dark:border-dark-border/80 shadow-xs">
+    <section class="wkl-page-hero">
         <!-- Ambient Background Glow -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-amber-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none"></div>
 

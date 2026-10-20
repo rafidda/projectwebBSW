@@ -77,6 +77,158 @@ function wakalumi_check_webp_filetype( $data, $file, $filename, $mimes ) {
 add_filter( 'wp_check_filetype_and_ext', 'wakalumi_check_webp_filetype', 10, 4 );
 
 /**
+ * Ensure WebP thumbnails and previews render properly in media library
+ */
+function wakalumi_displayable_image_webp( $result, $path ) {
+    if ( $result ) return $result;
+    $ext = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+    if ( $ext === 'webp' ) return true;
+    return $result;
+}
+add_filter( 'file_is_displayable_image', 'wakalumi_displayable_image_webp', 10, 2 );
+
+/**
+ * Render a heading with dual-tone color styling.
+ * 
+ * Supports:
+ * 1. Raw HTML: If <span> already exists in string, preserves it safely.
+ * 2. Asterisk marker: "Aktivitas & *Sosial Media BSW*" -> "Aktivitas & <span class="...">Sosial Media BSW</span>"
+ * 3. Curly brace marker: "Solusi {Tabungan Syariah}" -> "Solusi <span class="...">Tabungan Syariah</span>"
+ * 4. Automatic fallback: If no marker exists, intelligently highlights the last 1-2 words.
+ *
+ * @param string $title
+ * @param string $span_classes
+ * @return string
+ */
+function wakalumi_dualtone_title( $title, $span_classes = 'text-primary-600 dark:text-primary-300' ) {
+    if ( empty( $title ) ) return '';
+
+    // 1. If HTML span already present, preserve it safely
+    if ( strpos( $title, '<span' ) !== false ) {
+        return wp_kses_post( $title );
+    }
+
+    // 2. Check for *asterisks* marker: e.g. "Aktivitas & *Sosial Media BSW*"
+    if ( preg_match( '/\*(.*?)\*/', $title ) ) {
+        return preg_replace_callback( '/\*(.*?)\*/', function( $m ) use ( $span_classes ) {
+            return '<span class="' . esc_attr( $span_classes ) . '">' . esc_html( $m[1] ) . '</span>';
+        }, esc_html( $title ) );
+    }
+
+    // 3. Check for {curly braces} marker: e.g. "Solusi {Tabungan Syariah}"
+    if ( preg_match( '/\{(.*?)\}/', $title ) ) {
+        return preg_replace_callback( '/\{(.*?)\}/', function( $m ) use ( $span_classes ) {
+            return '<span class="' . esc_attr( $span_classes ) . '">' . esc_html( $m[1] ) . '</span>';
+        }, esc_html( $title ) );
+    }
+
+    // 4. Automatic fallback: highlight the last 1 or 2 words
+    $words = explode( ' ', trim( $title ) );
+    $count = count( $words );
+    if ( $count <= 1 ) {
+        return esc_html( $title );
+    }
+
+    if ( $count >= 6 ) {
+        $hl_count = 3;
+    } elseif ( $count >= 4 ) {
+        $hl_count = 2;
+    } else {
+        $hl_count = 1;
+    }
+
+    $first_words = array_slice( $words, 0, $count - $hl_count );
+    $last_words  = array_slice( $words, $count - $hl_count );
+
+    return esc_html( implode( ' ', $first_words ) ) . ' <span class="' . esc_attr( $span_classes ) . '">' . esc_html( implode( ' ', $last_words ) ) . '</span>';
+}
+
+/**
+ * Helper Skema Tema Warna Pilar Filosofi (Halaman Tentang Kami)
+ *
+ * @param string $color
+ * @return array
+ */
+function wakalumi_get_pilar_color_theme( string $color = 'teal' ): array {
+    $themes = [
+        'teal' => [
+            'name'         => 'Teal (Hijau Toska)',
+            'border_l'     => 'border-l-teal-500',
+            'bg_gradient'  => 'from-teal-50/70 via-white to-white dark:from-teal-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-teal-500/80',
+            'badge_bg'     => 'bg-teal-100/80 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border-teal-200/80 dark:border-teal-800/60',
+            'badge_dot'    => 'bg-teal-500',
+            'title_accent' => 'text-teal-600 dark:text-teal-400',
+        ],
+        'blue' => [
+            'name'         => 'Biru Samudera (Ocean Blue)',
+            'border_l'     => 'border-l-blue-600',
+            'bg_gradient'  => 'from-blue-50/70 via-white to-white dark:from-blue-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-blue-600/80',
+            'badge_bg'     => 'bg-blue-100/80 dark:bg-blue-950/70 text-blue-800 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/60',
+            'badge_dot'    => 'bg-blue-600',
+            'title_accent' => 'text-blue-600 dark:text-blue-400',
+        ],
+        'sky' => [
+            'name'         => 'Sky Blue (Biru Langit / Cyan)',
+            'border_l'     => 'border-l-cyan-500',
+            'bg_gradient'  => 'from-cyan-50/70 via-white to-white dark:from-cyan-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-cyan-500/80',
+            'badge_bg'     => 'bg-cyan-100/80 dark:bg-cyan-950/70 text-cyan-800 dark:text-cyan-300 border-cyan-200/80 dark:border-cyan-800/60',
+            'badge_dot'    => 'bg-cyan-500',
+            'title_accent' => 'text-cyan-600 dark:text-cyan-400',
+        ],
+        'indigo' => [
+            'name'         => 'Indigo (Biru Gelap / Royal Navy)',
+            'border_l'     => 'border-l-indigo-600',
+            'bg_gradient'  => 'from-indigo-50/70 via-white to-white dark:from-indigo-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-indigo-600/80',
+            'badge_bg'     => 'bg-indigo-100/80 dark:bg-indigo-950/70 text-indigo-800 dark:text-indigo-300 border-indigo-200/80 dark:border-indigo-800/60',
+            'badge_dot'    => 'bg-indigo-600',
+            'title_accent' => 'text-indigo-600 dark:text-indigo-400',
+        ],
+        'emerald' => [
+            'name'         => 'Emerald (Hijau Zamrud / Mint)',
+            'border_l'     => 'border-l-emerald-500',
+            'bg_gradient'  => 'from-emerald-50/70 via-white to-white dark:from-emerald-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-emerald-500/80',
+            'badge_bg'     => 'bg-emerald-100/80 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60',
+            'badge_dot'    => 'bg-emerald-500',
+            'title_accent' => 'text-emerald-600 dark:text-emerald-400',
+        ],
+        'amber' => [
+            'name'         => 'Amber (Kuning Keemasan)',
+            'border_l'     => 'border-l-amber-500',
+            'bg_gradient'  => 'from-amber-50/70 via-white to-white dark:from-amber-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-amber-500/80',
+            'badge_bg'     => 'bg-amber-100/80 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60',
+            'badge_dot'    => 'bg-amber-500',
+            'title_accent' => 'text-amber-600 dark:text-amber-400',
+        ],
+        'purple' => [
+            'name'         => 'Purple (Ungu Elegan)',
+            'border_l'     => 'border-l-purple-600',
+            'bg_gradient'  => 'from-purple-50/70 via-white to-white dark:from-purple-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-purple-600/80',
+            'badge_bg'     => 'bg-purple-100/80 dark:bg-purple-950/70 text-purple-800 dark:text-purple-300 border-purple-200/80 dark:border-purple-800/60',
+            'badge_dot'    => 'bg-purple-600',
+            'title_accent' => 'text-purple-600 dark:text-purple-400',
+        ],
+        'rose' => [
+            'name'         => 'Rose (Merah Muda Elegan)',
+            'border_l'     => 'border-l-rose-500',
+            'bg_gradient'  => 'from-rose-50/70 via-white to-white dark:from-rose-950/30 dark:via-slate-900/95 dark:to-slate-900/95',
+            'border_hover' => 'hover:border-rose-500/80',
+            'badge_bg'     => 'bg-rose-100/80 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border-rose-200/80 dark:border-rose-800/60',
+            'badge_dot'    => 'bg-rose-500',
+            'title_accent' => 'text-rose-600 dark:text-rose-400',
+        ],
+    ];
+
+    return $themes[ $color ] ?? $themes['teal'];
+}
+
+/**
  * Custom excerpt length.
  */
 function wakalumi_excerpt_length( $length ) {

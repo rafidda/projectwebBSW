@@ -125,7 +125,7 @@ $module_category_palettes = [
     <!-- ========================================================================
          SECTION 1: HERO HEADER BANNER & POJK LITERASI IDENTITY
          ======================================================================== -->
-    <section class="relative z-10 pt-8 sm:pt-10 pb-12 sm:pb-16 overflow-hidden bg-slate-50/70 dark:bg-dark-surface/50 border-b border-slate-200/80 dark:border-dark-border/80 shadow-xs">
+    <section class="wkl-page-hero">
         <!-- Ambient Background Glow -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -538,13 +538,13 @@ $module_category_palettes = [
                             <!-- Row 4: Pengawasan -->
                             <div class="grid grid-cols-12 border-b border-slate-200/70 dark:border-dark-border text-sm sm:text-base leading-relaxed sm:leading-loose">
                                 <div class="col-span-4 p-4 sm:p-5 font-bold text-slate-900 dark:text-white bg-slate-50/90 dark:bg-dark-surface/90 flex items-center">
-                                    Badan Pengawas
+                                    <span>Badan Pengawas</span>
                                 </div>
                                 <div class="col-span-4 p-4 sm:p-5 font-semibold text-emerald-950 dark:text-emerald-100 bg-emerald-50/70 dark:bg-emerald-950/45 border-l border-r border-emerald-200/80 dark:border-emerald-800/80 flex items-center">
-                                    Otoritas Jasa Keuangan (OJK) + <strong class="text-emerald-950 dark:text-emerald-300 font-extrabold ml-1">Dewan Pengawas Syariah (DPS)</strong> berizin DSN-MUI.
+                                    <span>Otoritas Jasa Keuangan (OJK) serta <strong class="text-emerald-950 dark:text-emerald-300 font-extrabold">Dewan Pengawas Syariah (DPS)</strong> berizin DSN-MUI.</span>
                                 </div>
                                 <div class="col-span-4 p-4 sm:p-5 font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-dark-card flex items-center">
-                                    Otoritas Jasa Keuangan (OJK) dan Bank Indonesia.
+                                    <span>Otoritas Jasa Keuangan (OJK) dan Bank Indonesia.</span>
                                 </div>
                             </div>
 

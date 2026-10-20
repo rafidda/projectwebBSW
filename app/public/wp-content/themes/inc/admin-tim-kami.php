@@ -256,137 +256,27 @@ if ( ! function_exists( 'wakalumi_generate_idcard_placeholder' ) ) {
      * @return string Data URI
      */
     function wakalumi_generate_idcard_placeholder( $nama = 'Nama Karyawan', $jabatan = 'Staf Perbankan', $divisi_label = 'Operasional', $nip = '-', $tingkat = 'staff', $short_tag = '' ) {
-        $nama_esc     = htmlspecialchars( $nama, ENT_QUOTES, 'UTF-8' );
-        $jabatan_esc  = htmlspecialchars( $jabatan, ENT_QUOTES, 'UTF-8' );
-        $divisi_esc   = htmlspecialchars( $divisi_label, ENT_QUOTES, 'UTF-8' );
-        $nip_display  = ( empty( $nip ) || $nip === '-' ) ? 'Karyawan Baru' : $nip;
-        $nip_esc      = htmlspecialchars( $nip_display, ENT_QUOTES, 'UTF-8' );
-
-        $tier_pill = '';
-        if ( $tingkat === 'eksekutif' ) {
-            $tag_label = ! empty( $short_tag ) ? $short_tag : 'EKS';
-            $tier_pill = '<g transform="translate(160, 115)">
-                <rect width="180" height="26" rx="13" fill="#042f2e" stroke="#2dd4bf" stroke-width="1.5" />
-                <text x="90" y="17" fill="#5eead4" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="900" text-anchor="middle">★ ' . htmlspecialchars( $tag_label, ENT_QUOTES, 'UTF-8' ) . ' ★</text>
-            </g>';
-        } elseif ( $tingkat === 'pe' ) {
-            $tier_pill = '<g transform="translate(200, 115)">
-                <rect width="100" height="26" rx="13" fill="#042f2e" stroke="#14b8a6" stroke-width="1.5" />
-                <text x="50" y="17" fill="#2dd4bf" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="900" text-anchor="middle">★ PE ★</text>
-            </g>';
-        }
-
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 780" width="500" height="780">
             <defs>
                 <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#0f766e" />
-                    <stop offset="50%" stop-color="#115e59" />
-                    <stop offset="100%" stop-color="#134e4a" />
+                    <stop offset="0%" stop-color="#f0fdfa" />
+                    <stop offset="50%" stop-color="#f8fafc" />
+                    <stop offset="100%" stop-color="#ccfbf1" />
                 </linearGradient>
-                <linearGradient id="goldHolo" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#f59e0b" />
-                    <stop offset="50%" stop-color="#fef08a" />
-                    <stop offset="100%" stop-color="#d97706" />
-                </linearGradient>
-                <pattern id="islamicPattern" width="60" height="60" patternUnits="userSpaceOnUse">
-                    <path d="M30 0 L60 30 L30 60 L0 30 Z" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.08"/>
-                    <circle cx="30" cy="30" r="10" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.06"/>
+                <radialGradient id="centerGlow" cx="50%" cy="50%" r="45%">
+                    <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.12" />
+                    <stop offset="100%" stop-color="#14b8a6" stop-opacity="0" />
+                </radialGradient>
+                <pattern id="subtleGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+                    <path d="M14 0 L28 14 L14 28 L0 14 Z" fill="none" stroke="#0d9488" stroke-width="0.6" opacity="0.08"/>
+                    <circle cx="14" cy="14" r="1.2" fill="#0d9488" opacity="0.10"/>
                 </pattern>
             </defs>
 
-            <!-- Card Background -->
+            <!-- Minimalist Gradient & Pattern Background -->
             <rect width="500" height="780" rx="28" fill="url(#cardGrad)" />
-            <rect width="500" height="780" rx="28" fill="url(#islamicPattern)" />
-
-            <!-- Lanyard Slot Clip Indicator -->
-            <rect x="205" y="14" width="90" height="14" rx="7" fill="#042f2e" stroke="#2dd4bf" stroke-width="1.5" opacity="0.6" />
-
-            <!-- Card Header: Bank Branding -->
-            <g transform="translate(40, 50)">
-                <rect x="0" y="0" width="46" height="46" rx="12" fill="#ffffff" opacity="0.95" />
-                <path d="M14 32 L23 14 L32 32 Z M18 27 L28 27" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                <text x="58" y="24" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="800" font-size="19" letter-spacing="0.5">BANK SYARIAH WAKALUMI</text>
-                <text x="58" y="40" fill="#a7f3d0" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="600" font-size="12" letter-spacing="1.2">KARTU TANDA PENGENAL RESMI</text>
-            </g>
-
-            <!-- Gold Security Hologram Chip -->
-            <rect x="40" y="125" width="56" height="42" rx="8" fill="url(#goldHolo)" stroke="#b45309" stroke-width="1.2" opacity="0.9" />
-            <line x1="68" y1="125" x2="68" y2="167" stroke="#78350f" stroke-width="1" opacity="0.5" />
-            <line x1="40" y1="146" x2="96" y2="146" stroke="#78350f" stroke-width="1" opacity="0.5" />
-
-            ' . $tier_pill . '
-
-            <!-- Photo Frame Area -->
-            <g transform="translate(135, 150)">
-                <rect x="0" y="0" width="230" height="270" rx="20" fill="#ffffff" stroke="#2dd4bf" stroke-width="3" opacity="0.95" />
-                <circle cx="115" cy="105" r="50" fill="#cbd5e1" />
-                <path d="M60 235 C60 175, 170 175, 170 235" fill="#94a3b8" />
-                <text x="115" y="255" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="600" text-anchor="middle">FOTO RESMI KARYAWAN</text>
-            </g>
-
-            <!-- Employee Details Body -->
-            <g transform="translate(40, 460)">
-                <!-- Name -->
-                <text x="210" y="25" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="800" font-size="21" text-anchor="middle" letter-spacing="0.2">' . $nama_esc . '</text>
-                
-                <!-- Position & Division -->
-                <rect x="30" y="42" width="360" height="28" rx="14" fill="#042f2e" opacity="0.75" />
-                <text x="210" y="61" fill="#5eead4" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="700" font-size="13" text-anchor="middle">' . $jabatan_esc . '</text>
-                
-                <text x="210" y="98" fill="#e2e8f0" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-weight="600" font-size="13" text-anchor="middle">' . $divisi_esc . '</text>
-
-                <!-- NIP & Status Strip -->
-                <rect x="20" y="125" width="380" height="58" rx="14" fill="#ffffff" opacity="0.1" stroke="#2dd4bf" stroke-width="1" />
-                <text x="45" y="150" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="700">NOMOR INDUK PEGAWAI (NIP)</text>
-                <text x="45" y="170" fill="#ffffff" font-family="Courier, monospace" font-size="15" font-weight="800">' . $nip_esc . '</text>
-
-                <rect x="275" y="140" width="105" height="26" rx="13" fill="#10b981" />
-                <text x="327" y="157" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="11" font-weight="800" text-anchor="middle">KARYAWAN AKTIF</text>
-            </g>
-
-            <!-- Barcode Simulation Bottom -->
-            <g transform="translate(60, 680)">
-                <rect x="0" y="0" width="380" height="42" rx="8" fill="#ffffff" opacity="0.9" />
-                <g fill="#0f172a" transform="translate(30, 8)">
-                    <rect x="0" y="0" width="4" height="26"/>
-                    <rect x="8" y="0" width="2" height="26"/>
-                    <rect x="14" y="0" width="6" height="26"/>
-                    <rect x="24" y="0" width="3" height="26"/>
-                    <rect x="32" y="0" width="2" height="26"/>
-                    <rect x="38" y="0" width="8" height="26"/>
-                    <rect x="52" y="0" width="3" height="26"/>
-                    <rect x="60" y="0" width="5" height="26"/>
-                    <rect x="70" y="0" width="2" height="26"/>
-                    <rect x="76" y="0" width="7" height="26"/>
-                    <rect x="90" y="0" width="4" height="26"/>
-                    <rect x="98" y="0" width="2" height="26"/>
-                    <rect x="105" y="0" width="6" height="26"/>
-                    <rect x="116" y="0" width="3" height="26"/>
-                    <rect x="124" y="0" width="5" height="26"/>
-                    <rect x="135" y="0" width="8" height="26"/>
-                    <rect x="148" y="0" width="2" height="26"/>
-                    <rect x="156" y="0" width="4" height="26"/>
-                    <rect x="165" y="0" width="7" height="26"/>
-                    <rect x="178" y="0" width="3" height="26"/>
-                    <rect x="186" y="0" width="5" height="26"/>
-                    <rect x="196" y="0" width="2" height="26"/>
-                    <rect x="204" y="0" width="6" height="26"/>
-                    <rect x="216" y="0" width="4" height="26"/>
-                    <rect x="224" y="0" width="3" height="26"/>
-                    <rect x="232" y="0" width="7" height="26"/>
-                    <rect x="244" y="0" width="2" height="26"/>
-                    <rect x="252" y="0" width="6" height="26"/>
-                    <rect x="264" y="0" width="3" height="26"/>
-                    <rect x="272" y="0" width="5" height="26"/>
-                    <rect x="282" y="0" width="4" height="26"/>
-                    <rect x="292" y="0" width="6" height="26"/>
-                    <rect x="304" y="0" width="2" height="26"/>
-                    <rect x="312" y="0" width="5" height="26"/>
-                </g>
-            </g>
-
-            <!-- Bottom Legal Strip -->
-            <text x="250" y="756" fill="#99f6e4" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="10" font-weight="600" text-anchor="middle" opacity="0.8">PT BANK SYARIAH WAKALUMI • TERDAFTAR &amp; DIAWASI OJK • LPS</text>
+            <rect width="500" height="780" rx="28" fill="url(#subtleGrid)" />
+            <circle cx="250" cy="390" r="180" fill="url(#centerGlow)" />
         </svg>';
 
         return 'data:image/svg+xml;base64,' . base64_encode( $svg );

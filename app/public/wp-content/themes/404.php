@@ -8,7 +8,7 @@
 get_header();
 ?>
 
-<section class="section relative overflow-hidden">
+<section class="wkl-page-hero section relative overflow-hidden">
     <!-- Decorative background -->
     <div class="absolute inset-0 mesh-gradient"></div>
     <div class="pattern-overlay"></div>

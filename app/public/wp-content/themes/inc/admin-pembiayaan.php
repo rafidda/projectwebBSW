@@ -454,7 +454,12 @@ function wakalumi_render_pembiayaan_admin_page() {
         update_option( 'options_pembiayaan_calc_min', sanitize_text_field( $_POST['options_pembiayaan_calc_min'] ?? '5000000' ) );
         update_option( 'options_pembiayaan_calc_max', sanitize_text_field( $_POST['options_pembiayaan_calc_max'] ?? '500000000' ) );
         update_option( 'options_pembiayaan_calc_default', sanitize_text_field( $_POST['options_pembiayaan_calc_default'] ?? '25000000' ) );
-        update_option( 'options_pembiayaan_calc_rate', sanitize_text_field( $_POST['options_pembiayaan_calc_rate'] ?? '11.5' ) );
+        $calc_rate_unit_post = sanitize_text_field( $_POST['options_pembiayaan_calc_rate_unit'] ?? 'bulan' );
+        if ( ! in_array( $calc_rate_unit_post, [ 'bulan', 'tahun' ], true ) ) {
+            $calc_rate_unit_post = 'bulan';
+        }
+        update_option( 'options_pembiayaan_calc_rate_unit', $calc_rate_unit_post );
+        update_option( 'options_pembiayaan_calc_rate', sanitize_text_field( $_POST['options_pembiayaan_calc_rate'] ?? ( $calc_rate_unit_post === 'bulan' ? '1.0' : '11.5' ) ) );
         update_option( 'options_pembiayaan_calc_note', sanitize_textarea_field( $_POST['options_pembiayaan_calc_note'] ?? '' ) );
         update_option( 'options_pembiayaan_calc_btn_text', sanitize_text_field( $_POST['options_pembiayaan_calc_btn_text'] ?? '' ) );
 
@@ -544,8 +549,16 @@ function wakalumi_render_pembiayaan_admin_page() {
     $calc_min       = get_option( 'options_pembiayaan_calc_min', '5000000' );
     $calc_max       = get_option( 'options_pembiayaan_calc_max', '500000000' );
     $calc_default   = get_option( 'options_pembiayaan_calc_default', '25000000' );
-    $calc_rate      = get_option( 'options_pembiayaan_calc_rate', '11.5' );
-    $calc_note      = get_option( 'options_pembiayaan_calc_note', '*Estimasi indikatif dengan formula perhitungan margin setara flat per tahun. Perhitungan riil disepakati saat akad resmi.' );
+    $saved_rate_unit = get_option( 'options_pembiayaan_calc_rate_unit', null );
+    $calc_rate_unit  = in_array( $saved_rate_unit, [ 'bulan', 'tahun' ], true ) ? $saved_rate_unit : 'bulan';
+    $calc_rate       = get_option( 'options_pembiayaan_calc_rate', ( $calc_rate_unit === 'bulan' ? '1.0' : '11.5' ) );
+    if ( $saved_rate_unit === null && $calc_rate === '11.5' ) {
+        $calc_rate = '1.0';
+    }
+    $calc_note      = get_option( 'options_pembiayaan_calc_note', '*Estimasi indikatif dengan formula perhitungan margin setara flat per bulan. Perhitungan riil disepakati saat akad resmi.' );
+    if ( $calc_rate_unit === 'bulan' && strpos( $calc_note, 'per tahun' ) !== false ) {
+        $calc_note = str_replace( 'per tahun', 'per bulan', $calc_note );
+    }
     $calc_btn_text  = get_option( 'options_pembiayaan_calc_btn_text', 'Ajukan Pembiayaan via WhatsApp' );
     $calc_presets   = wakalumi_get_pembiayaan_calc_presets();
 
@@ -846,10 +859,42 @@ function wakalumi_render_pembiayaan_admin_page() {
                         <td><textarea id="options_pembiayaan_calc_sub" name="options_pembiayaan_calc_sub" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $calc_sub ); ?></textarea></td>
                     </tr>
                     <tr>
-                        <th><label for="options_pembiayaan_calc_rate">Indikasi Margin Setara (% p.a. flat)</label></th>
+                        <th><label>Satuan Margin Kalkulator (Pilih Aktif)</label></th>
                         <td>
-                            <input type="number" step="0.1" id="options_pembiayaan_calc_rate" name="options_pembiayaan_calc_rate" value="<?php echo esc_attr( $calc_rate ); ?>" style="width: 100px; font-weight: bold; text-align: center;"> % per tahun
-                            <p class="description">Digunakan sebagai dasar formula estimasi angsuran pokok + margin per bulan.</p>
+                            <div style="display: flex; gap: 14px; flex-wrap: wrap; max-width: 650px;">
+                                <label style="flex: 1; min-width: 240px; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 2px solid <?php echo $calc_rate_unit === 'bulan' ? '#088395' : '#cbd5e1'; ?>; background: <?php echo $calc_rate_unit === 'bulan' ? '#f0fdfa' : '#f8fafc'; ?>; cursor: pointer; transition: all 0.2s;" class="wkl-rate-unit-card">
+                                    <input type="radio" name="options_pembiayaan_calc_rate_unit" value="bulan" <?php checked( $calc_rate_unit, 'bulan' ); ?> style="margin-top: 3px;">
+                                    <div>
+                                        <strong style="display: block; font-size: 13px; color: #0f172a;">Per Bulan (% / bln) <span style="display: inline-block; font-size: 10px; background: #088395; color: #fff; padding: 1px 7px; border-radius: 99px; margin-left: 4px;">Rekomendasi</span></strong>
+                                        <span style="font-size: 11px; color: #64748b; line-height: 1.4; display: block; margin-top: 2px;">Menampilkan satuan <strong>% / bln</strong> di kalkulator. Rumus margin bulanan = Plafon &times; (% Margin / bln).</span>
+                                    </div>
+                                </label>
+                                <label style="flex: 1; min-width: 240px; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 2px solid <?php echo $calc_rate_unit === 'tahun' ? '#088395' : '#cbd5e1'; ?>; background: <?php echo $calc_rate_unit === 'tahun' ? '#f0fdfa' : '#f8fafc'; ?>; cursor: pointer; transition: all 0.2s;" class="wkl-rate-unit-card">
+                                    <input type="radio" name="options_pembiayaan_calc_rate_unit" value="tahun" <?php checked( $calc_rate_unit, 'tahun' ); ?> style="margin-top: 3px;">
+                                    <div>
+                                        <strong style="display: block; font-size: 13px; color: #0f172a;">Per Tahun (% p.a.)</strong>
+                                        <span style="font-size: 11px; color: #64748b; line-height: 1.4; display: block; margin-top: 2px;">Menampilkan satuan <strong>% p.a.</strong> di kalkulator. Rumus margin bulanan = (Plafon &times; % Margin p.a.) &divide; 12.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_calc_rate" id="wkl-pem-rate-label">Indikasi Margin Setara (<span id="wkl-pem-rate-unit-code"><?php echo $calc_rate_unit === 'tahun' ? '% p.a. / tahun' : '% / bulan'; ?></span>)</label></th>
+                        <td>
+                            <div style="display: inline-flex; align-items: center; gap: 8px;">
+                                <input type="number" step="0.01" id="options_pembiayaan_calc_rate" name="options_pembiayaan_calc_rate" value="<?php echo esc_attr( $calc_rate ); ?>" style="width: 110px; font-weight: bold; text-align: center;">
+                                <span id="wkl-pem-rate-suffix" style="font-weight: 700; color: #088395; background: #f0fdfa; border: 1px solid #99f6e4; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
+                                    <?php echo $calc_rate_unit === 'tahun' ? '% per tahun (p.a.)' : '% per bulan (/ bln)'; ?>
+                                </span>
+                            </div>
+                            <p class="description" id="wkl-pem-rate-desc">
+                                <?php if ( $calc_rate_unit === 'tahun' ) : ?>
+                                    Digunakan sebagai dasar formula estimasi angsuran pokok + margin per bulan (contoh: <strong>11.5</strong> untuk 11.5% p.a. per tahun).
+                                <?php else : ?>
+                                    Digunakan sebagai dasar formula estimasi angsuran pokok + margin per bulan (contoh: <strong>1.0</strong> atau <strong>1.2</strong> untuk margin % per bulan).
+                                <?php endif; ?>
+                            </p>
                         </td>
                     </tr>
                     <tr>
@@ -1309,7 +1354,53 @@ function wakalumi_render_pembiayaan_admin_page() {
             });
         }
 
-        // 4. Media Uploader Kartu Pembiayaan
+        // 4. Toggle Satuan Margin Kalkulator (Per Bulan vs Per Tahun)
+        var rateUnitRadios = document.querySelectorAll('input[name="options_pembiayaan_calc_rate_unit"]');
+        var rateUnitCode   = document.getElementById('wkl-pem-rate-unit-code');
+        var rateSuffix     = document.getElementById('wkl-pem-rate-suffix');
+        var rateDesc       = document.getElementById('wkl-pem-rate-desc');
+        var rateInput      = document.getElementById('options_pembiayaan_calc_rate');
+        var noteInput      = document.getElementById('options_pembiayaan_calc_note');
+
+        rateUnitRadios.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var val = this.value;
+                document.querySelectorAll('.wkl-rate-unit-card').forEach(function(card) {
+                    var r = card.querySelector('input[type="radio"]');
+                    if (r && r.checked) {
+                        card.style.borderColor = '#088395';
+                        card.style.background  = '#f0fdfa';
+                    } else {
+                        card.style.borderColor = '#cbd5e1';
+                        card.style.background  = '#f8fafc';
+                    }
+                });
+
+                if (val === 'tahun') {
+                    if (rateUnitCode) rateUnitCode.textContent = '% p.a. / tahun';
+                    if (rateSuffix) rateSuffix.textContent = '% per tahun (p.a.)';
+                    if (rateDesc) rateDesc.innerHTML = 'Digunakan sebagai dasar formula estimasi angsuran pokok + margin per bulan (contoh: <strong>11.5</strong> untuk 11.5% p.a. per tahun).';
+                    if (rateInput && (rateInput.value === '1' || rateInput.value === '1.0')) {
+                        rateInput.value = '11.5';
+                    }
+                    if (noteInput && noteInput.value.indexOf('per bulan') !== -1) {
+                        noteInput.value = noteInput.value.replace('per bulan', 'per tahun');
+                    }
+                } else {
+                    if (rateUnitCode) rateUnitCode.textContent = '% / bulan';
+                    if (rateSuffix) rateSuffix.textContent = '% per bulan (/ bln)';
+                    if (rateDesc) rateDesc.innerHTML = 'Digunakan sebagai dasar formula estimasi angsuran pokok + margin per bulan (contoh: <strong>1.0</strong> atau <strong>1.2</strong> untuk margin % per bulan).';
+                    if (rateInput && rateInput.value === '11.5') {
+                        rateInput.value = '1.0';
+                    }
+                    if (noteInput && noteInput.value.indexOf('per tahun') !== -1) {
+                        noteInput.value = noteInput.value.replace('per tahun', 'per bulan');
+                    }
+                }
+            });
+        });
+
+        // 5. Media Uploader Kartu Pembiayaan
         if (window.jQuery) {
             var $ = window.jQuery;
             $(document).on('click', '.wkl-upload-pem-img-btn', function(e) {

@@ -120,10 +120,10 @@ if ( empty( $cta_btn1_url ) ) {
 ?>
 
 <!-- ========================================
-     HEADER BANNER & BREADCRUMBS
+     HEADER BANNER & BREADCRUMBS (UNIFIED HERO + OFFICE NETWORK CARD)
      ======================================== -->
-<section class="relative z-10 pt-8 pb-12 md:pb-16 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/60 dark:border-slate-800/60">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-primary-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none"></div>
+<section class="wkl-page-hero">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
     <div class="container-wide relative z-10">
         <!-- Breadcrumbs -->
@@ -135,73 +135,114 @@ if ( empty( $cta_btn1_url ) ) {
             <span class="text-slate-300 dark:text-slate-600">/</span>
             <span class="text-slate-600 dark:text-slate-300 font-medium">Profil</span>
             <span class="text-slate-300 dark:text-slate-600">/</span>
-            <span class="text-primary-600 dark:text-teal-400 font-bold">Jaringan Kantor</span>
+            <span class="text-teal-600 dark:text-teal-400 font-bold">Jaringan Kantor</span>
         </nav>
 
-        <div class="max-w-4xl" data-aos="fade-up">
-            <!-- Kicker Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-5 bg-primary-500/10 dark:bg-primary-400/10 border border-primary-500/20 dark:border-primary-400/20">
-                <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
-                <span class="text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-teal-300">
-                    <?php echo esc_html( $page_badge ); ?>
-                </span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <!-- Left Column: Title, Subtitle & 3 Quick Stats -->
+            <div class="lg:col-span-7 xl:col-span-8" data-aos="fade-up">
+                <!-- Kicker Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-4 bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                    <span><?php echo esc_html( $page_badge ); ?></span>
+                </div>
+
+                <!-- Page Title -->
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-4">
+                    <?php echo esc_html( $page_title ); ?>
+                </h1>
+
+                <!-- Subtitle -->
+                <?php if ( ! empty( $page_subtitle ) ) : ?>
+                    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl mb-6">
+                        <?php echo esc_html( $page_subtitle ); ?>
+                    </p>
+                <?php endif; ?>
+
+                <!-- 3 Quick Stats Counter Bar -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl pt-2">
+                    <!-- Stat 1 -->
+                    <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs backdrop-blur-sm">
+                        <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/50 flex items-center justify-center text-teal-600 dark:text-teal-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-base font-black text-slate-900 dark:text-white leading-tight">
+                                <?php echo esc_html( $stat1_num ); ?>
+                            </div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
+                                <?php echo esc_html( $stat1_label ); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat 2 -->
+                    <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs backdrop-blur-sm">
+                        <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/50 flex items-center justify-center text-primary-600 dark:text-teal-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-base font-black text-slate-900 dark:text-white leading-tight">
+                                <?php echo esc_html( $stat2_num ); ?>
+                            </div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
+                                <?php echo esc_html( $stat2_label ); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stat 3 -->
+                    <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs backdrop-blur-sm">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 flex items-center justify-center text-amber-600 dark:text-amber-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-base font-black text-slate-900 dark:text-white leading-tight">
+                                <?php echo esc_html( $stat3_num ); ?>
+                            </div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
+                                <?php echo esc_html( $stat3_label ); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Page Title -->
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-5">
-                <?php echo esc_html( $page_title ); ?>
-            </h1>
+            <!-- Right Column: Office Network Service Hub Card -->
+            <div class="lg:col-span-5 xl:col-span-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-teal-200/80 dark:border-teal-800/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 group cursor-default">
+                    <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500"></div>
 
-            <!-- Subtitle -->
-            <?php if ( ! empty( $page_subtitle ) ) : ?>
-                <p class="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl mb-8">
-                    <?php echo esc_html( $page_subtitle ); ?>
-                </p>
-            <?php endif; ?>
+                    <div class="p-6 bg-gradient-to-br from-teal-50/90 via-cyan-50/40 to-white dark:from-teal-950/70 dark:via-slate-900/60 dark:to-slate-900 border-b border-teal-100/80 dark:border-slate-800 relative overflow-hidden text-center">
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.055] dark:opacity-[0.04] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] select-none">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                        </div>
 
-            <!-- 3 Quick Stats Counter Bar -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl pt-2">
-                <!-- Stat 1 -->
-                <div class="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-sm backdrop-blur-sm">
-                    <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/50 flex items-center justify-center text-teal-600 dark:text-teal-400 flex-shrink-0">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">
-                            <?php echo esc_html( $stat1_num ); ?>
+                        <div class="relative w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center p-2.5 mx-auto shadow-md shadow-teal-500/10 border border-teal-200/80 dark:border-teal-700/60 group-hover:scale-105 transition-transform duration-300 z-10 mb-3">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Logo Bank Syariah Wakalumi" class="w-full h-full object-contain">
                         </div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
-                            <?php echo esc_html( $stat1_label ); ?>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Stat 2 -->
-                <div class="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-sm backdrop-blur-sm">
-                    <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/50 flex items-center justify-center text-primary-600 dark:text-teal-400 flex-shrink-0">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">
-                            <?php echo esc_html( $stat2_num ); ?>
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-100/90 dark:bg-teal-950 text-teal-800 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1 relative z-10">
+                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                            Jaringan Pelayanan Nasabah
                         </div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
-                            <?php echo esc_html( $stat2_label ); ?>
-                        </div>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white relative z-10">Hadir Lebih Dekat &amp; Bersahabat</h3>
                     </div>
-                </div>
 
-                <!-- Stat 3 -->
-                <div class="flex items-center gap-3 p-3.5 sm:p-4 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-sm backdrop-blur-sm">
-                    <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 flex items-center justify-center text-amber-600 dark:text-amber-400 flex-shrink-0">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </div>
-                    <div>
-                        <div class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">
-                            <?php echo esc_html( $stat3_num ); ?>
-                        </div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
-                            <?php echo esc_html( $stat3_label ); ?>
+                    <div class="p-6 space-y-4 bg-white dark:bg-slate-900/95 relative z-10 text-center">
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Melayani transaksi kas, pembukaan rekening simpanan, serta konsultasi pembiayaan syariah di wilayah Tangerang Selatan &amp; Tangerang.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-3 text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <?php echo count( $kantor_list ); ?> Lokasi Kantor
+                            </span>
+                            <span class="text-slate-300 dark:text-slate-600">•</span>
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                Layanan Prima SAPA
+                            </span>
                         </div>
                     </div>
                 </div>

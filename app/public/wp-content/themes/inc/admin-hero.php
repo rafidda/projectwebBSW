@@ -72,6 +72,8 @@ function wakalumi_render_hero_admin_page() {
                 foreach ( $slide_keys as $key ) {
                     $post_id     = isset( $_POST["slide_{$key}_id"] ) ? intval( $_POST["slide_{$key}_id"] ) : 0;
                     $title       = sanitize_text_field( $_POST["slide_{$key}_title"] ?? '' );
+                    $text_mode   = sanitize_key( $_POST["slide_{$key}_text_mode"] ?? 'show_all' );
+                    $badge_text  = sanitize_text_field( $_POST["slide_{$key}_badge_text"] ?? '' );
                     $subheadline = sanitize_textarea_field( $_POST["slide_{$key}_subheadline"] ?? '' );
                     $cta1_text   = sanitize_text_field( $_POST["slide_{$key}_cta_text"] ?? 'Hubungi Kami' );
                     $cta1_url    = esc_url_raw( trim( $_POST["slide_{$key}_cta_url"] ?? '' ) );
@@ -92,12 +94,10 @@ function wakalumi_render_hero_admin_page() {
                         $id_mob = attachment_url_to_postid( $img_mob );
                     }
 
-                    if ( empty( $title ) ) {
-                        $title = 'Bank Syariah Wakalumi';
-                    }
+                    $wp_title = ! empty( $title ) ? $title : ( 'Slide Banner #' . ( $order_index + 1 ) );
 
                     $post_data = [
-                        'post_title'  => $title,
+                        'post_title'  => $wp_title,
                         'post_type'   => 'hero_slide',
                         'post_status' => in_array( $status, [ 'publish', 'draft' ], true ) ? $status : 'publish',
                         'menu_order'  => $order_index,
@@ -111,6 +111,9 @@ function wakalumi_render_hero_admin_page() {
                     }
 
                     if ( $post_id && ! is_wp_error( $post_id ) ) {
+                        update_post_meta( $post_id, 'slide_headline', $title );
+                        update_post_meta( $post_id, 'slide_text_mode', $text_mode );
+                        update_post_meta( $post_id, 'slide_badge_text', $badge_text );
                         update_post_meta( $post_id, 'slide_subheadline', $subheadline );
                         update_post_meta( $post_id, 'slide_cta_text', $cta1_text );
                         update_post_meta( $post_id, 'slide_cta_url', $cta1_url );
@@ -229,9 +232,12 @@ function wakalumi_render_hero_admin_page() {
             $img_mob = wp_get_attachment_image_url( $id_mob, 'full' ) ?: wp_get_attachment_url( $id_mob );
         }
 
+        $headline = metadata_exists( 'post', $sid, 'slide_headline' ) ? get_post_meta( $sid, 'slide_headline', true ) : $s->post_title;
         $slides[] = [
             'id'          => $sid,
-            'title'       => $s->post_title,
+            'title'       => $headline,
+            'text_mode'   => get_post_meta( $sid, 'slide_text_mode', true ) ?: 'show_all',
+            'badge_text'  => metadata_exists( 'post', $sid, 'slide_badge_text' ) ? get_post_meta( $sid, 'slide_badge_text', true ) : 'Bank Syariah Wakalumi',
             'status'      => $s->post_status,
             'subheadline' => get_post_meta( $sid, 'slide_subheadline', true ),
             'cta_text'    => get_post_meta( $sid, 'slide_cta_text', true ) ?: 'Hubungi Kami',
@@ -368,11 +374,36 @@ function wakalumi_render_hero_admin_page() {
                                 <input type="hidden" name="slide_key[]" value="<?php echo esc_attr( $key ); ?>">
                                 <input type="hidden" name="slide_<?php echo esc_attr( $key ); ?>_id" value="<?php echo esc_attr( $slide['id'] ); ?>">
 
-                                <!-- Row 1: Title & Status -->
-                                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                <!-- Mode Tampilan Teks / Overlay -->
+                                <div style="background: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: 700; color: #0f766e; margin-bottom: 2px;">
+                                            🎨 Mode Tampilan Teks &amp; Tombol
+                                        </label>
+                                        <p style="font-size: 11px; color: #0d9488; margin: 0;">
+                                            Pilih opsi ini jika gambar banner yang diunggah sudah memiliki tulisan/keterangan produk sendiri.
+                                        </p>
+                                    </div>
+                                    <div style="min-width: 290px;">
+                                        <select name="slide_<?php echo esc_attr( $key ); ?>_text_mode" style="width: 100%; font-size: 12px; font-weight: 600; border-radius: 6px; padding: 6px 10px; border-color: #0d9488; background: #fff;">
+                                            <option value="show_all" <?php selected( $slide['text_mode'], 'show_all' ); ?>>✅ Tampilkan Lengkap (Judul, Subjudul &amp; Tombol)</option>
+                                            <option value="cta_only" <?php selected( $slide['text_mode'], 'cta_only' ); ?>>🔘 Hanya Tombol CTA (Judul &amp; Subjudul Disembunyikan)</option>
+                                            <option value="hide_all" <?php selected( $slide['text_mode'], 'hide_all' ); ?>>🖼️ Sembunyikan Seluruhnya (Gambar Grafis Banner Penuh)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Row 1: Badge, Title & Status -->
+                                <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 16px; margin-bottom: 16px;">
                                     <div>
                                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px;">
-                                            Judul Utama (Headline) <span style="color:#ef4444;">*</span>
+                                            Label Badge (Atas)
+                                        </label>
+                                        <input type="text" name="slide_<?php echo esc_attr( $key ); ?>_badge_text" value="<?php echo esc_attr( $slide['badge_text'] ); ?>" class="regular-text" placeholder="Bank Syariah Wakalumi" style="width: 100%; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px;">
+                                            Judul Utama (Headline)
                                         </label>
                                         <input type="text" name="slide_<?php echo esc_attr( $key ); ?>_title" value="<?php echo esc_attr( $slide['title'] ); ?>" class="large-text wkl-input-title" placeholder="Contoh: Bank Syariah Terpercaya untuk Masa Depan Anda" style="width: 100%; border-radius: 6px; padding: 6px 10px; font-weight: 600;">
                                     </div>
@@ -758,9 +789,26 @@ function wakalumi_render_hero_admin_page() {
                 '<div class="wkl-slide-body" style="padding: 20px 22px;">' +
                     '<input type="hidden" name="slide_key[]" value="' + key + '">' +
                     '<input type="hidden" name="slide_' + key + '_id" value="0">' +
-                    '<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px;">' +
+                    '<div style="background: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">' +
                         '<div>' +
-                            '<label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px;">Judul Utama (Headline) <span style="color:#ef4444;">*</span></label>' +
+                            '<label style="display: block; font-size: 12px; font-weight: 700; color: #0f766e; margin-bottom: 2px;">🎨 Mode Tampilan Teks &amp; Tombol</label>' +
+                            '<p style="font-size: 11px; color: #0d9488; margin: 0;">Pilih opsi ini jika gambar banner yang diunggah sudah memiliki tulisan/keterangan produk sendiri.</p>' +
+                        '</div>' +
+                        '<div style="min-width: 290px;">' +
+                            '<select name="slide_' + key + '_text_mode" style="width: 100%; font-size: 12px; font-weight: 600; border-radius: 6px; padding: 6px 10px; border-color: #0d9488; background: #fff;">' +
+                                '<option value="show_all" selected>✅ Tampilkan Lengkap (Judul, Subjudul &amp; Tombol)</option>' +
+                                '<option value="cta_only">🔘 Hanya Tombol CTA (Judul &amp; Subjudul Disembunyikan)</option>' +
+                                '<option value="hide_all">🖼️ Sembunyikan Seluruhnya (Gambar Grafis Banner Penuh)</option>' +
+                            '</select>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 16px; margin-bottom: 16px;">' +
+                        '<div>' +
+                            '<label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px;">Label Badge (Atas)</label>' +
+                            '<input type="text" name="slide_' + key + '_badge_text" value="Bank Syariah Wakalumi" class="regular-text" placeholder="Bank Syariah Wakalumi" style="width: 100%; border-radius: 6px; padding: 6px 10px; font-size: 12px;">' +
+                        '</div>' +
+                        '<div>' +
+                            '<label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 5px;">Judul Utama (Headline)</label>' +
                             '<input type="text" name="slide_' + key + '_title" value="" class="large-text wkl-input-title" placeholder="Contoh: Pembiayaan Usaha Berkah Syariah" style="width: 100%; border-radius: 6px; padding: 6px 10px; font-weight: 600;">' +
                         '</div>' +
                         '<div>' +

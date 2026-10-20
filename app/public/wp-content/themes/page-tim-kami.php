@@ -41,12 +41,12 @@ $wa_url     = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $header['notice_wa'] ) : $wa_url;
 ?>
 
-<div class="min-h-screen bg-transparent text-slate-800 dark:text-dark-text pb-24">
+<div class="min-h-screen bg-transparent text-slate-800 dark:text-slate-200 pb-24">
 
     <!-- ========================================================================
          SECTION 1: HERO HEADER BANNER & ANTI-FRAUD VERIFICATION NOTICE
          ======================================================================== -->
-    <section class="relative z-10 pt-8 sm:pt-10 pb-12 sm:pb-16 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/80 dark:border-dark-border/80 shadow-xs">
+    <section class="wkl-page-hero relative z-10 overflow-hidden shadow-xs">
         <!-- Ambient Background Glow -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -103,7 +103,10 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                         </div>
 
                         <div class="relative z-10 space-y-3.5">
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/80 dark:to-teal-950/60 border border-emerald-200/80 dark:border-emerald-800/60 flex items-center justify-center p-1.5 shadow-inner shrink-0">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Wakalumi" class="w-full h-full object-contain">
+                                </div>
                                 <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800/60">
                                     <?php echo esc_html( $header['notice_badge'] ); ?>
                                 </span>
@@ -376,8 +379,17 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                                 <!-- The ID Card Image (User's PNG or Generated SVG) -->
                                 <img src="<?php echo esc_url( $card_image ); ?>" 
                                      alt="<?php echo esc_attr( 'ID Card ' . $emp_nama ); ?>" 
-                                     class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                     class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                                      loading="lazy">
+
+                                <?php if ( empty( $emp_img ) ) : ?>
+                                    <!-- Minimalist Centered Logo with Subtle Opacity & Gentle Hover -->
+                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-[5]">
+                                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" 
+                                             alt="" 
+                                             class="w-14 h-14 sm:w-16 sm:h-16 object-contain opacity-[0.22] group-hover:opacity-[0.38] group-hover:scale-110 transition-all duration-500 ease-out">
+                                    </div>
+                                <?php endif; ?>
 
                                 <!-- Floating Badges Top Right: Tingkat Jabatan & Status -->
                                 <div class="absolute top-2.5 sm:top-3 right-2.5 sm:right-3 z-10 pointer-events-none flex items-center gap-1.5">
@@ -507,7 +519,7 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                                      data-aos="fade-up" 
                                      data-aos-delay="<?php echo min( ( $global_card_idx % 4 ) * 80, 240 ); ?>">
 
-                                    <div class="relative w-full rounded-2xl sm:rounded-3xl transition-all duration-500 cursor-pointer transform group-hover:-translate-y-2 select-none <?php echo $card_wrapper_class; ?>"
+                                    <div class="relative w-full rounded-2xl sm:rounded-3xl transition-all duration-500 cursor-pointer transform group-hover:-translate-y-1.5 select-none <?php echo $card_wrapper_class; ?>"
                                          style="aspect-ratio: 1 / 1.56;"
                                          data-modal-open="idcard-zoom-modal"
                                          data-emp-name="<?php echo $emp_nama; ?>"
@@ -524,8 +536,15 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                                             <div class="wkl-glass-shine"></div>
                                             <img src="<?php echo esc_url( $card_image ); ?>" 
                                                  alt="<?php echo esc_attr( 'ID Card ' . $emp_nama ); ?>" 
-                                                 class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                                 class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                                                  loading="lazy">
+                                            <?php if ( empty( $emp_img ) ) : ?>
+                                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-[5]">
+                                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" 
+                                                         alt="" 
+                                                         class="w-14 h-14 sm:w-16 sm:h-16 object-contain opacity-[0.22] group-hover:opacity-[0.38] group-hover:scale-110 transition-all duration-500 ease-out">
+                                                </div>
+                                            <?php endif; ?>
                                             <div class="absolute top-2.5 sm:top-3 right-2.5 sm:right-3 z-10 pointer-events-none flex items-center gap-1.5">
                                                 <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-bold bg-slate-900/75 text-emerald-300 border border-white/20 shadow-xs backdrop-blur-md">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>

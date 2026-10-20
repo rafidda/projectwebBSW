@@ -349,7 +349,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
 <!-- ========================================
      HEADER BANNER & BREADCRUMBS (WITH LPS GUARANTEE & WATERMARK)
      ======================================== -->
-<section class="relative z-10 pt-8 pb-12 md:pb-16 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/60 dark:border-slate-800/60">
+<section class="wkl-page-hero">
     <!-- Ambient Blur Background -->
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 

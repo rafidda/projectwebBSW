@@ -32,12 +32,12 @@ foreach ( $all_jobs as $j ) {
 }
 ?>
 
-<div class="min-h-screen bg-transparent text-slate-800 dark:text-dark-text pb-24">
+<div class="min-h-screen bg-transparent text-slate-800 dark:text-slate-200 pb-24">
 
     <!-- ========================================================================
          SECTION 1: HERO HEADER BANNER & RECRUITMENT STATUS
          ======================================================================== -->
-    <section class="relative z-10 pt-8 sm:pt-10 pb-12 sm:pb-16 overflow-hidden bg-slate-50/70 dark:bg-dark-surface/50 border-b border-slate-200/80 dark:border-dark-border/80 shadow-xs">
+    <section class="wkl-page-hero relative z-10 overflow-hidden shadow-xs">
         <!-- Ambient Background Glow -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -91,15 +91,24 @@ foreach ( $all_jobs as $j ) {
                         <div class="relative rounded-[22px] p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl overflow-hidden">
                             <!-- Glass Shine Glint -->
                             <div class="wkl-glass-shine"></div>
+                            <!-- Watermark Emblem Subtle Background -->
+                            <div class="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 w-40 h-40 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-500 group-hover:scale-125 select-none">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                            </div>
 
                             <div class="relative z-10 space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <span class="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300/70 dark:border-teal-700/60 shadow-2xs">
-                                        Portal Rekrutmen Resmi
-                                    </span>
-                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wide">
-                                        Bank Syariah Wakalumi
-                                    </span>
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/80 dark:to-emerald-950/60 border border-teal-200/80 dark:border-teal-800/60 flex items-center justify-center p-2 shadow-inner shrink-0">
+                                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Wakalumi" class="w-full h-full object-contain">
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300/70 dark:border-teal-700/60 shadow-2xs mb-0.5">
+                                            Portal Rekrutmen Resmi
+                                        </span>
+                                        <span class="block text-xs font-bold text-slate-600 dark:text-slate-300 tracking-wide truncate">
+                                            PT BPRS Wakalumi
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white leading-snug">

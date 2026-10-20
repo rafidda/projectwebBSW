@@ -148,54 +148,107 @@ $total_members = count( $pengurus_list );
 ?>
 
 <!-- ========================================
-     HEADER BANNER & BREADCRUMBS
+     HEADER BANNER & BREADCRUMBS (UNIFIED HERO + GCG GOVERNANCE CARD)
      ======================================== -->
-<section class="relative pt-8 pb-14 md:pb-20 overflow-hidden bg-slate-50 dark:bg-dark-surface border-b border-slate-200/60 dark:border-slate-800/60">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-primary-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none"></div>
+<section class="wkl-page-hero pb-16 sm:pb-20 md:pb-24">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
     <div class="container-wide relative z-10">
         <!-- Breadcrumbs -->
         <nav class="flex items-center gap-2 text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-6" data-aos="fade-down">
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-primary-600 dark:hover:text-accent transition-colors flex items-center gap-1.5 font-medium">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hover:text-primary-600 dark:hover:text-teal-400 transition-colors flex items-center gap-1.5 font-medium">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Beranda
             </a>
             <span class="text-slate-300 dark:text-slate-600">/</span>
             <span class="text-slate-600 dark:text-slate-300 font-medium">Profil</span>
             <span class="text-slate-300 dark:text-slate-600">/</span>
-            <span class="text-primary-600 dark:text-teal-400 font-bold">Susunan Pengurus</span>
+            <span class="text-teal-600 dark:text-teal-400 font-bold">Susunan Pengurus</span>
         </nav>
 
-        <div class="max-w-4xl" data-aos="fade-up">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-5 bg-primary-500/10 dark:bg-primary-400/10 border border-primary-500/20 dark:border-primary-400/20">
-                <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
-                <span class="text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-teal-300">
-                    <?php echo esc_html( $page_badge ); ?>
-                </span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <!-- Left Column: Title, Subtitle & Highlights -->
+            <div class="lg:col-span-7 xl:col-span-8" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-4 bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider shadow-xs">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                    <span><?php echo esc_html( $page_badge ); ?></span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-4">
+                    <?php echo esc_html( $page_title ); ?>
+                </h1>
+
+                <?php if ( ! empty( $page_subtitle ) ) : ?>
+                    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
+                        <?php echo esc_html( $page_subtitle ); ?>
+                    </p>
+                <?php endif; ?>
+
+                <!-- Key Highlights Pills -->
+                <div class="flex flex-wrap items-center gap-3 pt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                        <span>Prinsip Good Corporate Governance (GCG)</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+                        <span>Sertifikasi OJK &amp; DSN-MUI</span>
+                    </div>
+                </div>
             </div>
 
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-5">
-                <?php echo esc_html( $page_title ); ?>
-            </h1>
+            <!-- Right Column: Executive Governance & Emblem Badge Card -->
+            <div class="lg:col-span-5 xl:col-span-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-teal-200/80 dark:border-teal-800/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 group cursor-default">
+                    <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500"></div>
 
-            <?php if ( ! empty( $page_subtitle ) ) : ?>
-                <p class="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
-                    <?php echo esc_html( $page_subtitle ); ?>
-                </p>
-            <?php endif; ?>
+                    <div class="p-6 bg-gradient-to-br from-teal-50/90 via-cyan-50/40 to-white dark:from-teal-950/70 dark:via-slate-900/60 dark:to-slate-900 border-b border-teal-100/80 dark:border-slate-800 relative overflow-hidden text-center">
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.055] dark:opacity-[0.04] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] select-none">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                        </div>
+
+                        <div class="relative w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center p-2.5 mx-auto shadow-md shadow-teal-500/10 border border-teal-200/80 dark:border-teal-700/60 group-hover:scale-105 transition-transform duration-300 z-10 mb-3">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Logo Bank Syariah Wakalumi" class="w-full h-full object-contain">
+                        </div>
+
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-100/90 dark:bg-teal-950 text-teal-800 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1 relative z-10">
+                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                            Kepemimpinan &amp; Pengawasan
+                        </div>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white relative z-10">Tata Kelola Amanah &amp; Profesional</h3>
+                    </div>
+
+                    <div class="p-6 space-y-4 bg-white dark:bg-slate-900/95 relative z-10 text-center">
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Sinergi pengawasan Dewan Komisaris, Dewan Pengawas Syariah (DPS), dan manajemen eksekutif dalam menjaga kepercayaan nasabah.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-3 text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <?php echo esc_html( $total_members ); ?> Jajaran Pengurus
+                            </span>
+                            <span class="text-slate-300 dark:text-slate-600">•</span>
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                Kepatuhan GCG
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 
 <!-- ========================================
-     GCG STATS BAR
+     GCG STATS BAR (FLOATING OVERLAY CARDS)
      ======================================== -->
-<section class="relative -mt-8 mb-8 md:mb-12">
+<section class="relative z-20 -mt-8 sm:-mt-10 mb-8 md:mb-12">
     <div class="container-wide">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4 md:gap-5" data-aos="fade-up" data-aos-delay="100">
             <!-- Total Pengurus -->
-            <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
+            <div class="relative rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-lg shadow-slate-900/5 dark:shadow-black/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary-500/10 dark:bg-primary-400/10 text-primary-600 dark:text-teal-400 mb-2 group-hover:scale-110 transition-transform">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
                 </div>
@@ -206,7 +259,7 @@ $total_members = count( $pengurus_list );
             </div>
 
             <!-- DPS -->
-            <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
+            <div class="relative rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-lg shadow-slate-900/5 dark:shadow-black/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-2 group-hover:scale-110 transition-transform">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
                 </div>
@@ -217,7 +270,7 @@ $total_members = count( $pengurus_list );
             </div>
 
             <!-- Komisaris -->
-            <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
+            <div class="relative rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-lg shadow-slate-900/5 dark:shadow-black/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal-500/10 text-primary-600 dark:text-teal-400 mb-2 group-hover:scale-110 transition-transform">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/></svg>
                 </div>
@@ -228,7 +281,7 @@ $total_members = count( $pengurus_list );
             </div>
 
             <!-- Direksi (Dynamic & Seragam) -->
-            <div class="relative rounded-2xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-sm hover:shadow-md transition-shadow group">
+            <div class="relative rounded-2xl sm:rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-700/80 p-4 md:p-5 text-center shadow-lg shadow-slate-900/5 dark:shadow-black/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-teal-500/10 text-primary-600 dark:text-teal-400 mb-2 group-hover:scale-110 transition-transform">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
                 </div>
@@ -378,8 +431,11 @@ $total_members = count( $pengurus_list );
                                      alt="<?php echo esc_attr( $item['nama'] ); ?>" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <?php else : ?>
-                                <div class="w-full h-full flex items-center justify-center text-slate-400 font-bold">
-                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                <div class="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50/70 to-emerald-100/60 dark:from-teal-950/80 dark:via-slate-900 dark:to-emerald-950/60 overflow-hidden">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="absolute w-40 h-40 object-contain opacity-[0.08] dark:opacity-[0.06] group-hover:scale-125 group-hover:rotate-6 transition-all duration-700 pointer-events-none">
+                                    <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-teal-200/80 dark:border-teal-700/60 p-3 shadow-md group-hover:scale-110 transition-transform duration-500">
+                                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="" class="w-full h-full object-contain">
+                                    </div>
                                 </div>
                             <?php endif; ?>
 
@@ -422,8 +478,8 @@ $total_members = count( $pengurus_list );
                                      alt="<?php echo esc_attr( $item['nama'] ); ?>" 
                                      class="w-full h-full object-cover">
                             <?php else : ?>
-                                <div class="w-full h-full flex items-center justify-center text-slate-400 text-xs font-bold">
-                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950 dark:to-slate-900 p-2.5">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="" class="w-full h-full object-contain">
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -466,8 +522,9 @@ $total_members = count( $pengurus_list );
                                                  alt="<?php echo esc_attr( $item['nama'] ); ?>" 
                                                  class="w-full h-full object-cover">
                                         <?php else : ?>
-                                            <div class="w-full h-full flex items-center justify-center text-slate-400 text-lg font-bold">
-                                                <?php echo esc_html( $cfg['abbr'] ); ?>
+                                            <div class="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-emerald-100/60 dark:from-teal-950 dark:via-slate-900 dark:to-emerald-950/60 overflow-hidden">
+                                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="absolute w-32 h-32 object-contain opacity-10">
+                                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="" class="relative z-10 w-16 h-16 object-contain">
                                             </div>
                                         <?php endif; ?>
                                     </div>

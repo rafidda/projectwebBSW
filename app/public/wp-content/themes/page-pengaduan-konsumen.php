@@ -44,7 +44,7 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
          SECTION 1: HERO HEADER BANNER (STANDAR SERAGAM DENGAN BRANDING RESMI)
          DENGAN CARD BADGE KEAMANAN, KERAHASIAAN & TRANSPARANSI NASABAH
          ======================================================================== -->
-    <section class="relative z-10 pt-8 pb-12 md:pb-16 overflow-hidden bg-gradient-to-b from-teal-50/60 via-slate-50/40 to-transparent dark:from-dark-surface dark:via-dark-surface/50 dark:to-transparent border-b border-slate-200/80 dark:border-dark-border/80">
+    <section class="wkl-page-hero">
         <!-- Ambient Blur Glow -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-72 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
 

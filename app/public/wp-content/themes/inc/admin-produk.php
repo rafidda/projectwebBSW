@@ -544,11 +544,14 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
             update_option( 'options_nisbah_data', $new_nisbah );
         }
 
-        // 5. Deposito: Header Banner
+        // 5. Deposito: Header Banner & Foto Perwakilan Produk
         update_option( 'options_deposito_page_badge', sanitize_text_field( $_POST['options_deposito_page_badge'] ?? '' ) );
         update_option( 'options_deposito_page_title', sanitize_text_field( $_POST['options_deposito_page_title'] ?? '' ) );
         update_option( 'options_deposito_page_subtitle', sanitize_textarea_field( $_POST['options_deposito_page_subtitle'] ?? '' ) );
         update_option( 'options_deposito_quote', sanitize_textarea_field( $_POST['options_deposito_quote'] ?? '' ) );
+        if ( isset( $_POST['options_deposito_main_image'] ) ) {
+            update_option( 'options_deposito_main_image', esc_url_raw( $_POST['options_deposito_main_image'] ) );
+        }
 
         // 5b. Deposito: LPS Card
         update_option( 'options_deposito_lps_tag', sanitize_text_field( $_POST['options_deposito_lps_tag'] ?? '' ) );
@@ -790,6 +793,15 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
     $dep_tenor_title   = get_option( 'options_deposito_tenor_title', 'Pilihan Tenor Fleksibel Sesuai Kebutuhan' );
     $dep_tenor_desc    = get_option( 'options_deposito_tenor_desc', 'Pilih jangka waktu penempatan yang paling cocok untuk rencana likuiditas pribadi maupun perusahaan.' );
     $dep_tenor_cards   = wakalumi_get_deposito_tenor_cards();
+    $dep_main_image    = get_option( 'options_deposito_main_image', '' );
+    if ( empty( $dep_main_image ) && ! empty( $dep_tenor_cards ) && is_array( $dep_tenor_cards ) ) {
+        foreach ( $dep_tenor_cards as $dc_item ) {
+            if ( ! empty( $dc_item['image'] ) ) {
+                $dep_main_image = $dc_item['image'];
+                break;
+            }
+        }
+    }
     $dep_t1_badge      = get_option( 'options_deposito_t1_badge', 'Tenor Singkat' );
     $dep_t1_desc       = get_option( 'options_deposito_t1_desc', 'Likuiditas cepat dan fleksibel untuk perputaran dana jangka sangat pendek.' );
     $dep_t1_aro        = get_option( 'options_deposito_t1_aro', 'ARO Tersedia' );
@@ -1648,6 +1660,28 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                             <th><label for="options_deposito_quote">Teks Kutipan Resmi Deposito</label></th>
                             <td><textarea id="options_deposito_quote" name="options_deposito_quote" rows="3" class="large-text" style="width: 100%; max-width: 650px; font-style: italic;"><?php echo esc_textarea( $dep_quote ); ?></textarea></td>
                         </tr>
+                        <tr>
+                            <th><label for="options_deposito_main_image">Foto / Gambar Perwakilan Produk Deposito</label></th>
+                            <td>
+                                <div class="wkl-dep-main-img-wrap" style="max-width: 650px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 14px 16px;">
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <input type="text" id="options_deposito_main_image" name="options_deposito_main_image" value="<?php echo esc_attr( $dep_main_image ); ?>" class="regular-text" style="flex: 1; min-width: 240px; background: #fff;" placeholder="https://... atau klik Unggah Foto Perwakilan">
+                                        <button type="button" id="wkl-upload-dep-main-img-btn" class="button button-primary" style="background: #088395; border-color: #066e7d; display: inline-flex; align-items: center; gap: 5px;">
+                                            <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Foto Perwakilan
+                                        </button>
+                                        <button type="button" id="wkl-remove-dep-main-img-btn" class="button button-link-delete" style="color: #ef4444; <?php echo empty( $dep_main_image ) ? 'display:none;' : ''; ?>">
+                                            ✕ Hapus
+                                        </button>
+                                    </div>
+                                    <div id="wkl-dep-main-img-preview-box" style="margin-top: 10px;">
+                                        <img id="wkl-dep-main-img-preview" src="<?php echo esc_url( $dep_main_image ); ?>" style="height: 90px; aspect-ratio: 16/10; border-radius: 8px; border: 1px solid #cbd5e1; object-fit: cover; <?php echo empty( $dep_main_image ) ? 'display:none;' : ''; ?>" alt="Preview Produk Deposito">
+                                    </div>
+                                    <p class="description" style="font-size: 11px; margin-top: 6px; color: #0f766e;">
+                                        Cukup <strong>1 foto perwakilan</strong> untuk produk <strong>Deposito Mudharabah</strong>. Foto ini akan tampil saat kursor diarahkan ke <em>Deposito Mudharabah</em> pada <strong>Navbar Produk</strong> serta tampil pada halaman Deposito Syariah (Rekomendasi rasio 16:10 / 800&times;500 px).
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
 
                     <!-- Sub-Card: Kartu LPS Kanan Header -->
@@ -1704,7 +1738,7 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                                 ✨ Daftar Kartu Tenor Deposito (Dinamis):
                             </span>
                             <p style="margin: 4px 0 0 0; color: #15803d; font-size: 12px;">
-                                Anda dapat mengunggah foto/grafis produk untuk setiap tenor (rasio rekomendasi 16:10 / 800×500 px agar pas tanpa terpotong), menambah tenor baru (misal: 24 Bulan atau program promo), mengubah nama, memindahkan urutan, atau menghapus kartu.
+                                Anda dapat mengatur daftar kartu jangka waktu deposito (1, 3, 6, 12 Bulan), menambah tenor baru (misal: 24 Bulan), mengubah nama, memindahkan urutan, atau menghapus kartu. Foto perwakilan produk Deposito dikelola terpusat pada Bagian 1 di atas.
                             </p>
                         </div>
                         <button type="button" id="btn-add-deposito-tenor" class="button button-primary" style="background: #088395; border-color: #066e7d; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;">
@@ -1785,28 +1819,7 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                                             Kartu Unggulan / Pilihan Populer (Aksen Border Tebal)
                                         </label>
                                         <input type="hidden" name="dep_tenor_popular[]" class="wkl-dep-popular-hidden" value="<?php echo $c_pop ? '1' : '0'; ?>">
-                                    </div>
-
-                                    <!-- Upload Foto / Gambar Produk Deposito -->
-                                    <div style="grid-column: 1 / -1;" class="wkl-dep-img-field-wrap">
-                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">
-                                            Gambar / Foto Produk Deposito (Opsional - Rekomendasi Rasio 16:10 / 800×500 px)
-                                        </label>
-                                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                                            <input type="text" name="dep_tenor_image[]" value="<?php echo esc_attr( $c_image ); ?>" class="regular-text" style="flex: 1; min-width: 250px;" placeholder="https://... atau klik Unggah Gambar">
-                                            <button type="button" class="button wkl-upload-dep-img-btn" style="display: inline-flex; align-items: center; gap: 5px;">
-                                                <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Gambar
-                                            </button>
-                                            <button type="button" class="button button-link-delete wkl-remove-dep-img-btn" style="color: #ef4444; <?php echo empty( $c_image ) ? 'display:none;' : ''; ?>">
-                                                ✕ Hapus
-                                            </button>
-                                        </div>
-                                        <div class="wkl-dep-img-preview-box" style="margin-top: 8px;">
-                                            <img class="wkl-dep-img-preview" src="<?php echo esc_url( $c_image ); ?>" style="height: 65px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; <?php echo empty( $c_image ) ? 'display:none;' : ''; ?>" alt="Preview Deposito">
-                                        </div>
-                                        <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">
-                                            Rekomendasi rasio gambar <strong>16:10</strong> (misal 800×500 px). Jika gambar diunggah dengan rasio berbeda, sistem otomatis menyesuaikan proporsi (<em>object-cover</em>) tanpa merusak tampilan kartu.
-                                        </p>
+                                        <input type="hidden" name="dep_tenor_image[]" value="<?php echo esc_attr( $c_image ); ?>">
                                     </div>
                                 </div>
 
@@ -2461,28 +2474,7 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                         Kartu Unggulan / Pilihan Populer (Aksen Border Tebal)
                     </label>
                     <input type="hidden" name="dep_tenor_popular[]" class="wkl-dep-popular-hidden" value="0">
-                </div>
-
-                <!-- Upload Foto / Gambar Produk Deposito -->
-                <div style="grid-column: 1 / -1;" class="wkl-dep-img-field-wrap">
-                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">
-                        Gambar / Foto Produk Deposito (Opsional - Rekomendasi Rasio 16:10 / 800×500 px)
-                    </label>
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <input type="text" name="dep_tenor_image[]" value="" class="regular-text" style="flex: 1; min-width: 250px;" placeholder="https://... atau klik Unggah Gambar">
-                        <button type="button" class="button wkl-upload-dep-img-btn" style="display: inline-flex; align-items: center; gap: 5px;">
-                            <span class="dashicons dashicons-format-image" style="font-size: 16px; width: 16px; height: 16px;"></span> Unggah Gambar
-                        </button>
-                        <button type="button" class="button button-link-delete wkl-remove-dep-img-btn" style="color: #ef4444; display: none;">
-                            ✕ Hapus
-                        </button>
-                    </div>
-                    <div class="wkl-dep-img-preview-box" style="margin-top: 8px;">
-                        <img class="wkl-dep-img-preview" src="" style="height: 65px; border-radius: 6px; border: 1px solid #cbd5e1; object-fit: cover; display: none;" alt="Preview Deposito">
-                    </div>
-                    <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">
-                        Rekomendasi rasio gambar <strong>16:10</strong> (misal 800×500 px). Jika gambar diunggah dengan rasio berbeda, sistem otomatis menyesuaikan proporsi (<em>object-cover</em>) tanpa merusak tampilan kartu.
-                    </p>
+                    <input type="hidden" name="dep_tenor_image[]" value="">
                 </div>
             </div>
 
@@ -2821,18 +2813,16 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                 btn.hide();
             });
 
-            // Media Uploader Kartu Deposito
-            jQuery(document).on('click', '.wkl-upload-dep-img-btn', function(e) {
+            // Media Uploader Foto Perwakilan Produk Deposito (1 Foto Utama)
+            jQuery(document).on('click', '#wkl-upload-dep-main-img-btn', function(e) {
                 e.preventDefault();
-                var btn = jQuery(this);
-                var wrap = btn.closest('.wkl-dep-img-field-wrap');
-                var input = wrap.find('input[name="dep_tenor_image[]"]');
-                var preview = wrap.find('img.wkl-dep-img-preview');
-                var removeBtn = wrap.find('.wkl-remove-dep-img-btn');
+                var input = jQuery('#options_deposito_main_image');
+                var preview = jQuery('#wkl-dep-main-img-preview');
+                var removeBtn = jQuery('#wkl-remove-dep-main-img-btn');
 
                 var frame = wp.media({
-                    title: 'Pilih atau Unggah Foto Produk Deposito (Rekomendasi Rasio 16:10)',
-                    button: { text: 'Gunakan Gambar Ini' },
+                    title: 'Pilih atau Unggah Foto Perwakilan Produk Deposito (Rekomendasi Rasio 16:10)',
+                    button: { text: 'Gunakan Foto Ini' },
                     multiple: false,
                     library: { type: 'image' }
                 });
@@ -2854,12 +2844,11 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                 frame.open();
             });
 
-            jQuery(document).on('click', '.wkl-remove-dep-img-btn', function(e) {
+            jQuery(document).on('click', '#wkl-remove-dep-main-img-btn', function(e) {
                 e.preventDefault();
                 var btn = jQuery(this);
-                var wrap = btn.closest('.wkl-dep-img-field-wrap');
-                var input = wrap.find('input[name="dep_tenor_image[]"]');
-                var preview = wrap.find('img.wkl-dep-img-preview');
+                var input = jQuery('#options_deposito_main_image');
+                var preview = jQuery('#wkl-dep-main-img-preview');
                 input.val('').trigger('change');
                 if (preview.length) {
                     preview.attr('src', '').hide();

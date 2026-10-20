@@ -135,11 +135,23 @@ function wakalumi_render_general_page() {
             remove_theme_mod( 'custom_logo' );
         }
 
-        echo '<div class="notice notice-success is-dismissible"><p><strong>✅ Pengaturan Identitas Brand, Logo, Favicon & WhatsApp berhasil disimpan!</strong></p></div>';
+        // Pengaturan SEO & Pratinjau Mesin Pencari
+        update_option( 'options_seo_meta_desc', sanitize_textarea_field( $_POST['options_seo_meta_desc'] ?? '' ) );
+        update_option( 'options_seo_keywords', sanitize_text_field( $_POST['options_seo_keywords'] ?? '' ) );
+        update_option( 'options_seo_og_image', esc_url_raw( $_POST['options_seo_og_image'] ?? '' ) );
+        update_option( 'options_seo_og_image_id', intval( $_POST['options_seo_og_image_id'] ?? 0 ) );
+        update_option( 'options_seo_google_verify', sanitize_text_field( $_POST['options_seo_google_verify'] ?? '' ) );
+
+        echo '<div class="notice notice-success is-dismissible"><p><strong>✅ Pengaturan Identitas Brand, Logo, Favicon, WhatsApp & SEO berhasil disimpan!</strong></p></div>';
     }
 
     $wa     = get_option( 'options_contact_wa', '6281517380388' );
     $wa_msg = get_option( 'options_contact_wa_message', 'Halo CS Bank Syariah Wakalumi, saya ingin berkonsultasi mengenai produk perbankan.' );
+    $seo_desc   = get_option( 'options_seo_meta_desc', 'PT BPRS Wakalumi (Bank Syariah Wakalumi / BSW) — Bank Perekonomian Rakyat Syariah terpercaya di Ciputat, Tangerang Selatan & Depok. Solusi Tabungan Syariah, Deposito Mudharabah bagi hasil kompetitif, dan Pembiayaan Syariah mudah, amanah, berizin & diawasi OJK serta dijamin LPS.' );
+    $seo_kw     = get_option( 'options_seo_keywords', 'Bank Syariah Wakalumi, BPRS Wakalumi, BSW, Bank Syariah Ciputat, Bank Syariah Tangerang Selatan, Bank Syariah Depok, Tabungan Syariah, Deposito Syariah, Pembiayaan Syariah, BPRS OJK LPS' );
+    $seo_og_img = get_option( 'options_seo_og_image', '' );
+    $seo_og_id  = get_option( 'options_seo_og_image_id', 0 );
+    $seo_gver   = get_option( 'options_seo_google_verify', '' );
     $brand  = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
         'logo_url'      => get_option( 'options_site_logo', '' ),
         'logo_id'       => get_option( 'options_site_logo_id', 0 ),
@@ -368,9 +380,65 @@ function wakalumi_render_general_page() {
                     </tr>
                 </table>
 
+                <div style="margin: 35px 0 25px 0; border-top: 1px solid #e2e8f0;"></div>
+
+                <!-- SEKSI 3: PENGATURAN SEO & PRATINJAU WHATSAPP / GOOGLE -->
+                <h2 style="font-size: 16px; margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🔍 Pengaturan SEO &amp; Pratinjau Mesin Pencari (Google &amp; Share WhatsApp)
+                </h2>
+                <p style="color: #64748b; font-size: 13px;">
+                    Pengaturan ini mengoptimalkan tampilan website di hasil pencarian Google (Meta Description, Keywords, Schema.org Perbankan Syariah) serta kartu pratinjau otomatis ketika link website dibagikan di WhatsApp/Sosial Media.
+                </p>
+
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_seo_meta_desc">Deskripsi Meta Google (Meta Description):</label></th>
+                        <td>
+                            <textarea id="options_seo_meta_desc" name="options_seo_meta_desc" rows="3" class="large-text"><?php echo esc_textarea( $seo_desc ); ?></textarea>
+                            <p class="description">Ringkasan resmi bank (ideal 140–165 karakter) yang muncul di bawah judul website pada hasil pencarian Google dan pratinjau chat WhatsApp.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_seo_keywords">Kata Kunci Pencarian (Meta Keywords):</label></th>
+                        <td>
+                            <input type="text" id="options_seo_keywords" name="options_seo_keywords" value="<?php echo esc_attr( $seo_kw ); ?>" class="large-text">
+                            <p class="description">Pisahkan dengan tanda koma (contoh: <code>Bank Syariah Wakalumi, BPRS Wakalumi, BSW, Tabungan Syariah, Deposito Syariah, Pembiayaan Syariah</code>).</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_seo_og_image">Gambar Thumbnail Share WhatsApp (OG Image):</label></th>
+                        <td>
+                            <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                                <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 8px; display: inline-flex; align-items: center; justify-content: center; min-width: 140px; min-height: 74px;">
+                                    <img id="seo_og_preview" src="<?php echo esc_url( $seo_og_img ); ?>" style="max-height: 70px; max-width: 180px; object-fit: cover; border-radius: 4px; <?php echo empty( $seo_og_img ) ? 'display:none;' : ''; ?>" alt="Preview OG" />
+                                    <span class="wkl-placeholder" style="<?php echo ! empty( $seo_og_img ) ? 'display:none;' : ''; ?> color: #94a3b8; font-size: 11px;">Otomatis Gunakan Logo</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button type="button" class="button button-secondary wkl-upload-btn" data-target="options_seo_og_image" data-preview="seo_og_preview" data-target-id="options_seo_og_image_id" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Pilih Gambar Banner Share
+                                    </button>
+                                    <button type="button" class="button-link wkl-remove-btn" data-target="options_seo_og_image" data-preview="seo_og_preview" data-target-id="options_seo_og_image_id" style="color: #ef4444; font-size: 12px; <?php echo empty( $seo_og_img ) ? 'display:none;' : ''; ?>">
+                                        ✕ Hapus Gambar
+                                    </button>
+                                </div>
+                                <input type="hidden" id="options_seo_og_image" name="options_seo_og_image" value="<?php echo esc_attr( $seo_og_img ); ?>">
+                                <input type="hidden" id="options_seo_og_image_id" name="options_seo_og_image_id" value="<?php echo esc_attr( $seo_og_id ); ?>">
+                            </div>
+                            <p class="description" style="margin-top: 8px;">Gambar yang muncul saat link website dibagikan di WhatsApp/Facebook/LinkedIn (Rekomendasi: 1200 &times; 630 piksel). Jika dikosongkan, otomatis menggunakan Logo Utama Bank.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_seo_google_verify">Kode Verifikasi Google Search Console <span style="font-weight: normal; color: #94a3b8;">(Opsional)</span>:</label></th>
+                        <td>
+                            <input type="text" id="options_seo_google_verify" name="options_seo_google_verify" value="<?php echo esc_attr( $seo_gver ); ?>" class="regular-text" placeholder="Contoh: aBcDeFgHiJkLmNoPqRsTuVwXyZ123456">
+                            <p class="description">Jika Anda mendaftarkan domain di Google Search Console dengan metode <em>HTML Tag</em>, cukup tempelkan kode kontennya di sini.</p>
+                        </td>
+                    </tr>
+                </table>
+
                 <p class="submit" style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
                     <button type="submit" name="wakalumi_save_general" class="button button-primary button-large" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 25px;">
-                        Simpan Identitas &amp; Pengaturan Umum
+                        Simpan Identitas, WhatsApp &amp; SEO
                     </button>
                 </p>
             </form>
@@ -1063,6 +1131,7 @@ function wakalumi_render_media_page() {
         // Layanan Cepat (4 cards)
         for ( $i = 1; $i <= 4; $i++ ) {
             update_option( "options_quick_card_{$i}_title", sanitize_text_field( $_POST["options_quick_card_{$i}_title"] ?? '' ) );
+            update_option( "options_quick_card_{$i}_badge", sanitize_text_field( $_POST["options_quick_card_{$i}_badge"] ?? '' ) );
             update_option( "options_quick_card_{$i}_desc", sanitize_text_field( $_POST["options_quick_card_{$i}_desc"] ?? '' ) );
             update_option( "options_quick_card_{$i}_url", esc_url_raw( $_POST["options_quick_card_{$i}_url"] ?? '' ) );
             update_option( "options_quick_card_{$i}_icon", sanitize_text_field( $_POST["options_quick_card_{$i}_icon"] ?? '' ) );
@@ -1110,8 +1179,14 @@ function wakalumi_render_media_page() {
         update_option( 'options_about_cta_url', esc_url_raw( $_POST['options_about_cta_url'] ?? '' ) );
         update_option( 'options_about_img_mobile_mode', sanitize_text_field( $_POST['options_about_img_mobile_mode'] ?? 'show_top' ) );
 
-        // Instagram Feed
-        update_option( 'options_ig_title', sanitize_text_field( $_POST['options_ig_title'] ?? 'Aktivitas & Edukasi Terbaru' ) );
+        // Tabungan Preview (Section 4 Beranda)
+        update_option( 'options_tabungan_sec_badge', sanitize_text_field( $_POST['options_tabungan_sec_badge'] ?? 'Produk Simpanan' ) );
+        update_option( 'options_tabungan_sec_title', sanitize_text_field( $_POST['options_tabungan_sec_title'] ?? 'Solusi Tabungan *Syariah Amanah*' ) );
+        update_option( 'options_tabungan_sec_desc', sanitize_textarea_field( $_POST['options_tabungan_sec_desc'] ?? '' ) );
+
+        // Instagram Feed (Section 8 Beranda)
+        update_option( 'options_ig_badge', sanitize_text_field( $_POST['options_ig_badge'] ?? 'Sosial Media' ) );
+        update_option( 'options_ig_title', sanitize_text_field( $_POST['options_ig_title'] ?? 'Aktivitas & *Sosial Media BSW*' ) );
         update_option( 'options_ig_subtitle', sanitize_text_field( $_POST['options_ig_subtitle'] ?? 'Ikuti perjalanan dan literasi keuangan syariah kami di Instagram.' ) );
         
         $submitted_posts = $_POST['options_ig_posts'] ?? [];
@@ -1126,20 +1201,25 @@ function wakalumi_render_media_page() {
         }
         update_option( 'options_ig_posts', $clean_posts );
 
+        // Berita Terbaru (Section 9 Beranda)
+        update_option( 'options_berita_sec_badge', sanitize_text_field( $_POST['options_berita_sec_badge'] ?? 'Berita Terbaru' ) );
+        update_option( 'options_berita_sec_title', sanitize_text_field( $_POST['options_berita_sec_title'] ?? 'Berita dari *BSW*' ) );
+
         echo '<div class="notice notice-success is-dismissible"><p><strong>Layanan Cepat & Media Beranda berhasil disimpan!</strong></p></div>';
     }
 
     // Default Quick Cards
     $cards = [];
     $default_cards = [
-        1 => [ 'title' => 'Pembiayaan Syariah', 'desc' => 'Solusi permodalan usaha UMKM, investasi & multiguna tanpa riba.', 'url' => home_url( '/produk/pembiayaan/' ), 'icon' => 'financing', 'image' => '' ],
-        2 => [ 'title' => 'Tabungan Syariah', 'desc' => 'Simpanan amanah berbasis Wadiah & Mudharabah bebas riba.', 'url' => home_url( '/produk/tabungan-syariah/' ), 'icon' => 'savings', 'image' => '' ],
-        3 => [ 'title' => 'Deposito Syariah', 'desc' => 'Investasi berjangka bagi hasil optimal, aman & dijamin LPS.', 'url' => home_url( '/produk/deposito-syariah/' ), 'icon' => 'deposit', 'image' => '' ],
-        4 => [ 'title' => 'Simulasi Angsuran', 'desc' => 'Hitung estimasi plafon, tenor & angsuran bulanan transparan.', 'url' => home_url( '/produk/pembiayaan/#kalkulator' ), 'icon' => 'calculator', 'image' => '' ],
+        1 => [ 'title' => 'Pembiayaan Syariah', 'badge' => 'Solusi Usaha', 'desc' => 'Solusi permodalan usaha UMKM, investasi & multiguna tanpa riba.', 'url' => home_url( '/produk/pembiayaan/' ), 'icon' => 'financing', 'image' => '' ],
+        2 => [ 'title' => 'Tabungan Syariah', 'badge' => 'Bebas Biaya Adm', 'desc' => 'Simpanan amanah berbasis Wadiah & Mudharabah bebas riba.', 'url' => home_url( '/produk/tabungan-syariah/' ), 'icon' => 'savings', 'image' => '' ],
+        3 => [ 'title' => 'Deposito Syariah', 'badge' => 'Bagi Hasil & LPS', 'desc' => 'Investasi berjangka bagi hasil optimal, aman & dijamin LPS.', 'url' => home_url( '/produk/deposito-syariah/' ), 'icon' => 'deposit', 'image' => '' ],
+        4 => [ 'title' => 'Simulasi Angsuran', 'badge' => 'Kalkulator Cepat', 'desc' => 'Hitung estimasi plafon, tenor & angsuran bulanan transparan.', 'url' => home_url( '/produk/pembiayaan/#kalkulator' ), 'icon' => 'calculator', 'image' => '' ],
     ];
     for ( $i = 1; $i <= 4; $i++ ) {
         $cards[$i] = [
             'title' => get_option( "options_quick_card_{$i}_title", $default_cards[$i]['title'] ),
+            'badge' => get_option( "options_quick_card_{$i}_badge", $default_cards[$i]['badge'] ),
             'desc'  => get_option( "options_quick_card_{$i}_desc", $default_cards[$i]['desc'] ),
             'url'   => get_option( "options_quick_card_{$i}_url", $default_cards[$i]['url'] ),
             'icon'  => get_option( "options_quick_card_{$i}_icon", $default_cards[$i]['icon'] ),
@@ -1183,8 +1263,18 @@ function wakalumi_render_media_page() {
     $v_url   = get_option( 'options_video_url', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' );
     $v_thumb = get_option( 'options_video_thumb', '' );
 
+    // Tabungan Preview defaults
+    $tab_sec_badge = get_option( 'options_tabungan_sec_badge', 'Produk Simpanan' );
+    $tab_sec_title = get_option( 'options_tabungan_sec_title', 'Solusi Tabungan *Syariah Amanah*' );
+    $tab_sec_desc  = get_option( 'options_tabungan_sec_desc', 'Ragam pilihan produk simpanan murni syariah tanpa riba, aman dijamin LPS, dan dikelola profesional untuk kemaslahatan Anda.' );
+
+    // Berita defaults
+    $berita_sec_badge = get_option( 'options_berita_sec_badge', 'Berita Terbaru' );
+    $berita_sec_title = get_option( 'options_berita_sec_title', 'Berita dari *BSW*' );
+
     // Instagram defaults
-    $ig_title    = get_option( 'options_ig_title', 'Aktivitas & Edukasi Terbaru' );
+    $ig_badge    = get_option( 'options_ig_badge', 'Sosial Media' );
+    $ig_title    = get_option( 'options_ig_title', 'Aktivitas & *Sosial Media BSW*' );
     $ig_subtitle = get_option( 'options_ig_subtitle', 'Ikuti perjalanan dan literasi keuangan syariah kami di Instagram.' );
     $ig_posts    = get_option( 'options_ig_posts', [] );
     if ( empty( $ig_posts ) ) {
@@ -1227,6 +1317,10 @@ function wakalumi_render_media_page() {
                             <div style="margin-bottom: 8px;">
                                 <label style="font-size: 12px; font-weight: 600; color: #475569;">Judul Kartu:</label>
                                 <input type="text" name="options_quick_card_<?php echo $i; ?>_title" value="<?php echo esc_attr( $cards[$i]['title'] ); ?>" class="regular-text" style="width: 100%; margin-top: 2px;" required>
+                            </div>
+                            <div style="margin-bottom: 8px;">
+                                <label style="font-size: 12px; font-weight: 600; color: #475569;">Teks Badge / Label Pojok:</label>
+                                <input type="text" name="options_quick_card_<?php echo $i; ?>_badge" value="<?php echo esc_attr( $cards[$i]['badge'] ); ?>" class="regular-text" placeholder="Contoh: Solusi Usaha" style="width: 100%; margin-top: 2px;">
                             </div>
                             <div style="margin-bottom: 8px;">
                                 <label style="font-size: 12px; font-weight: 600; color: #475569;">Deskripsi Singkat:</label>
@@ -1469,7 +1563,7 @@ function wakalumi_render_media_page() {
                 </table>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    📖 Bagian "Tentang Kami" (Section 4 Beranda)
+                    📖 Bagian "Tentang Kami" (Section 3 Beranda)
                 </h2>
                 <p style="color: #64748b; font-size: 13px;">
                     Kelola foto, narasi pengantar, dan penataan tampilan khusus mobile untuk bagian profil di beranda.
@@ -1485,6 +1579,7 @@ function wakalumi_render_media_page() {
                         <th scope="row"><label for="options_about_title">Judul Utama:</label></th>
                         <td>
                             <input type="text" id="options_about_title" name="options_about_title" value="<?php echo esc_attr( $abt_title ); ?>" class="large-text">
+                            <p class="description">💡 <strong>Dual-Tone:</strong> Gunakan tanda bintang <code>*kata*</code> untuk memberi warna aksen berbeda (Contoh: <code>Tumbuh Bersama *Kebaikan Syariah*</code>). Jika tanpa tanda bintang, kata terakhir otomatis diberi aksen.</p>
                         </td>
                     </tr>
                     <tr>
@@ -1545,15 +1640,50 @@ function wakalumi_render_media_page() {
                 </table>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    📸 Bagian Feed Instagram (Dinamis & Fleksibel)
+                    🏦 Bagian "Produk Tabungan &amp; Simpanan" (Section 4 Beranda)
+                </h2>
+                <p style="color: #64748b; font-size: 13px;">
+                    Kelola label, judul promosi beraksen warna, dan narasi pengantar untuk 4 kartu simpanan unggulan di beranda.
+                </p>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_tabungan_sec_badge">Label Kecil Atas:</label></th>
+                        <td>
+                            <input type="text" id="options_tabungan_sec_badge" name="options_tabungan_sec_badge" value="<?php echo esc_attr( $tab_sec_badge ); ?>" class="regular-text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_tabungan_sec_title">Judul Utama:</label></th>
+                        <td>
+                            <input type="text" id="options_tabungan_sec_title" name="options_tabungan_sec_title" value="<?php echo esc_attr( $tab_sec_title ); ?>" class="large-text">
+                            <p class="description">💡 <strong>Dual-Tone:</strong> Gunakan <code>*kata*</code> untuk aksen warna (Contoh: <code>Solusi Tabungan *Syariah Amanah*</code>).</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_tabungan_sec_desc">Deskripsi Subjudul:</label></th>
+                        <td>
+                            <textarea id="options_tabungan_sec_desc" name="options_tabungan_sec_desc" rows="3" class="large-text"><?php echo esc_textarea( $tab_sec_desc ); ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    📸 Bagian Feed Instagram &amp; Media Sosial (Section 8 Beranda)
                 </h2>
                 <p style="color: #64748b; font-size: 13px;">
                     Anda bebas menambahkan 3, 5, atau lebih postingan Instagram. Tampilan di beranda otomatis mendukung geser/scroll horizontal yang halus.
                 </p>
                 <table class="form-table" style="margin-bottom: 15px;">
                     <tr>
+                        <th scope="row"><label for="options_ig_badge">Label Kecil Atas:</label></th>
+                        <td><input type="text" id="options_ig_badge" name="options_ig_badge" value="<?php echo esc_attr( $ig_badge ); ?>" class="regular-text"></td>
+                    </tr>
+                    <tr>
                         <th scope="row"><label for="options_ig_title">Judul Bagian:</label></th>
-                        <td><input type="text" id="options_ig_title" name="options_ig_title" value="<?php echo esc_attr( $ig_title ); ?>" class="regular-text"></td>
+                        <td>
+                            <input type="text" id="options_ig_title" name="options_ig_title" value="<?php echo esc_attr( $ig_title ); ?>" class="regular-text">
+                            <p class="description">💡 <strong>Dual-Tone:</strong> Gunakan tanda bintang <code>*kata*</code> untuk warna aksen (Contoh: <code>Aktivitas &amp; *Sosial Media BSW*</code>).</p>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="options_ig_subtitle">Subjudul:</label></th>
@@ -1589,6 +1719,26 @@ function wakalumi_render_media_page() {
                         <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> Tambah Postingan Instagram
                     </button>
                 </div>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    📰 Bagian "Berita Terbaru" (Section 9 Beranda)
+                </h2>
+                <p style="color: #64748b; font-size: 13px;">
+                    Kelola label kecil dan judul bagian artikel / berita terbaru di beranda.
+                </p>
+                <table class="form-table" style="margin-bottom: 15px;">
+                    <tr>
+                        <th scope="row"><label for="options_berita_sec_badge">Label Kecil Atas:</label></th>
+                        <td><input type="text" id="options_berita_sec_badge" name="options_berita_sec_badge" value="<?php echo esc_attr( $berita_sec_badge ); ?>" class="regular-text"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_berita_sec_title">Judul Bagian:</label></th>
+                        <td>
+                            <input type="text" id="options_berita_sec_title" name="options_berita_sec_title" value="<?php echo esc_attr( $berita_sec_title ); ?>" class="regular-text">
+                            <p class="description">💡 <strong>Dual-Tone:</strong> Gunakan tanda bintang <code>*kata*</code> untuk memberi warna aksen (Contoh: <code>Berita dari *BSW*</code>).</p>
+                        </td>
+                    </tr>
+                </table>
 
                 <p class="submit" style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
                     <button type="submit" name="wakalumi_save_media" class="button button-primary button-large" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 25px;">
@@ -1647,8 +1797,16 @@ function wakalumi_render_media_page() {
  * ─────────────────────────────────────────────────────────────
  */
 function wakalumi_render_nisbah_page() {
-    $current_bulan = get_option( 'options_nisbah_bulan', 'Agustus 2026' );
-    $current_data  = get_option( 'options_nisbah_data', [] );
+    if ( isset( $_POST['wakalumi_save_nisbah_header'] ) && check_admin_referer( 'wakalumi_nisbah_header_nonce' ) ) {
+        update_option( 'options_nisbah_sec_badge', sanitize_text_field( $_POST['options_nisbah_sec_badge'] ?? 'Kinerja Bank' ) );
+        update_option( 'options_nisbah_sec_title', sanitize_text_field( $_POST['options_nisbah_sec_title'] ?? 'Realisasi Nisbah *Bagi Hasil*' ) );
+        echo '<div class="notice notice-success is-dismissible"><p><strong>Pengaturan judul bagian Nisbah Beranda berhasil disimpan!</strong></p></div>';
+    }
+
+    $nisbah_sec_badge = get_option( 'options_nisbah_sec_badge', 'Kinerja Bank' );
+    $nisbah_sec_title = get_option( 'options_nisbah_sec_title', 'Realisasi Nisbah *Bagi Hasil*' );
+    $current_bulan    = get_option( 'options_nisbah_bulan', 'Agustus 2026' );
+    $current_data     = get_option( 'options_nisbah_data', [] );
 
     if ( empty( $current_data ) ) {
         $current_data = [
@@ -1686,6 +1844,36 @@ function wakalumi_render_nisbah_page() {
                 <span style="font-size: 12px; font-weight: 700; color: #166534;">Periode Aktif:</span>
                 <strong style="color: #047857; font-size: 13px;"><?php echo esc_html( $current_bulan ); ?></strong>
             </div>
+        </div>
+
+        <!-- Customization Card for Beranda Header -->
+        <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <form method="post" action="">
+                <?php wp_nonce_field( 'wakalumi_nisbah_header_nonce' ); ?>
+                <h3 style="margin: 0 0 6px 0; font-size: 15px; font-weight: 800; color: #088395; display: flex; align-items: center; gap: 8px;">
+                    <span class="dashicons dashicons-heading" style="color: #088395;"></span>
+                    Kustomisasi Judul &amp; Label Bagian Nisbah (Section 5 Beranda)
+                </h3>
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 16px 0;">
+                    Atur teks label kecil dan judul utama bagian nisbah bagi hasil di halaman depan.
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 14px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Label Atas / Badge:</label>
+                        <input type="text" name="options_nisbah_sec_badge" value="<?php echo esc_attr( $nisbah_sec_badge ); ?>" class="regular-text" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Judul Utama:</label>
+                        <input type="text" name="options_nisbah_sec_title" value="<?php echo esc_attr( $nisbah_sec_title ); ?>" class="large-text" style="width: 100%;">
+                        <p class="description" style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                            💡 <strong>Dual-Tone Gradient:</strong> Gunakan tanda bintang <code>*kata*</code> untuk efek gradient warna (Contoh: <code>Realisasi Nisbah *Bagi Hasil*</code>).
+                        </p>
+                    </div>
+                </div>
+                <button type="submit" name="wakalumi_save_nisbah_header" class="button button-primary" style="background: #088395; border-color: #066e7d; font-weight: 700; padding: 2px 18px;">
+                    Simpan Judul Bagian
+                </button>
+            </form>
         </div>
 
         <!-- Single Source of Truth Notice Box -->
