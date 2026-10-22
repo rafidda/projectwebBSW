@@ -322,21 +322,28 @@ if ( ! function_exists( 'wakalumi_get_pengaduan_settings' ) ) {
             'steps'         => $steps,
 
             // Standar Waktu Resmi (SLA POJK No. 22/2023)
+            'sla_kicker'         => get_option( 'options_pengaduan_sla_kicker', 'Komitmen Kepastian Waktu' ),
             'sla_title'          => get_option( 'options_pengaduan_sla_title', 'Standar Waktu Layanan Pengaduan (SLA)' ),
             'sla_subtitle'       => get_option( 'options_pengaduan_sla_subtitle', 'Bank Syariah Wakalumi menjamin setiap pengaduan nasabah diselesaikan secara tepat waktu, profesional, dan transparan berpedoman pada POJK No. 22 Tahun 2023.' ),
             'sla_card1_title'    => get_option( 'options_pengaduan_sla_card1_title', 'Penyelesaian Standar oleh Bank' ),
+            'sla_card1_sub'      => get_option( 'options_pengaduan_sla_card1_sub', 'Saluran Resmi Bank Syariah Wakalumi' ),
             'sla_card1_badge'    => get_option( 'options_pengaduan_sla_card1_badge', 'Standar Batas Waktu POJK' ),
             'sla_card1_time'     => get_option( 'options_pengaduan_sla_card1_time', '20 Hari Kerja' ),
             'sla_card1_label'    => get_option( 'options_pengaduan_sla_card1_label', 'Maksimal Standar' ),
             'sla_card1_desc'     => get_option( 'options_pengaduan_sla_card1_desc', 'Bank Syariah Wakalumi wajib menyelesaikan penanganan pengaduan nasabah paling lambat 20 hari kerja sejak dokumen pendukung lengkap diterima.' ),
             'sla_card1_points'   => get_option( 'options_pengaduan_sla_card1_points', "Pencatatan langsung & konfirmasi nomor tanda terima aduan\nPenyampaian surat tanggapan tertulis resmi bersegel bank" ),
+            'sla_card1_footer_left'  => get_option( 'options_pengaduan_sla_card1_footer_left', 'Tahap 1: Unit Layanan Aduan' ),
+            'sla_card1_footer_right' => get_option( 'options_pengaduan_sla_card1_footer_right', 'POJK No. 22/2023' ),
 
             'sla_card2_title'    => get_option( 'options_pengaduan_sla_card2_title', 'Perpanjangan Waktu Resmi Bank' ),
+            'sla_card2_sub'      => get_option( 'options_pengaduan_sla_card2_sub', 'Pemberitahuan Tertulis Resmi' ),
             'sla_card2_badge'    => get_option( 'options_pengaduan_sla_card2_badge', 'Perpanjangan Waktu Resmi' ),
             'sla_card2_time'     => get_option( 'options_pengaduan_sla_card2_time', '+20 Hari Kerja' ),
             'sla_card2_label'    => get_option( 'options_pengaduan_sla_card2_label', 'Kondisi Tertentu' ),
             'sla_card2_desc'     => get_option( 'options_pengaduan_sla_card2_desc', 'Dapat diperpanjang paling lama 20 hari kerja jika memerlukan penelitian pihak ketiga/kantor cabang lain dengan pemberitahuan tertulis resmi kepada nasabah.' ),
             'sla_card2_points'   => get_option( 'options_pengaduan_sla_card2_points', "Pemberitahuan tertulis alasan perpanjangan sebelum hari ke-20\nJaminan penuntasan pengaduan berkeadilan syariah" ),
+            'sla_card2_footer_left'  => get_option( 'options_pengaduan_sla_card2_footer_left', 'Tahap 2: Notifikasi Tertulis' ),
+            'sla_card2_footer_right' => get_option( 'options_pengaduan_sla_card2_footer_right', 'Sebelum Hari Ke-20' ),
 
             'sla_note'           => get_option( 'options_pengaduan_sla_note', 'Sesuai POJK No. 22 Tahun 2023 Pasal 55 & 57, jangka waktu penyelesaian pengaduan oleh Bank adalah maksimal 20 (dua puluh) hari kerja sejak dokumen lengkap, dan dapat diperpanjang maksimal 20 (dua puluh) hari kerja dalam kondisi tertentu. Jika pengaduan tidak ditindaklanjuti atau belum mencapai kesepakatan, konsumen berhak mengajukan penyelesaian sengketa ke LAPS SJK atau pengaduan ke OJK.' ),
 
@@ -510,22 +517,29 @@ function wakalumi_render_pengaduan_page() {
         update_option( 'options_pengaduan_steps', $steps );
 
         // 6. Standar Waktu Resmi (SLA POJK No. 22/2023)
+        update_option( 'options_pengaduan_sla_kicker', sanitize_text_field( $_POST['options_pengaduan_sla_kicker'] ?? '' ) );
         update_option( 'options_pengaduan_sla_title', sanitize_text_field( $_POST['options_pengaduan_sla_title'] ?? '' ) );
         update_option( 'options_pengaduan_sla_subtitle', sanitize_textarea_field( $_POST['options_pengaduan_sla_subtitle'] ?? '' ) );
         
         update_option( 'options_pengaduan_sla_card1_title', sanitize_text_field( $_POST['options_pengaduan_sla_card1_title'] ?? '' ) );
+        update_option( 'options_pengaduan_sla_card1_sub', sanitize_text_field( $_POST['options_pengaduan_sla_card1_sub'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card1_badge', sanitize_text_field( $_POST['options_pengaduan_sla_card1_badge'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card1_time', sanitize_text_field( $_POST['options_pengaduan_sla_card1_time'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card1_label', sanitize_text_field( $_POST['options_pengaduan_sla_card1_label'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card1_desc', sanitize_textarea_field( $_POST['options_pengaduan_sla_card1_desc'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card1_points', sanitize_textarea_field( $_POST['options_pengaduan_sla_card1_points'] ?? '' ) );
+        update_option( 'options_pengaduan_sla_card1_footer_left', sanitize_text_field( $_POST['options_pengaduan_sla_card1_footer_left'] ?? '' ) );
+        update_option( 'options_pengaduan_sla_card1_footer_right', sanitize_text_field( $_POST['options_pengaduan_sla_card1_footer_right'] ?? '' ) );
 
         update_option( 'options_pengaduan_sla_card2_title', sanitize_text_field( $_POST['options_pengaduan_sla_card2_title'] ?? '' ) );
+        update_option( 'options_pengaduan_sla_card2_sub', sanitize_text_field( $_POST['options_pengaduan_sla_card2_sub'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card2_badge', sanitize_text_field( $_POST['options_pengaduan_sla_card2_badge'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card2_time', sanitize_text_field( $_POST['options_pengaduan_sla_card2_time'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card2_label', sanitize_text_field( $_POST['options_pengaduan_sla_card2_label'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card2_desc', sanitize_textarea_field( $_POST['options_pengaduan_sla_card2_desc'] ?? '' ) );
         update_option( 'options_pengaduan_sla_card2_points', sanitize_textarea_field( $_POST['options_pengaduan_sla_card2_points'] ?? '' ) );
+        update_option( 'options_pengaduan_sla_card2_footer_left', sanitize_text_field( $_POST['options_pengaduan_sla_card2_footer_left'] ?? '' ) );
+        update_option( 'options_pengaduan_sla_card2_footer_right', sanitize_text_field( $_POST['options_pengaduan_sla_card2_footer_right'] ?? '' ) );
 
         update_option( 'options_pengaduan_sla_note', sanitize_textarea_field( $_POST['options_pengaduan_sla_note'] ?? '' ) );
         
@@ -949,7 +963,11 @@ function wakalumi_render_pengaduan_page() {
                 </p>
 
                 <!-- Judul & Subjudul Seksi SLA -->
-                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 14px; margin-bottom: 16px;">
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr 2fr; gap: 14px; margin-bottom: 16px;">
+                    <div>
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Kicker / Badge Seksi</label>
+                        <input type="text" name="options_pengaduan_sla_kicker" value="<?php echo esc_attr( $cfg['sla_kicker'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;" placeholder="Komitmen Kepastian Waktu">
+                    </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Judul Seksi SLA</label>
                         <input type="text" name="options_pengaduan_sla_title" value="<?php echo esc_attr( $cfg['sla_title'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: 700;">
@@ -970,7 +988,11 @@ function wakalumi_render_pengaduan_page() {
                         </strong>
                         <div style="margin-bottom: 8px;">
                             <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">Judul Kartu SLA 1</label>
-                            <input type="text" name="options_pengaduan_sla_card1_title" value="<?php echo esc_attr( $cfg['sla_card1_title'] ); ?>" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 12px;">
+                            <input type="text" name="options_pengaduan_sla_card1_title" value="<?php echo esc_attr( $cfg['sla_card1_title'] ); ?>" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 12px; font-weight: 700;">
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; font-weight: 700; color: #166534; display: block; margin-bottom: 3px;">Sub-judul / Saluran Resmi (Tampil di Bawah Judul)</label>
+                            <input type="text" name="options_pengaduan_sla_card1_sub" value="<?php echo esc_attr( $cfg['sla_card1_sub'] ); ?>" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #86efac; font-size: 12px; background: #fff;" placeholder="Saluran Resmi Bank Syariah Wakalumi">
                         </div>
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-bottom: 8px;">
                             <div>
@@ -990,9 +1012,19 @@ function wakalumi_render_pengaduan_page() {
                             <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">Deskripsi Penjelasan</label>
                             <textarea name="options_pengaduan_sla_card1_desc" rows="2" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;"><?php echo esc_textarea( $cfg['sla_card1_desc'] ); ?></textarea>
                         </div>
-                        <div>
+                        <div style="margin-bottom: 8px;">
                             <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">Poin Checklist (Satu per baris)</label>
                             <textarea name="options_pengaduan_sla_card1_points" rows="2" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;"><?php echo esc_textarea( $cfg['sla_card1_points'] ); ?></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="font-size: 10px; font-weight: 700; color: #64748b; display: block; margin-bottom: 2px;">Teks Kaki Kiri</label>
+                                <input type="text" name="options_pengaduan_sla_card1_footer_left" value="<?php echo esc_attr( $cfg['sla_card1_footer_left'] ); ?>" style="width: 100%; border-radius: 4px; padding: 5px 8px; border: 1px solid #cbd5e1; font-size: 11px;" placeholder="Tahap 1: Unit Layanan Aduan">
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; font-weight: 700; color: #64748b; display: block; margin-bottom: 2px;">Teks Kaki Kanan</label>
+                                <input type="text" name="options_pengaduan_sla_card1_footer_right" value="<?php echo esc_attr( $cfg['sla_card1_footer_right'] ); ?>" style="width: 100%; border-radius: 4px; padding: 5px 8px; border: 1px solid #cbd5e1; font-size: 11px;" placeholder="POJK No. 22/2023">
+                            </div>
                         </div>
                     </div>
 
@@ -1003,7 +1035,11 @@ function wakalumi_render_pengaduan_page() {
                         </strong>
                         <div style="margin-bottom: 8px;">
                             <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">Judul Kartu SLA 2</label>
-                            <input type="text" name="options_pengaduan_sla_card2_title" value="<?php echo esc_attr( $cfg['sla_card2_title'] ); ?>" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 12px;">
+                            <input type="text" name="options_pengaduan_sla_card2_title" value="<?php echo esc_attr( $cfg['sla_card2_title'] ); ?>" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 12px; font-weight: 700;">
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; font-weight: 700; color: #0f766e; display: block; margin-bottom: 3px;">Sub-judul / Keterangan (Tampil di Bawah Judul)</label>
+                            <input type="text" name="options_pengaduan_sla_card2_sub" value="<?php echo esc_attr( $cfg['sla_card2_sub'] ); ?>" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #5eead4; font-size: 12px; background: #fff;" placeholder="Pemberitahuan Tertulis Resmi">
                         </div>
                         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-bottom: 8px;">
                             <div>
@@ -1023,9 +1059,19 @@ function wakalumi_render_pengaduan_page() {
                             <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">Deskripsi Penjelasan</label>
                             <textarea name="options_pengaduan_sla_card2_desc" rows="2" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;"><?php echo esc_textarea( $cfg['sla_card2_desc'] ); ?></textarea>
                         </div>
-                        <div>
+                        <div style="margin-bottom: 8px;">
                             <label style="font-size: 11px; font-weight: 700; color: #334155; display: block; margin-bottom: 3px;">Poin Checklist (Satu per baris)</label>
                             <textarea name="options_pengaduan_sla_card2_points" rows="2" style="width: 100%; border-radius: 4px; padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;"><?php echo esc_textarea( $cfg['sla_card2_points'] ); ?></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="font-size: 10px; font-weight: 700; color: #64748b; display: block; margin-bottom: 2px;">Teks Kaki Kiri</label>
+                                <input type="text" name="options_pengaduan_sla_card2_footer_left" value="<?php echo esc_attr( $cfg['sla_card2_footer_left'] ); ?>" style="width: 100%; border-radius: 4px; padding: 5px 8px; border: 1px solid #cbd5e1; font-size: 11px;" placeholder="Tahap 2: Notifikasi Tertulis">
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; font-weight: 700; color: #64748b; display: block; margin-bottom: 2px;">Teks Kaki Kanan</label>
+                                <input type="text" name="options_pengaduan_sla_card2_footer_right" value="<?php echo esc_attr( $cfg['sla_card2_footer_right'] ); ?>" style="width: 100%; border-radius: 4px; padding: 5px 8px; border: 1px solid #cbd5e1; font-size: 11px;" placeholder="Sebelum Hari Ke-20">
+                            </div>
                         </div>
                     </div>
 

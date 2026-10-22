@@ -493,6 +493,7 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
         update_option( 'options_tabungan_brosur_title', sanitize_text_field( $_POST['options_tabungan_brosur_title'] ?? '' ) );
         update_option( 'options_tabungan_brosur_desc', sanitize_textarea_field( $_POST['options_tabungan_brosur_desc'] ?? '' ) );
         update_option( 'options_tabungan_brosur_btn', sanitize_text_field( $_POST['options_tabungan_brosur_btn'] ?? '' ) );
+        update_option( 'options_tabungan_brosur_url', esc_url_raw( $_POST['options_tabungan_brosur_url'] ?? '' ) );
 
         update_option( 'options_tabungan_dep_kicker', sanitize_text_field( $_POST['options_tabungan_dep_kicker'] ?? '' ) );
         update_option( 'options_tabungan_dep_title', sanitize_text_field( $_POST['options_tabungan_dep_title'] ?? '' ) );
@@ -658,6 +659,7 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
         update_option( 'options_deposito_cta_btn_text', sanitize_text_field( $_POST['options_deposito_cta_btn_text'] ?? '' ) );
         update_option( 'options_deposito_cta_wa_msg', sanitize_textarea_field( $_POST['options_deposito_cta_wa_msg'] ?? '' ) );
         update_option( 'options_brosur_file_url', esc_url_raw( $_POST['options_brosur_file_url'] ?? '' ) );
+        update_option( 'options_deposito_brosur_url', esc_url_raw( $_POST['options_deposito_brosur_url'] ?? '' ) );
 
         // 6. Deposito: Parameter Dasar
         update_option( 'options_deposito_akad', sanitize_text_field( $_POST['options_deposito_akad'] ?? '' ) );
@@ -764,7 +766,8 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
     $tab_brosur_kicker = get_option( 'options_tabungan_brosur_kicker', 'Katalog Brosur Resmi' );
     $tab_brosur_title  = get_option( 'options_tabungan_brosur_title', 'Unduh Brosur Produk Lengkap' );
     $tab_brosur_desc   = get_option( 'options_tabungan_brosur_desc', 'Dapatkan informasi lengkap seluruh produk simpanan, deposito, dan pembiayaan BPRS Wakalumi dalam format dokumen PDF resmi.' );
-    $tab_brosur_btn    = get_option( 'options_tabungan_brosur_btn', 'Unduh File Brosur (PDF)' );
+    $tab_brosur_btn    = get_option( 'options_tabungan_brosur_btn', 'Lihat & Unduh Brosur' );
+    $tab_brosur_url    = get_option( 'options_tabungan_brosur_url', '' );
 
     $tab_dep_kicker    = get_option( 'options_tabungan_dep_kicker', 'Investasi Berjangka' );
     $tab_dep_title     = get_option( 'options_tabungan_dep_title', 'Ingin Imbal Hasil Lebih Optimal?' );
@@ -863,7 +866,8 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
     $dep_cta_desc      = get_option( 'options_deposito_cta_desc', 'Hubungi staf treasury dan customer service kami untuk mendapatkan penawaran porsi nisbah terbaik bagi dana simpanan perorangan maupun korporasi.' );
     $dep_cta_btn       = get_option( 'options_deposito_cta_btn_text', 'Hubungi via WhatsApp' );
     $dep_cta_wa_msg    = get_option( 'options_deposito_cta_wa_msg', 'Halo BPRS Wakalumi, saya ingin berkonsultasi mengenai penempatan dana Deposito Mudharabah.' );
-    $dep_brosur_url    = get_option( 'options_brosur_file_url', '' );
+    $dep_brosur_file   = get_option( 'options_brosur_file_url', '' );
+    $dep_brosur_url    = get_option( 'options_deposito_brosur_url', '' );
 
     // Deposito: Parameter Dasar
     $dep_akad          = get_option( 'options_deposito_akad', 'Mudharabah Muthlaqah' );
@@ -1507,10 +1511,14 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi</label>
                                 <textarea name="options_tabungan_brosur_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $tab_brosur_desc ); ?></textarea>
                             </div>
-                            <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Tombol Unduh</label>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Tombol Brosur</label>
                                 <input type="text" name="options_tabungan_brosur_btn" value="<?php echo esc_attr( $tab_brosur_btn ); ?>" class="regular-text" style="width: 100%;">
-                                <span style="font-size: 11px; color: #64748b;">Menggunakan tautan berkas brosur PDF resmi yang tersimpan di sistem.</span>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">URL Tautan Tombol Brosur</label>
+                                <input type="text" name="options_tabungan_brosur_url" value="<?php echo esc_attr( $tab_brosur_url ); ?>" class="regular-text" style="width: 100%;" placeholder="<?php echo esc_attr( home_url( '/brosur/' ) ); ?>">
+                                <span style="font-size: 11px; color: #64748b;">Kosongkan untuk otomatis mengarahkan ke halaman katalog brosur interaktif (<code><?php echo esc_html( home_url( '/brosur/' ) ); ?></code>). Anda juga dapat mengisi tautan PDF langsung jika ingin unduh otomatis.</span>
                             </div>
                         </div>
 
@@ -2096,12 +2104,19 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                             <th><label for="options_brosur_file_url">File Dokumen Brosur (PDF)</label></th>
                             <td>
                                 <div style="display: flex; gap: 8px; align-items: center; max-width: 650px;">
-                                    <input type="text" id="options_brosur_file_url" name="options_brosur_file_url" value="<?php echo esc_url( $dep_brosur_url ); ?>" class="regular-text" style="flex: 1;" placeholder="https://.../brosur-deposito.pdf">
+                                    <input type="text" id="options_brosur_file_url" name="options_brosur_file_url" value="<?php echo esc_url( $dep_brosur_file ); ?>" class="regular-text" style="flex: 1;" placeholder="https://.../brosur-deposito.pdf">
                                     <button type="button" class="button wkl-upload-file-btn" data-target="options_brosur_file_url">
                                         <span class="dashicons dashicons-media-document" style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle;"></span> Unggah / Pilih PDF
                                     </button>
                                 </div>
-                                <p class="description">Jika URL brosur terisi, tombol "Unduh Brosur Produk (PDF)" akan otomatis muncul di banner CTA.</p>
+                                <p class="description">Unggah berkas PDF brosur deposito jika ingin nasabah langsung mengunduh berkas fisik.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_deposito_brosur_url">URL Tautan Tombol Brosur</label></th>
+                            <td>
+                                <input type="text" id="options_deposito_brosur_url" name="options_deposito_brosur_url" value="<?php echo esc_attr( $dep_brosur_url ); ?>" class="regular-text" style="width: 100%; max-width: 550px;" placeholder="<?php echo esc_attr( home_url( '/brosur/' ) ); ?>">
+                                <p class="description">Kosongkan untuk otomatis mengarahkan ke halaman katalog brosur interaktif (<code><?php echo esc_html( home_url( '/brosur/' ) ); ?></code>) atau berkas PDF di atas.</p>
                             </td>
                         </tr>
                     </table>

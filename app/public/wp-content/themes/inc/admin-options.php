@@ -2016,6 +2016,14 @@ function wakalumi_render_footer_page() {
         update_option( 'options_footer_show_prayer_times', isset( $_POST['options_footer_show_prayer_times'] ) ? '1' : '0' );
         update_option( 'options_footer_prayer_city', sanitize_text_field( $_POST['options_footer_prayer_city'] ?? 'Tangerang Selatan' ) );
 
+        // Corporate Culture (WAQF) Footer
+        update_option( 'options_footer_show_culture', isset( $_POST['options_footer_show_culture'] ) ? '1' : '0' );
+        update_option( 'options_footer_culture_label', sanitize_text_field( $_POST['options_footer_culture_label'] ?? 'Corporate Culture' ) );
+        update_option( 'options_footer_culture_logo', esc_url_raw( $_POST['options_footer_culture_logo'] ?? '' ) );
+        update_option( 'options_footer_culture_height', absint( $_POST['options_footer_culture_height'] ?? 99 ) );
+        update_option( 'options_footer_culture_url', esc_url_raw( $_POST['options_footer_culture_url'] ?? '' ) );
+        update_option( 'options_footer_culture_position', sanitize_key( $_POST['options_footer_culture_position'] ?? 'bottom_left' ) );
+
         // Google Maps Footer
         if ( isset( $_POST['options_maps_embed'] ) ) {
             update_option( 'options_maps_embed', wakalumi_clean_maps_embed_url( $_POST['options_maps_embed'] ) );
@@ -2057,6 +2065,18 @@ function wakalumi_render_footer_page() {
             [ 'label' => 'LPS', 'url' => get_template_directory_uri() . '/assets/img/lps-logo.png' ],
         ];
     }
+
+    // Corporate Culture (WAQF)
+    $show_culture   = get_option( 'options_footer_show_culture', '1' );
+    $culture_label  = get_option( 'options_footer_culture_label', 'Corporate Culture' );
+    $default_culture_logo = get_template_directory_uri() . '/assets/img/logo-waqf-light.png';
+    $culture_logo   = get_option( 'options_footer_culture_logo', $default_culture_logo );
+    if ( empty( $culture_logo ) ) {
+        $culture_logo = $default_culture_logo;
+    }
+    $culture_height = get_option( 'options_footer_culture_height', 99 );
+    $culture_url    = get_option( 'options_footer_culture_url', '' );
+    $culture_pos    = get_option( 'options_footer_culture_position', 'bottom_left' );
 
     $ig         = get_option( 'options_social_instagram', 'https://www.instagram.com/bprswakalumi' );
     $fb         = get_option( 'options_social_facebook', 'https://facebook.com/bprswakalumi' );
@@ -2230,6 +2250,76 @@ function wakalumi_render_footer_page() {
                         </button>
                     </div>
                 </div>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🏛️ Corporate Culture (Budaya Kerja &amp; Tagline WAQF)
+                </h2>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Status Tampilan:</th>
+                        <td>
+                            <label style="font-weight: 600;">
+                                <input type="checkbox" name="options_footer_show_culture" value="1" <?php checked( $show_culture, '1' ); ?>>
+                                Aktifkan / Tampilkan Logo Corporate Culture di Footer
+                            </label>
+                            <p class="description">Centang opsi ini untuk menampilkan identitas corporate culture (WAQF) di area footer.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_culture_label">Label Teks Pengantar:</label></th>
+                        <td>
+                            <input type="text" id="options_footer_culture_label" name="options_footer_culture_label" value="<?php echo esc_attr( $culture_label ); ?>" class="regular-text" placeholder="Corporate Culture">
+                            <p class="description">Teks kecil di atas logo (Contoh: <code>Corporate Culture</code> atau <code>Budaya Kerja</code>). Kosongkan jika hanya ingin menampilkan gambar logo saja.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_culture_logo">Logo Corporate Culture:</label></th>
+                        <td>
+                            <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <div style="background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; display: inline-flex; align-items: center; justify-content: center; min-width: 120px;">
+                                    <img id="culture_logo_preview" src="<?php echo esc_url( $culture_logo ); ?>" style="max-width: 140px; max-height: 48px; object-fit: contain; <?php echo empty( $culture_logo ) ? 'display:none;' : ''; ?>" />
+                                    <span class="wkl-placeholder" style="font-size: 11px; color: #94a3b8; <?php echo ! empty( $culture_logo ) ? 'display:none;' : ''; ?>">Belum ada logo</span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
+                                    <button type="button" class="button wkl-upload-btn" data-target="options_footer_culture_logo" data-preview="culture_logo_preview" style="display: inline-flex; align-items: center; gap: 5px;">
+                                        <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah / Ganti Logo
+                                    </button>
+                                    <button type="button" class="button-link wkl-remove-btn" data-target="options_footer_culture_logo" data-preview="culture_logo_preview" style="color: #ef4444; font-size: 12px; <?php echo empty( $culture_logo ) ? 'display:none;' : ''; ?>">
+                                        ✕ Hapus
+                                    </button>
+                                </div>
+                                <input type="text" id="options_footer_culture_logo" name="options_footer_culture_logo" value="<?php echo esc_attr( $culture_logo ); ?>" class="regular-text" placeholder="URL Logo Culture" style="flex: 1; min-width: 220px;">
+                            </div>
+                            <p class="description" style="margin-top: 6px;">Gunakan file berformat PNG transparan (tipe <em>Light/Putih/Kuning</em>) agar serasi dengan latar belakang footer gelap.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_culture_height">Ukuran Tinggi Logo (Pixel):</label></th>
+                        <td>
+                            <input type="number" id="options_footer_culture_height" name="options_footer_culture_height" value="<?php echo esc_attr( $culture_height ); ?>" min="40" max="150" step="2" class="small-text"> px
+                            <p class="description">Tinggi standar saat ini adalah <strong>99px</strong> (30% lebih besar dari ukuran sebelumnya). Rentang dapat disesuaikan hingga 150px.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_culture_position">Posisi di Footer:</label></th>
+                        <td>
+                            <select id="options_footer_culture_position" name="options_footer_culture_position" style="min-width: 280px;">
+                                <option value="bottom_left" <?php selected( $culture_pos, 'bottom_left' ); ?>>Pojok Kiri Bawah (Di Sebelah Kiri Legalitas Rata Tengah) — Standar</option>
+                                <option value="column_left" <?php selected( $culture_pos, 'column_left' ); ?>>Kolom Kiri Atas (Di Bawah Sosial Media)</option>
+                                <option value="bottom_center" <?php selected( $culture_pos, 'bottom_center' ); ?>>Baris Bawah (Tengah)</option>
+                                <option value="both" <?php selected( $culture_pos, 'both' ); ?>>Tampilkan di Keduanya</option>
+                            </select>
+                            <p class="description">Pilih posisi penempatan logo corporate culture di footer web.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_culture_url">Tautan / Link URL (Opsional):</label></th>
+                        <td>
+                            <input type="url" id="options_footer_culture_url" name="options_footer_culture_url" value="<?php echo esc_attr( $culture_url ); ?>" class="large-text" placeholder="<?php echo esc_url( home_url( '/tentang-kami' ) ); ?>">
+                            <p class="description">Bisa diarahkan ke halaman Tentang Kami atau profil budaya kerja bank (kosongkan jika tidak perlu bisa diklik).</p>
+                        </td>
+                    </tr>
+                </table>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
                     ⚖️ Teks Footer, Hak Cipta & Pernyataan Regulasi

@@ -1,15 +1,19 @@
+itg
+
 # 🚀 Panduan Implementasi Produksi (Hosting) & Operasional WP-Admin
-**Project:** Website Resmi PT BPRS Wakalumi (Bank Syariah Wakalumi)  
-**Environment Asal (Local):** `http://wakalumibprscoid.local`  
+
+**Project:** Website Resmi PT BPRS Wakalumi (Bank Syariah Wakalumi)
+**Environment Asal (Local):** `http://wakalumibprscoid.local`
 **Target Produksi:** Hosting Resmi (contoh: `https://bprswakalumi.co.id` atau `https://wakalumibprs.co.id`)
 
 ---
 
 ## 📌 Daftar Isi
-1. [Arsitektur & Infrastruktur Sistem](#1-arsitektur--infrastruktur-sistem)
-2. [Daftar URL & Konfigurasi yang Perlu Diubah Saat Pindah ke Hosting](#2-daftar-url--konfigurasi-yang-perlu-diubah-saat-pindah-ke-hosting)
+
+1. [Arsitektur &amp; Infrastruktur Sistem](#1-arsitektur--infrastruktur-sistem)
+2. [Daftar URL &amp; Konfigurasi yang Perlu Diubah Saat Pindah ke Hosting](#2-daftar-url--konfigurasi-yang-perlu-diubah-saat-pindah-ke-hosting)
 3. [Tahapan Step-by-Step Migrasi dari LocalWP ke Hosting](#3-tahapan-step-by-step-migrasi-dari-localwp-ke-hosting)
-4. [Proteksi Otomatis yang Sudah Ditanamkan (Bug-Fix & Auto-Domain Guard)](#4-proteksi-otomatis-yang-sudah-ditanamkan-bug-fix--auto-domain-guard)
+4. [Proteksi Otomatis yang Sudah Ditanamkan (Bug-Fix &amp; Auto-Domain Guard)](#4-proteksi-otomatis-yang-sudah-ditanamkan-bug-fix--auto-domain-guard)
 5. [Panduan Operasional Lengkap WP-Admin (Tata Cara Edit Konten)](#5-panduan-operasional-lengkap-wp-admin-tata-cara-edit-konten)
 6. [Checklist Pemeriksaan Akhir Setelah Publish](#6-checklist-pemeriksaan-akhir-setelah-publish)
 
@@ -20,19 +24,21 @@
 Project website Bank Syariah Wakalumi dibangun menggunakan arsitektur **Custom Hybrid WordPress CMS** yang menggabungkan kemudahan pengelolaan konten melalui panel WP-Admin dengan performa frontend modern setara aplikasi web masa kini.
 
 ### A. Stack Infrastruktur & Bahasa Pemrograman
-| Komponen | Teknologi / Versi | Keterangan & Fungsi |
-| :--- | :--- | :--- |
-| **Core CMS** | WordPress `6.4+` | Sistem manajemen konten utama dan manajemen hak akses user/admin. |
-| **Bahasa Backend** | PHP `8.1` / `8.2+` | Eksekusi template tema, pemrosesan custom admin panel (`inc/admin-*.php`), dan AJAX PDF Streamer. |
-| **Database** | MySQL `8.0+` / MariaDB `10.5+` | Menyimpan seluruh halaman, berita, pengaturan `wp_options`, dan metadata produk. |
-| **Web Server** | Nginx / Apache / LiteSpeed | Mendukung `mod_rewrite` untuk struktur URL ramah SEO (*Pretty Permalinks*). |
-| **CSS Framework** | Tailwind CSS `v4.1` + PostCSS | Styling komponen modern, *Dual-Tone Cards*, *Glassmorphism*, dan dukungan penuh *Dark Mode*. |
-| **Asset Bundler** | Vite `v5.4` | Mengompilasi source CSS (`assets/src/css/main.css`) & JS (`assets/src/js/app.js`) ke `assets/build/`. |
-| **SPA Navigation** | Swup.js `v4.8` | Transisi perpindahan antar-halaman secara instan tanpa reload penuh (*Single Page Application feel*). |
-| **Animasi & UI** | AOS (`v2.3`) + Custom Vanilla JS | Animasi scroll halus, kalkulator finansial syariah interaktif, dan waktu sholat real-time. |
-| **PDF Engine** | PDF.js + Custom PHP Streamer | Menampilkan pratinjau dokumen PDF (Brosur & Laporan OJK) langsung di dalam popup modal tanpa dibajak oleh aplikasi download manager (seperti IDM). |
+
+| Komponen                 | Teknologi / Versi                  | Keterangan & Fungsi                                                                                                                                |
+| :----------------------- | :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Core CMS**       | WordPress `6.4+`                 | Sistem manajemen konten utama dan manajemen hak akses user/admin.                                                                                  |
+| **Bahasa Backend** | PHP `8.1` / `8.2+`             | Eksekusi template tema, pemrosesan custom admin panel (`inc/admin-*.php`), dan AJAX PDF Streamer.                                                |
+| **Database**       | MySQL `8.0+` / MariaDB `10.5+` | Menyimpan seluruh halaman, berita, pengaturan `wp_options`, dan metadata produk.                                                                 |
+| **Web Server**     | Nginx / Apache / LiteSpeed         | Mendukung `mod_rewrite` untuk struktur URL ramah SEO (*Pretty Permalinks*).                                                                    |
+| **CSS Framework**  | Tailwind CSS `v4.1` + PostCSS    | Styling komponen modern, *Dual-Tone Cards*, *Glassmorphism*, dan dukungan penuh *Dark Mode*.                                                 |
+| **Asset Bundler**  | Vite `v5.4`                      | Mengompilasi source CSS (`assets/src/css/main.css`) & JS (`assets/src/js/app.js`) ke `assets/build/`.                                        |
+| **SPA Navigation** | Swup.js `v4.8`                   | Transisi perpindahan antar-halaman secara instan tanpa reload penuh (*Single Page Application feel*).                                            |
+| **Animasi & UI**   | AOS (`v2.3`) + Custom Vanilla JS | Animasi scroll halus, kalkulator finansial syariah interaktif, dan waktu sholat real-time.                                                         |
+| **PDF Engine**     | PDF.js + Custom PHP Streamer       | Menampilkan pratinjau dokumen PDF (Brosur & Laporan OJK) langsung di dalam popup modal tanpa dibajak oleh aplikasi download manager (seperti IDM). |
 
 ### B. Struktur Penyimpanan Data di Database
+
 1. **Custom Admin Modules (`wp_options`)**:
    - Hampir seluruh konten halaman statis dan katalog (Tentang Kami, Legalitas, Pengurus, Jaringan Kantor, Tabungan, Deposito, Pembiayaan, Brosur, Laporan Publikasi, Pengaduan, Pengumuman, Lelang, Kegiatan, Galeri, Tim Kami, Karir, serta Literasi & Inklusi) disimpan secara terstruktur di tabel `wp_options` dengan prefix `options_*` dan `wakalumi_*`.
    - **Keunggulan**: Sangat cepat diakses, tidak membebani query database, dan setiap modul memiliki data *fallback* (default) otomatis jika belum diisi.
@@ -40,7 +46,9 @@ Project website Bank Syariah Wakalumi dibangun menggunakan arsitektur **Custom H
    - Digunakan untuk konten berbasis artikel dan entitas dinamis seperti **Berita & Artikel (`berita`)**, **Hero Slider (`hero_slide`)**, **Produk (`produk`)**, dan **Anggota Tim (`anggota_tim`)**.
 
 ### C. Lokasi Direktori Tema
+
 Perhatikan bahwa struktur tema ini berada langsung di dalam folder `wp-content/themes/` (atau dapat dimasukkan ke dalam subfolder tema `wp-content/themes/wakalumi/`):
+
 - File konfigurasi & fungsi utama: `functions.php`
 - Modul-modul halaman admin: `inc/admin-*.php`
 - Template halaman frontend: `front-page.php`, `header.php`, `footer.php`, `page-*.php`, `archive-berita.php`, `single-berita.php`
@@ -53,7 +61,9 @@ Perhatikan bahwa struktur tema ini berada langsung di dalam folder `wp-content/t
 Karena website ini dikembangkan di environment LocalWP dengan domain `http://wakalumibprscoid.local`, saat dipindahkan ke hosting produksi (misalnya `https://bprswakalumi.co.id`), berikut adalah **4 titik konfigurasi** yang wajib disesuaikan:
 
 ### 1. Kredensial Database di `wp-config.php`
+
 Pada aplikasi LocalWP, konfigurasi default menggunakan user `root` dan password `root`. Saat di hosting (cPanel/VPS), ubah bagian berikut di file `wp-config.php`:
+
 ```php
 define( 'DB_NAME', 'nama_db_hosting_anda' );
 define( 'DB_USER', 'user_db_hosting_anda' );
@@ -67,18 +77,23 @@ define( 'WP_DEBUG_DISPLAY', false );
 ```
 
 ### 2. URL Utama Website (`siteurl` & `home`) di Tabel `wp_options`
+
 Di dalam database tabel `wp_options`, terdapat 2 baris utama yang menentukan alamat website:
+
 - `option_name = 'siteurl'` ➡️ Ubah dari `http://wakalumibprscoid.local` menjadi `https://bprswakalumi.co.id` (tanpa garis miring `/` di paling belakang).
 - `option_name = 'home'` ➡️ Ubah dari `http://wakalumibprscoid.local` menjadi `https://bprswakalumi.co.id` (tanpa garis miring `/` di paling belakang).
 
 ### 3. URL Gambar & Dokumen PDF di Dalam Database (*Serialized Data*)
+
 Saat mengunggah foto pengurus, gambar berita, brosur PDF, atau laporan publikasi di LocalWP, WordPress menyimpan URL lengkap seperti `http://wakalumibprscoid.local/wp-content/uploads/2026/...` di dalam tabel `wp_options` dan `wp_postmeta`.
+
 - **PERINGATAN PENTING**: Jangan melakukan *Find & Replace* manual menggunakan Notepad/VS Code langsung pada file `.sql`! Mengapa? Karena WordPress menyimpan array pengaturan dalam format **PHP Serialized** (contoh: `s:58:"http://wakalumibprscoid.local/wp-content/uploads/foto.jpg";`). Jika panjang karakter domain berubah tanpa memperbarui angka `s:58`, array tersebut bisa ter-reset.
 - **Solusi Aman**:
   1. **Otomatis (Sudah Kami Tanamkan)**: Kami telah menambahkan fitur **Auto-Domain Normalizer** di `functions.php` yang secara otomatis mengubah URL `wakalumibprscoid.local` menjadi domain hosting aktif saat halaman dimuat tanpa merusak data *serialized*!
   2. **Pembersihan Permanen Database**: Setelah berhasil login ke WP-Admin di hosting, Anda cukup menginstal plugin gratis **Better Search Replace** (atau menjalankan perintah WP-CLI `wp search-replace 'http://wakalumibprscoid.local' 'https://bprswakalumi.co.id' --all-tables`), yang akan memperbarui seluruh URL di database dengan aman.
 
 ### 4. Konfigurasi `.htaccess` & Permalink
+
 Setelah pindah ke hosting, struktur URL halaman (seperti `/profil/tentang-kami/` atau `/produk/tabungan-syariah/`) memerlukan file `.htaccess` yang sesuai dengan server hosting. Cara memperbaruinya sangat mudah: cukup buka **WP-Admin ➡️ Settings ➡️ Permalinks**, lalu klik tombol **Save Changes** satu kali tanpa mengubah apa pun.
 
 ---
@@ -88,17 +103,20 @@ Setelah pindah ke hosting, struktur URL halaman (seperti `/profil/tentang-kami/`
 Ikuti langkah-langkah berurutan berikut untuk meng-online-kan website ke hosting produksi:
 
 ### Tahap 1: Pastikan Build Asset Terbaru & Ekspor dari LocalWP
+
 1. Pastikan file CSS/JS sudah ter-build versi produksi terbaru di komputer lokal:
    ```bash
    cd "app/public/wp-content/themes"
    npm run build
    ```
+
    *(Catatan: Di server hosting nanti Anda **tidak perlu** menjalankan `npm` atau meng-upload folder `node_modules`, karena hasil jadi di `assets/build/` sudah siap pakai).*
 2. Buka aplikasi **LocalWP**:
    - Klik kanan pada site **wakalumibprscoid** ➡️ pilih **Export** (atau buka tab **Database ➡️ Open AdminerEvo ➡️ Export** untuk mengunduh file database `.sql`).
    - Jika memilih menyalin manual, kompres isi folder `app/public/` menjadi `website-wakalumi.zip` (**kecuali** folder `wp-content/themes/node_modules` agar ukuran file zip ringan dan cepat di-upload).
 
 ### Tahap 2: Siapkan Database di Hosting (cPanel / Plesk / VPS)
+
 1. Login ke cPanel hosting Anda (`https://namadomain.co.id/cpanel`).
 2. Buka menu **MySQL® Database Wizard**:
    - Buat database baru (misal: `bprswaka_wp`).
@@ -111,6 +129,7 @@ Ikuti langkah-langkah berurutan berikut untuk meng-online-kan website ke hosting
    - Ubah nilai `siteurl` dan `home` menjadi `https://bprswakalumi.co.id` (sesuaikan dengan domain resmi Anda).
 
 ### Tahap 3: Upload File Website ke Hosting
+
 1. Buka menu **File Manager** di cPanel ➡️ masuk ke direktori **`public_html`**.
 2. Upload file `website-wakalumi.zip` lalu **Extract** di dalam `public_html`.
 3. Klik kanan pada file **`wp-config.php`** ➡️ pilih **Edit**:
@@ -118,6 +137,7 @@ Ikuti langkah-langkah berurutan berikut untuk meng-online-kan website ke hosting
    - Simpan perubahan.
 
 ### Tahap 4: Sinkronisasi Domain & Permalinks di WP-Admin Hosting
+
 1. Buka browser dan login ke **`https://bprswakalumi.co.id/wp-admin`**.
 2. Buka menu **Settings (Pengaturan) ➡️ Permalinks**:
    - Pastikan terpilih **Post name** (`/%postname%/`), lalu klik **Save Changes** agar file `.htaccess` di hosting ter-generate secara otomatis.
@@ -151,6 +171,7 @@ Untuk memastikan website langsung berjalan mulus begitu di-upload ke hosting, ka
 Panduan ini ditujukan bagi **Tim Admin / Humas / IT Bank Syariah Wakalumi** untuk mengelola dan memperbarui konten website sehari-hari setelah dipublikasikan tanpa perlu menyentuh kode pemrograman.
 
 ### 🔐 Cara Login ke Dashboard Admin
+
 1. Akses alamat: **`https://bprswakalumi.co.id/wp-admin`**
 2. Masukkan **Username / Email** dan **Password** Administrator.
 3. Setelah masuk, di sidebar sebelah kiri terdapat **2 kelompok menu utama** yang akan sering Anda gunakan:
@@ -160,22 +181,27 @@ Panduan ini ditujukan bagi **Tim Admin / Humas / IT Bank Syariah Wakalumi** untu
 ---
 
 ### A. Mengelola Pengaturan Global, Kontak, Nisbah & Footer
+
 Di sidebar kiri WP-Admin, arahkan kursor ke **`Pengaturan Wakalumi`**. Terdapat 5 sub-menu pengaturan global di bagian paling atas:
 
 #### 1. Umum & Pengumuman (`Pengaturan Wakalumi ➡️ Umum & Pengumuman`)
+
 - **Top Bar & Running Text**: Mengubah teks pengumuman berjalan di bagian atas website, label tombol darurat/info, dan status aktif/nonaktifnya.
 - **Identitas & Statistik Beranda**: Mengubah angka statistik pencapaian bank di beranda (misal: Tahun Berdiri, Jumlah Nasabah, Rasio Keuangan).
 
 #### 2. Kontak & Maps (`Pengaturan Wakalumi ➡️ Kontak & Maps`)
+
 - **Nomor WhatsApp Utama & Call Center**: Mengubah nomor WhatsApp Customer Service (format `62815...`), nomor telepon kantor, dan alamat email resmi. Perubahan di sini otomatis memperbarui tombol WhatsApp mengambang (*Floating WA*) dan kontak di seluruh halaman.
 - **Alamat Kantor Pusat & Embed Google Maps**: Mengubah alamat teks dan tautan iframe Google Maps.
 
 #### 3. Layanan & Media (`Pengaturan Wakalumi ➡️ Layanan & Media`)
+
 - **4 Kartu Layanan Cepat Beranda**: Mengubah judul, deskripsi, link tujuan, pilihan ikon, atau mengunggah gambar kustom untuk 4 kartu akses cepat di bawah banner utama beranda.
 - **Video Profil & Ringkasan Tentang Kami di Beranda**: Mengubah tautan video YouTube, gambar sampul (*thumbnail*), dan teks perkenalan singkat di halaman depan.
 - **Logo Regulasi Hero & Badge Jaminan LPS**: Menambah/mengubah logo lembaga regulasi (OJK, LPS, dll.) serta teks informasi batas maksimal penjaminan simpanan LPS (Rp 2 Miliar).
 
 #### 4. Informasi Nisbah (`Pengaturan Wakalumi ➡️ Informasi Nisbah`) — *Single Source of Truth*
+
 - **Sangat Penting (Update Bulanan)**: Menu ini adalah **pusat data tunggal** untuk tabel bagi hasil (Nisbah) Tabungan dan Deposito.
 - Anda cukup mengubah **Periode Bulan** (misal: `Oktober 2026`) serta persentase **Nisbah Nasabah : Bank** dan **Indikasi Equivalent Rate (%)** di halaman ini.
 - Setelah klik **Simpan**, data akan **otomatis ter-update secara serentak** di:
@@ -184,12 +210,15 @@ Di sidebar kiri WP-Admin, arahkan kursor ke **`Pengaturan Wakalumi`**. Terdapat 
   3. Rumus Kalkulator Simulasi Deposito!
 
 #### 5. Footer & Jam Kerja (`Pengaturan Wakalumi ➡️ Footer & Jam Kerja`)
+
 - Mengubah deskripsi singkat bank di bagian bawah website (Footer), jadwal jam operasional layanan kas/kantor, tautan media sosial (Instagram, Facebook, YouTube, TikTok, LinkedIn), serta deretan logo mitra/regulator di bagian bawah halaman.
 
 ---
 
 ### B. Mengelola Banner Utama Beranda (Hero Slider)
+
 Untuk mengganti gambar spanduk promosi/informasi besar di bagian paling atas Halaman Beranda:
+
 1. Lihat menu **`Hero Slider`** di sidebar kiri WP-Admin (atau melalui **`Pengaturan Wakalumi ➡️ Hero & Slider`**).
 2. Untuk menambah slide baru: Klik **Tambah Slide Baru (Add New)**:
    - Isi **Judul Slide** dan **Sub-judul / Deskripsi Singkat**.
@@ -200,6 +229,7 @@ Untuk mengganti gambar spanduk promosi/informasi besar di bagian paling atas Hal
 ---
 
 ### C. Mengelola Halaman Profil Perusahaan
+
 Seluruh sub-halaman pada menu **Profil** di navigasi atas dikelola melalui sub-menu di bawah **`Pengaturan Wakalumi`**:
 
 1. **Profil: Tentang Kami (`Pengaturan Wakalumi ➡️ Profil: Tentang Kami`)**:
@@ -216,6 +246,7 @@ Seluruh sub-halaman pada menu **Profil** di navigasi atas dikelola melalui sub-m
 ---
 
 ### D. Mengelola Halaman Produk & Katalog Brosur
+
 Seluruh halaman di bawah menu **Produk** dikelola melalui sub-menu berikut:
 
 1. **Produk: Tabungan & Deposito (`Pengaturan Wakalumi ➡️ Produk: Simpanan`)**:
@@ -261,6 +292,7 @@ Seluruh halaman di bawah menu **Produk** dikelola melalui sub-menu berikut:
 ---
 
 ### 💡 Tips Terbaik Operasional Admin
+
 - **Ukuran Gambar**: Sebelum mengunggah foto ke Media Library, usahakan ukuran dimensi gambar proporsional (maksimal lebar `1600px` - `1920px`) dengan ukuran file di bawah **`500 KB`** (format `.jpg`, `.png`, atau `.webp`) agar website selalu terasa sangat cepat saat dibuka oleh nasabah melalui smartphone.
 - **Penamaan File PDF**: Saat mengunggah file PDF Laporan Publikasi atau Brosur, gunakan nama file tanpa karakter spesial yang aneh (contoh baik: `Laporan-Publikasi-Triwulan-I-2026-BPRS-Wakalumi.pdf`).
 - **Tombol Simpan**: Setiap kali selesai mengubah teks atau mengunggah gambar di halaman **`Pengaturan Wakalumi`**, jangan lupa gulir ke bagian bawah halaman dan klik tombol biru/hijau **"Simpan Perubahan"**.
@@ -272,6 +304,7 @@ Seluruh halaman di bawah menu **Produk** dikelola melalui sub-menu berikut:
 Tema **Wakalumi** telah dilengkapi dengan **Mesin SEO & Open Graph Otomatis (Built-in Smart SEO Engine)** tanpa memerlukan plugin tambahan yang memberatkan server:
 
 ### A. Cara Mengatur SEO & Thumbnail Share WhatsApp di WP-Admin
+
 1. Masuk ke **WP-Admin ➡️ Pengaturan Website ➡️ Umum & Logo Brand**.
 2. Gulir ke bawah menuju bagian **"🔍 Pengaturan SEO & Pratinjau Mesin Pencari (Google & Share WhatsApp)"**:
    - **Deskripsi Meta Google (Meta Description)**: Isi dengan ringkasan resmi Bank Syariah Wakalumi (ideal 140–165 karakter). Teks ini akan tampil di bawah judul website pada hasil pencarian Google dan saat link website dibagikan di chat WhatsApp.
@@ -281,11 +314,13 @@ Tema **Wakalumi** telah dilengkapi dengan **Mesin SEO & Open Graph Otomatis (Bui
 3. Klik tombol **"Simpan Identitas, WhatsApp & SEO"**.
 
 ### B. Fitur SEO Otomatis yang Sudah Aktif di Tema
+
 - **Dynamic Meta Title & Description per Halaman**: Untuk halaman berita/artikel, sistem otomatis mengambil cuplikan isi berita (*excerpt*) dan gambar sampul (*Featured Image*) sebagai pratinjau WhatsApp & Google.
 - **Schema.org JSON-LD (`BankOrCreditUnion`)**: Sistem secara otomatis menyematkan struktur data resmi lembaga keuangan/perbankan syariah di kode halaman agar algoritma Google mengenali nama resmi **PT BPRS Wakalumi (Bank Syariah Wakalumi / BSW)**, nomor telepon, logo, dan alamat kantor pusat.
 - **Kompatibilitas Penuh dengan Plugin SEO (Opsional)**: Jika di kemudian hari tim IT ingin memasang plugin **Yoast SEO** atau **Rank Math**, mesin SEO bawaan tema akan otomatis menonaktifkan tag duplikat dan menyerahkan kendali ke plugin tersebut.
 
 ### C. Langkah Agar Cepat Tampil di Halaman Pertama Google (Setelah Publish)
+
 1. Pastikan opsi **`Settings ➡️ Reading ➡️ Search engine visibility`** ("Discourage search engines from indexing this site") **TIDAK DICENTANG** di WP-Admin.
 2. Buka [Google Search Console](https://search.google.com/search-console/) menggunakan akun Google resmi perusahaan.
 3. Tambahkan properti domain `https://bprswakalumi.co.id`, lalu salin kode verifikasi *HTML Tag* ke menu **WP-Admin ➡️ Pengaturan Website ➡️ Umum & Logo Brand ➡️ Kode Verifikasi Google Search Console**.
@@ -299,6 +334,7 @@ Tema **Wakalumi** telah dilengkapi dengan **Mesin SEO & Open Graph Otomatis (Bui
 ## 7. Checklist Pemeriksaan Akhir Setelah Publish
 
 Setelah website selesai dimigrasikan ke hosting, lakukan pengecekan singkat berikut (kurang lebih 5 menit):
+
 - [ ] Buka `https://bprswakalumi.co.id` — pastikan gembok **SSL (HTTPS)** aktif dan halaman Beranda tampil sempurna dengan font baru **BSW (Rounded Water Philosophy — Nunito & Quicksand)**.
 - [ ] Klik menu navigasi satu per satu (**Profil**, **Produk**, **Informasi**, **Kontak**) — pastikan perpindahan halaman berjalan mulus dan tidak ada error `404 Not Found`.
 - [ ] Uji tombol **Mode Gelap / Terang (Dark Mode)** di bagian kanan atas navbar.

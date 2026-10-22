@@ -102,6 +102,10 @@ $dep_cta_desc      = get_option( 'options_deposito_cta_desc', 'Hubungi staf trea
 $dep_cta_btn       = get_option( 'options_deposito_cta_btn_text', 'Hubungi via WhatsApp' );
 $dep_cta_wa_msg    = get_option( 'options_deposito_cta_wa_msg', 'Halo BPRS Wakalumi, saya ingin berkonsultasi mengenai penempatan dana Deposito Mudharabah.' );
 $brosur_url        = get_option( 'options_brosur_file_url', '' );
+$dep_brosur_url    = get_option( 'options_deposito_brosur_url', '' );
+if ( empty( $dep_brosur_url ) ) {
+    $dep_brosur_url = ! empty( $brosur_url ) ? $brosur_url : home_url( '/brosur/' );
+}
 
 // WhatsApp Hotline
 $default_wa        = get_option( 'options_contact_wa', '6281517380388' );
@@ -971,18 +975,17 @@ if ( empty( $deposito_nisbah ) ) {
                         </svg>
                         <span><?php echo esc_html( $dep_cta_btn ); ?></span>
                     </a>
-                    <?php if ( ! empty( $brosur_url ) ) : ?>
-                        <a 
-                            href="<?php echo esc_url( $brosur_url ); ?>" 
-                            download 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
-                        >
-                            <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                            <span>Unduh Brosur Produk (PDF)</span>
-                        </a>
-                    <?php endif; ?>
+                    <?php 
+                    $is_dep_pdf = (bool) preg_match( '/\.pdf($|\?)/i', $dep_brosur_url );
+                    ?>
+                    <a 
+                        href="<?php echo esc_url( $dep_brosur_url ); ?>" 
+                        <?php if ( $is_dep_pdf ) : ?>download target="_blank" rel="noopener noreferrer"<?php endif; ?>
+                        class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
+                    >
+                        <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        <span><?php echo $is_dep_pdf ? 'Unduh Brosur Produk (PDF)' : 'Lihat Brosur Produk'; ?></span>
+                    </a>
                 </div>
             </div>
         </div>

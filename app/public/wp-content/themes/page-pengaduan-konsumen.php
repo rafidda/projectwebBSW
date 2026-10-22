@@ -34,6 +34,13 @@ $pdf_link      = $has_pdf_file ? $cfg['form_pdf_url'] : $wa_url . '&text=' . raw
 // Nilai SLA Dinamis
 $sla_primary_time   = ! empty( $cfg['sla_card1_time'] ) ? $cfg['sla_card1_time'] : '20 Hari Kerja';
 $sla_secondary_time = ! empty( $cfg['sla_card2_time'] ) ? $cfg['sla_card2_time'] : '+20 Hari Kerja';
+$sla_kicker         = ! empty( $cfg['sla_kicker'] ) ? $cfg['sla_kicker'] : 'Komitmen Kepastian Waktu';
+$sla_card1_sub      = ! empty( $cfg['sla_card1_sub'] ) ? $cfg['sla_card1_sub'] : 'Saluran Resmi Bank Syariah Wakalumi';
+$sla_card2_sub      = ! empty( $cfg['sla_card2_sub'] ) ? $cfg['sla_card2_sub'] : 'Pemberitahuan Tertulis Resmi';
+$sla_card1_foot_l   = ! empty( $cfg['sla_card1_footer_left'] ) ? $cfg['sla_card1_footer_left'] : 'Tahap 1: Unit Layanan Aduan';
+$sla_card1_foot_r   = ! empty( $cfg['sla_card1_footer_right'] ) ? $cfg['sla_card1_footer_right'] : 'POJK No. 22/2023';
+$sla_card2_foot_l   = ! empty( $cfg['sla_card2_footer_left'] ) ? $cfg['sla_card2_footer_left'] : 'Tahap 2: Notifikasi Tertulis';
+$sla_card2_foot_r   = ! empty( $cfg['sla_card2_footer_right'] ) ? $cfg['sla_card2_footer_right'] : 'Sebelum Hari Ke-20';
 $channels           = ! empty( $cfg['channels'] ) && is_array( $cfg['channels'] ) ? $cfg['channels'] : [];
 $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $cfg['steps'] : [];
 ?>
@@ -115,14 +122,14 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                         <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 absolute top-0 left-0 right-0"></div>
 
                         <!-- Decorative Watermark Logo inside Card -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
-                                    w-56 h-56
-                                    opacity-[0.04] dark:opacity-[0.06] 
+                        <div class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 
+                                    w-52 h-52 sm:w-60 sm:h-60
+                                    opacity-[0.05] dark:opacity-[0.08] 
                                     pointer-events-none select-none 
                                     transition-all duration-700 ease-out 
-                                    group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 
-                                    group-hover:opacity-[0.09] dark:group-hover:opacity-[0.14] 
-                                    grayscale mix-blend-multiply dark:mix-blend-screen overflow-hidden z-0">
+                                    group-hover:left-full group-hover:-translate-x-[calc(100%+0.75rem)] sm:group-hover:-translate-x-[calc(100%+1.25rem)] group-hover:scale-110 
+                                    group-hover:opacity-[0.16] dark:group-hover:opacity-[0.24] 
+                                    grayscale mix-blend-multiply dark:mix-blend-screen z-0">
                             <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
                         </div>
 
@@ -240,15 +247,15 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                     <!-- CARD SALURAN PENGADUAN -->
                     <div class="spotlight-card group relative rounded-3xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border <?php echo esc_attr( $theme['border'] ?? 'border-slate-200/90 dark:border-dark-border' ); ?> shadow-md hover:shadow-2xl <?php echo esc_attr( $theme['hover_shadow'] ?? '' ); ?> hover:-translate-y-1.5 transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( ($c_idx + 1) * 70 ); ?>">
                         
-                        <!-- Decorative Watermark Logo (Interactive Hover: Left 3/4 -> Right 1/2 Full Card) -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
-                                    w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80
-                                    opacity-[0.035] dark:opacity-[0.055] 
+                        <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide, Full Card View) -->
+                        <div class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 
+                                    w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72
+                                    opacity-[0.05] dark:opacity-[0.08] 
                                     pointer-events-none select-none 
                                     transition-all duration-700 ease-out 
-                                    group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 
-                                    group-hover:opacity-[0.08] dark:group-hover:opacity-[0.14] 
-                                    grayscale mix-blend-multiply dark:mix-blend-screen overflow-hidden z-0">
+                                    group-hover:left-full group-hover:-translate-x-[calc(100%+0.75rem)] sm:group-hover:-translate-x-[calc(100%+1.5rem)] group-hover:scale-110 
+                                    group-hover:opacity-[0.16] dark:group-hover:opacity-[0.24] 
+                                    grayscale mix-blend-multiply dark:mix-blend-screen z-0">
                             <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
                         </div>
 
@@ -305,7 +312,7 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                         </div>
 
                         <!-- TONE 2: CARD BODY & CHANNELS -->
-                        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between bg-white dark:bg-dark-card space-y-6">
+                        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between relative z-10 space-y-6">
                             
                             <!-- Channel Items List -->
                             <div class="space-y-3">
@@ -619,7 +626,7 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-black uppercase tracking-wider mb-3 shadow-xs">
                     <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
                     <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Komitmen Kepastian Waktu</span>
+                    <span><?php echo esc_html( $sla_kicker ); ?></span>
                 </div>
                 <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     <?php echo esc_html( $cfg['sla_title'] ?? 'Standar Waktu Layanan Pengaduan (SLA)' ); ?>
@@ -633,62 +640,66 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-6 items-stretch">
                 
                 <!-- CARD SLA 1: PENYELESAIAN OLEH BANK -->
-                <div class="spotlight-card group relative rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="50">
+                <div class="spotlight-card group relative rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500/80 shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="50">
                     
-                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
-                                w-48 h-48 sm:w-56 sm:h-56
-                                opacity-[0.035] dark:opacity-[0.055] 
+                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide, Full Card View) -->
+                    <div class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 
+                                w-52 h-52 sm:w-60 sm:h-60
+                                opacity-[0.05] dark:opacity-[0.08] 
                                 pointer-events-none select-none 
                                 transition-all duration-700 ease-out 
-                                group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 
-                                group-hover:opacity-[0.08] dark:group-hover:opacity-[0.14] 
-                                grayscale mix-blend-multiply dark:mix-blend-screen overflow-hidden z-0">
+                                group-hover:left-full group-hover:-translate-x-[calc(100%+0.75rem)] sm:group-hover:-translate-x-[calc(100%+1.25rem)] group-hover:scale-110 
+                                group-hover:opacity-[0.16] dark:group-hover:opacity-[0.24] 
+                                grayscale mix-blend-multiply dark:mix-blend-screen z-0">
                         <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
                     </div>
 
                     <div class="h-1.5 w-full bg-emerald-500 relative z-10"></div>
 
                     <!-- Top Bar (Tone 1) -->
-                    <div class="p-5 bg-emerald-50/80 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-900/40 flex items-center justify-between min-h-[82px] relative z-10">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-md shadow-emerald-500/25 flex-shrink-0">
+                    <div class="p-6 bg-gradient-to-br from-emerald-50/80 via-teal-50/30 to-transparent dark:from-emerald-950/50 dark:via-dark-surface/40 dark:to-transparent border-b border-emerald-100/80 dark:border-dark-border relative z-10">
+                        <div class="flex items-center justify-between gap-3 mb-3.5">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/25 flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
-                            <div>
-                                <span class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider block">
-                                    <?php echo esc_html( $cfg['sla_card1_title'] ?? 'Penyelesaian Standar oleh Bank' ); ?>
+                            <?php if ( ! empty( $cfg['sla_card1_badge'] ) ) : ?>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-xs font-black uppercase tracking-wider border border-emerald-300/60 dark:border-emerald-700/60 shadow-xs flex-shrink-0">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <?php echo esc_html( $cfg['sla_card1_badge'] ); ?>
                                 </span>
-                                <span class="text-[11px] text-slate-500 dark:text-slate-400">Saluran Resmi Bank Syariah Wakalumi</span>
-                            </div>
+                            <?php endif; ?>
                         </div>
-                        <?php if ( ! empty( $cfg['sla_card1_badge'] ) ) : ?>
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-extrabold flex-shrink-0">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                                <?php echo esc_html( $cfg['sla_card1_badge'] ); ?>
-                            </span>
-                        <?php endif; ?>
+                        <div>
+                            <h4 class="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+                                <?php echo esc_html( $cfg['sla_card1_title'] ?? 'Penyelesaian Standar oleh Bank' ); ?>
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+                                <span><?php echo esc_html( $sla_card1_sub ); ?></span>
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Body (Tone 2) -->
-                    <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
-                        <div>
+                    <div class="p-6 flex-1 flex flex-col justify-between relative z-10 space-y-5">
+                        <div class="space-y-4">
                             <!-- Metric Podium Box -->
-                            <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-dark-surface/60 border border-slate-200/70 dark:border-dark-border mb-4 flex items-center justify-between">
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-50/70 via-slate-50/50 to-white dark:from-emerald-950/30 dark:via-dark-surface dark:to-dark-card border border-emerald-200/70 dark:border-dark-border flex items-center justify-between shadow-2xs">
                                 <div>
-                                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                                    <span class="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">
                                         <?php echo esc_html( $cfg['sla_card1_label'] ?? 'Maksimal Standar' ); ?>
                                     </span>
                                     <span class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
                                         <?php echo esc_html( $sla_primary_time ); ?>
                                     </span>
                                 </div>
-                                <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-black text-xs uppercase tracking-wider border border-emerald-200/60 dark:border-emerald-800/60">
-                                    SLA
+                                <div class="px-3 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 font-black text-xs uppercase tracking-wider border border-emerald-300/60 dark:border-emerald-800/60 flex items-center gap-1.5 shadow-2xs">
+                                    <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>SLA RESMI</span>
                                 </div>
                             </div>
 
-                            <p class="min-h-[48px] text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed min-h-[44px]">
                                 <?php echo esc_html( $cfg['sla_card1_desc'] ?? 'Bank Syariah Wakalumi wajib menyelesaikan penanganan pengaduan nasabah paling lambat 20 hari kerja sejak dokumen pendukung lengkap diterima.' ); ?>
                             </p>
                             
@@ -696,13 +707,13 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                             $points1 = ! empty( $cfg['sla_card1_points'] ) ? explode( "\n", str_replace( "\r", "", $cfg['sla_card1_points'] ) ) : [];
                             if ( ! empty( $points1 ) ) : 
                             ?>
-                                <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border space-y-2.5 text-xs text-slate-600 dark:text-slate-400">
+                                <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border space-y-2.5">
                                     <?php foreach ( $points1 as $p1 ) : 
                                         $p1 = trim( $p1 );
                                         if ( empty( $p1 ) ) continue;
                                     ?>
-                                        <div class="flex items-start gap-2.5">
-                                            <span class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">✓</span>
+                                        <div class="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300">
+                                            <div class="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-black flex-shrink-0 mt-0.5 shadow-2xs">✓</div>
                                             <span class="leading-relaxed"><?php echo esc_html( $p1 ); ?></span>
                                         </div>
                                     <?php endforeach; ?>
@@ -711,70 +722,74 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                         </div>
 
                         <!-- Card Footer Tag -->
-                        <div class="mt-5 pt-3.5 border-t border-slate-100 dark:border-dark-border flex items-center justify-between text-[11px] text-slate-400">
-                            <span>Tahap 1: Unit Layanan Aduan</span>
-                            <span class="font-bold text-emerald-600 dark:text-emerald-400">POJK No. 22/2023</span>
+                        <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
+                            <span><?php echo esc_html( $sla_card1_foot_l ); ?></span>
+                            <span class="font-extrabold text-emerald-600 dark:text-emerald-400"><?php echo esc_html( $sla_card1_foot_r ); ?></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- CARD SLA 2: KONDISI TERTENTU & PERPANJANGAN -->
-                <div class="spotlight-card group relative rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-500/80 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+                <div class="spotlight-card group relative rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-500/80 shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
                     
-                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] 
-                                w-48 h-48 sm:w-56 sm:h-56
-                                opacity-[0.035] dark:opacity-[0.055] 
+                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide, Full Card View) -->
+                    <div class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 
+                                w-52 h-52 sm:w-60 sm:h-60
+                                opacity-[0.05] dark:opacity-[0.08] 
                                 pointer-events-none select-none 
                                 transition-all duration-700 ease-out 
-                                group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 
-                                group-hover:opacity-[0.08] dark:group-hover:opacity-[0.14] 
-                                grayscale mix-blend-multiply dark:mix-blend-screen overflow-hidden z-0">
+                                group-hover:left-full group-hover:-translate-x-[calc(100%+0.75rem)] sm:group-hover:-translate-x-[calc(100%+1.25rem)] group-hover:scale-110 
+                                group-hover:opacity-[0.16] dark:group-hover:opacity-[0.24] 
+                                grayscale mix-blend-multiply dark:mix-blend-screen z-0">
                         <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain">
                     </div>
 
                     <div class="h-1.5 w-full bg-teal-600 relative z-10"></div>
 
                     <!-- Top Bar (Tone 1) -->
-                    <div class="p-5 bg-teal-50/80 dark:bg-teal-950/40 border-b border-teal-100 dark:border-teal-900/40 flex items-center justify-between min-h-[82px] relative z-10">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/25 flex-shrink-0">
+                    <div class="p-6 bg-gradient-to-br from-teal-50/80 via-cyan-50/30 to-transparent dark:from-teal-950/50 dark:via-dark-surface/40 dark:to-transparent border-b border-teal-100/80 dark:border-dark-border relative z-10">
+                        <div class="flex items-center justify-between gap-3 mb-3.5">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white flex items-center justify-center shadow-md shadow-teal-600/25 flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                             </div>
-                            <div>
-                                <span class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider block">
-                                    <?php echo esc_html( $cfg['sla_card2_title'] ?? 'Perpanjangan Waktu Resmi Bank' ); ?>
+                            <?php if ( ! empty( $cfg['sla_card2_badge'] ) ) : ?>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300 text-xs font-black uppercase tracking-wider border border-teal-300/60 dark:border-teal-700/60 shadow-xs flex-shrink-0">
+                                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                                    <?php echo esc_html( $cfg['sla_card2_badge'] ); ?>
                                 </span>
-                                <span class="text-[11px] text-slate-500 dark:text-slate-400">Pemberitahuan Tertulis Resmi</span>
-                            </div>
+                            <?php endif; ?>
                         </div>
-                        <?php if ( ! empty( $cfg['sla_card2_badge'] ) ) : ?>
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300 text-[11px] font-extrabold flex-shrink-0">
-                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-ping"></span>
-                                <?php echo esc_html( $cfg['sla_card2_badge'] ); ?>
-                            </span>
-                        <?php endif; ?>
+                        <div>
+                            <h4 class="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+                                <?php echo esc_html( $cfg['sla_card2_title'] ?? 'Perpanjangan Waktu Resmi Bank' ); ?>
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500 flex-shrink-0"></span>
+                                <span><?php echo esc_html( $sla_card2_sub ); ?></span>
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Body (Tone 2) -->
-                    <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
-                        <div>
+                    <div class="p-6 flex-1 flex flex-col justify-between relative z-10 space-y-5">
+                        <div class="space-y-4">
                             <!-- Metric Podium Box -->
-                            <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-dark-surface/60 border border-slate-200/70 dark:border-dark-border mb-4 flex items-center justify-between">
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-teal-50/70 via-slate-50/50 to-white dark:from-teal-950/30 dark:via-dark-surface dark:to-dark-card border border-teal-200/70 dark:border-dark-border flex items-center justify-between shadow-2xs">
                                 <div>
-                                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
+                                    <span class="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">
                                         <?php echo esc_html( $cfg['sla_card2_label'] ?? 'Kondisi Tertentu' ); ?>
                                     </span>
                                     <span class="text-2xl sm:text-3xl font-black text-teal-600 dark:text-teal-400 tracking-tight">
                                         <?php echo esc_html( $sla_secondary_time ); ?>
                                     </span>
                                 </div>
-                                <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 flex items-center justify-center font-black text-xs uppercase tracking-wider border border-teal-200/60 dark:border-teal-800/60">
-                                    +SLA
+                                <div class="px-3 py-1.5 rounded-xl bg-teal-100 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 font-black text-xs uppercase tracking-wider border border-teal-300/60 dark:border-teal-800/60 flex items-center gap-1.5 shadow-2xs">
+                                    <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>+SLA RESMI</span>
                                 </div>
                             </div>
 
-                            <p class="min-h-[48px] text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed min-h-[44px]">
                                 <?php echo esc_html( $cfg['sla_card2_desc'] ?? 'Dapat diperpanjang paling lama 20 hari kerja jika membutuhkan konfirmasi pihak ketiga dengan pemberitahuan tertulis kepada nasabah sebelum hari ke-20.' ); ?>
                             </p>
                             
@@ -782,13 +797,13 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                             $points2 = ! empty( $cfg['sla_card2_points'] ) ? explode( "\n", str_replace( "\r", "", $cfg['sla_card2_points'] ) ) : [];
                             if ( ! empty( $points2 ) ) : 
                             ?>
-                                <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border space-y-2.5 text-xs text-slate-600 dark:text-slate-400">
+                                <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border space-y-2.5">
                                     <?php foreach ( $points2 as $p2 ) : 
                                         $p2 = trim( $p2 );
                                         if ( empty( $p2 ) ) continue;
                                     ?>
-                                        <div class="flex items-start gap-2.5">
-                                            <span class="w-4 h-4 rounded-full bg-teal-100 dark:bg-teal-950/80 text-teal-600 dark:text-teal-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">✓</span>
+                                        <div class="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300">
+                                            <div class="w-4 h-4 rounded-full bg-teal-100 dark:bg-teal-950/80 text-teal-600 dark:text-teal-400 flex items-center justify-center text-[10px] font-black flex-shrink-0 mt-0.5 shadow-2xs">✓</div>
                                             <span class="leading-relaxed"><?php echo esc_html( $p2 ); ?></span>
                                         </div>
                                     <?php endforeach; ?>
@@ -797,9 +812,9 @@ $steps              = ! empty( $cfg['steps'] ) && is_array( $cfg['steps'] ) ? $c
                         </div>
 
                         <!-- Card Footer Tag -->
-                        <div class="mt-5 pt-3.5 border-t border-slate-100 dark:border-dark-border flex items-center justify-between text-[11px] text-slate-400">
-                            <span>Tahap 2: Notifikasi Tertulis</span>
-                            <span class="font-bold text-teal-600 dark:text-teal-400">Sebelum Hari Ke-20</span>
+                        <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
+                            <span><?php echo esc_html( $sla_card2_foot_l ); ?></span>
+                            <span class="font-extrabold text-teal-600 dark:text-teal-400"><?php echo esc_html( $sla_card2_foot_r ); ?></span>
                         </div>
                     </div>
                 </div>

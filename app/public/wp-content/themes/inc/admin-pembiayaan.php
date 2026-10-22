@@ -509,7 +509,13 @@ function wakalumi_render_pembiayaan_admin_page() {
             update_option( "options_pembiayaan_step_{$s}_desc", sanitize_textarea_field( $_POST["options_pembiayaan_step_{$s}_desc"] ?? '' ) );
         }
 
-        // 6. Box Konsultasi Relationship Manager (Sidebar FAQ)
+        // 6. Box Brosur Pembiayaan (Sidebar FAQ)
+        update_option( 'options_pembiayaan_brosur_title', sanitize_text_field( $_POST['options_pembiayaan_brosur_title'] ?? '' ) );
+        update_option( 'options_pembiayaan_brosur_desc', sanitize_textarea_field( $_POST['options_pembiayaan_brosur_desc'] ?? '' ) );
+        update_option( 'options_pembiayaan_brosur_btn', sanitize_text_field( $_POST['options_pembiayaan_brosur_btn'] ?? '' ) );
+        update_option( 'options_pembiayaan_brosur_url', esc_url_raw( $_POST['options_pembiayaan_brosur_url'] ?? '' ) );
+
+        // 7. Box Konsultasi Relationship Manager (Sidebar FAQ)
         update_option( 'options_pembiayaan_rm_show', isset( $_POST['options_pembiayaan_rm_show'] ) ? '1' : '0' );
         update_option( 'options_pembiayaan_rm_title', sanitize_text_field( $_POST['options_pembiayaan_rm_title'] ?? '' ) );
         update_option( 'options_pembiayaan_rm_desc', sanitize_textarea_field( $_POST['options_pembiayaan_rm_desc'] ?? '' ) );
@@ -517,7 +523,7 @@ function wakalumi_render_pembiayaan_admin_page() {
         update_option( 'options_pembiayaan_rm_wa_msg', sanitize_textarea_field( $_POST['options_pembiayaan_rm_wa_msg'] ?? '' ) );
         update_option( 'options_pembiayaan_rm_wa_num', sanitize_text_field( $_POST['options_pembiayaan_rm_wa_num'] ?? '' ) );
 
-        // 7. Banner CTA Konsultasi Pembiayaan
+        // 8. Banner CTA Konsultasi Pembiayaan
         update_option( 'options_pembiayaan_cta_kicker', sanitize_text_field( $_POST['options_pembiayaan_cta_kicker'] ?? '' ) );
         update_option( 'options_pembiayaan_cta_title', sanitize_text_field( $_POST['options_pembiayaan_cta_title'] ?? '' ) );
         update_option( 'options_pembiayaan_cta_desc', sanitize_textarea_field( $_POST['options_pembiayaan_cta_desc'] ?? '' ) );
@@ -567,6 +573,12 @@ function wakalumi_render_pembiayaan_admin_page() {
     $faq_title      = get_option( 'options_pembiayaan_faq_title', 'Pertanyaan Seputar Pembiayaan Syariah' );
     $faq_sub        = get_option( 'options_pembiayaan_faq_sub', 'Pertanyaan umum nasabah seputar jaminan, waktu pencairan, sistem pelunasan, dan bebas denda riba.' );
     $faq_list       = wakalumi_get_pembiayaan_faq_list();
+
+    // Brosur Box
+    $pem_brosur_title = get_option( 'options_pembiayaan_brosur_title', 'Brosur Lengkap Pembiayaan' );
+    $pem_brosur_desc  = get_option( 'options_pembiayaan_brosur_desc', 'Unduh panduan resmi, simulasi plafon terperinci, dan daftar dokumen persyaratan seluruh produk pembiayaan syariah kami dalam format PDF praktis.' );
+    $pem_brosur_btn   = get_option( 'options_pembiayaan_brosur_btn', 'Lihat Brosur Lengkap' );
+    $pem_brosur_url   = get_option( 'options_pembiayaan_brosur_url', '' );
 
     // RM Box
     $rm_show        = get_option( 'options_pembiayaan_rm_show', '1' );
@@ -1031,11 +1043,41 @@ function wakalumi_render_pembiayaan_admin_page() {
             </div>
 
             <!-- ========================================================
-                 BAGIAN 6: BOX KONSULTASI RELATIONSHIP MANAGER (SIDEBAR FAQ)
+                 BAGIAN 6: BOX BROSUR LENGKAP PEMBIAYAAN (SIDEBAR FAQ)
+                 ======================================================== -->
+            <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #0d9488; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <h2 style="font-size: 16px; font-weight: 700; color: #0d9488; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                    6. Box Brosur Lengkap Pembiayaan (Sidebar FAQ)
+                </h2>
+                <table class="form-table" style="margin: 0;">
+                    <tr>
+                        <th style="width: 230px;"><label for="options_pembiayaan_brosur_title">Judul Box Brosur</label></th>
+                        <td><input type="text" id="options_pembiayaan_brosur_title" name="options_pembiayaan_brosur_title" value="<?php echo esc_attr( $pem_brosur_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_brosur_desc">Deskripsi</label></th>
+                        <td><textarea id="options_pembiayaan_brosur_desc" name="options_pembiayaan_brosur_desc" rows="3" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $pem_brosur_desc ); ?></textarea></td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_brosur_btn">Teks Tombol</label></th>
+                        <td><input type="text" id="options_pembiayaan_brosur_btn" name="options_pembiayaan_brosur_btn" value="<?php echo esc_attr( $pem_brosur_btn ); ?>" class="regular-text" style="width: 100%; max-width: 350px;"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_brosur_url">URL Tautan Brosur</label></th>
+                        <td>
+                            <input type="text" id="options_pembiayaan_brosur_url" name="options_pembiayaan_brosur_url" value="<?php echo esc_attr( $pem_brosur_url ); ?>" class="regular-text" style="width: 100%; max-width: 550px;" placeholder="<?php echo esc_attr( home_url( '/brosur/' ) ); ?>">
+                            <p class="description" style="font-size: 11px; color: #64748b; margin-top: 4px;">Kosongkan untuk otomatis mengarahkan ke halaman katalog brosur interaktif (<code><?php echo esc_html( home_url( '/brosur/' ) ); ?></code>). Anda juga dapat mengisi tautan berkas PDF jika ingin langsung diunduh nasabah.</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- ========================================================
+                 BAGIAN 7: BOX KONSULTASI RELATIONSHIP MANAGER (SIDEBAR FAQ)
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #4f46e5; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #4f46e5; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                    6. Box Konsultasi Relationship Manager (Sidebar FAQ)
+                    7. Box Konsultasi Relationship Manager (Sidebar FAQ)
                 </h2>
                 <table class="form-table" style="margin: 0;">
                     <tr>
@@ -1074,11 +1116,11 @@ function wakalumi_render_pembiayaan_admin_page() {
             </div>
 
             <!-- ========================================================
-                 BAGIAN 7: BANNER CTA KONSULTASI PEMBIAYAAN
+                 BAGIAN 8: BANNER CTA KONSULTASI PEMBIAYAAN
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                    7. Banner CTA Konsultasi Pembiayaan
+                    8. Banner CTA Konsultasi Pembiayaan
                 </h2>
                 <table class="form-table" style="margin: 0;">
                     <tr>

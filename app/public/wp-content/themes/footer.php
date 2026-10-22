@@ -44,6 +44,16 @@ $disclaimer_text= str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $discla
 $wa_number      = get_option( 'options_contact_wa', '6281517380388' );
 $wa_url         = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 
+// Corporate Culture (WAQF) Logo
+$show_culture   = get_option( 'options_footer_show_culture', '1' );
+$default_culture_logo = get_template_directory_uri() . '/assets/img/logo-waqf-light.png';
+$culture_logo   = get_option( 'options_footer_culture_logo', $default_culture_logo );
+if ( empty( $culture_logo ) ) {
+    $culture_logo = $default_culture_logo;
+}
+$culture_height = get_option( 'options_footer_culture_height', 99 );
+$culture_url    = get_option( 'options_footer_culture_url', '' );
+
 $brand          = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
     'logo_url'      => get_option( 'options_site_logo', '' ),
     'logo_id'       => get_option( 'options_site_logo_id', 0 ),
@@ -287,42 +297,61 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
             </div>
         </div>
         <?php endif; // wakalumi_hide_main_footer ?>
+    </div><!-- /.container-wide -->
 
-        <!-- Bottom Bar -->
-        <?php
-        $footer_show_logos    = get_option( 'options_footer_show_logos', '1' );
-        $footer_logos_desktop = get_option( 'options_footer_logos_desktop', '1' );
-        $footer_logos_mobile  = get_option( 'options_footer_logos_mobile', '1' );
-        $footer_reg_label     = get_option( 'options_footer_reg_label', 'Terdaftar & Diawasi:' );
-        
-        $footer_logos = get_option( 'options_footer_reg_logos', [] );
-        if ( empty( $footer_logos ) ) {
-            $old_ojk = get_option( 'options_logo_ojk_url', get_template_directory_uri() . '/assets/img/ojk-logo.png' );
-            $old_lps = get_option( 'options_logo_lps_url', get_template_directory_uri() . '/assets/img/lps-logo.png' );
-            $footer_logos = [
-                [ 'label' => 'OJK', 'url' => $old_ojk ],
-                [ 'label' => 'LPS', 'url' => $old_lps ],
-            ];
-        }
+    <!-- Bottom Bar (Di Luar Container, Lebih Luas & Berjarak Nyaman dari Tepi Layar) -->
+    <?php
+    $footer_show_logos    = get_option( 'options_footer_show_logos', '1' );
+    $footer_logos_desktop = get_option( 'options_footer_logos_desktop', '1' );
+    $footer_logos_mobile  = get_option( 'options_footer_logos_mobile', '1' );
+    $footer_reg_label     = get_option( 'options_footer_reg_label', 'Terdaftar & Diawasi:' );
+    
+    $footer_logos = get_option( 'options_footer_reg_logos', [] );
+    if ( empty( $footer_logos ) ) {
+        $old_ojk = get_option( 'options_logo_ojk_url', get_template_directory_uri() . '/assets/img/ojk-logo.png' );
+        $old_lps = get_option( 'options_logo_lps_url', get_template_directory_uri() . '/assets/img/lps-logo.png' );
+        $footer_logos = [
+            [ 'label' => 'OJK', 'url' => $old_ojk ],
+            [ 'label' => 'LPS', 'url' => $old_lps ],
+        ];
+    }
 
-        $footer_logos_class = '';
-        if ( $footer_show_logos ) {
-            if ( $footer_logos_desktop && $footer_logos_mobile ) {
-                $footer_logos_class = 'flex';
-            } elseif ( $footer_logos_desktop && ! $footer_logos_mobile ) {
-                $footer_logos_class = 'hidden md:flex';
-            } elseif ( ! $footer_logos_desktop && $footer_logos_mobile ) {
-                $footer_logos_class = 'flex md:hidden';
-            } else {
-                $footer_logos_class = 'hidden';
-            }
+    $footer_logos_class = '';
+    if ( $footer_show_logos ) {
+        if ( $footer_logos_desktop && $footer_logos_mobile ) {
+            $footer_logos_class = 'flex';
+        } elseif ( $footer_logos_desktop && ! $footer_logos_mobile ) {
+            $footer_logos_class = 'hidden md:flex';
+        } elseif ( ! $footer_logos_desktop && $footer_logos_mobile ) {
+            $footer_logos_class = 'flex md:hidden';
         } else {
             $footer_logos_class = 'hidden';
         }
-        ?>
-        <div class="py-8 border-t border-slate-800 dark:border-dark-border flex flex-col items-center justify-center gap-4 text-center">
+    } else {
+        $footer_logos_class = 'hidden';
+    }
+    ?>
+    <div class="py-8 border-t border-slate-800 dark:border-dark-border px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10 w-full">
+        <?php if ( $show_culture && ! empty( $culture_logo ) ) : ?>
+        <!-- Logo WAQF di Sisi Kiri Lebih Luas (Di Luar Container, Berjarak Nyaman dan Elegan) -->
+        <div class="lg:absolute lg:left-8 xl:left-14 lg:top-1/2 lg:-translate-y-1/2 flex items-center justify-center lg:justify-start mb-6 lg:mb-0">
+            <?php if ( ! empty( $culture_url ) ) : ?>
+                <a href="<?php echo esc_url( $culture_url ); ?>" class="inline-block transition-transform duration-300 hover:scale-105" title="WAQF">
+            <?php endif; ?>
+                <img src="<?php echo esc_url( $culture_logo ); ?>" 
+                     alt="WAQF" 
+                     class="w-auto object-contain transition-all drop-shadow-md"
+                     style="height: <?php echo esc_attr( $culture_height ); ?>px; max-height: 130px;" />
+            <?php if ( ! empty( $culture_url ) ) : ?>
+                </a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
+        <!-- Konten Utama: 100% Rata Tengah Sesuai Aslinya (OJK, LPS, Disclaimer & Hak Cipta) -->
+        <div class="flex flex-col items-center justify-center gap-4 text-center max-w-2xl mx-auto">
             <?php if ( $footer_logos_class !== 'hidden' && ! empty( $footer_logos ) ) : ?>
-            <!-- Logo Regulasi Dinamis (OJK, LPS, BI, dll.) -->
+            <!-- Logo Regulasi Dinamis (OJK, LPS, BI, dll.) Rata Tengah -->
             <div class="<?php echo esc_attr( $footer_logos_class ); ?> flex-wrap items-center justify-center gap-2.5 sm:gap-3 py-1">
                 <?php if ( ! empty( $footer_reg_label ) ) : ?>
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-1"><?php echo esc_html( $footer_reg_label ); ?></span>
@@ -343,13 +372,13 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
             </div>
             <?php endif; ?>
 
-            <!-- Pernyataan Regulasi Resmi -->
-            <p class="text-xs text-slate-400 max-w-2xl leading-relaxed">
+            <!-- Pernyataan Regulasi Resmi Rata Tengah -->
+            <p class="text-xs text-slate-400 leading-relaxed">
                 <?php echo esc_html( $disclaimer_text ); ?>
             </p>
 
-            <!-- Teks Hak Cipta Paling Bawah -->
-            <p class="text-[11px] font-medium text-slate-500 pt-3 border-t border-slate-800/70 dark:border-dark-border/70 w-full max-w-md">
+            <!-- Teks Hak Cipta Paling Bawah Rata Tengah -->
+            <p class="text-[11px] font-medium text-slate-500 pt-3 border-t border-slate-800/70 dark:border-dark-border/70 w-full max-w-md mx-auto">
                 &copy; <?php echo date( 'Y' ); ?> <?php echo esc_html( $copyright_text ); ?>
             </p>
         </div>

@@ -89,8 +89,15 @@ $default_wa     = get_option( 'options_contact_wa', '6281517380388' );
 $wa_number      = get_option( 'options_produk_wa_number', $default_wa );
 $clean_wa       = preg_replace( '/[^0-9]/', '', $wa_number );
 
-// Brosur File
-$brosur_url     = get_option( 'options_brosur_file_url', '' );
+// Brosur Pembiayaan
+$brosur_url       = get_option( 'options_brosur_file_url', '' );
+$pem_brosur_title = get_option( 'options_pembiayaan_brosur_title', 'Brosur Lengkap Pembiayaan' );
+$pem_brosur_desc  = get_option( 'options_pembiayaan_brosur_desc', 'Unduh panduan resmi, simulasi plafon terperinci, dan daftar dokumen persyaratan seluruh produk pembiayaan syariah kami dalam format PDF praktis.' );
+$pem_brosur_btn   = get_option( 'options_pembiayaan_brosur_btn', 'Lihat Brosur Lengkap' );
+$pem_brosur_url   = get_option( 'options_pembiayaan_brosur_url', '' );
+if ( empty( $pem_brosur_url ) ) {
+    $pem_brosur_url = ! empty( $brosur_url ) ? $brosur_url : home_url( '/brosur/' );
+}
 
 /**
  * Helper Konversi Garis Teks Menjadi Array
@@ -1017,22 +1024,22 @@ $color_themes = [
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                         </div>
                         <h4 class="text-lg font-black text-slate-900 dark:text-white mb-2">
-                            Brosur Lengkap Pembiayaan
+                            <?php echo esc_html( $pem_brosur_title ); ?>
                         </h4>
                         <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                            Unduh panduan resmi, simulasi plafon terperinci, dan daftar dokumen persyaratan seluruh produk pembiayaan syariah kami dalam format PDF praktis.
+                            <?php echo esc_html( $pem_brosur_desc ); ?>
                         </p>
-                        <?php if ( ! empty( $brosur_url ) ) : ?>
-                            <a href="<?php echo esc_url( $brosur_url ); ?>" download target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs inline-flex items-center justify-center gap-2 shadow-md transition-all">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                                <span>Unduh Brosur Pembiayaan (PDF)</span>
-                            </a>
-                        <?php else : ?>
-                            <a href="https://wa.me/<?php echo esc_attr( $clean_wa ); ?>?text=<?php echo urlencode( 'Halo BPRS Wakalumi, saya ingin meminta brosur lengkap produk pembiayaan syariah.' ); ?>" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs inline-flex items-center justify-center gap-2 shadow-md transition-all">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                                <span>Minta Brosur via WhatsApp</span>
-                            </a>
-                        <?php endif; ?>
+                        <?php 
+                        $is_pem_pdf = (bool) preg_match( '/\.pdf($|\?)/i', $pem_brosur_url );
+                        ?>
+                        <a 
+                            href="<?php echo esc_url( $pem_brosur_url ); ?>" 
+                            <?php if ( $is_pem_pdf ) : ?>download target="_blank" rel="noopener noreferrer"<?php endif; ?>
+                            class="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs inline-flex items-center justify-center gap-2 shadow-md transition-all"
+                        >
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <span><?php echo esc_html( $pem_brosur_btn ); ?></span>
+                        </a>
                     </div>
                 </div>
 
@@ -1096,18 +1103,18 @@ $color_themes = [
                         <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                         <span><?php echo esc_html( $cta_btn_text ); ?></span>
                     </a>
-                    <?php if ( ! empty( $brosur_url ) ) : ?>
-                        <a 
-                            href="<?php echo esc_url( $brosur_url ); ?>" 
-                            download 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
-                        >
-                            <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                            <span>Unduh Brosur Pembiayaan (PDF)</span>
-                        </a>
-                    <?php endif; ?>
+                    <?php 
+                    $cta_pem_brosur_url = ! empty( $pem_brosur_url ) ? $pem_brosur_url : home_url( '/brosur/' );
+                    $is_cta_pem_pdf     = (bool) preg_match( '/\.pdf($|\?)/i', $cta_pem_brosur_url );
+                    ?>
+                    <a 
+                        href="<?php echo esc_url( $cta_pem_brosur_url ); ?>" 
+                        <?php if ( $is_cta_pem_pdf ) : ?>download target="_blank" rel="noopener noreferrer"<?php endif; ?>
+                        class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
+                    >
+                        <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        <span><?php echo $is_cta_pem_pdf ? 'Unduh Brosur Pembiayaan (PDF)' : 'Lihat Brosur Lengkap'; ?></span>
+                    </a>
                 </div>
             </div>
         </div>
