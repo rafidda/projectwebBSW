@@ -126,6 +126,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
             $is_page_home      = ( is_front_page() || is_home() || $req_uri === '/' );
             $is_page_profil    = ( ! $is_page_home && ( strpos( $req_uri, '/profil' ) === 0 || is_page( [ 'tentang-kami', 'legalitas', 'susunan-pengurus', 'jaringan-kantor' ] ) ) );
             $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || strpos( $req_uri, '/brosur' ) === 0 || is_page( 'brosur' ) || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
+            $is_page_layanan   = ( ! $is_page_home && ( strpos( $req_uri, '/layanan' ) === 0 || is_page( [ 'layanan-kami', 'layanan' ] ) ) );
             $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/pengumuman' ) === 0 || strpos( $req_uri, '/lelang' ) === 0 || strpos( $req_uri, '/tim-kami' ) === 0 || is_page( [ 'pengumuman', 'lelang', 'tim-kami' ] ) || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
 
@@ -462,6 +463,9 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                         </div>
                     </div>
                 </div>
+
+                <!-- LAYANAN KAMI (Direct Link to Service Hub) -->
+                <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="nav-link <?php echo $is_page_layanan ? 'active' : ''; ?> px-4 py-2 rounded-full">Layanan</a>
 
                 <!-- INFORMASI: 3-COLUMN BANKING MEGA-MENU -->
                 <div class="dropdown relative">
@@ -946,6 +950,12 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     </div>
                 </div>
             </div>
+
+            <!-- Layanan Kami (Mobile) -->
+            <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>"
+               class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_layanan ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+                Layanan Kami
+            </a>
 
             <!-- Informasi -->
             <div class="mobile-nav-group">

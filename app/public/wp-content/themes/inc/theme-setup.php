@@ -1003,6 +1003,32 @@ function wakalumi_ensure_kontak_page() {
 add_action( 'init', 'wakalumi_ensure_kontak_page' );
 
 /**
+ * Otomatis pastikan halaman 'Layanan Kami' terdaftar di database
+ * agar URL /layanan-kami/ langsung aktif dengan page-layanan-kami.php
+ */
+function wakalumi_ensure_layanan_page() {
+    $page = get_page_by_path( 'layanan-kami' ) ?: ( get_page_by_path( 'layanan' ) ?: get_page_by_path( 'services' ) );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( [
+            'post_title'   => 'Layanan Kami',
+            'post_name'    => 'layanan-kami',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-layanan-kami.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-layanan-kami.php' ) {
+            update_post_meta( $page->ID, '_wp_page_template', 'page-layanan-kami.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_layanan_page' );
+
+/**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
  * dan tampilkan Panduan Visual Pengelolaan Beranda yang ramah pengguna.
  */
@@ -1218,6 +1244,13 @@ function wakalumi_admin_bar_quick_links( $wp_admin_bar ) {
         'parent' => 'wakalumi_quick_edit',
         'title'  => '🏛️ Profil: Tentang Kami & Visi Misi',
         'href'   => admin_url( 'admin.php?page=wakalumi-about' ),
+    ] );
+
+    $wp_admin_bar->add_node( [
+        'id'     => 'wakalumi_quick_layanan',
+        'parent' => 'wakalumi_quick_edit',
+        'title'  => '💳 Fasilitas Layanan Bank & VA',
+        'href'   => admin_url( 'admin.php?page=wakalumi-layanan' ),
     ] );
 
     $wp_admin_bar->add_node( [
