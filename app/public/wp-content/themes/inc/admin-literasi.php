@@ -34,6 +34,25 @@ if ( ! function_exists( 'wakalumi_get_literasi_header' ) ) {
     }
 }
 
+if ( ! function_exists( 'wakalumi_get_literasi_hero_card' ) ) {
+    /**
+     * Mengambil konfigurasi Kartu Samping Hero Section (Dual-Tone Executive Trust Card).
+     *
+     * @return array
+     */
+    function wakalumi_get_literasi_hero_card() {
+        return [
+            'badge' => get_option( 'options_literasi_hero_badge', 'POJK Literasi & Inklusi' ),
+            'title' => get_option( 'options_literasi_hero_title', 'Ekosistem Muamalah Adil & Berdaya' ),
+            'desc'  => get_option( 'options_literasi_hero_desc', 'Kami hadir tidak sekadar sebagai lembaga intermediasi perbankan, melainkan mitra belajar masyarakat dalam mengelola rezeki secara berkah, mempermudah permodalan usaha halal, dan mewujudkan kemandirian finansial yang amanah.' ),
+            'tag1'  => get_option( 'options_literasi_hero_tag1', '3 Program Nyata' ),
+            'tag2'  => get_option( 'options_literasi_hero_tag2', 'Panduan Edukasi Resmi' ),
+            'btn'   => get_option( 'options_literasi_hero_btn', 'Ajukan Kemitraan Edukasi' ),
+            'url'   => get_option( 'options_literasi_hero_url', '#form-kemitraan' ),
+        ];
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_literasi_pillars_section' ) ) {
     /**
      * Mengambil pengaturan judul dan pengantar seksi Pilar Inklusi Keuangan.
@@ -265,10 +284,19 @@ function wakalumi_render_literasi_admin_page() {
         if ( ! wp_verify_nonce( $_POST['wkl_literasi_save_nonce'], 'wkl_literasi_save_action' ) ) {
             $notice = '<div class="notice notice-error is-dismissible"><p>Validasi keamanan gagal. Silakan coba kembali.</p></div>';
         } else {
-            // 1. Simpan Header Halaman
+            // 1. Simpan Header Halaman & Kartu Hero
             update_option( 'options_literasi_badge', sanitize_text_field( $_POST['options_literasi_badge'] ?? '' ) );
             update_option( 'options_literasi_title', sanitize_text_field( $_POST['options_literasi_title'] ?? '' ) );
             update_option( 'options_literasi_desc', sanitize_textarea_field( $_POST['options_literasi_desc'] ?? '' ) );
+
+            // Simpan Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+            update_option( 'options_literasi_hero_badge', sanitize_text_field( $_POST['options_literasi_hero_badge'] ?? 'POJK Literasi & Inklusi' ) );
+            update_option( 'options_literasi_hero_title', sanitize_text_field( $_POST['options_literasi_hero_title'] ?? 'Ekosistem Muamalah Adil & Berdaya' ) );
+            update_option( 'options_literasi_hero_desc', sanitize_textarea_field( $_POST['options_literasi_hero_desc'] ?? '' ) );
+            update_option( 'options_literasi_hero_tag1', sanitize_text_field( $_POST['options_literasi_hero_tag1'] ?? '3 Program Nyata' ) );
+            update_option( 'options_literasi_hero_tag2', sanitize_text_field( $_POST['options_literasi_hero_tag2'] ?? 'Panduan Edukasi Resmi' ) );
+            update_option( 'options_literasi_hero_btn', sanitize_text_field( $_POST['options_literasi_hero_btn'] ?? 'Ajukan Kemitraan Edukasi' ) );
+            update_option( 'options_literasi_hero_url', sanitize_text_field( $_POST['options_literasi_hero_url'] ?? '#form-kemitraan' ) );
 
             // 2. Simpan Pengaturan Seksi & 3 Pilar Inklusi
             update_option( 'options_literasi_pillars_badge', sanitize_text_field( $_POST['options_literasi_pillars_badge'] ?? '' ) );
@@ -360,6 +388,7 @@ function wakalumi_render_literasi_admin_page() {
 
     // Load Data
     $header       = wakalumi_get_literasi_header();
+    $hero_card    = wakalumi_get_literasi_hero_card();
     $pillars_sec  = wakalumi_get_literasi_pillars_section();
     $pillars      = wakalumi_get_literasi_pillars();
     $modules      = wakalumi_get_literasi_modules();
@@ -630,6 +659,38 @@ function wakalumi_render_literasi_admin_page() {
                 <div style="margin-top: 15px;">
                     <label style="display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; color: #1e293b;">Deskripsi Narasi Pengantar</label>
                     <textarea name="options_literasi_desc" rows="2" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 13px;"><?php echo esc_textarea( $header['desc'] ); ?></textarea>
+                </div>
+
+                <!-- Pengaturan Kartu Samping Hero Section (Dual-Tone Executive Trust Card) -->
+                <div style="margin-top: 20px; padding: 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;">
+                    <div style="font-weight: 700; color: #0f766e; font-size: 13px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-shield-alt" style="font-size: 16px; width: 16px; height: 16px;"></span>
+                        Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; margin-bottom: 12px;">
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #1e293b;">Badge Kartu Tone 1</label>
+                            <input type="text" name="options_literasi_hero_badge" value="<?php echo esc_attr( $hero_card['badge'] ); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #1e293b;">Judul Kartu Kepercayaan</label>
+                            <input type="text" name="options_literasi_hero_title" value="<?php echo esc_attr( $hero_card['title'] ); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #1e293b;">Deskripsi Pernyataan Komitmen Tone 2</label>
+                        <textarea name="options_literasi_hero_desc" rows="2" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #fff;"><?php echo esc_textarea( $hero_card['desc'] ); ?></textarea>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #1e293b;">Teks Tombol Aksi / Link</label>
+                            <input type="text" name="options_literasi_hero_btn" value="<?php echo esc_attr( $hero_card['btn'] ); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #1e293b;">Target Anchor URL</label>
+                            <input type="text" name="options_literasi_hero_url" value="<?php echo esc_attr( $hero_card['url'] ); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Pengaturan Form Kemitraan Komunitas -->

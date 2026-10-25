@@ -875,7 +875,7 @@ function wklToggleFaq(btn) {
 }
 
 function openZoomModal(imgUrl, title, caption) {
-    var modal = document.getElementById('wkl-lightbox-modal');
+    var modal = document.getElementById('wkl-lightbox-modal');;
     var mImg  = document.getElementById('wkl-lightbox-img');
     var mTit  = document.getElementById('wkl-lightbox-title');
     var mCap  = document.getElementById('wkl-lightbox-caption');

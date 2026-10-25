@@ -9,20 +9,114 @@
 get_header();
 
 // ── AMBIL DATA PENGATURAN HALAMAN DARI WP_OPTIONS ─────────────────
+// Seksi 1: Hero
 $page_badge    = get_option( 'options_legal_page_badge', 'Transparansi & Kepatuhan Regulasi' );
 $page_title    = get_option( 'options_legal_page_title', 'Legalitas & Landasan Hukum Resmi' );
 $page_subtitle = get_option( 'options_legal_page_subtitle', 'Bukti legalitas pendirian, perizinan operasional perbankan syariah, registrasi perpajakan, dan kepatuhan regulasi PT Bank Perekonomian Rakyat Syariah Wakalumi.' );
+$hero_pill_1   = get_option( 'options_legal_hero_pill_1', 'SK Kemenkumham RI' );
+$hero_pill_2   = get_option( 'options_legal_hero_pill_2', 'Berizin & Diawasi OJK' );
+$hero_pill_3   = get_option( 'options_legal_hero_pill_3', 'Peserta Penjaminan LPS' );
 
-$company_name  = get_option( 'options_legal_company_name', 'PT. Bank Perekonomian Rakyat Syariah Wakalumi' );
-$founder       = get_option( 'options_legal_founder', 'Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank)' );
-$nib           = get_option( 'options_legal_nib', '129.200.032.0036' );
-$npwp          = get_option( 'options_legal_npwp', '1.484.259.5-411.000' );
-$npwz          = get_option( 'options_legal_npwz', 'B1 000 005 8 411 000' );
+$hero_card_badge = get_option( 'options_legal_hero_card_badge', 'Verifikasi Hukum & Regulasi' );
+$hero_card_title = get_option( 'options_legal_hero_card_title', 'Kepatuhan Korporasi Terjamin' );
+$hero_card_desc  = get_option( 'options_legal_hero_card_desc', 'Seluruh kegiatan operasional dan produk Bank Syariah Wakalumi memiliki landasan izin usaha resmi serta diawasi otoritas negara.' );
+$hero_card_tag1  = get_option( 'options_legal_hero_card_tag1', 'Izin Resmi OJK' );
+$hero_card_tag2  = get_option( 'options_legal_hero_card_tag2', 'Fatwa DSN-MUI' );
 
-$sk_menkeu     = get_option( 'options_legal_sk_menkeu', 'Nomor Kep-016/KM.17/1995 Tanggal 16 Januari 1995' );
-$sk_bi         = get_option( 'options_legal_sk_bi', 'Nomor 13/5/KEP.Dir/Pbs/2011 Tanggal 13 Juli 2011' );
-$head_office   = get_option( 'options_legal_head_office', 'Komp. Ciputat Mutiara Center Blok B1, Jl. Dewi Sartika Ciputat - Tangerang Selatan' );
-$phone         = get_option( 'options_legal_phone', '021-7401667 / 021-749084, 021-7442788' );
+// Seksi 2: Registrasi Fiskal
+$sec1_badge    = get_option( 'options_legal_sec1_badge', 'Nomor Registrasi Resmi' );
+$sec1_title    = get_option( 'options_legal_sec1_title', 'Identitas Registrasi & Fiskal Perusahaan' );
+$sec1_subtitle = get_option( 'options_legal_sec1_subtitle', 'Legalitas kepatuhan terhadap perizinan berusaha nasional, perpajakan negara, dan pengelolaan zakat syariah.' );
+
+$reg_cards = get_option( 'options_legal_reg_cards', [] );
+if ( empty( $reg_cards ) ) {
+    $legacy_nib  = get_option( 'options_legal_nib', '129.200.032.0036' );
+    $legacy_npwp = get_option( 'options_legal_npwp', '1.484.259.5-411.000' );
+    $legacy_npwz = get_option( 'options_legal_npwz', 'B1 000 005 8 411 000' );
+    $reg_cards = [
+        [
+            'category'    => 'Registrasi',
+            'subcategory' => 'Perizinan Berusaha',
+            'badge'       => 'Berizin Resmi',
+            'title'       => 'Nomor Induk Berusaha (NIB)',
+            'number'      => $legacy_nib,
+            'desc'        => 'Diterbitkan oleh Lembaga Pengelola dan Penyelenggara OSS berbasis risiko (Kementerian Investasi / BKPM RI).',
+            'footer'      => 'Terverifikasi Valid & Terdaftar',
+        ],
+        [
+            'category'    => 'Fiskal',
+            'subcategory' => 'Perpajakan Negara',
+            'badge'       => 'Wajib Pajak Badan',
+            'title'       => 'Nomor Pokok Wajib Pajak (NPWP)',
+            'number'      => $legacy_npwp,
+            'desc'        => 'Terdaftar resmi pada Direktorat Jenderal Pajak Republik Indonesia sebagai entitas badan perbankan yang patuh fiskal.',
+            'footer'      => 'Kepatuhan Pajak Nasional',
+        ],
+        [
+            'category'    => 'Sosial Syariah',
+            'subcategory' => 'Pengelolaan Zakat',
+            'badge'       => 'Kepatuhan Syariah',
+            'title'       => 'Nomor Pokok Wajib Zakat (NPWZ)',
+            'number'      => $legacy_npwz,
+            'desc'        => 'Terdaftar dalam kelembagaan kepatuhan zakat perusahaan perbankan syariah guna kemaslahatan sosial umat.',
+            'footer'      => 'Zakat Terintegrasi & Amanah',
+        ],
+    ];
+}
+
+// Seksi 3: Landasan Izin Usaha & Regulator
+$sec2_badge    = get_option( 'options_legal_sec2_badge', 'Landasan Operasional' );
+$sec2_title    = get_option( 'options_legal_sec2_title', 'Izin Usaha Perbankan Syariah Republik Indonesia' );
+$sec2_subtitle = get_option( 'options_legal_sec2_subtitle', 'Operasional PT BPRS Wakalumi diselenggarakan berlandaskan izin resmi dari Otoritas Keuangan Pemerintah Republik Indonesia serta kepatuhan fatwa Dewan Syariah Nasional:' );
+
+$sk_cards = get_option( 'options_legal_sk_cards', [] );
+if ( empty( $sk_cards ) ) {
+    $legacy_menkeu = get_option( 'options_legal_sk_menkeu', 'Nomor Kep-016/KM.17/1995 Tanggal 16 Januari 1995' );
+    $legacy_bi     = get_option( 'options_legal_sk_bi', 'Nomor 13/5/KEP.Dir/Pbs/2011 Tanggal 13 Juli 2011' );
+    $sk_cards = [
+        [
+            'abbr'   => 'SK',
+            'tag'    => 'Kementerian Keuangan RI',
+            'number' => $legacy_menkeu,
+            'desc'   => 'Izin Usaha Pendirian Bank Pembiayaan Rakyat Syariah (BPRS) berlandaskan Undang-Undang Perbankan Syariah.',
+        ],
+        [
+            'abbr'   => 'BI',
+            'tag'    => 'Bank Indonesia',
+            'number' => $legacy_bi,
+            'desc'   => 'Surat Keputusan Bank Indonesia terkait penyesuaian anggaran dasar dan kelembagaan BPR Syariah.',
+        ],
+    ];
+}
+
+$sec2_card_badge = get_option( 'options_legal_sec2_card_badge', 'Perlindungan & Keamanan Nasabah' );
+$sec2_card_title = get_option( 'options_legal_sec2_card_title', 'Diawasi OJK & Dijamin LPS' );
+
+$regulators = get_option( 'options_legal_regulators', [] );
+if ( empty( $regulators ) ) {
+    $regulators = [
+        [
+            'number' => '01',
+            'title'  => 'Otoritas Jasa Keuangan (OJK)',
+            'desc'   => 'PT BPRS Wakalumi terdaftar resmi dan diawasi ketat oleh OJK sesuai kaidah kehati-hatian perbankan (prudential banking).',
+        ],
+        [
+            'number' => '02',
+            'title'  => 'Lembaga Penjamin Simpanan (LPS)',
+            'desc'   => 'Simpanan dana nasabah (tabungan & deposito syariah) dijamin oleh LPS sampai dengan Rp 2 Miliar per nasabah per bank.',
+        ],
+        [
+            'number' => '03',
+            'title'  => 'Dewan Pengawas Syariah (DPS)',
+            'desc'   => 'Seluruh akad pembiayaan, produk penghimpunan dana, dan operasional perbankan diawasi kepatuhannya berpedoman pada fatwa DSN-MUI.',
+        ],
+    ];
+}
+
+// Seksi 4: Akta Notaris & Kantor
+$sec3_badge    = get_option( 'options_legal_sec3_badge', 'Kronologi Yuridis' );
+$sec3_title    = get_option( 'options_legal_sec3_title', 'Rekam Jejak Akta Notaris & Perubahan Anggaran Dasar' );
+$sec3_subtitle = get_option( 'options_legal_sec3_subtitle', 'Dokumentasi yuridis perjalanan kelembagaan PT BPRS Wakalumi dari pendirian tahun 1989 hingga pembaruan anggaran dasar terkini.' );
 
 $aktas = get_option( 'options_legal_akta_list', [] );
 if ( empty( $aktas ) ) {
@@ -72,6 +166,15 @@ if ( empty( $aktas ) ) {
     ];
 }
 
+$office_card_badge = get_option( 'options_legal_office_card_badge', 'Entitas Korporasi' );
+$company_name      = get_option( 'options_legal_company_name', 'PT. Bank Perekonomian Rakyat Syariah Wakalumi' );
+$founder           = get_option( 'options_legal_founder', 'Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank)' );
+$head_office       = get_option( 'options_legal_head_office', 'Komp. Ciputat Mutiara Center Blok B1, Jl. Dewi Sartika Ciputat - Tangerang Selatan' );
+$office_btn_text   = get_option( 'options_legal_office_btn_text', 'Peta & Kontak Kantor' );
+$office_btn_url    = get_option( 'options_legal_office_btn_url', home_url( '/kontak' ) );
+
+// Seksi 5: CTA Bawah
+$cta_badge     = get_option( 'options_legal_cta_badge', 'Transparansi & Kemitraan' );
 $cta_title     = get_option( 'options_legal_cta_title', 'Perlu Verifikasi Legalitas atau Salinan Dokumen Resmi?' );
 $cta_desc      = get_option( 'options_legal_cta_desc', 'Tim kepatuhan dan sekretariat korporasi BPRS Wakalumi siap melayani kebutuhan verifikasi hukum, kemitraan institusi, dan kepatuhan syariah Anda.' );
 $cta_btn1_text = get_option( 'options_legal_cta_btn1_text', 'Hubungi Sekretariat via WhatsApp' );
@@ -86,7 +189,7 @@ if ( empty( $cta_btn1_url ) ) {
 ?>
 
 <!-- ========================================
-     HEADER BANNER & BREADCRUMBS (UNIFIED HERO + LEGAL COMPLIANCE CARD)
+     HEADER BANNER & BREADCRUMBS (HERO + KARTU VERIFIKASI HUKUM)
      ======================================== -->
 <section class="wkl-page-hero">
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-b from-teal-500/10 via-primary-500/5 to-transparent blur-3xl pointer-events-none"></div>
@@ -108,10 +211,12 @@ if ( empty( $cta_btn1_url ) ) {
             <!-- Left Column: Title, Subtitle & Highlights -->
             <div class="lg:col-span-7 xl:col-span-8" data-aos="fade-up">
                 <!-- Kicker Badge -->
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-4 bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider shadow-xs">
-                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
-                    <span><?php echo esc_html( $page_badge ); ?></span>
-                </div>
+                <?php if ( ! empty( $page_badge ) ) : ?>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-4 bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider shadow-xs">
+                        <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                        <span><?php echo esc_html( $page_badge ); ?></span>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Main Page Title -->
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] mb-4">
@@ -127,18 +232,24 @@ if ( empty( $cta_btn1_url ) ) {
 
                 <!-- Key Highlights Pills -->
                 <div class="flex flex-wrap items-center gap-3 pt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
-                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                        <span>SK Kemenkumham RI</span>
-                    </div>
-                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
-                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                        <span>Berizin &amp; Diawasi OJK</span>
-                    </div>
-                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
-                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span>Peserta Penjaminan LPS</span>
-                    </div>
+                    <?php if ( ! empty( $hero_pill_1 ) ) : ?>
+                        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            <span><?php echo esc_html( $hero_pill_1 ); ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ( ! empty( $hero_pill_2 ) ) : ?>
+                        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <span><?php echo esc_html( $hero_pill_2 ); ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ( ! empty( $hero_pill_3 ) ) : ?>
+                        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
+                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span><?php echo esc_html( $hero_pill_3 ); ?></span>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -156,27 +267,39 @@ if ( empty( $cta_btn1_url ) ) {
                             <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Logo Bank Syariah Wakalumi" class="w-full h-full object-contain">
                         </div>
 
-                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-100/90 dark:bg-teal-950 text-teal-800 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1 relative z-10">
-                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                            Verifikasi Hukum &amp; Regulasi
-                        </div>
-                        <h3 class="text-lg font-black text-slate-900 dark:text-white relative z-10">Kepatuhan Korporasi Terjamin</h3>
+                        <?php if ( ! empty( $hero_card_badge ) ) : ?>
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-100/90 dark:bg-teal-950 text-teal-800 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1 relative z-10">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <?php echo esc_html( $hero_card_badge ); ?>
+                            </div>
+                        <?php endif; ?>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white relative z-10">
+                            <?php echo esc_html( $hero_card_title ); ?>
+                        </h3>
                     </div>
 
                     <div class="p-6 space-y-4 bg-white dark:bg-slate-900/95 relative z-10 text-center">
-                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                            Seluruh kegiatan operasional dan produk Bank Syariah Wakalumi memiliki landasan izin usaha resmi serta diawasi otoritas negara.
-                        </p>
+                        <?php if ( ! empty( $hero_card_desc ) ) : ?>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                <?php echo esc_html( $hero_card_desc ); ?>
+                            </p>
+                        <?php endif; ?>
                         <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-3 text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                            <span class="inline-flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                Izin Resmi OJK
-                            </span>
-                            <span class="text-slate-300 dark:text-slate-600">•</span>
-                            <span class="inline-flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                Fatwa DSN-MUI
-                            </span>
+                            <?php if ( ! empty( $hero_card_tag1 ) ) : ?>
+                                <span class="inline-flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <?php echo esc_html( $hero_card_tag1 ); ?>
+                                </span>
+                            <?php endif; ?>
+                            <?php if ( ! empty( $hero_card_tag1 ) && ! empty( $hero_card_tag2 ) ) : ?>
+                                <span class="text-slate-300 dark:text-slate-600">•</span>
+                            <?php endif; ?>
+                            <?php if ( ! empty( $hero_card_tag2 ) ) : ?>
+                                <span class="inline-flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <?php echo esc_html( $hero_card_tag2 ); ?>
+                                </span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -187,197 +310,116 @@ if ( empty( $cta_btn1_url ) ) {
 
 
 <!-- ========================================
-     SECTION 1: TIGA KARTU REGISTRASI FISKAL & BERUSAHA (NIB, NPWP, NPWZ)
+     SEKSI 1: KARTU IDENTITAS & REGISTRASI FISKAL (REPEATER CARDS)
      ======================================== -->
+<?php if ( ! empty( $reg_cards ) ) : ?>
 <section class="relative z-10 py-12 md:py-16 bg-white dark:bg-dark border-b border-slate-100 dark:border-slate-800/60">
     <div class="container-wide">
         <div class="text-center max-w-3xl mx-auto mb-10 md:mb-14" data-aos="fade-up">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
-                Nomor Registrasi Resmi
-            </div>
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Identitas Registrasi & Fiskal Perusahaan
-            </h2>
-            <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-2">
-                Legalitas kepatuhan terhadap perizinan berusaha nasional, perpajakan negara, dan pengelolaan zakat syariah.
-            </p>
+            <?php if ( ! empty( $sec1_badge ) ) : ?>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
+                    <?php echo esc_html( $sec1_badge ); ?>
+                </div>
+            <?php endif; ?>
+            <?php if ( ! empty( $sec1_title ) ) : ?>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <?php echo esc_html( $sec1_title ); ?>
+                </h2>
+            <?php endif; ?>
+            <?php if ( ! empty( $sec1_subtitle ) ) : ?>
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-2">
+                    <?php echo esc_html( $sec1_subtitle ); ?>
+                </p>
+            <?php endif; ?>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            <!-- Card 1: NIB -->
-            <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="0">
-                <!-- Dual-Tone Header Bar -->
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/40 border border-primary-200 dark:border-primary-800/40 flex items-center justify-center text-primary-600 dark:text-teal-300 shadow-sm group-hover:scale-105 transition-transform">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <?php foreach ( $reg_cards as $c_idx => $card ) : 
+                $cat      = $card['category'] ?? 'Registrasi';
+                $subcat   = $card['subcategory'] ?? '';
+                $badge    = $card['badge'] ?? 'Berizin Resmi';
+                $c_title  = $card['title'] ?? '';
+                $c_number = $card['number'] ?? '';
+                $c_desc   = $card['desc'] ?? '';
+                $c_footer = $card['footer'] ?? 'Terverifikasi Valid & Terdaftar';
+            ?>
+                <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $c_idx % 3 ) * 90; ?>">
+                    <!-- Dual-Tone Header Bar -->
+                    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center text-teal-600 dark:text-teal-300 shadow-sm group-hover:scale-105 transition-transform">
+                                <?php if ( $c_idx === 0 || stripos( $cat, 'registrasi' ) !== false ) : ?>
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <?php elseif ( $c_idx === 1 || stripos( $cat, 'fiskal' ) !== false || stripos( $cat, 'pajak' ) !== false ) : ?>
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                <?php else : ?>
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                                <?php endif; ?>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block"><?php echo esc_html( $cat ); ?></span>
+                                <span class="text-xs font-bold text-slate-700 dark:text-white"><?php echo esc_html( $subcat ); ?></span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">Registrasi</span>
-                            <span class="text-xs font-bold text-slate-700 dark:text-white">Perizinan Berusaha</span>
-                        </div>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 border border-teal-200 dark:border-teal-700/50">
-                        Berizin Resmi
-                    </span>
-                </div>
-
-                <!-- Card Body -->
-                <div class="p-6 md:p-7 relative flex-grow flex flex-col justify-between overflow-hidden">
-                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-36 h-36 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
-
-                    <div class="relative z-10">
-                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-3">Nomor Induk Berusaha (NIB)</h3>
-                        
-                        <!-- Copy Box NIB -->
-                        <div class="flex items-center justify-between gap-2 p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 mb-4 group/copy">
-                            <span class="font-mono font-black text-sm sm:text-base md:text-lg text-primary-700 dark:text-teal-300 tracking-wider select-all truncate">
-                                <?php echo esc_html( $nib ); ?>
+                        <?php if ( ! empty( $badge ) ) : ?>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 border border-teal-200 dark:border-teal-700/50">
+                                <?php echo esc_html( $badge ); ?>
                             </span>
-                            <button type="button" 
-                                    class="btn-copy-code shrink-0 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-sans font-semibold text-slate-600 dark:text-white hover:text-teal-600 dark:hover:text-teal-300 hover:border-teal-400/50 shadow-sm flex items-center gap-1.5 transition-all duration-200 active:scale-95" 
-                                    data-copy="<?php echo esc_attr( $nib ); ?>" 
-                                    title="Salin NIB">
-                                <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                                </svg>
-                                <span class="copy-label text-[11px]">Salin</span>
-                            </button>
-                        </div>
-
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100 leading-relaxed">
-                            Diterbitkan oleh Lembaga Pengelola dan Penyelenggara OSS berbasis risiko (Kementerian Investasi / BKPM RI).
-                        </p>
+                        <?php endif; ?>
                     </div>
 
-                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/80 flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400 relative z-10">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        <span>Terverifikasi Valid & Terdaftar</span>
+                    <!-- Card Body -->
+                    <div class="p-6 md:p-7 relative flex-grow flex flex-col justify-between overflow-hidden">
+                        <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-36 h-36 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                        </div>
+
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-3"><?php echo esc_html( $c_title ); ?></h3>
+                            
+                            <!-- Copy Box Number -->
+                            <?php if ( ! empty( $c_number ) ) : ?>
+                                <div class="flex items-center justify-between gap-2 p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 mb-4 group/copy">
+                                    <span class="font-mono font-black text-sm sm:text-base md:text-lg text-teal-700 dark:text-teal-300 tracking-wider select-all truncate">
+                                        <?php echo esc_html( $c_number ); ?>
+                                    </span>
+                                    <button type="button" 
+                                            class="btn-copy-code shrink-0 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-sans font-semibold text-slate-600 dark:text-white hover:text-teal-600 dark:hover:text-teal-300 hover:border-teal-400/50 shadow-sm flex items-center gap-1.5 transition-all duration-200 active:scale-95" 
+                                            data-copy="<?php echo esc_attr( $c_number ); ?>" 
+                                            title="Salin Nomor">
+                                        <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                        </svg>
+                                        <span class="copy-label text-[11px]">Salin</span>
+                                    </button>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ( ! empty( $c_desc ) ) : ?>
+                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100 leading-relaxed">
+                                    <?php echo esc_html( $c_desc ); ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ( ! empty( $c_footer ) ) : ?>
+                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/80 flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400 relative z-10">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                <span><?php echo esc_html( $c_footer ); ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
-            </div>
-
-            <!-- Card 2: NPWP -->
-            <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="100">
-                <!-- Dual-Tone Header Bar -->
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center text-teal-600 dark:text-teal-300 shadow-sm group-hover:scale-105 transition-transform">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                        </div>
-                        <div>
-                            <span class="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">Fiskal</span>
-                            <span class="text-xs font-bold text-slate-700 dark:text-white">Perpajakan Negara</span>
-                        </div>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-teal-300 border border-primary-200 dark:border-primary-700/50">
-                        Wajib Pajak Badan
-                    </span>
-                </div>
-
-                <!-- Card Body -->
-                <div class="p-6 md:p-7 relative flex-grow flex flex-col justify-between overflow-hidden">
-                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-36 h-36 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
-
-                    <div class="relative z-10">
-                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-3">Nomor Pokok Wajib Pajak (NPWP)</h3>
-                        
-                        <!-- Copy Box NPWP -->
-                        <div class="flex items-center justify-between gap-2 p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 mb-4 group/copy">
-                            <span class="font-mono font-black text-sm sm:text-base md:text-lg text-teal-700 dark:text-teal-300 tracking-wider select-all truncate">
-                                <?php echo esc_html( $npwp ); ?>
-                            </span>
-                            <button type="button" 
-                                    class="btn-copy-code shrink-0 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-sans font-semibold text-slate-600 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-400/50 shadow-sm flex items-center gap-1.5 transition-all duration-200 active:scale-95" 
-                                    data-copy="<?php echo esc_attr( $npwp ); ?>" 
-                                    title="Salin NPWP">
-                                <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                                </svg>
-                                <span class="copy-label text-[11px]">Salin</span>
-                            </button>
-                        </div>
-
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100 leading-relaxed">
-                            Terdaftar resmi pada Direktorat Jenderal Pajak Republik Indonesia sebagai entitas badan perbankan yang patuh fiskal.
-                        </p>
-                    </div>
-
-                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/80 flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400 relative z-10">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        <span>Kepatuhan Pajak Nasional</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3: NPWZ -->
-            <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="200">
-                <!-- Dual-Tone Header Bar -->
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 flex items-center justify-center text-teal-600 dark:text-teal-300 shadow-sm group-hover:scale-105 transition-transform">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
-                        </div>
-                        <div>
-                            <span class="text-[10px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">Sosial Syariah</span>
-                            <span class="text-xs font-bold text-slate-700 dark:text-white">Pengelolaan Zakat</span>
-                        </div>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30">
-                        Kepatuhan Syariah
-                    </span>
-                </div>
-
-                <!-- Card Body -->
-                <div class="p-6 md:p-7 relative flex-grow flex flex-col justify-between overflow-hidden">
-                    <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-36 h-36 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
-
-                    <div class="relative z-10">
-                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-3">Nomor Pokok Wajib Zakat (NPWZ)</h3>
-                        
-                        <!-- Copy Box NPWZ -->
-                        <div class="flex items-center justify-between gap-2 p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 mb-4 group/copy">
-                            <span class="font-mono font-black text-sm sm:text-base md:text-lg text-teal-700 dark:text-teal-300 tracking-wider select-all truncate">
-                                <?php echo esc_html( $npwz ); ?>
-                            </span>
-                            <button type="button" 
-                                    class="btn-copy-code shrink-0 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-sans font-semibold text-slate-600 dark:text-white hover:text-teal-600 dark:hover:text-teal-400 hover:border-teal-400/50 shadow-sm flex items-center gap-1.5 transition-all duration-200 active:scale-95" 
-                                    data-copy="<?php echo esc_attr( $npwz ); ?>" 
-                                    title="Salin NPWZ">
-                                <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                                </svg>
-                                <span class="copy-label text-[11px]">Salin</span>
-                            </button>
-                        </div>
-
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100 leading-relaxed">
-                            Terdaftar dalam kelembagaan kepatuhan zakat perusahaan perbankan syariah guna kemaslahatan sosial umat.
-                        </p>
-                    </div>
-
-                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/80 flex items-center gap-1.5 text-xs font-bold text-teal-600 dark:text-teal-400 relative z-10">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        <span>Zakat Terintegrasi & Amanah</span>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 
 <!-- ========================================
-     SECTION 2: LANDASAN IZIN USAHA PERBANKAN & REGULATOR
+     SEKSI 2: LANDASAN IZIN USAHA PERBANKAN & REGULATOR
      ======================================== -->
 <section class="relative z-10 py-16 md:py-24 bg-transparent border-b border-slate-200/60 dark:border-slate-800/60">
     <div class="container-wide relative z-10">
@@ -385,57 +427,54 @@ if ( empty( $cta_btn1_url ) ) {
             
             <!-- Left: SK Menteri Keuangan & SK BI -->
             <div class="lg:col-span-6" data-aos="fade-right">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary-50 text-primary-700 dark:bg-primary-400/10 dark:text-teal-300 border border-primary-100 dark:border-primary-800/30 mb-4">
-                    Landasan Operasional
-                </div>
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug mb-6">
-                    Izin Usaha Perbankan Syariah Republik Indonesia
-                </h2>
-                <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8">
-                    Operasional PT BPRS Wakalumi diselenggarakan berlandaskan izin resmi dari Otoritas Keuangan Pemerintah Republik Indonesia serta kepatuhan fatwa Dewan Syariah Nasional:
-                </p>
-
-                <div class="space-y-5">
-                    <!-- SK Menkeu RI -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] flex items-start gap-4 hover:border-primary-500/40 hover:shadow-md transition-all cursor-default">
-                        <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-950 text-primary-700 dark:text-teal-300 flex items-center justify-center shrink-0 mt-0.5 font-bold relative z-10 group-hover:scale-105 transition-transform">
-                            SK
-                        </div>
-                        <div class="relative z-10">
-                            <span class="text-[11px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">Kementerian Keuangan RI</span>
-                            <h4 class="text-base font-bold text-slate-900 dark:text-white mt-0.5 mb-1">
-                                <?php echo esc_html( $sk_menkeu ); ?>
-                            </h4>
-                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100">
-                                Izin Usaha Pendirian Bank Pembiayaan Rakyat Syariah (BPRS) berlandaskan Undang-Undang Perbankan Syariah.
-                            </p>
-                        </div>
+                <?php if ( ! empty( $sec2_badge ) ) : ?>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary-50 text-primary-700 dark:bg-primary-400/10 dark:text-teal-300 border border-primary-100 dark:border-primary-800/30 mb-4">
+                        <?php echo esc_html( $sec2_badge ); ?>
                     </div>
+                <?php endif; ?>
 
-                    <!-- SK Bank Indonesia -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] flex items-start gap-4 hover:border-teal-500/40 hover:shadow-md transition-all cursor-default">
-                        <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300 flex items-center justify-center shrink-0 mt-0.5 font-bold relative z-10 group-hover:scale-105 transition-transform">
-                            BI
-                        </div>
-                        <div class="relative z-10">
-                            <span class="text-[11px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">Bank Indonesia</span>
-                            <h4 class="text-base font-bold text-slate-900 dark:text-white mt-0.5 mb-1">
-                                <?php echo esc_html( $sk_bi ); ?>
-                            </h4>
-                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100">
-                                Surat Keputusan Bank Indonesia terkait penyesuaian anggaran dasar dan kelembagaan BPR Syariah.
-                            </p>
-                        </div>
+                <?php if ( ! empty( $sec2_title ) ) : ?>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug mb-6">
+                        <?php echo esc_html( $sec2_title ); ?>
+                    </h2>
+                <?php endif; ?>
+
+                <?php if ( ! empty( $sec2_subtitle ) ) : ?>
+                    <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8">
+                        <?php echo esc_html( $sec2_subtitle ); ?>
+                    </p>
+                <?php endif; ?>
+
+                <?php if ( ! empty( $sk_cards ) ) : ?>
+                    <div class="space-y-5">
+                        <?php foreach ( $sk_cards as $sk_idx => $sk_item ) : ?>
+                            <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] flex items-start gap-4 hover:border-teal-500/40 hover:shadow-md transition-all cursor-default">
+                                <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
+                                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                                </div>
+                                <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300 flex items-center justify-center shrink-0 mt-0.5 font-bold relative z-10 group-hover:scale-105 transition-transform">
+                                    <?php echo esc_html( $sk_item['abbr'] ?? 'SK' ); ?>
+                                </div>
+                                <div class="relative z-10">
+                                    <?php if ( ! empty( $sk_item['tag'] ) ) : ?>
+                                        <span class="text-[11px] uppercase tracking-widest font-extrabold text-slate-400 dark:text-teal-300 block">
+                                            <?php echo esc_html( $sk_item['tag'] ); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white mt-0.5 mb-1">
+                                        <?php echo esc_html( $sk_item['number'] ?? '' ); ?>
+                                    </h4>
+                                    <?php if ( ! empty( $sk_item['desc'] ) ) : ?>
+                                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100">
+                                            <?php echo esc_html( $sk_item['desc'] ); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
 
             <!-- Right: 3 Pilar Pengawasan Regulasi (OJK, LPS, DPS) -->
@@ -448,51 +487,39 @@ if ( empty( $cta_btn1_url ) ) {
                     <div class="absolute -top-20 -right-20 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
                     <div class="relative z-10">
-                        <span class="text-xs uppercase tracking-widest font-bold text-teal-300 block mb-2">Perlindungan & Keamanan Nasabah</span>
-                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-6">
-                            Diawasi OJK & Dijamin LPS
-                        </h3>
+                        <?php if ( ! empty( $sec2_card_badge ) ) : ?>
+                            <span class="text-xs uppercase tracking-widest font-bold text-teal-300 block mb-2">
+                                <?php echo esc_html( $sec2_card_badge ); ?>
+                            </span>
+                        <?php endif; ?>
 
-                        <div class="space-y-6">
-                            <!-- OJK -->
-                            <div class="flex items-start gap-4 group/item">
-                                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-300 shrink-0 font-bold group-hover/item:scale-110 transition-transform">
-                                    01
-                                </div>
-                                <div>
-                                    <h4 class="text-base font-bold text-white mb-1">Otoritas Jasa Keuangan (OJK)</h4>
-                                    <p class="text-sm text-slate-300 leading-relaxed">
-                                        PT BPRS Wakalumi terdaftar resmi dan diawasi ketat oleh OJK sesuai kaidah kehati-hatian perbankan (prudential banking).
-                                    </p>
-                                </div>
-                            </div>
+                        <?php if ( ! empty( $sec2_card_title ) ) : ?>
+                            <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-6">
+                                <?php echo esc_html( $sec2_card_title ); ?>
+                            </h3>
+                        <?php endif; ?>
 
-                            <!-- LPS -->
-                            <div class="flex items-start gap-4 group/item">
-                                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-300 shrink-0 font-bold group-hover/item:scale-110 transition-transform">
-                                    02
-                                </div>
-                                <div>
-                                    <h4 class="text-base font-bold text-white mb-1">Lembaga Penjamin Simpanan (LPS)</h4>
-                                    <p class="text-sm text-slate-300 leading-relaxed">
-                                        Simpanan dana nasabah (tabungan & deposito syariah) dijamin oleh LPS sampai dengan <strong>Rp 2 Miliar per nasabah per bank</strong>.
-                                    </p>
-                                </div>
+                        <?php if ( ! empty( $regulators ) ) : ?>
+                            <div class="space-y-6">
+                                <?php foreach ( $regulators as $rg_idx => $reg_item ) : ?>
+                                    <div class="flex items-start gap-4 group/item">
+                                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-teal-300 shrink-0 font-bold group-hover/item:scale-110 transition-transform">
+                                            <?php echo esc_html( $reg_item['number'] ?? sprintf( '%02d', $rg_idx + 1 ) ); ?>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-base font-bold text-white mb-1">
+                                                <?php echo esc_html( $reg_item['title'] ?? '' ); ?>
+                                            </h4>
+                                            <?php if ( ! empty( $reg_item['desc'] ) ) : ?>
+                                                <p class="text-sm text-slate-300 leading-relaxed">
+                                                    <?php echo esc_html( $reg_item['desc'] ); ?>
+                                                </p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
-
-                            <!-- DPS & DSN-MUI -->
-                            <div class="flex items-start gap-4 group/item">
-                                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-emerald-300 shrink-0 font-bold group-hover/item:scale-110 transition-transform">
-                                    03
-                                </div>
-                                <div>
-                                    <h4 class="text-base font-bold text-white mb-1">Dewan Pengawas Syariah (DPS)</h4>
-                                    <p class="text-sm text-slate-300 leading-relaxed">
-                                        Seluruh akad pembiayaan, produk penghimpunan dana, dan operasional perbankan diawasi kepatuhannya berpedoman pada fatwa DSN-MUI.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -503,90 +530,98 @@ if ( empty( $cta_btn1_url ) ) {
 
 
 <!-- ========================================
-     SECTION 3: LINIMASA REKAM JEJAK AKTA NOTARIS
+     SEKSI 3: LINIMASA REKAM JEJAK AKTA NOTARIS
      ======================================== -->
 <section class="relative z-10 py-16 md:py-24 bg-white dark:bg-dark">
     <div class="container-wide">
         <div class="text-center max-w-3xl mx-auto mb-14 md:mb-18" data-aos="fade-up">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
-                Kronologi Yuridis
-            </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Rekam Jejak Akta Notaris & Perubahan Anggaran Dasar
-            </h2>
-            <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3 leading-relaxed">
-                Dokumentasi yuridis perjalanan kelembagaan PT BPRS Wakalumi dari pendirian tahun 1989 hingga pembaruan anggaran dasar terkini.
-            </p>
+            <?php if ( ! empty( $sec3_badge ) ) : ?>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300 border border-teal-100 dark:border-teal-800/30 mb-3">
+                    <?php echo esc_html( $sec3_badge ); ?>
+                </div>
+            <?php endif; ?>
+            <?php if ( ! empty( $sec3_title ) ) : ?>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    <?php echo esc_html( $sec3_title ); ?>
+                </h2>
+            <?php endif; ?>
+            <?php if ( ! empty( $sec3_subtitle ) ) : ?>
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3 leading-relaxed">
+                    <?php echo esc_html( $sec3_subtitle ); ?>
+                </p>
+            <?php endif; ?>
         </div>
 
         <!-- Timeline Grid / Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <?php 
-            $total_aktas = count( $aktas );
-            foreach ( $aktas as $idx => $item ) : 
-                $is_latest = ( $idx === $total_aktas - 1 );
-            ?>
-                <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border <?php echo $is_latest ? 'border-teal-500/50 dark:border-teal-400/60 shadow-lg shadow-teal-500/10 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.6)]' : 'border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)]'; ?> hover:border-teal-500/60 hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 90; ?>">
-                    <!-- Dual-Tone Header Bar -->
-                    <div class="px-6 py-3.5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <span class="inline-block px-3 py-1 rounded-xl text-xs font-black bg-gradient-to-r from-primary-600 to-teal-500 text-white shadow-sm">
-                                <?php echo esc_html( $item['year'] ?? '' ); ?>
-                            </span>
-                            <?php if ( $is_latest ) : ?>
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 pulse-teal-glow">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping"></span>
-                                    Mutakhir
+        <?php if ( ! empty( $aktas ) ) : ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <?php 
+                $total_aktas = count( $aktas );
+                foreach ( $aktas as $idx => $item ) : 
+                    $is_latest = ( $idx === $total_aktas - 1 );
+                ?>
+                    <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border <?php echo $is_latest ? 'border-teal-500/50 dark:border-teal-400/60 shadow-lg shadow-teal-500/10 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.6)]' : 'border-slate-200/80 dark:border-slate-700/80 shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)]'; ?> hover:border-teal-500/60 hover:shadow-xl hover:shadow-teal-500/15 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 90; ?>">
+                        <!-- Dual-Tone Header Bar -->
+                        <div class="px-6 py-3.5 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-block px-3 py-1 rounded-xl text-xs font-black bg-gradient-to-r from-primary-600 to-teal-500 text-white shadow-sm">
+                                    <?php echo esc_html( $item['year'] ?? '' ); ?>
                                 </span>
-                            <?php endif; ?>
-                        </div>
-                        <span class="text-[11px] font-bold text-slate-400 dark:text-slate-400 font-mono">
-                            #<?php echo sprintf( '%02d', $idx + 1 ); ?>
-                        </span>
-                    </div>
-
-                    <!-- Card Body -->
-                    <div class="p-6 relative flex-grow flex flex-col justify-between overflow-hidden">
-                        <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                                <?php if ( $is_latest ) : ?>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 pulse-teal-glow">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping"></span>
+                                        Mutakhir
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-400 dark:text-slate-400 font-mono">
+                                #<?php echo sprintf( '%02d', $idx + 1 ); ?>
+                            </span>
                         </div>
 
-                        <div class="relative z-10">
-                            <!-- Akta Title -->
-                            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white mb-2 leading-snug">
-                                <?php echo esc_html( $item['number'] ?? '' ); ?>
-                            </h3>
+                        <!-- Card Body -->
+                        <div class="p-6 relative flex-grow flex flex-col justify-between overflow-hidden">
+                            <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                            </div>
 
-                            <!-- Notaris -->
-                            <?php if ( ! empty( $item['notaris'] ) ) : ?>
-                                <div class="flex items-center gap-2 text-xs font-semibold text-teal-700 dark:text-teal-300 mb-3">
-                                    <svg class="w-4 h-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                    <span><?php echo esc_html( $item['notaris'] ); ?></span>
+                            <div class="relative z-10">
+                                <!-- Akta Title -->
+                                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white mb-2 leading-snug">
+                                    <?php echo esc_html( $item['number'] ?? '' ); ?>
+                                </h3>
+
+                                <!-- Notaris -->
+                                <?php if ( ! empty( $item['notaris'] ) ) : ?>
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-teal-700 dark:text-teal-300 mb-3">
+                                        <svg class="w-4 h-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                        <span><?php echo esc_html( $item['notaris'] ); ?></span>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- Description -->
+                                <?php if ( ! empty( $item['desc'] ) ) : ?>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100 leading-relaxed mb-4">
+                                        <?php echo esc_html( $item['desc'] ); ?>
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- SK Pengesahan Footer -->
+                            <?php if ( ! empty( $item['sk'] ) ) : ?>
+                                <div class="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-700/80 relative z-10">
+                                    <span class="text-[10px] uppercase font-bold text-slate-400 dark:text-teal-300 block">Pengesahan Kemenkumham:</span>
+                                    <span class="text-xs font-medium text-slate-700 dark:text-slate-100 font-mono break-words block mt-0.5">
+                                        <?php echo esc_html( $item['sk'] ); ?>
+                                    </span>
                                 </div>
                             <?php endif; ?>
-
-                            <!-- Description -->
-                            <?php if ( ! empty( $item['desc'] ) ) : ?>
-                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-100 leading-relaxed mb-4">
-                                    <?php echo esc_html( $item['desc'] ); ?>
-                                </p>
-                            <?php endif; ?>
                         </div>
-
-                        <!-- SK Pengesahan Footer -->
-                        <?php if ( ! empty( $item['sk'] ) ) : ?>
-                            <div class="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-700/80 relative z-10">
-                                <span class="text-[10px] uppercase font-bold text-slate-400 dark:text-teal-300 block">Pengesahan Kemenkumham:</span>
-                                <span class="text-xs font-medium text-slate-700 dark:text-slate-100 font-mono break-words block mt-0.5">
-                                    <?php echo esc_html( $item['sk'] ); ?>
-                                </span>
-                            </div>
-                        <?php endif; ?>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
         <!-- Info Card: Kantor Pusat & Entitas Pendiri -->
         <div class="spotlight-card tilt-card group relative overflow-hidden mt-14 p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 shadow-md dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 cursor-default" data-aos="fade-up">
@@ -595,7 +630,11 @@ if ( empty( $cta_btn1_url ) ) {
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
             </div>
             <div class="relative z-10">
-                <span class="text-xs uppercase tracking-widest font-extrabold text-primary-600 dark:text-teal-300 block mb-1">Entitas Korporasi</span>
+                <?php if ( ! empty( $office_card_badge ) ) : ?>
+                    <span class="text-xs uppercase tracking-widest font-extrabold text-primary-600 dark:text-teal-300 block mb-1">
+                        <?php echo esc_html( $office_card_badge ); ?>
+                    </span>
+                <?php endif; ?>
                 <h4 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">
                     <?php echo esc_html( $company_name ); ?>
                 </h4>
@@ -605,8 +644,8 @@ if ( empty( $cta_btn1_url ) ) {
                 </p>
             </div>
             <div class="shrink-0 flex items-center gap-3 relative z-10">
-                <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="btn-primary text-xs sm:text-sm px-6 py-3 rounded-xl inline-flex items-center gap-2">
-                    <span>Peta & Kontak Kantor</span>
+                <a href="<?php echo esc_url( $office_btn_url ); ?>" class="btn-primary text-xs sm:text-sm px-6 py-3 rounded-xl inline-flex items-center gap-2">
+                    <span><?php echo esc_html( $office_btn_text ); ?></span>
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
             </div>
@@ -617,7 +656,7 @@ if ( empty( $cta_btn1_url ) ) {
 
 
 <!-- ========================================
-     SECTION 4: AJAKAN BERTINDAK (CALL TO ACTION)
+     SEKSI 4: AJAKAN BERTINDAK (CALL TO ACTION)
      ======================================== -->
 <section class="relative z-10 py-16 md:py-24 bg-white dark:bg-dark border-t border-slate-200/60 dark:border-slate-800/60">
     <div class="container-wide">
@@ -631,18 +670,24 @@ if ( empty( $cta_btn1_url ) ) {
             <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-teal-400/20 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative z-10 max-w-3xl mx-auto">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 mb-6">
-                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
-                    Transparansi & Kemitraan
-                </div>
+                <?php if ( ! empty( $cta_badge ) ) : ?>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 mb-6">
+                        <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
+                        <?php echo esc_html( $cta_badge ); ?>
+                    </div>
+                <?php endif; ?>
 
-                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
-                    <?php echo esc_html( $cta_title ); ?>
-                </h2>
+                <?php if ( ! empty( $cta_title ) ) : ?>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
+                        <?php echo esc_html( $cta_title ); ?>
+                    </h2>
+                <?php endif; ?>
 
-                <p class="text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed mb-8 max-w-2xl mx-auto font-normal">
-                    <?php echo esc_html( $cta_desc ); ?>
-                </p>
+                <?php if ( ! empty( $cta_desc ) ) : ?>
+                    <p class="text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed mb-8 max-w-2xl mx-auto font-normal">
+                        <?php echo esc_html( $cta_desc ); ?>
+                    </p>
+                <?php endif; ?>
 
                 <div class="flex flex-wrap items-center justify-center gap-4">
                     <a href="<?php echo esc_url( $cta_btn1_url ); ?>" 
@@ -666,4 +711,3 @@ if ( empty( $cta_btn1_url ) ) {
 
 <?php
 get_footer();
-

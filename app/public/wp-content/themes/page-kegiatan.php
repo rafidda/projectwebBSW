@@ -91,46 +91,61 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     </div>
                 </div>
 
-                <!-- Right Column: Governance Badge Card with Watermark Pass-Through -->
-                <div class="lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-teal-200/80 dark:border-dark-border shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 via-emerald-400 to-teal-600">
-                        <!-- Interactive Slide Watermark Emblem -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                        </div>
+                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                <div class="lg:col-span-4" data-aos="fade-left" data-aos-delay="100">
+                    <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                        <div class="wkl-glass-shine"></div>
 
-                        <!-- Holographic Calendar Icon -->
-                        <div class="relative w-16 h-16 rounded-2xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto shadow-lg shadow-teal-500/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
-                            <div class="absolute inset-0 rounded-2xl bg-teal-400/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <svg class="w-8 h-8 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                            </svg>
-                        </div>
+                        <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                        <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-emerald-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                            <!-- Subtle Top Accent Line -->
+                            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-emerald-400 to-teal-600 opacity-90"></div>
 
-                        <div class="relative z-10">
-                            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                                <?php echo esc_html( $header['card_badge'] ); ?>
+                            <!-- Interactive Slide Watermark Emblem -->
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
-                            <h4 class="text-lg font-black text-slate-900 dark:text-white">
-                                <?php echo esc_html( $header['card_title'] ); ?>
-                            </h4>
+
+                            <!-- Soft Dual-Tone Ring Calendar Icon -->
+                            <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                                <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                                </svg>
+                            </div>
+
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                    <?php echo esc_html( $header['card_badge'] ); ?>
+                                </div>
+                                <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $header['card_title'] ); ?></h4>
+                            </div>
                         </div>
 
-                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                            <?php echo esc_html( $header['card_desc'] ); ?>
-                        </p>
+                        <!-- Bottom Dual-Tone Zone: Description, Reg Tags & Button -->
+                        <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed text-center sm:text-left">
+                                <?php echo esc_html( $header['card_desc'] ); ?>
+                            </p>
 
-                        <div class="pt-1 relative z-10 flex items-center justify-center gap-2">
-                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                Berizin &amp; Diawasi OJK
-                            </span>
-                            <span class="text-slate-300 dark:text-slate-600">•</span>
-                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                Prinsip Syariah
-                            </span>
+                            <div class="pt-1 flex items-center justify-center gap-2">
+                                <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Diawasi OJK
+                                </span>
+                                <span class="text-slate-300 dark:text-slate-600">•</span>
+                                <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Prinsip Syariah
+                                </span>
+                            </div>
+
+                            <div class="pt-1">
+                                <a href="#kegiatan-time-filters" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/kegbtn">
+                                    <span>Lihat Agenda &amp; Kegiatan</span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/kegbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

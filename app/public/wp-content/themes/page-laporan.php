@@ -22,13 +22,32 @@ add_filter( 'document_title_parts', function( $title_parts ) {
 get_header();
 
 // ── 1. AMBIL KONFIGURASI HEADER & DATA DARI CMS ADMIN ───────────────
-$header_cfg  = function_exists( 'wakalumi_get_laporan_header' ) ? wakalumi_get_laporan_header() : [
+$header_cfg    = function_exists( 'wakalumi_get_laporan_header' ) ? wakalumi_get_laporan_header() : [
     'badge'      => 'Transparansi & Kepatuhan Regulasi',
     'title'      => 'Laporan Publikasi Keuangan & Tata Kelola',
     'subtitle'   => 'Akses seluruh publikasi resmi transparansi keuangan triwulanan, laporan tata kelola perusahaan, dan laporan tahunan BPRS Wakalumi sesuai ketentuan regulasi Otoritas Jasa Keuangan (OJK).',
     'disclaimer' => 'Seluruh laporan keuangan dan tata kelola dipublikasikan secara resmi sebagai wujud kepatuhan terhadap POJK No. 37/POJK.03/2019 tentang Transparansi dan Publikasi Laporan Bank serta regulasi tata kelola BPR Syariah.',
 ];
-$all_laporan = function_exists( 'wakalumi_get_laporan_list' ) ? wakalumi_get_laporan_list() : [];
+$hero_card_cfg = function_exists( 'wakalumi_get_laporan_hero_card' ) ? wakalumi_get_laporan_hero_card() : [
+    'badge' => 'Keterbukaan Informasi Publik',
+    'title' => 'Transparansi, Akuntabilitas & Kepatuhan',
+    'desc'  => 'BPRS Wakalumi berkomitmen menerapkan prinsip keterbukaan informasi perbankan syariah sesuai standar OJK dan tata kelola yang amanah.',
+    'tag1'  => 'Diawasi OJK',
+    'tag2'  => 'Penjaminan LPS',
+    'btn'   => 'Telusuri Arsip Laporan',
+    'url'   => '#laporan-main-tabs',
+];
+$cta_cfg       = function_exists( 'wakalumi_get_laporan_cta' ) ? wakalumi_get_laporan_cta() : [
+    'badge'     => 'Kepatuhan & Akuntabilitas Publik',
+    'title'     => 'Komitmen Tata Kelola BPRS Wakalumi',
+    'desc'      => $header_cfg['disclaimer'],
+    'note'      => 'Untuk pertanyaan mengenai laporan publikasi, permintaan dokumen cetak, atau konfirmasi audit, silakan hubungi Bagian Kepatuhan / Sekretariat Perusahaan BPRS Wakalumi.',
+    'btn1_text' => 'Hubungi Sekretariat Bank',
+    'btn1_url'  => '',
+    'btn2_text' => 'Lihat Legalitas Perusahaan',
+    'btn2_url'  => home_url( '/profil/legalitas/' ),
+];
+$all_laporan   = function_exists( 'wakalumi_get_laporan_list' ) ? wakalumi_get_laporan_list() : [];
 
 // ── 2. EKSTRAK TAHUN UNIK & HITUNG JUMLAH DOKUMEN PER KATEGORI ───────
 $counts = [
@@ -75,7 +94,7 @@ if ( empty( $available_years ) ) {
 $default_wa      = get_option( 'options_contact_wa', '6281517380388' );
 $wa_number       = get_option( 'options_produk_wa_number', $default_wa );
 $clean_wa        = preg_replace( '/[^0-9]/', '', $wa_number );
-$default_wa_link = 'https://wa.me/' . $clean_wa . '?text=' . rawurlencode( 'Halo Sekretariat BPRS Wakalumi, saya ingin menanyakan informasi publikasi laporan resmi bank.' );
+$default_wa_link = 'https://wa.me/' . $clean_wa . '?text=' . rawurlencode( 'Halo Bank Syariah Wakalumi, saya ingin menanyakan informasi publikasi laporan resmi bank.' );
 
 if ( ! function_exists( 'wakalumi_get_laporan_theme' ) ) {
     /**
@@ -153,42 +172,61 @@ if ( ! function_exists( 'wakalumi_get_laporan_theme' ) ) {
                 </div>
             </div>
 
-            <!-- Right Column: Governance Badge Card with Watermark -->
-            <div class="lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-emerald-200/80 dark:border-dark-border shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-emerald-500 via-teal-400 to-cyan-500">
-                    <!-- Interactive Slide Watermark Emblem (untitled3.png) -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.06] dark:opacity-[0.04] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.1] dark:group-hover:opacity-[0.08] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="" class="w-full h-full object-contain">
-                    </div>
+            <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+            <div class="lg:col-span-4" data-aos="fade-left" data-aos-delay="100">
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                    <div class="wkl-glass-shine"></div>
 
-                    <!-- Official Emblem / Bank Logo Badge in Full Color (No black silhouette) -->
-                    <div class="relative w-16 h-16 rounded-2xl bg-white dark:bg-dark-surface-alt text-emerald-600 dark:text-emerald-400 flex items-center justify-center p-2.5 mx-auto shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-all duration-300 z-10 border border-emerald-200/80 dark:border-dark-border">
-                        <div class="absolute inset-0 rounded-2xl bg-emerald-400/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Logo BPRS Wakalumi" class="w-full h-full object-contain relative z-10">
-                    </div>
+                    <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                    <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                        <!-- Subtle Top Accent Line -->
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 opacity-90"></div>
 
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                            Keterbukaan Informasi Publik
+                        <!-- Interactive Slide Watermark Emblem -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <h4 class="text-lg font-black text-slate-900 dark:text-white">Transparansi, Akuntabilitas &amp; Kepatuhan</h4>
+
+                        <!-- Authority Document / Governance Icon with Soft Dual-Tone Ring -->
+                        <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-emerald-200/80 dark:border-emerald-800/70 text-emerald-600 dark:text-emerald-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-105 transition-all duration-500 z-10">
+                            <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                            </svg>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <?php echo esc_html( $hero_card_cfg['badge'] ); ?>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $hero_card_cfg['title'] ); ?></h4>
+                        </div>
                     </div>
 
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                        BPRS Wakalumi berkomitmen menerapkan prinsip keterbukaan informasi perbankan syariah sesuai standar OJK dan tata kelola yang amanah.
-                    </p>
+                    <!-- Bottom Dual-Tone Zone: Description, Reg Tags & Button -->
+                    <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            <?php echo esc_html( $hero_card_cfg['desc'] ); ?>
+                        </p>
 
-                    <div class="pt-1 relative z-10 flex items-center justify-center gap-2">
-                        <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Diawasi OJK
-                        </span>
-                        <span class="text-slate-300 dark:text-slate-600">•</span>
-                        <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Penjaminan LPS
-                        </span>
+                        <div class="pt-1 flex items-center justify-center gap-2">
+                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <?php echo esc_html( $hero_card_cfg['tag1'] ); ?>
+                            </span>
+                            <span class="text-slate-300 dark:text-slate-600">•</span>
+                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <?php echo esc_html( $hero_card_cfg['tag2'] ); ?>
+                            </span>
+                        </div>
+
+                        <div class="pt-1">
+                            <a href="<?php echo esc_url( $hero_card_cfg['url'] ); ?>" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-emerald-50/80 dark:bg-slate-800/80 dark:hover:bg-emerald-950/50 border border-slate-200/80 hover:border-emerald-300 dark:border-slate-700/80 dark:hover:border-emerald-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-all duration-300 group/lpsbtn">
+                                <span><?php echo esc_html( $hero_card_cfg['btn'] ); ?></span>
+                                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -603,8 +641,12 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
 </section>
 
 <!-- ========================================================================
-     SECTION 5: REGULATORY COMPLIANCE & INVESTOR CONTACT BANNER
+     SECTION 5: REGULATORY COMPLIANCE & INVESTOR CONTACT BANNER (CTA DINAMIS CMS)
      ======================================================================== -->
+<?php
+$cta_target_btn1 = ! empty( $cta_cfg['btn1_url'] ) ? $cta_cfg['btn1_url'] : $default_wa_link;
+$cta_target_btn2 = ! empty( $cta_cfg['btn2_url'] ) ? $cta_cfg['btn2_url'] : home_url( '/profil/legalitas/' );
+?>
 <section class="py-14 lg:py-20 bg-transparent relative">
     <div class="container-wide">
         <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-teal-950 text-white text-center relative overflow-hidden shadow-2xl group" data-aos="fade-up">
@@ -616,24 +658,26 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
             <div class="relative z-10 max-w-2xl mx-auto space-y-4">
                 <span class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-teal-300 bg-teal-950/80 px-3.5 py-1.5 rounded-full border border-teal-800 mb-1">
                     <svg class="w-3.5 h-3.5 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333A48.272 48.272 0 0012 9.75c-2.551 0-5.056.2-7.5.583V21" /></svg>
-                    Kepatuhan &amp; Akuntabilitas Publik
+                    <?php echo esc_html( $cta_cfg['badge'] ); ?>
                 </span>
                 
                 <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
-                    Komitmen Tata Kelola BPRS Wakalumi
+                    <?php echo esc_html( $cta_cfg['title'] ); ?>
                 </h3>
                 
                 <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
-                    <?php echo esc_html( $header_cfg['disclaimer'] ); ?>
+                    <?php echo esc_html( $cta_cfg['desc'] ); ?>
                 </p>
 
+                <?php if ( ! empty( $cta_cfg['note'] ) ) : ?>
                 <p class="text-xs text-slate-400 leading-relaxed pt-2">
-                    Untuk pertanyaan mengenai laporan publikasi, permintaan dokumen cetak, atau konfirmasi audit, silakan hubungi Bagian Kepatuhan / Sekretariat Perusahaan BPRS Wakalumi.
+                    <?php echo esc_html( $cta_cfg['note'] ); ?>
                 </p>
+                <?php endif; ?>
 
                 <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
                     <a 
-                        href="<?php echo esc_url( $default_wa_link ); ?>" 
+                        href="<?php echo esc_url( $cta_target_btn1 ); ?>" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         class="relative overflow-hidden group/btn py-3.5 px-6 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-sm inline-flex items-center gap-2 shadow-lg transition-transform hover:scale-105"
@@ -641,14 +685,14 @@ $theme_lainnya       = wakalumi_get_laporan_theme( 'lainnya' );
                         <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                         </svg>
-                        <span>Hubungi Sekretariat Bank</span>
+                        <span><?php echo esc_html( $cta_cfg['btn1_text'] ); ?></span>
                     </a>
                     <a 
-                        href="<?php echo esc_url( home_url( '/profil/legalitas/' ) ); ?>" 
+                        href="<?php echo esc_url( $cta_target_btn2 ); ?>" 
                         class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
                     >
                         <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
-                        <span>Lihat Legalitas Perusahaan</span>
+                        <span><?php echo esc_html( $cta_cfg['btn2_text'] ); ?></span>
                     </a>
                 </div>
             </div>

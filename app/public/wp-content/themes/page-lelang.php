@@ -98,65 +98,80 @@ $wa_url = 'https://wa.me/' . $pic_wa;
                 </div>
 
                 <?php if ( ! empty( $header['card_show'] ) && $header['card_show'] !== '0' ) : ?>
-                    <!-- Right Column: Governance Badge Card with Watermark Pass-Through -->
-                    <div class="lg:col-span-4">
-                        <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-amber-200/80 dark:border-dark-border shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-amber-500 via-teal-400 to-amber-600">
-                            <!-- Interactive Slide Watermark Emblem -->
-                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                            </div>
+                    <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                    <div class="lg:col-span-4" data-aos="fade-left" data-aos-delay="100">
+                        <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                            <div class="wkl-glass-shine"></div>
 
-                            <!-- Gavel / Auction Icon -->
-                            <div class="relative w-16 h-16 rounded-2xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
-                                <div class="absolute inset-0 rounded-2xl bg-amber-400/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <svg class="w-8 h-8 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m14 13-7.5 7.5a2.12 2.12 0 1 1-3-3L11 10"/>
-                                    <path d="m16 16 6-6"/>
-                                    <path d="m8 8 6-6"/>
-                                    <path d="m9 7 8 8"/>
-                                    <path d="m21 11-8-8"/>
-                                </svg>
-                            </div>
+                            <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                            <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-amber-50/85 via-yellow-50/40 to-white dark:from-amber-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                                <!-- Subtle Top Accent Line -->
+                                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 opacity-90"></div>
 
-                            <div class="relative z-10">
-                                <?php if ( ! empty( $header['card_badge'] ) ) : ?>
-                                    <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                        <?php echo esc_html( $header['card_badge'] ); ?>
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ( ! empty( $header['card_title'] ) ) : ?>
-                                    <h4 class="text-lg font-black text-slate-900 dark:text-white">
-                                        <?php echo esc_html( $header['card_title'] ); ?>
-                                    </h4>
-                                <?php endif; ?>
-                            </div>
+                                <!-- Interactive Slide Watermark Emblem -->
+                                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                                </div>
 
-                            <?php if ( ! empty( $header['card_desc'] ) ) : ?>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                                    <?php echo esc_html( $header['card_desc'] ); ?>
-                                </p>
-                            <?php endif; ?>
+                                <!-- Soft Dual-Tone Ring Gavel Icon -->
+                                <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-amber-200/80 dark:border-amber-800/70 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600 group-hover:scale-105 transition-all duration-500 z-10">
+                                    <svg class="w-7 h-7 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m14 13-7.5 7.5a2.12 2.12 0 1 1-3-3L11 10"/>
+                                        <path d="m16 16 6-6"/>
+                                        <path d="m8 8 6-6"/>
+                                        <path d="m9 7 8 8"/>
+                                        <path d="m21 11-8-8"/>
+                                    </svg>
+                                </div>
 
-                            <?php if ( ! empty( $header['card_tag1'] ) || ! empty( $header['card_tag2'] ) ) : ?>
-                                <div class="pt-1 relative z-10 flex items-center justify-center gap-2 flex-wrap">
-                                    <?php if ( ! empty( $header['card_tag1'] ) ) : ?>
-                                        <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                                            <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                            <?php echo esc_html( $header['card_tag1'] ); ?>
-                                        </span>
+                                <div class="relative z-10">
+                                    <?php if ( ! empty( $header['card_badge'] ) ) : ?>
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-amber-700 dark:text-amber-300 border border-amber-200/70 dark:border-amber-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            <?php echo esc_html( $header['card_badge'] ); ?>
+                                        </div>
                                     <?php endif; ?>
-                                    <?php if ( ! empty( $header['card_tag1'] ) && ! empty( $header['card_tag2'] ) ) : ?>
-                                        <span class="text-slate-300 dark:text-slate-600">•</span>
-                                    <?php endif; ?>
-                                    <?php if ( ! empty( $header['card_tag2'] ) ) : ?>
-                                        <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                                            <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                            <?php echo esc_html( $header['card_tag2'] ); ?>
-                                        </span>
+                                    <?php if ( ! empty( $header['card_title'] ) ) : ?>
+                                        <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $header['card_title'] ); ?></h4>
                                     <?php endif; ?>
                                 </div>
-                            <?php endif; ?>
+                            </div>
+
+                            <!-- Bottom Dual-Tone Zone: Description, Reg Tags & Button -->
+                            <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                                <?php if ( ! empty( $header['card_desc'] ) ) : ?>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed text-center sm:text-left">
+                                        <?php echo esc_html( $header['card_desc'] ); ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <?php if ( ! empty( $header['card_tag1'] ) || ! empty( $header['card_tag2'] ) ) : ?>
+                                    <div class="pt-1 flex items-center justify-center gap-2 flex-wrap">
+                                        <?php if ( ! empty( $header['card_tag1'] ) ) : ?>
+                                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                                <?php echo esc_html( $header['card_tag1'] ); ?>
+                                            </span>
+                                        <?php endif; ?>
+                                        <?php if ( ! empty( $header['card_tag1'] ) && ! empty( $header['card_tag2'] ) ) : ?>
+                                            <span class="text-slate-300 dark:text-slate-600">•</span>
+                                        <?php endif; ?>
+                                        <?php if ( ! empty( $header['card_tag2'] ) ) : ?>
+                                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                                <?php echo esc_html( $header['card_tag2'] ); ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="pt-1">
+                                    <a href="#lelang-grid" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-amber-50/80 dark:bg-slate-800/80 dark:hover:bg-amber-950/50 border border-slate-200/80 hover:border-amber-300 dark:border-slate-700/80 dark:hover:border-amber-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-300 transition-all duration-300 group/lelangbtn">
+                                        <span>Lihat Agunan Lelang</span>
+                                        <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lelangbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <?php endif; ?>

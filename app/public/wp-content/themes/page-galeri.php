@@ -92,35 +92,70 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     </div>
                 </div>
 
-                <!-- Right Column: Governance Badge Card with Watermark Emblem -->
-                <div class="lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-teal-200/80 dark:border-dark-border shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 via-emerald-400 to-teal-600">
-                        <!-- Interactive Slide Watermark Emblem -->
-                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                <div class="lg:col-span-4" data-aos="fade-left" data-aos-delay="100">
+                    <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                        <div class="wkl-glass-shine"></div>
+
+                        <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                        <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-emerald-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                            <!-- Subtle Top Accent Line -->
+                            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-emerald-400 to-teal-600 opacity-90"></div>
+
+                            <!-- Interactive Slide Watermark Emblem -->
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                            </div>
+
+                            <!-- Soft Dual-Tone Ring Camera Icon -->
+                            <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                                <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                                </svg>
+                            </div>
+
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                    <?php echo esc_html( $header['card_badge'] ); ?>
+                                </div>
+                                <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $header['card_title'] ); ?></h4>
+                            </div>
                         </div>
 
-                        <div class="w-14 h-14 mx-auto rounded-2xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300">
-                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
-                        </div>
-
-                        <div>
-                            <span class="text-xs font-bold tracking-widest text-teal-600 dark:text-teal-400 uppercase"><?php echo esc_html( $header['card_badge'] ); ?></span>
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1"><?php echo esc_html( $header['card_title'] ); ?></h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                        <!-- Bottom Dual-Tone Zone: Description, Live Metrics & Button -->
+                        <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed text-center sm:text-left">
                                 <?php echo esc_html( $header['card_desc'] ); ?>
                             </p>
-                        </div>
 
-                        <!-- Mini Stats Bar inside Card -->
-                        <div class="pt-3 border-t border-slate-100 dark:border-dark-border grid grid-cols-2 gap-3 text-center">
-                            <div class="p-2 rounded-xl bg-slate-50 dark:bg-dark-surface/60 border border-slate-200/60 dark:border-dark-border/60">
-                                <span class="block text-xl font-extrabold text-teal-600 dark:text-teal-400"><?php echo esc_html( $count_all_albums ); ?></span>
-                                <span class="block text-[11px] font-medium text-slate-500 dark:text-slate-400">Album Kegiatan</span>
+                            <!-- Live Stats Metrics Grid -->
+                            <div class="grid grid-cols-2 gap-2.5 pt-1 text-left">
+                                <div class="p-3 rounded-xl bg-teal-50/70 dark:bg-teal-950/50 border border-teal-200/70 dark:border-teal-800/60 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/80 text-teal-700 dark:text-teal-300 flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Album Resmi</span>
+                                        <span class="block text-xs font-black text-teal-700 dark:text-teal-300 truncate"><?php echo esc_html( $count_all_albums ); ?> Album</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Dokumentasi</span>
+                                        <span class="block text-xs font-black text-emerald-700 dark:text-emerald-300 truncate"><?php echo esc_html( $count_all_photos ); ?> Foto</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="p-2 rounded-xl bg-slate-50 dark:bg-dark-surface/60 border border-slate-200/60 dark:border-dark-border/60">
-                                <span class="block text-xl font-extrabold text-purple-600 dark:text-purple-400"><?php echo esc_html( $count_all_photos ); ?></span>
-                                <span class="block text-[11px] font-medium text-slate-500 dark:text-slate-400">Foto Dokumentasi</span>
+
+                            <div class="pt-1">
+                                <a href="#galeri-grid-top" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/galeribtn">
+                                    <span>Jelajahi Koleksi Galeri</span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/galeribtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                </a>
                             </div>
                         </div>
                     </div>

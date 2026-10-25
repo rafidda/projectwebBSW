@@ -372,6 +372,47 @@ if ( ! function_exists( 'wakalumi_get_pembiayaan_color_theme' ) ) {
 }
 
 /**
+ * Helper Ikon Langkah Alur Pembiayaan (3-Tone Cards)
+ */
+if ( ! function_exists( 'wakalumi_render_step_icon' ) ) {
+    function wakalumi_render_step_icon( string $icon_key = 'chat' ): string {
+        switch ( $icon_key ) {
+            case 'phone':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>';
+            case 'document':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>';
+            case 'clipboard':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>';
+            case 'signature':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>';
+            case 'handshake':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>';
+            case 'shield':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>';
+            case 'check':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>';
+            case 'cash':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v8.25m0 0a60.1 60.1 0 0015.797 2.101c.727.198 1.453-.342 1.453-1.096V14.25m-17.25 0h17.25m-17.25 0v-8.25m17.25 8.25V6.75m0 0a60.1 60.1 0 00-15.797-2.101c-.727-.198-1.453.342-1.453 1.096V6.75m17.25 0h-17.25M12 12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z"/></svg>';
+            case 'coins':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>';
+            case 'trending':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>';
+            case 'store':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009 9.35c.66 0 1.28-.213 1.785-.578a3.001 3.001 0 004.43 0c.506.365 1.125.578 1.785.578a2.993 2.993 0 002.465-1.281 3.001 3.001 0 003.75.615M2.25 9.35l1.64-5.33A1.5 1.5 0 015.32 3h13.36a1.5 1.5 0 011.43 1.02l1.64 5.33"/></svg>';
+            case 'award':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.504-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.003 0H9.497m5.003 0a6.75 6.75 0 10-5.003 0m7.5-6.75h.75a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25h-.75m-11.25 0h-.75a2.25 2.25 0 00-2.25 2.25v2.25a2.25 2.25 0 002.25 2.25h.75"/></svg>';
+            case 'users':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>';
+            case 'lock':
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>';
+            case 'chat':
+            default:
+                return '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a.75.75 0 01-.974-.94 6.012 6.012 0 011.082-2.185A8.136 8.136 0 013 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>';
+        }
+    }
+}
+
+/**
  * Render Halaman Admin Pengelolaan Pembiayaan Syariah
  */
 function wakalumi_render_pembiayaan_admin_page() {
@@ -391,6 +432,16 @@ function wakalumi_render_pembiayaan_admin_page() {
         update_option( 'options_pembiayaan_trust_title', sanitize_text_field( $_POST['options_pembiayaan_trust_title'] ?? '' ) );
         update_option( 'options_pembiayaan_trust_desc', sanitize_textarea_field( $_POST['options_pembiayaan_trust_desc'] ?? '' ) );
         update_option( 'options_pembiayaan_trust_btn', sanitize_text_field( $_POST['options_pembiayaan_trust_btn'] ?? '' ) );
+
+        // 1b. Katalog Produk Title & Kicker
+        update_option( 'options_pembiayaan_katalog_kicker', sanitize_text_field( $_POST['options_pembiayaan_katalog_kicker'] ?? '' ) );
+        update_option( 'options_pembiayaan_katalog_title', sanitize_text_field( $_POST['options_pembiayaan_katalog_title'] ?? '' ) );
+        update_option( 'options_pembiayaan_katalog_desc', sanitize_textarea_field( $_POST['options_pembiayaan_katalog_desc'] ?? '' ) );
+
+        // 1c. Matriks Komparasi Title & Kicker
+        update_option( 'options_pembiayaan_komp_kicker', sanitize_text_field( $_POST['options_pembiayaan_komp_kicker'] ?? '' ) );
+        update_option( 'options_pembiayaan_komp_title', sanitize_text_field( $_POST['options_pembiayaan_komp_title'] ?? '' ) );
+        update_option( 'options_pembiayaan_komp_desc', sanitize_textarea_field( $_POST['options_pembiayaan_komp_desc'] ?? '' ) );
 
         // 2. Repeater Produk Pembiayaan
         $pem_names     = $_POST['pem_nama'] ?? [];
@@ -500,12 +551,15 @@ function wakalumi_render_pembiayaan_admin_page() {
         }
         update_option( 'options_pembiayaan_faq_list', $clean_faqs );
 
-        // 5. Alur & Prosedur 4 Langkah
+        // 5. Alur & Prosedur 4 Langkah (Proses Mudah & Cepat)
         update_option( 'options_pembiayaan_alur_kicker', sanitize_text_field( $_POST['options_pembiayaan_alur_kicker'] ?? '' ) );
         update_option( 'options_pembiayaan_alur_title', sanitize_text_field( $_POST['options_pembiayaan_alur_title'] ?? '' ) );
         update_option( 'options_pembiayaan_alur_sub', sanitize_textarea_field( $_POST['options_pembiayaan_alur_sub'] ?? '' ) );
         for ( $s = 1; $s <= 4; $s++ ) {
             update_option( "options_pembiayaan_step_{$s}_title", sanitize_text_field( $_POST["options_pembiayaan_step_{$s}_title"] ?? '' ) );
+            update_option( "options_pembiayaan_step_{$s}_tag", sanitize_text_field( $_POST["options_pembiayaan_step_{$s}_tag"] ?? '' ) );
+            update_option( "options_pembiayaan_step_{$s}_icon", sanitize_text_field( $_POST["options_pembiayaan_step_{$s}_icon"] ?? 'chat' ) );
+            update_option( "options_pembiayaan_step_{$s}_color", sanitize_text_field( $_POST["options_pembiayaan_step_{$s}_color"] ?? 'auto' ) );
             update_option( "options_pembiayaan_step_{$s}_desc", sanitize_textarea_field( $_POST["options_pembiayaan_step_{$s}_desc"] ?? '' ) );
         }
 
@@ -515,7 +569,7 @@ function wakalumi_render_pembiayaan_admin_page() {
         update_option( 'options_pembiayaan_brosur_btn', sanitize_text_field( $_POST['options_pembiayaan_brosur_btn'] ?? '' ) );
         update_option( 'options_pembiayaan_brosur_url', esc_url_raw( $_POST['options_pembiayaan_brosur_url'] ?? '' ) );
 
-        // 7. Box Konsultasi Relationship Manager (Sidebar FAQ)
+        // 7b. Box Konsultasi Relationship Manager (Sidebar FAQ)
         update_option( 'options_pembiayaan_rm_show', isset( $_POST['options_pembiayaan_rm_show'] ) ? '1' : '0' );
         update_option( 'options_pembiayaan_rm_title', sanitize_text_field( $_POST['options_pembiayaan_rm_title'] ?? '' ) );
         update_option( 'options_pembiayaan_rm_desc', sanitize_textarea_field( $_POST['options_pembiayaan_rm_desc'] ?? '' ) );
@@ -547,6 +601,16 @@ function wakalumi_render_pembiayaan_admin_page() {
     $trust_btn      = get_option( 'options_pembiayaan_trust_btn', 'Simulasi Angsuran Syariah' );
 
     $pembiayaan_list = wakalumi_get_pembiayaan_list();
+
+    // Katalog Header
+    $katalog_kicker = get_option( 'options_pembiayaan_katalog_kicker', 'Katalog Pembiayaan Syariah' );
+    $katalog_title  = get_option( 'options_pembiayaan_katalog_title', 'Pilihan Akad Sesuai Karakteristik Kebutuhan Anda' );
+    $katalog_desc   = get_option( 'options_pembiayaan_katalog_desc', 'Setiap pembiayaan didesain berlandaskan prinsip fikih muamalah yang adil, menenangkan, dan memberikan kepastian usaha.' );
+
+    // Komparasi Header
+    $komp_kicker    = get_option( 'options_pembiayaan_komp_kicker', 'Matriks Perbandingan' );
+    $komp_title     = get_option( 'options_pembiayaan_komp_title', 'Tabel Komparasi Fitur Pembiayaan' );
+    $komp_desc      = get_option( 'options_pembiayaan_komp_desc', 'Bandingkan skema akad, batas plafon, dan jangka waktu tenor untuk menemukan solusi pembiayaan yang paling tepat.' );
 
     // Kalkulator
     $calc_badge     = get_option( 'options_pembiayaan_calc_badge', 'Simulasi Finansial Syariah' );
@@ -592,14 +656,58 @@ function wakalumi_render_pembiayaan_admin_page() {
     $alur_kicker    = get_option( 'options_pembiayaan_alur_kicker', 'Proses Mudah & Cepat' );
     $alur_title     = get_option( 'options_pembiayaan_alur_title', '4 Tahapan Mudah Pengajuan Pembiayaan' );
     $alur_sub       = get_option( 'options_pembiayaan_alur_sub', 'Panduan tahapan transparan mulai dari konsultasi awal hingga dana pembiayaan cair ke rekening Anda.' );
-    $step_1_title   = get_option( 'options_pembiayaan_step_1_title', '1. Konsultasi & Pengisian Formulir' );
+
+    $step_1_title   = get_option( 'options_pembiayaan_step_1_title', 'Konsultasi & Pengisian Formulir' );
+    $step_1_tag     = get_option( 'options_pembiayaan_step_1_tag', 'Tahap 1: Konsultasi Ramah' );
+    $step_1_icon    = get_option( 'options_pembiayaan_step_1_icon', 'chat' );
+    $step_1_color   = get_option( 'options_pembiayaan_step_1_color', 'teal' );
     $step_1_desc    = get_option( 'options_pembiayaan_step_1_desc', 'Hubungi tim relationship manager kami via WhatsApp atau kunjungi kantor BPRS Wakalumi untuk konsultasi kebutuhan dana dan pengisian formulir pengajuan.' );
-    $step_2_title   = get_option( 'options_pembiayaan_step_2_title', '2. Kelengkapan Berkas & Verifikasi' );
+
+    $step_2_title   = get_option( 'options_pembiayaan_step_2_title', 'Kelengkapan Berkas & Verifikasi' );
+    $step_2_tag     = get_option( 'options_pembiayaan_step_2_tag', 'Tahap 2: Verifikasi Cepat' );
+    $step_2_icon    = get_option( 'options_pembiayaan_step_2_icon', 'document' );
+    $step_2_color   = get_option( 'options_pembiayaan_step_2_color', 'sky' );
     $step_2_desc    = get_option( 'options_pembiayaan_step_2_desc', 'Serahkan dokumen persyaratan (identitas, legalitas usaha/surat guru, dan jaminan). Tim kami akan melakukan verifikasi dan survei usaha secara bersahabat.' );
-    $step_3_title   = get_option( 'options_pembiayaan_step_3_title', '3. Persetujuan & Ijab Qabul Akad' );
+
+    $step_3_title   = get_option( 'options_pembiayaan_step_3_title', 'Persetujuan & Ijab Qabul Akad' );
+    $step_3_tag     = get_option( 'options_pembiayaan_step_3_tag', 'Tahap 3: Bebas Riba & Transparan' );
+    $step_3_icon    = get_option( 'options_pembiayaan_step_3_icon', 'signature' );
+    $step_3_color   = get_option( 'options_pembiayaan_step_3_color', 'indigo' );
     $step_3_desc    = get_option( 'options_pembiayaan_step_3_desc', 'Setelah pengajuan disetujui, penandatanganan akad syariah (ijab-qabul) dilakukan secara transparan tanpa ada pasal jebakan atau biaya tersembunyi.' );
-    $step_4_title   = get_option( 'options_pembiayaan_step_4_title', '4. Pencairan Dana Cepat & Pendampingan' );
+
+    $step_4_title   = get_option( 'options_pembiayaan_step_4_title', 'Pencairan Dana Cepat & Pendampingan' );
+    $step_4_tag     = get_option( 'options_pembiayaan_step_4_tag', 'Tahap 4: Dana Siap Berkembang' );
+    $step_4_icon    = get_option( 'options_pembiayaan_step_4_icon', 'cash' );
+    $step_4_color   = get_option( 'options_pembiayaan_step_4_color', 'emerald' );
     $step_4_desc    = get_option( 'options_pembiayaan_step_4_desc', 'Dana pembiayaan langsung dicairkan ke rekening Anda untuk mendukung kemajuan usaha atau pemenuhan kebutuhan dengan pendampingan berkala.' );
+
+    $step_icon_options = [
+        'chat'      => '💬 Chat / Konsultasi Awal',
+        'phone'     => '📞 Telepon / Hotline Layanan',
+        'document'  => '📄 Dokumen / Berkas Persyaratan',
+        'clipboard' => '📋 Formulir / Checklist Verifikasi',
+        'signature' => '✍️ Tanda Tangan / Akad Ijab Qabul',
+        'handshake' => '🤝 Jabat Tangan / Kesepakatan Syariah',
+        'shield'    => '🛡️ Perisai / Amanah & Kepatuhan Syariah',
+        'check'     => '✅ Centang / Verifikasi Disetujui',
+        'cash'      => '💵 Uang Tunai / Pencairan Dana',
+        'coins'     => '🪙 Koin Modal / Pembiayaan Cair',
+        'trending'  => '📈 Grafik Tumbuh / Usaha Berkembang',
+        'store'     => '🏪 Toko / Usaha Berjalan',
+        'award'     => '🏆 Penghargaan / Keberkahan Hasil',
+        'users'     => '👥 Tim / Pendampingan Nasabah',
+        'lock'      => '🔒 Keamanan & Kerahasiaan Data',
+    ];
+
+    $step_color_options = [
+        'auto'    => '🔄 Otomatis (Rotasi Gradien)',
+        'teal'    => '🟢 Teal (Brand Utama Wakalumi)',
+        'sky'     => '🔵 Sky Blue (Segar & Dinamis)',
+        'amber'   => '🟡 Amber (Emas & Kemakmuran)',
+        'indigo'  => '🟣 Indigo (Elegan & Amanah)',
+        'rose'    => '🔴 Rose (Hangat & Ramah)',
+        'emerald' => '🌿 Emerald (Hijau Syariah)',
+    ];
 
     // CTA
     $cta_kicker     = get_option( 'options_pembiayaan_cta_kicker', 'Konsultasi Pembiayaan Bebas Riba' );
@@ -687,12 +795,26 @@ function wakalumi_render_pembiayaan_admin_page() {
                         <td><textarea id="options_pembiayaan_quote" name="options_pembiayaan_quote" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $page_quote ); ?></textarea></td>
                     </tr>
                     <tr>
+                        <th><label for="options_pembiayaan_trust_tag">Tag Pill Kartu Pengawasan (Hero Card)</label></th>
+                        <td>
+                            <input type="text" id="options_pembiayaan_trust_tag" name="options_pembiayaan_trust_tag" value="<?php echo esc_attr( $trust_tag ); ?>" class="regular-text" style="width: 100%; max-width: 400px;" placeholder="Kepatuhan Regulasi &amp; Syariah">
+                            <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">Tag pill kecil yang tampil di atas judul kartu pengawasan hero (misal: <em>Kepatuhan Regulasi &amp; Syariah</em>).</p>
+                        </td>
+                    </tr>
+                    <tr>
                         <th><label for="options_pembiayaan_trust_title">Judul Kartu Pengawasan OJK &amp; DPS</label></th>
                         <td><input type="text" id="options_pembiayaan_trust_title" name="options_pembiayaan_trust_title" value="<?php echo esc_attr( $trust_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px;"></td>
                     </tr>
                     <tr>
                         <th><label for="options_pembiayaan_trust_desc">Deskripsi Kartu Pengawasan</label></th>
                         <td><textarea id="options_pembiayaan_trust_desc" name="options_pembiayaan_trust_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $trust_desc ); ?></textarea></td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_trust_btn">Teks Tombol Aksi Kartu Hero</label></th>
+                        <td>
+                            <input type="text" id="options_pembiayaan_trust_btn" name="options_pembiayaan_trust_btn" value="<?php echo esc_attr( $trust_btn ); ?>" class="regular-text" style="width: 100%; max-width: 350px;" placeholder="Simulasi Angsuran Syariah">
+                            <p class="description" style="font-size: 11px; margin-top: 4px; color: #64748b;">Teks tombol di bagian bawah kartu hero yang mengarahkan langsung ke simulasi kalkulator.</p>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -704,12 +826,33 @@ function wakalumi_render_pembiayaan_admin_page() {
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <h2 style="font-size: 16px; font-weight: 700; color: #ea580c; margin: 0 0 4px 0;">
-                            2. Katalog Produk Pembiayaan Dinamis (Repeater)
+                            2. Katalog Produk Pembiayaan Syariah
                         </h2>
                         <p style="margin: 0; font-size: 12px; color: #64748b;">
-                            Setiap produk otomatis tampil sebagai kartu interaktif, memiliki ID anchor untuk mega menu navbar (misal: <code>#pedagang</code>, <code>#guru</code>, <code>#murabahah</code>), dan terhubung ke tabel komparasi serta kalkulator.
+                            Kelola judul seksi dan daftar produk pembiayaan (8 produk default atau tambah produk baru sesuai kebutuhan bank). Setiap produk terhubung ke ID anchor mega-menu dan kalkulator.
                         </p>
                     </div>
+                    <button type="button" id="btn-add-pembiayaan" class="button button-primary" style="background: #ea580c; border-color: #c2410c; font-weight: 600;">
+                        + Tambah Produk Baru
+                    </button>
+                </div>
+
+                <!-- Pengaturan Judul & Deskripsi Seksi Katalog -->
+                <div style="background: #fff7ed; border: 1px solid #ffedd5; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;">
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 220px;"><label for="options_pembiayaan_katalog_kicker">Kicker Seksi Katalog</label></th>
+                            <td><input type="text" id="options_pembiayaan_katalog_kicker" name="options_pembiayaan_katalog_kicker" value="<?php echo esc_attr( $katalog_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 400px;" placeholder="Katalog Pembiayaan Syariah"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_pembiayaan_katalog_title">Judul Seksi Katalog</label></th>
+                            <td><input type="text" id="options_pembiayaan_katalog_title" name="options_pembiayaan_katalog_title" value="<?php echo esc_attr( $katalog_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;" placeholder="Pilihan Akad Sesuai Karakteristik Kebutuhan Anda"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="options_pembiayaan_katalog_desc">Deskripsi Seksi Katalog</label></th>
+                            <td><textarea id="options_pembiayaan_katalog_desc" name="options_pembiayaan_katalog_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;" placeholder="Setiap pembiayaan didesain berlandaskan prinsip fikih muamalah yang adil, menenangkan, dan memberikan kepastian usaha."><?php echo esc_textarea( $katalog_desc ); ?></textarea></td>
+                        </tr>
+                    </table>
                 </div>
 
                 <div id="pembiayaan-cards-container" style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px;">
@@ -851,11 +994,37 @@ function wakalumi_render_pembiayaan_admin_page() {
             </div>
 
             <!-- ========================================================
-                 BAGIAN 3: KALKULATOR SIMULASI ANGSURAN PEMBIAYAAN
+                 BAGIAN 3: TABEL KOMPARASI MATRIKS & FITUR
+                 ======================================================== -->
+            <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #0284c7; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <h2 style="font-size: 16px; font-weight: 700; color: #0284c7; margin-top: 0; margin-bottom: 6px;">
+                    3. Tabel Komparasi Matriks Fitur Pembiayaan
+                </h2>
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                    Kelola judul dan keterangan pengantar tabel perbandingan. Seluruh baris tabel komparasi digenerate secara otomatis dari katalog produk di Bagian 2 di atas.
+                </p>
+                <table class="form-table" style="margin: 0;">
+                    <tr>
+                        <th style="width: 230px;"><label for="options_pembiayaan_komp_kicker">Kicker Tabel Komparasi</label></th>
+                        <td><input type="text" id="options_pembiayaan_komp_kicker" name="options_pembiayaan_komp_kicker" value="<?php echo esc_attr( $komp_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 400px;" placeholder="Matriks Perbandingan"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_komp_title">Judul Utama Tabel Komparasi</label></th>
+                        <td><input type="text" id="options_pembiayaan_komp_title" name="options_pembiayaan_komp_title" value="<?php echo esc_attr( $komp_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;" placeholder="Tabel Komparasi Fitur Pembiayaan"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="options_pembiayaan_komp_desc">Deskripsi Tabel Komparasi</label></th>
+                        <td><textarea id="options_pembiayaan_komp_desc" name="options_pembiayaan_komp_desc" rows="2" class="large-text" style="width: 100%; max-width: 650px;" placeholder="Bandingkan skema akad, batas plafon, dan jangka waktu tenor untuk menemukan solusi pembiayaan yang paling tepat."><?php echo esc_textarea( $komp_desc ); ?></textarea></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- ========================================================
+                 BAGIAN 4: KALKULATOR SIMULASI ANGSURAN PEMBIAYAAN
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #088395; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                    3. Kalkulator Simulasi Angsuran Pembiayaan
+                    4. Kalkulator Simulasi Angsuran Pembiayaan
                 </h2>
                 <table class="form-table" style="margin: 0 0 20px 0;">
                     <tr>
@@ -958,57 +1127,96 @@ function wakalumi_render_pembiayaan_admin_page() {
             </div>
 
             <!-- ========================================================
-                 BAGIAN 4: ALUR & PROSEDUR 4 LANGKAH PENGAJUAN
+                 BAGIAN 5: ALUR & PROSEDUR 4 LANGKAH PENGAJUAN (3-TONE CARD)
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #059669; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                <h2 style="font-size: 16px; font-weight: 700; color: #059669; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                    4. Alur &amp; Prosedur 4 Langkah Pengajuan Pembiayaan
+                <h2 style="font-size: 16px; font-weight: 700; color: #059669; margin-top: 0; margin-bottom: 6px;">
+                    5. Alur &amp; Prosedur 4 Langkah Pengajuan Pembiayaan (Proses Mudah &amp; Cepat)
                 </h2>
-                <table class="form-table" style="margin: 0 0 15px 0;">
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                    Kelola judul seksi dan 4 kartu tahapan pengajuan yang ditampilkan dalam gaya eksekutif 3-Tone Card dengan ikon solid, logo watermark interaktif, dan tag komitmen footer.
+                </p>
+                <table class="form-table" style="margin: 0 0 20px 0;">
                     <tr>
-                        <th style="width: 230px;"><label for="options_pembiayaan_alur_kicker">Kicker Bagian</label></th>
-                        <td><input type="text" id="options_pembiayaan_alur_kicker" name="options_pembiayaan_alur_kicker" value="<?php echo esc_attr( $alur_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 400px;"></td>
+                        <th style="width: 230px;"><label for="options_pembiayaan_alur_kicker">Kicker Seksi Alur</label></th>
+                        <td><input type="text" id="options_pembiayaan_alur_kicker" name="options_pembiayaan_alur_kicker" value="<?php echo esc_attr( $alur_kicker ); ?>" class="regular-text" style="width: 100%; max-width: 400px;" placeholder="Proses Mudah &amp; Cepat"></td>
                     </tr>
                     <tr>
-                        <th><label for="options_pembiayaan_alur_title">Judul Bagian</label></th>
-                        <td><input type="text" id="options_pembiayaan_alur_title" name="options_pembiayaan_alur_title" value="<?php echo esc_attr( $alur_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;"></td>
+                        <th><label for="options_pembiayaan_alur_title">Judul Utama Seksi Alur</label></th>
+                        <td><input type="text" id="options_pembiayaan_alur_title" name="options_pembiayaan_alur_title" value="<?php echo esc_attr( $alur_title ); ?>" class="regular-text" style="width: 100%; max-width: 550px; font-weight: bold;" placeholder="4 Tahapan Mudah Pengajuan Pembiayaan"></td>
                     </tr>
                     <tr>
-                        <th><label for="options_pembiayaan_alur_sub">Subjudul Bagian</label></th>
-                        <td><textarea id="options_pembiayaan_alur_sub" name="options_pembiayaan_alur_sub" rows="2" class="large-text" style="width: 100%; max-width: 650px;"><?php echo esc_textarea( $alur_sub ); ?></textarea></td>
+                        <th><label for="options_pembiayaan_alur_sub">Deskripsi / Subjudul Seksi Alur</label></th>
+                        <td><textarea id="options_pembiayaan_alur_sub" name="options_pembiayaan_alur_sub" rows="2" class="large-text" style="width: 100%; max-width: 650px;" placeholder="Panduan tahapan transparan mulai dari konsultasi awal hingga dana pembiayaan cair ke rekening Anda."><?php echo esc_textarea( $alur_sub ); ?></textarea></td>
                     </tr>
                 </table>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px;">
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
-                        <strong>Langkah 1</strong>
-                        <input type="text" name="options_pembiayaan_step_1_title" value="<?php echo esc_attr( $step_1_title ); ?>" style="width: 100%; margin: 6px 0; font-weight: 600;">
-                        <textarea name="options_pembiayaan_step_1_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $step_1_desc ); ?></textarea>
-                    </div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
-                        <strong>Langkah 2</strong>
-                        <input type="text" name="options_pembiayaan_step_2_title" value="<?php echo esc_attr( $step_2_title ); ?>" style="width: 100%; margin: 6px 0; font-weight: 600;">
-                        <textarea name="options_pembiayaan_step_2_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $step_2_desc ); ?></textarea>
-                    </div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
-                        <strong>Langkah 3</strong>
-                        <input type="text" name="options_pembiayaan_step_3_title" value="<?php echo esc_attr( $step_3_title ); ?>" style="width: 100%; margin: 6px 0; font-weight: 600;">
-                        <textarea name="options_pembiayaan_step_3_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $step_3_desc ); ?></textarea>
-                    </div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
-                        <strong>Langkah 4</strong>
-                        <input type="text" name="options_pembiayaan_step_4_title" value="<?php echo esc_attr( $step_4_title ); ?>" style="width: 100%; margin: 6px 0; font-weight: 600;">
-                        <textarea name="options_pembiayaan_step_4_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $step_4_desc ); ?></textarea>
-                    </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px;">
+                    <?php 
+                    $steps_meta = [
+                        1 => [ 'title' => $step_1_title, 'tag' => $step_1_tag, 'icon' => $step_1_icon, 'color' => $step_1_color, 'desc' => $step_1_desc ],
+                        2 => [ 'title' => $step_2_title, 'tag' => $step_2_tag, 'icon' => $step_2_icon, 'color' => $step_2_color, 'desc' => $step_2_desc ],
+                        3 => [ 'title' => $step_3_title, 'tag' => $step_3_tag, 'icon' => $step_3_icon, 'color' => $step_3_color, 'desc' => $step_3_desc ],
+                        4 => [ 'title' => $step_4_title, 'tag' => $step_4_tag, 'icon' => $step_4_icon, 'color' => $step_4_color, 'desc' => $step_4_desc ],
+                    ];
+                    foreach ( $steps_meta as $s_num => $s_val ) : 
+                    ?>
+                        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <strong style="font-size: 13px; color: #0f172a;">Kartu Langkah #<?php echo $s_num; ?></strong>
+                                    <span style="font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 99px; background: #e0f2fe; color: #0369a1;">Tahap <?php echo $s_num; ?></span>
+                                </div>
+
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Langkah</label>
+                                    <input type="text" name="options_pembiayaan_step_<?php echo $s_num; ?>_title" value="<?php echo esc_attr( $s_val['title'] ); ?>" style="width: 100%; font-weight: 600;" required>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Pilihan Ikon</label>
+                                        <select name="options_pembiayaan_step_<?php echo $s_num; ?>_icon" style="width: 100%;">
+                                            <?php foreach ( $step_icon_options as $ic_val => $ic_label ) : ?>
+                                                <option value="<?php echo esc_attr( $ic_val ); ?>" <?php selected( $s_val['icon'], $ic_val ); ?>>
+                                                    <?php echo esc_html( $ic_label ); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Warna Kartu</label>
+                                        <select name="options_pembiayaan_step_<?php echo $s_num; ?>_color" style="width: 100%;">
+                                            <?php foreach ( $step_color_options as $sc_val => $sc_label ) : ?>
+                                                <option value="<?php echo esc_attr( $sc_val ); ?>" <?php selected( $s_val['color'], $sc_val ); ?>>
+                                                    <?php echo esc_html( $sc_label ); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Uraian Penjelasan Langkah</label>
+                                    <textarea name="options_pembiayaan_step_<?php echo $s_num; ?>_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $s_val['desc'] ); ?></textarea>
+                                </div>
+
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Status Footer (Pill Tone 3)</label>
+                                    <input type="text" name="options_pembiayaan_step_<?php echo $s_num; ?>_tag" value="<?php echo esc_attr( $s_val['tag'] ); ?>" style="width: 100%;" placeholder="misal: Tahap <?php echo $s_num; ?>: Selesai Cepat">
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <!-- ========================================================
-                 BAGIAN 5: TANYA JAWAB (FAQ / QNA)
+                 BAGIAN 6: TANYA JAWAB (FAQ / QNA)
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #6366f1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #6366f1; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                    5. Tanya Jawab (FAQ / QnA Pembiayaan)
+                    6. Tanya Jawab (FAQ / QnA Pembiayaan)
                 </h2>
                 <table class="form-table" style="margin: 0 0 15px 0;">
                     <tr>
@@ -1043,11 +1251,11 @@ function wakalumi_render_pembiayaan_admin_page() {
             </div>
 
             <!-- ========================================================
-                 BAGIAN 6: BOX BROSUR LENGKAP PEMBIAYAAN (SIDEBAR FAQ)
+                 BAGIAN 7: BOX BROSUR LENGKAP & RELATIONSHIP MANAGER (SIDEBAR FAQ)
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #0d9488; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #0d9488; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                    6. Box Brosur Lengkap Pembiayaan (Sidebar FAQ)
+                    7. Box Brosur Lengkap Pembiayaan (Sidebar FAQ)
                 </h2>
                 <table class="form-table" style="margin: 0;">
                     <tr>
@@ -1073,7 +1281,7 @@ function wakalumi_render_pembiayaan_admin_page() {
             </div>
 
             <!-- ========================================================
-                 BAGIAN 7: BOX KONSULTASI RELATIONSHIP MANAGER (SIDEBAR FAQ)
+                 BAGIAN 7b: BOX KONSULTASI RELATIONSHIP MANAGER (SIDEBAR FAQ)
                  ======================================================== -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-left: 5px solid #4f46e5; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #4f46e5; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">

@@ -33,10 +33,22 @@ function wakalumi_render_about_admin_page() {
 
     // ── PROSES SIMPAN DATA ──────────────────────────────────────────
     if ( isset( $_POST['wakalumi_save_about'] ) && check_admin_referer( 'wakalumi_about_nonce' ) ) {
-        // 1. Header Banner
+        // 1. Header Banner & Hero Card
         update_option( 'options_about_page_badge', sanitize_text_field( $_POST['options_about_page_badge'] ?? '' ) );
         update_option( 'options_about_page_title', sanitize_text_field( $_POST['options_about_page_title'] ?? '' ) );
         update_option( 'options_about_page_subtitle', sanitize_textarea_field( $_POST['options_about_page_subtitle'] ?? '' ) );
+
+        update_option( 'options_about_page_hero_pill_1', sanitize_text_field( $_POST['options_about_page_hero_pill_1'] ?? '' ) );
+        update_option( 'options_about_page_hero_pill_2', sanitize_text_field( $_POST['options_about_page_hero_pill_2'] ?? '' ) );
+        update_option( 'options_about_page_hero_pill_3', sanitize_text_field( $_POST['options_about_page_hero_pill_3'] ?? '' ) );
+
+        update_option( 'options_about_page_hero_card_show', isset( $_POST['options_about_page_hero_card_show'] ) ? '1' : '0' );
+        update_option( 'options_about_page_hero_card_logo', esc_url_raw( $_POST['options_about_page_hero_card_logo'] ?? '' ) );
+        update_option( 'options_about_page_hero_card_badge', sanitize_text_field( $_POST['options_about_page_hero_card_badge'] ?? '' ) );
+        update_option( 'options_about_page_hero_card_title', sanitize_text_field( $_POST['options_about_page_hero_card_title'] ?? '' ) );
+        update_option( 'options_about_page_hero_card_desc', sanitize_textarea_field( $_POST['options_about_page_hero_card_desc'] ?? '' ) );
+        update_option( 'options_about_page_hero_card_tag1', sanitize_text_field( $_POST['options_about_page_hero_card_tag1'] ?? '' ) );
+        update_option( 'options_about_page_hero_card_tag2', sanitize_text_field( $_POST['options_about_page_hero_card_tag2'] ?? '' ) );
 
         // 2. Sekilas Perusahaan & Sejarah
         update_option( 'options_about_page_sec_badge', sanitize_text_field( $_POST['options_about_page_sec_badge'] ?? '' ) );
@@ -44,6 +56,14 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_narrative_1', wp_kses_post( $_POST['options_about_page_narrative_1'] ?? '' ) );
         update_option( 'options_about_page_narrative_2', wp_kses_post( $_POST['options_about_page_narrative_2'] ?? '' ) );
         update_option( 'options_about_page_image', esc_url_raw( $_POST['options_about_page_image'] ?? '' ) );
+        update_option( 'options_about_page_photo_label', sanitize_text_field( $_POST['options_about_page_photo_label'] ?? '' ) );
+        update_option( 'options_about_page_photo_title', sanitize_text_field( $_POST['options_about_page_photo_title'] ?? '' ) );
+        update_option( 'options_about_page_floating_title', sanitize_text_field( $_POST['options_about_page_floating_title'] ?? '' ) );
+        update_option( 'options_about_page_floating_desc', sanitize_text_field( $_POST['options_about_page_floating_desc'] ?? '' ) );
+        update_option( 'options_about_page_sec_btn1_text', sanitize_text_field( $_POST['options_about_page_sec_btn1_text'] ?? '' ) );
+        update_option( 'options_about_page_sec_btn1_url', esc_url_raw( $_POST['options_about_page_sec_btn1_url'] ?? '' ) );
+        update_option( 'options_about_page_sec_btn2_text', sanitize_text_field( $_POST['options_about_page_sec_btn2_text'] ?? '' ) );
+        update_option( 'options_about_page_sec_btn2_url', esc_url_raw( $_POST['options_about_page_sec_btn2_url'] ?? '' ) );
 
         // 4 Statistik
         for ( $s = 1; $s <= 4; $s++ ) {
@@ -51,7 +71,12 @@ function wakalumi_render_about_admin_page() {
             update_option( "options_about_page_stat_{$s}_lbl", sanitize_text_field( $_POST["options_about_page_stat_{$s}_lbl"] ?? '' ) );
         }
 
-        // 3. Visi
+        // 3. Visi & Misi Strategis
+        update_option( 'options_about_page_vm_badge', sanitize_text_field( $_POST['options_about_page_vm_badge'] ?? '' ) );
+        update_option( 'options_about_page_vm_title', sanitize_text_field( $_POST['options_about_page_vm_title'] ?? '' ) );
+        update_option( 'options_about_page_vm_subtitle', sanitize_textarea_field( $_POST['options_about_page_vm_subtitle'] ?? '' ) );
+        update_option( 'options_about_page_missions_heading', sanitize_text_field( $_POST['options_about_page_missions_heading'] ?? '' ) );
+
         update_option( 'options_about_page_vision_badge', sanitize_text_field( $_POST['options_about_page_vision_badge'] ?? '' ) );
         update_option( 'options_about_page_vision_title', sanitize_textarea_field( $_POST['options_about_page_vision_title'] ?? '' ) );
         update_option( 'options_about_page_vision_desc', sanitize_textarea_field( $_POST['options_about_page_vision_desc'] ?? '' ) );
@@ -70,7 +95,14 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_missions', $clean_missions );
 
         // Jati Diri & ISHLAH
+        update_option( 'options_about_page_identity_badge', sanitize_text_field( $_POST['options_about_page_identity_badge'] ?? '' ) );
+        update_option( 'options_about_page_identity_tag', sanitize_text_field( $_POST['options_about_page_identity_tag'] ?? '' ) );
+        update_option( 'options_about_page_identity_title', sanitize_text_field( $_POST['options_about_page_identity_title'] ?? '' ) );
         update_option( 'options_about_page_identity', sanitize_textarea_field( $_POST['options_about_page_identity'] ?? '' ) );
+
+        update_option( 'options_about_page_belief_badge', sanitize_text_field( $_POST['options_about_page_belief_badge'] ?? '' ) );
+        update_option( 'options_about_page_belief_tag', sanitize_text_field( $_POST['options_about_page_belief_tag'] ?? '' ) );
+        update_option( 'options_about_page_belief_title', sanitize_text_field( $_POST['options_about_page_belief_title'] ?? '' ) );
         update_option( 'options_about_page_belief', sanitize_textarea_field( $_POST['options_about_page_belief'] ?? '' ) );
 
         // 4. Nilai Budaya (Core Values)
@@ -78,6 +110,13 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_values_title', sanitize_text_field( $_POST['options_about_page_values_title'] ?? '' ) );
         update_option( 'options_about_page_values_desc', wp_kses_post( $_POST['options_about_page_values_desc'] ?? '' ) );
         update_option( 'options_about_page_values_tag', sanitize_text_field( $_POST['options_about_page_values_tag'] ?? '' ) );
+
+        // Corporate Culture Visual Logo (Light & Dark Mode)
+        update_option( 'options_about_page_culture_img_show', isset( $_POST['options_about_page_culture_img_show'] ) ? '1' : '0' );
+        update_option( 'options_about_page_culture_img_light', esc_url_raw( $_POST['options_about_page_culture_img_light'] ?? '' ) );
+        update_option( 'options_about_page_culture_img_dark', esc_url_raw( $_POST['options_about_page_culture_img_dark'] ?? '' ) );
+        update_option( 'options_about_page_culture_caption', sanitize_text_field( $_POST['options_about_page_culture_caption'] ?? '' ) );
+        update_option( 'options_about_page_culture_subcaption', sanitize_textarea_field( $_POST['options_about_page_culture_subcaption'] ?? '' ) );
 
         // Nilai Budaya Repeater
         $raw_v_acronym = $_POST['about_val_acronym'] ?? [];
@@ -95,6 +134,10 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_values', $clean_values );
 
         // 5. Makna Logo
+        update_option( 'options_about_page_logo_sec_badge', sanitize_text_field( $_POST['options_about_page_logo_sec_badge'] ?? '' ) );
+        update_option( 'options_about_page_logo_sec_title', sanitize_text_field( $_POST['options_about_page_logo_sec_title'] ?? '' ) );
+        update_option( 'options_about_page_logo_preview_badge', sanitize_text_field( $_POST['options_about_page_logo_preview_badge'] ?? '' ) );
+        update_option( 'options_about_page_logo_preview_title', sanitize_text_field( $_POST['options_about_page_logo_preview_title'] ?? '' ) );
         update_option( 'options_about_page_logo_img', esc_url_raw( $_POST['options_about_page_logo_img'] ?? '' ) );
         update_option( 'options_about_page_logo_desc', sanitize_textarea_field( $_POST['options_about_page_logo_desc'] ?? '' ) );
         for ( $lp = 1; $lp <= 3; $lp++ ) {
@@ -151,11 +194,34 @@ function wakalumi_render_about_admin_page() {
     $page_title     = get_option( 'options_about_page_title', 'Mengenal Lebih Dekat BPRS Wakalumi' );
     $page_subtitle  = get_option( 'options_about_page_subtitle', 'Membangun kualitas hidup berkah sesuai Syariah — Lembaga keuangan syariah yang fokus pada jasa keuangan dan pemberdayaan ekonomi umat serta UMKM.' );
 
+    $hero_pill_1     = get_option( 'options_about_page_hero_pill_1', 'Melayani Sejak 1990' );
+    $hero_pill_2     = get_option( 'options_about_page_hero_pill_2', 'Budaya Kerja SAPA & Prinsip Syariah' );
+    $hero_pill_3     = get_option( 'options_about_page_hero_pill_3', 'Berizin OJK & Dijamin LPS' );
+
+    $hero_card_show  = get_option( 'options_about_page_hero_card_show', '1' );
+    $hero_card_logo  = get_option( 'options_about_page_hero_card_logo', get_template_directory_uri() . '/assets/img/untitled3.png' );
+    if ( empty( $hero_card_logo ) ) {
+        $hero_card_logo = get_template_directory_uri() . '/assets/img/untitled3.png';
+    }
+    $hero_card_badge = get_option( 'options_about_page_hero_card_badge', 'Identitas Korporasi Resmi' );
+    $hero_card_title = get_option( 'options_about_page_hero_card_title', 'Bank Syariah Wakalumi' );
+    $hero_card_desc  = get_option( 'options_about_page_hero_card_desc', 'Berkhidmat sejak tahun 1990 menghadirkan layanan perbankan syariah yang amanah, profesional, dan memberdayakan ekonomi umat.' );
+    $hero_card_tag1  = get_option( 'options_about_page_hero_card_tag1', 'Diawasi OJK' );
+    $hero_card_tag2  = get_option( 'options_about_page_hero_card_tag2', 'Dijamin LPS' );
+
     $sec_badge      = get_option( 'options_about_page_sec_badge', 'Sekilas Perusahaan' );
     $sec_title      = get_option( 'options_about_page_sec_title', 'Tumbuh Bersama Umat, Melayani Sepenuh Hati' );
     $narrative_1    = get_option( 'options_about_page_narrative_1', 'PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) berdasarkan Akta Notaris Ny. Siti Pertiwi Henny Shidki, SH Nomor 59 tanggal 7 Oktober 1989 dan mendapatkan pengesahan Menteri Kehakiman RI tanggal 13 Januari 1990. BPRS Wakalumi memulai aktivitas operasi perbankan pada tanggal 1 Mei 1992, dan resmi dikonversi menjadi Bank Pembiayaan Rakyat Syariah pada tahun 1995 berlandaskan UU Nomor 7 Tahun 1992.' );
     $narrative_2    = get_option( 'options_about_page_narrative_2', 'BPRS Wakalumi senantiasa berpegang teguh pada komitmen ISHLAH—terus melakukan perbaikan berkelanjutan demi kemaslahatan bersama. Kami menghimpun dana dari masyarakat dalam bentuk deposito berjangka dan tabungan syariah, memberikan pembiayaan bagi pengusaha kecil, mikro, maupun masyarakat umum, serta aktif memfasilitasi literasi ekonomi syariah dan pembinaan Bank Mini di sekolah-sekolah.' );
     $about_img      = get_option( 'options_about_page_image', get_template_directory_uri() . '/assets/img/about-photo.jpg' );
+    $photo_label    = get_option( 'options_about_page_photo_label', 'Kantor Pusat' );
+    $photo_title    = get_option( 'options_about_page_photo_title', 'Bank Syariah Wakalumi Ciputat, Tangerang Selatan' );
+    $floating_title = get_option( 'options_about_page_floating_title', 'Amanah' );
+    $floating_desc  = get_option( 'options_about_page_floating_desc', 'Berpengalaman & Terpercaya' );
+    $sec_btn1_text  = get_option( 'options_about_page_sec_btn1_text', 'Lihat Legalitas Perusahaan' );
+    $sec_btn1_url   = get_option( 'options_about_page_sec_btn1_url', home_url( '/profil/legalitas' ) );
+    $sec_btn2_text  = get_option( 'options_about_page_sec_btn2_text', 'Susunan Pengurus' );
+    $sec_btn2_url   = get_option( 'options_about_page_sec_btn2_url', home_url( '/profil/susunan-pengurus' ) );
 
     $stat_1_val     = get_option( 'options_about_page_stat_1_val', '35+' );
     $stat_1_lbl     = get_option( 'options_about_page_stat_1_lbl', 'Tahun Pengalaman (1989)' );
@@ -165,6 +231,11 @@ function wakalumi_render_about_admin_page() {
     $stat_3_lbl     = get_option( 'options_about_page_stat_3_lbl', 'Prinsip Murni Syariah' );
     $stat_4_val     = get_option( 'options_about_page_stat_4_val', 'Rp2 Miliar' );
     $stat_4_lbl     = get_option( 'options_about_page_stat_4_lbl', 'Dijamin LPS per Nasabah' );
+
+    $vm_badge           = get_option( 'options_about_page_vm_badge', 'Arah & Tujuan Strategis' );
+    $vm_title           = get_option( 'options_about_page_vm_title', 'Visi & Misi BSW' );
+    $vm_subtitle        = get_option( 'options_about_page_vm_subtitle', 'Landasan cita-cita luhur dan aksi nyata kami dalam melayani serta menggerakkan roda perekonomian masyarakat secara syariah.' );
+    $missions_heading   = get_option( 'options_about_page_missions_heading', 'Butir-Butir Misi Strategis:' );
 
     $vision_badge   = get_option( 'options_about_page_vision_badge', 'Visi Perusahaan' );
     $vision_title   = get_option( 'options_about_page_vision_title', 'Menjadi BPR Syariah yang sehat, besar dan bermanfaat bagi umat' );
@@ -181,13 +252,26 @@ function wakalumi_render_about_admin_page() {
         ];
     }
 
+    $identity_badge = get_option( 'options_about_page_identity_badge', 'Jati Diri Lembaga' );
+    $identity_tag   = get_option( 'options_about_page_identity_tag', 'Fokus Syariah' );
+    $identity_title = get_option( 'options_about_page_identity_title', 'Lembaga Keuangan Syariah Umat' );
     $identity_text  = get_option( 'options_about_page_identity', 'BPRS Wakalumi adalah Lembaga Keuangan Syariah yang memiliki fokus pada jasa keuangan dan pemberdayaan ekonomi umat dan masyarakat sesuai syariah.' );
+
+    $belief_badge   = get_option( 'options_about_page_belief_badge', 'Keyakinan Inti (Core Beliefs)' );
+    $belief_tag     = get_option( 'options_about_page_belief_tag', 'Nilai Abadi' );
+    $belief_title   = get_option( 'options_about_page_belief_title', 'Komitmen ISHLAH Berkelanjutan' );
     $belief_text    = get_option( 'options_about_page_belief', 'BPRS Wakalumi berkomitmen untuk selalu melakukan ISHLAH, yakni kami terus melakukan perbaikan berkelanjutan.' );
 
     $values_badge = get_option( 'options_about_page_values_badge', "Budaya Kerja 'SAPA'" );
     $values_title = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)' );
     $values_desc  = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya SAPA yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk hasil optimal dalam aktivitas kerja.' );
     $values_tag   = get_option( 'options_about_page_values_tag', 'Pilar Budaya SAPA' );
+
+    $culture_img_show   = get_option( 'options_about_page_culture_img_show', '1' );
+    $culture_img_light  = get_option( 'options_about_page_culture_img_light', '' );
+    $culture_img_dark   = get_option( 'options_about_page_culture_img_dark', '' );
+    $culture_caption    = get_option( 'options_about_page_culture_caption', 'Visualisasi Lambang & Budaya Perusahaan' );
+    $culture_subcaption = get_option( 'options_about_page_culture_subcaption', 'Identitas visual resmi perwujudan nilai SAPA (Skill, Action, Pray, Attitude) Bank Syariah Wakalumi' );
 
     $values = get_option( 'options_about_page_values', [] );
     if ( empty( $values ) ) {
@@ -199,8 +283,12 @@ function wakalumi_render_about_admin_page() {
         ];
     }
 
-    $logo_img       = get_option( 'options_about_page_logo_img', get_template_directory_uri() . '/assets/img/logo-new-1.png' );
-    $logo_desc      = get_option( 'options_about_page_logo_desc', 'Logo BPRS Wakalumi merefleksikan identitas perbankan syariah yang dinamis, bersih, dan berakar pada nilai-nilai keislaman universal.' );
+    $logo_sec_badge     = get_option( 'options_about_page_logo_sec_badge', 'Identitas & Filosofi Brand' );
+    $logo_sec_title     = get_option( 'options_about_page_logo_sec_title', 'Makna di Balik Lambang BSW' );
+    $logo_preview_badge = get_option( 'options_about_page_logo_preview_badge', 'Identitas Visual Resmi' );
+    $logo_preview_title = get_option( 'options_about_page_logo_preview_title', 'Bank Syariah Wakalumi (BSW)' );
+    $logo_img           = get_option( 'options_about_page_logo_img', get_template_directory_uri() . '/assets/img/logo-new-1.png' );
+    $logo_desc          = get_option( 'options_about_page_logo_desc', 'Logo BPRS Wakalumi merefleksikan identitas perbankan syariah yang dinamis, bersih, dan berakar pada nilai-nilai keislaman universal.' );
 
     $logo_p1_title  = get_option( 'options_about_page_logo_p1_title', 'Bentuk Gelombang & Aliran Berkah' );
     $logo_p1_desc   = get_option( 'options_about_page_logo_p1_desc', 'Melambangkan kelancaran aliran rezeki, fleksibilitas dalam melayani, serta kesegaran solusi finansial yang menyejukkan perekonomian umat.' );
@@ -288,6 +376,94 @@ function wakalumi_render_about_admin_page() {
                         </td>
                     </tr>
                 </table>
+
+                <!-- 1B. 3 Pills Sorotan Hero -->
+                <h3 style="font-size: 14px; margin: 25px 0 12px 0; padding-top: 15px; border-top: 1px dashed #e2e8f0; color: #1e293b; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <span class="dashicons dashicons-tag"></span> 1B. 3 Pills Sorotan Hero (Kolom Kiri)
+                </h3>
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 12px;">3 badge/pill ringkas yang tampil di bawah teks pengantar hero (kosongkan jika tidak ingin ditampilkan).</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #088395; text-transform: uppercase; margin-bottom: 6px;">Pill Sorotan #1</label>
+                        <input type="text" name="options_about_page_hero_pill_1" value="<?php echo esc_attr( $hero_pill_1 ); ?>" placeholder="Contoh: Melayani Sejak 1990" style="width: 100%;">
+                    </div>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #088395; text-transform: uppercase; margin-bottom: 6px;">Pill Sorotan #2</label>
+                        <input type="text" name="options_about_page_hero_pill_2" value="<?php echo esc_attr( $hero_pill_2 ); ?>" placeholder="Contoh: Budaya Kerja SAPA & Prinsip Syariah" style="width: 100%;">
+                    </div>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #088395; text-transform: uppercase; margin-bottom: 6px;">Pill Sorotan #3</label>
+                        <input type="text" name="options_about_page_hero_pill_3" value="<?php echo esc_attr( $hero_pill_3 ); ?>" placeholder="Contoh: Berizin OJK & Dijamin LPS" style="width: 100%;">
+                    </div>
+                </div>
+
+                <!-- 1C. Kartu Identitas Korporasi Hero (Kolom Kanan) -->
+                <div style="margin-top: 25px; padding-top: 18px; border-top: 1px dashed #e2e8f0;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="font-size: 14px; margin: 0; color: #1e293b; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <span class="dashicons dashicons-id-alt"></span> 1C. Kartu Identitas Korporasi Hero (Kolom Kanan)
+                        </h3>
+                        <label style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; color: #1e293b; background: #f0fdf4; border: 1px solid #86efac; padding: 4px 10px; border-radius: 6px;">
+                            <input type="checkbox" name="options_about_page_hero_card_show" value="1" <?php checked( $hero_card_show, '1' ); ?>> Aktifkan Kartu di Hero
+                        </label>
+                    </div>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">Kelola logo, judul, uraian singkat korporat, dan badge regulasi yang tampil pada kartu sorotan (spotlight card) di sebelah kanan hero section.</p>
+
+                    <table class="form-table" role="presentation" style="margin-top: 0;">
+                        <tr>
+                            <th scope="row"><label>Logo / Lambang Kartu</label></th>
+                            <td>
+                                <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div style="width: 70px; height: 70px; border-radius: 12px; border: 1px solid #e2e8f0; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                        <img id="hero_card_logo_preview" src="<?php echo esc_url( $hero_card_logo ); ?>" style="max-width: 100%; max-height: 100%; object-fit: contain; <?php echo empty( $hero_card_logo ) ? 'display:none;' : ''; ?>" />
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <button type="button" class="button wkl-upload-btn" data-target="options_about_page_hero_card_logo" data-preview="hero_card_logo_preview" style="display: inline-flex; align-items: center; gap: 5px;">
+                                            <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah / Pilih Logo
+                                        </button>
+                                        <button type="button" class="button-link wkl-remove-btn" data-target="options_about_page_hero_card_logo" data-preview="hero_card_logo_preview" style="color: #ef4444; font-size: 12px; <?php echo empty( $hero_card_logo ) ? 'display:none;' : ''; ?>">
+                                            ✕ Reset Logo
+                                        </button>
+                                    </div>
+                                    <input type="text" id="options_about_page_hero_card_logo" name="options_about_page_hero_card_logo" value="<?php echo esc_attr( $hero_card_logo ); ?>" class="regular-text" placeholder="...atau tempel URL logo" style="flex: 1; min-width: 220px;">
+                                </div>
+                                <p class="description" style="margin-top: 6px;">Rekomendasi: Logo format PNG transparan atau WebP (persegi/square), resolusi sekitar 200×200 px.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="options_about_page_hero_card_badge">Badge Header Kartu</label></th>
+                            <td>
+                                <input type="text" id="options_about_page_hero_card_badge" name="options_about_page_hero_card_badge" value="<?php echo esc_attr( $hero_card_badge ); ?>" class="regular-text" placeholder="Contoh: Identitas Korporasi Resmi">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="options_about_page_hero_card_title">Nama Perusahaan / Judul Kartu</label></th>
+                            <td>
+                                <input type="text" id="options_about_page_hero_card_title" name="options_about_page_hero_card_title" value="<?php echo esc_attr( $hero_card_title ); ?>" class="large-text" style="font-weight: 600;" placeholder="Contoh: Bank Syariah Wakalumi">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="options_about_page_hero_card_desc">Deskripsi Singkat Kartu</label></th>
+                            <td>
+                                <textarea id="options_about_page_hero_card_desc" name="options_about_page_hero_card_desc" rows="3" class="large-text" placeholder="Tuliskan komitmen atau profil singkat bank di sini..."><?php echo esc_textarea( $hero_card_desc ); ?></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Tag Regulasi Bawah Kartu</th>
+                            <td>
+                                <div style="display: flex; gap: 10px; max-width: 600px;">
+                                    <div style="flex: 1;">
+                                        <input type="text" name="options_about_page_hero_card_tag1" value="<?php echo esc_attr( $hero_card_tag1 ); ?>" class="regular-text" style="width: 100%;" placeholder="Tag 1 (contoh: Diawasi OJK)">
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <input type="text" name="options_about_page_hero_card_tag2" value="<?php echo esc_attr( $hero_card_tag2 ); ?>" class="regular-text" style="width: 100%;" placeholder="Tag 2 (contoh: Dijamin LPS)">
+                                    </div>
+                                </div>
+                                <p class="description" style="margin-top: 6px;">Tag verifikasi legalitas resmi yang tampil di baris paling bawah kartu hero.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
             <!-- ── SECTION 2: SEKILAS PERUSAHAAN & SEJARAH ────────── -->
@@ -340,6 +516,48 @@ function wakalumi_render_about_admin_page() {
                             <p class="description" style="margin-top: 6px;">Rekomendasi: Format JPG/WebP landscape, resolusi minimal 1200×800 px.</p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">Label &amp; Keterangan Foto</th>
+                        <td>
+                            <div style="display: flex; gap: 10px; max-width: 650px; margin-bottom: 6px;">
+                                <div style="flex: 1;">
+                                    <input type="text" name="options_about_page_photo_label" value="<?php echo esc_attr( $photo_label ); ?>" class="regular-text" style="width: 100%;" placeholder="Label Foto (misal: Kantor Pusat)">
+                                </div>
+                                <div style="flex: 2;">
+                                    <input type="text" name="options_about_page_photo_title" value="<?php echo esc_attr( $photo_title ); ?>" class="regular-text" style="width: 100%;" placeholder="Keterangan (misal: Bank Syariah Wakalumi Ciputat, Tangerang Selatan)">
+                                </div>
+                            </div>
+                            <p class="description">Teks keterangan lokasi yang melayang di pojok bawah foto kantor.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Floating Badge (Pojok Kanan Atas Foto)</th>
+                        <td>
+                            <div style="display: flex; gap: 10px; max-width: 650px; margin-bottom: 6px;">
+                                <div style="flex: 1;">
+                                    <input type="text" name="options_about_page_floating_title" value="<?php echo esc_attr( $floating_title ); ?>" class="regular-text" style="width: 100%;" placeholder="Judul Badge (misal: Amanah)">
+                                </div>
+                                <div style="flex: 2;">
+                                    <input type="text" name="options_about_page_floating_desc" value="<?php echo esc_attr( $floating_desc ); ?>" class="regular-text" style="width: 100%;" placeholder="Sub-teks (misal: Berpengalaman &amp; Terpercaya)">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Tombol Aksi Bawah Narasi</th>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 8px; max-width: 650px;">
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" name="options_about_page_sec_btn1_text" value="<?php echo esc_attr( $sec_btn1_text ); ?>" class="regular-text" style="flex: 1;" placeholder="Teks Tombol 1 (misal: Lihat Legalitas Perusahaan)">
+                                    <input type="text" name="options_about_page_sec_btn1_url" value="<?php echo esc_attr( $sec_btn1_url ); ?>" class="regular-text" style="flex: 1;" placeholder="URL Tombol 1">
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" name="options_about_page_sec_btn2_text" value="<?php echo esc_attr( $sec_btn2_text ); ?>" class="regular-text" style="flex: 1;" placeholder="Teks Tombol 2 (misal: Susunan Pengurus)">
+                                    <input type="text" name="options_about_page_sec_btn2_url" value="<?php echo esc_attr( $sec_btn2_url ); ?>" class="regular-text" style="flex: 1;" placeholder="URL Tombol 2">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
 
                 <h3 style="font-size: 14px; margin: 25px 0 12px 0; padding-bottom: 6px; border-bottom: 1px dashed #e2e8f0; color: #334155;">
@@ -365,7 +583,29 @@ function wakalumi_render_about_admin_page() {
                     <span class="dashicons dashicons-star-filled"></span> 3. Visi & Misi Strategis Perusahaan
                 </h2>
                 
-                <h3 style="font-size: 14px; margin: 0 0 10px 0; color: #0f172a;">✨ Visi Utama</h3>
+                <h3 style="font-size: 14px; margin: 0 0 10px 0; color: #0f172a;">✨ Header Seksi Visi &amp; Misi</h3>
+                <table class="form-table" role="presentation" style="margin-top: 0; margin-bottom: 20px;">
+                    <tr>
+                        <th scope="row" style="width: 180px;"><label for="options_about_page_vm_badge">Badge Header Seksi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_vm_badge" name="options_about_page_vm_badge" value="<?php echo esc_attr( $vm_badge ); ?>" class="regular-text" placeholder="Arah &amp; Tujuan Strategis">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_vm_title">Judul Header Seksi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_vm_title" name="options_about_page_vm_title" value="<?php echo esc_attr( $vm_title ); ?>" class="large-text" placeholder="Visi &amp; Misi BSW">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_vm_subtitle">Sub-Judul / Pengantar</label></th>
+                        <td>
+                            <textarea id="options_about_page_vm_subtitle" name="options_about_page_vm_subtitle" rows="2" class="large-text" placeholder="Landasan cita-cita luhur dan aksi nyata kami..."><?php echo esc_textarea( $vm_subtitle ); ?></textarea>
+                        </td>
+                    </tr>
+                </table>
+
+                <h3 style="font-size: 14px; margin: 20px 0 10px 0; padding-top: 15px; border-top: 1px dashed #e2e8f0; color: #0f172a;">✨ Visi Utama</h3>
                 <table class="form-table" role="presentation" style="margin-top: 0; margin-bottom: 20px;">
                     <tr>
                         <th scope="row" style="width: 180px;"><label for="options_about_page_vision_badge">Label Visi</label></th>
@@ -390,6 +630,14 @@ function wakalumi_render_about_admin_page() {
                 <h3 style="font-size: 14px; margin: 20px 0 10px 0; padding-top: 15px; border-top: 1px dashed #e2e8f0; color: #0f172a;">
                     🎯 Butir-Butir Misi (Tabel Dinamis)
                 </h3>
+                <table class="form-table" role="presentation" style="margin-top: 0; margin-bottom: 10px;">
+                    <tr>
+                        <th scope="row" style="width: 180px;"><label for="options_about_page_missions_heading">Judul Daftar Misi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_missions_heading" name="options_about_page_missions_heading" value="<?php echo esc_attr( $missions_heading ); ?>" class="large-text" placeholder="Butir-Butir Misi Strategis:">
+                        </td>
+                    </tr>
+                </table>
                 <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 12px;">Anda dapat menambah atau mengurangi butir misi sesuai arah strategis bank.</p>
                 
                 <table class="widefat fixed striped" style="border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
@@ -420,23 +668,56 @@ function wakalumi_render_about_admin_page() {
                     <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> + Tambah Butir Misi
                 </button>
 
-                <h3 style="font-size: 14px; margin: 25px 0 10px 0; color: #0f172a; font-weight: 700;">Jati Diri & Keyakinan Inti (Core Beliefs)</h3>
-                <table class="form-table" role="presentation">
-                    <tr>
-                        <th scope="row"><label for="options_about_page_identity">Jati Diri Perusahaan</label></th>
-                        <td>
-                            <textarea id="options_about_page_identity" name="options_about_page_identity" rows="2" class="large-text"><?php echo esc_textarea( $identity_text ); ?></textarea>
-                            <p class="description">Contoh: BPRS Wakalumi adalah Lembaga Keuangan Syariah yang memiliki fokus pada jasa keuangan dan pemberdayaan ekonomi umat...</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_about_page_belief">Keyakinan Inti (ISHLAH)</label></th>
-                        <td>
-                            <textarea id="options_about_page_belief" name="options_about_page_belief" rows="2" class="large-text"><?php echo esc_textarea( $belief_text ); ?></textarea>
-                            <p class="description">Komitmen perbaikan terus-menerus (ISHLAH) insan BPRS Wakalumi.</p>
-                        </td>
-                    </tr>
-                </table>
+                <h3 style="font-size: 14px; margin: 25px 0 10px 0; color: #0f172a; font-weight: 700; border-top: 1px dashed #e2e8f0; padding-top: 15px;">
+                    Jati Diri &amp; Keyakinan Inti (Core Beliefs)
+                </h3>
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">Kelola label, tag, judul utama, dan narasi untuk 2 kartu fondasi korporasi di bagian bawah seksi visi-misi.</p>
+
+                <!-- Jati Diri Card -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 13px; color: #088395; font-weight: 700;">Kartu 1: Jati Diri Lembaga</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Label Kicker</label>
+                            <input type="text" name="options_about_page_identity_badge" value="<?php echo esc_attr( $identity_badge ); ?>" class="regular-text" style="width: 100%;" placeholder="Jati Diri Lembaga">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Pill Tag Kanan</label>
+                            <input type="text" name="options_about_page_identity_tag" value="<?php echo esc_attr( $identity_tag ); ?>" class="regular-text" style="width: 100%;" placeholder="Fokus Syariah">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Judul Kartu</label>
+                        <input type="text" name="options_about_page_identity_title" value="<?php echo esc_attr( $identity_title ); ?>" class="large-text" style="width: 100%; font-weight: 600;" placeholder="Lembaga Keuangan Syariah Umat">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Uraian Narasi Jati Diri</label>
+                        <textarea id="options_about_page_identity" name="options_about_page_identity" rows="2" class="large-text" style="width: 100%;"><?php echo esc_textarea( $identity_text ); ?></textarea>
+                    </div>
+                </div>
+
+                <!-- Keyakinan Inti Card (ISHLAH) -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 13px; color: #088395; font-weight: 700;">Kartu 2: Keyakinan Inti (ISHLAH)</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Label Kicker</label>
+                            <input type="text" name="options_about_page_belief_badge" value="<?php echo esc_attr( $belief_badge ); ?>" class="regular-text" style="width: 100%;" placeholder="Keyakinan Inti (Core Beliefs)">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Pill Tag Kanan</label>
+                            <input type="text" name="options_about_page_belief_tag" value="<?php echo esc_attr( $belief_tag ); ?>" class="regular-text" style="width: 100%;" placeholder="Nilai Abadi">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Judul Kartu</label>
+                        <input type="text" name="options_about_page_belief_title" value="<?php echo esc_attr( $belief_title ); ?>" class="large-text" style="width: 100%; font-weight: 600;" placeholder="Komitmen ISHLAH Berkelanjutan">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #475569;">Uraian Narasi Komitmen ISHLAH</label>
+                        <textarea id="options_about_page_belief" name="options_about_page_belief" rows="2" class="large-text" style="width: 100%;"><?php echo esc_textarea( $belief_text ); ?></textarea>
+                    </div>
+                </div>
             </div>
 
             <!-- ── SECTION 4: NILAI BUDAYA PERUSAHAAN (SAPA) ── -->
@@ -514,6 +795,75 @@ function wakalumi_render_about_admin_page() {
                 <button type="button" id="btn-add-value" class="button" style="display: inline-flex; align-items: center; gap: 5px;">
                     <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> + Tambah Nilai Budaya
                 </button>
+
+                <!-- 4B. Visual Lambang / Logo Budaya Kerja (Light & Dark Mode) -->
+                <div style="margin-top: 25px; padding-top: 18px; border-top: 1px dashed #cbd5e1;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="font-size: 14px; margin: 0; color: #1e293b; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <span class="dashicons dashicons-format-image"></span> 4B. Visual Lambang / Logo Budaya Kerja (Light &amp; Dark Mode)
+                        </h3>
+                        <label style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; color: #1e293b; background: #f0fdf4; border: 1px solid #86efac; padding: 4px 10px; border-radius: 6px;">
+                            <input type="checkbox" name="options_about_page_culture_img_show" value="1" <?php checked( $culture_img_show, '1' ); ?>> Aktifkan Visual Logo di Halaman
+                        </label>
+                    </div>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">
+                        Unggah gambar lambang / visual logo Corporate Culture yang akan tampil <strong>polos rata tengah di bawah kartu SAPA</strong> (tanpa bingkai card/hover, seperti watermark rapi). Tersedia opsi unggah terpisah untuk tampilan <strong>Mode Terang (Light Mode)</strong> dan <strong>Mode Gelap (Dark Mode)</strong>.
+                    </p>
+
+                    <table class="form-table" role="presentation" style="margin-top: 0;">
+                        <!-- Light Mode Upload -->
+                        <tr>
+                            <th scope="row"><label>Visual Versi Light Mode</label></th>
+                            <td>
+                                <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div style="width: 120px; height: 80px; border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                        <img id="culture_img_light_preview" src="<?php echo esc_url( $culture_img_light ); ?>" style="max-width: 100%; max-height: 100%; object-fit: contain; <?php echo empty( $culture_img_light ) ? 'display:none;' : ''; ?>" />
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <button type="button" class="button wkl-upload-btn" data-target="options_about_page_culture_img_light" data-preview="culture_img_light_preview" style="display: inline-flex; align-items: center; gap: 5px;">
+                                            <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah Gambar (Light Mode)
+                                        </button>
+                                        <button type="button" class="button-link wkl-remove-btn" data-target="options_about_page_culture_img_light" data-preview="culture_img_light_preview" style="color: #ef4444; font-size: 12px; <?php echo empty( $culture_img_light ) ? 'display:none;' : ''; ?>">
+                                            ✕ Hapus Gambar
+                                        </button>
+                                    </div>
+                                    <input type="text" id="options_about_page_culture_img_light" name="options_about_page_culture_img_light" value="<?php echo esc_attr( $culture_img_light ); ?>" class="regular-text" placeholder="...atau tempel URL gambar (Light Mode)" style="flex: 1; min-width: 220px;">
+                                </div>
+                                <p class="description" style="margin-top: 6px;">Rekomendasi: Format PNG transparan atau WebP, resolusi proporsional untuk background terang.</p>
+                            </td>
+                        </tr>
+
+                        <!-- Dark Mode Upload -->
+                        <tr>
+                            <th scope="row"><label>Visual Versi Dark Mode</label></th>
+                            <td>
+                                <div class="wkl-upload-wrap" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div style="width: 120px; height: 80px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; display: flex; align-items: center; justify-content: center; padding: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+                                        <img id="culture_img_dark_preview" src="<?php echo esc_url( $culture_img_dark ); ?>" style="max-width: 100%; max-height: 100%; object-fit: contain; <?php echo empty( $culture_img_dark ) ? 'display:none;' : ''; ?>" />
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <button type="button" class="button wkl-upload-btn" data-target="options_about_page_culture_img_dark" data-preview="culture_img_dark_preview" style="display: inline-flex; align-items: center; gap: 5px;">
+                                            <span class="dashicons dashicons-upload" style="font-size:16px; width:16px; height:16px;"></span> Unggah Gambar (Dark Mode)
+                                        </button>
+                                        <button type="button" class="button-link wkl-remove-btn" data-target="options_about_page_culture_img_dark" data-preview="culture_img_dark_preview" style="color: #ef4444; font-size: 12px; <?php echo empty( $culture_img_dark ) ? 'display:none;' : ''; ?>">
+                                            ✕ Hapus Gambar
+                                        </button>
+                                    </div>
+                                    <input type="text" id="options_about_page_culture_img_dark" name="options_about_page_culture_img_dark" value="<?php echo esc_attr( $culture_img_dark ); ?>" class="regular-text" placeholder="...atau tempel URL gambar (Dark Mode)" style="flex: 1; min-width: 220px;">
+                                </div>
+                                <p class="description" style="margin-top: 6px;">Rekomendasi: Format PNG transparan (dengan aksen terang/putih) untuk kontras optimal di background gelap.</p>
+                            </td>
+                        </tr>
+
+                        <!-- Alt Text / Label -->
+                        <tr>
+                            <th scope="row"><label for="options_about_page_culture_caption">Label Alt Gambar (Aksesibilitas &amp; SEO)</label></th>
+                            <td>
+                                <input type="text" id="options_about_page_culture_caption" name="options_about_page_culture_caption" value="<?php echo esc_attr( $culture_caption ); ?>" class="large-text" placeholder="Visualisasi Lambang &amp; Budaya Perusahaan SAPA">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
             <!-- ── SECTION 5: MAKNA & FILOSOFI LOGO ──────────────── -->
@@ -522,6 +872,27 @@ function wakalumi_render_about_admin_page() {
                     <span class="dashicons dashicons-art"></span> 5. Makna & Filosofi Logo Bank
                 </h2>
                 <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row"><label for="options_about_page_logo_sec_badge">Badge Header Seksi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_logo_sec_badge" name="options_about_page_logo_sec_badge" value="<?php echo esc_attr( $logo_sec_badge ); ?>" class="regular-text" placeholder="Identitas &amp; Filosofi Brand">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_about_page_logo_sec_title">Judul Header Seksi</label></th>
+                        <td>
+                            <input type="text" id="options_about_page_logo_sec_title" name="options_about_page_logo_sec_title" value="<?php echo esc_attr( $logo_sec_title ); ?>" class="large-text" placeholder="Makna di Balik Lambang BSW">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Pratinjau Visual Logo (Kolom Kiri)</th>
+                        <td>
+                            <div style="display: flex; gap: 10px; max-width: 650px; margin-bottom: 6px;">
+                                <input type="text" name="options_about_page_logo_preview_badge" value="<?php echo esc_attr( $logo_preview_badge ); ?>" class="regular-text" style="flex: 1;" placeholder="Label (misal: Identitas Visual Resmi)">
+                                <input type="text" name="options_about_page_logo_preview_title" value="<?php echo esc_attr( $logo_preview_title ); ?>" class="regular-text" style="flex: 1;" placeholder="Judul (misal: Bank Syariah Wakalumi (BSW))">
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row"><label>Gambar Logo</label></th>
                         <td>
@@ -782,9 +1153,11 @@ function wakalumi_render_about_admin_page() {
                         <th scope="row">Tampilkan Bagian</th>
                         <td>
                             <fieldset style="display: flex; flex-direction: column; gap: 10px;">
+                                <label><input type="checkbox" name="options_about_page_hero_card_show" value="1" <?php checked( $hero_card_show, '1' ); ?>> Kartu Identitas Korporasi di Hero Section (Kolom Kanan)</label>
                                 <label><input type="checkbox" name="options_about_page_show_stats" value="1" <?php checked( $show_stats, '1' ); ?>> 4 Kotak Indikator Statistik Pengalaman</label>
                                 <label><input type="checkbox" name="options_about_page_show_vision" value="1" <?php checked( $show_vision, '1' ); ?>> Seksi Visi & Misi Perusahaan</label>
                                 <label><input type="checkbox" name="options_about_page_show_values" value="1" <?php checked( $show_values, '1' ); ?>> Seksi Nilai-Nilai Budaya Perusahaan (Core Values)</label>
+                                <label><input type="checkbox" name="options_about_page_culture_img_show" value="1" <?php checked( $culture_img_show, '1' ); ?>> Visual Logo Budaya Kerja Perusahaan (Light &amp; Dark Mode)</label>
                                 <label><input type="checkbox" name="options_about_page_show_logo" value="1" <?php checked( $show_logo, '1' ); ?>> Seksi Makna & Filosofi Logo</label>
                                 <label><input type="checkbox" name="options_about_page_compro_show" value="1" <?php checked( $compro_show, '1' ); ?>> Seksi Company Profile Resmi (Unduh Dokumen PDF)</label>
                                 <label><input type="checkbox" name="options_about_page_show_cta" value="1" <?php checked( $show_cta, '1' ); ?>> Seksi Ajakan Bertindak (CTA Banner WhatsApp & Produk)</label>
@@ -805,6 +1178,49 @@ function wakalumi_render_about_admin_page() {
     <!-- SCRIPT REPEATER MISI & NILAI BUDAYA -->
     <script>
     jQuery(document).ready(function($) {
+        // Universal Upload Gambar (WordPress Media Library)
+        $(document).on('click', '.wkl-upload-btn', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetId = button.data('target');
+            var previewId = button.data('preview');
+            var wrap = button.closest('.wkl-upload-wrap');
+
+            var imageFrame = wp.media({
+                title: 'Pilih atau Unggah Gambar',
+                button: { text: 'Gunakan Gambar Ini' },
+                multiple: false,
+                library: { type: 'image' }
+            });
+
+            imageFrame.on('select', function() {
+                var attachment = imageFrame.state().get('selection').first().toJSON();
+                $('#' + targetId).val(attachment.url).trigger('change');
+                if (previewId && $('#' + previewId).length) {
+                    $('#' + previewId).attr('src', attachment.url).show();
+                }
+                if (wrap.length) {
+                    wrap.find('.wkl-remove-btn').show();
+                }
+            });
+
+            imageFrame.open();
+        });
+
+        // Universal Hapus Gambar
+        $(document).on('click', '.wkl-remove-btn', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetId = button.data('target');
+            var previewId = button.data('preview');
+
+            $('#' + targetId).val('').trigger('change');
+            if (previewId && $('#' + previewId).length) {
+                $('#' + previewId).attr('src', '').hide();
+            }
+            button.hide();
+        });
+
         // Hapus Baris Repeater
         $(document).on('click', '.wkl-del-row', function(e) {
             e.preventDefault();

@@ -131,9 +131,13 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
 
             // Brosur Dokumen Dinamis dari Database
-            $brosur_file_url  = get_option( 'options_brosur_file_url', '' );
-            $brosur_file_name = get_option( 'options_brosur_file_name', 'Brosur Resmi Bank Syariah Wakalumi (Edisi 2026).pdf' );
-            $brosur_file_size = get_option( 'options_brosur_file_size', 'PDF Resmi • Edisi Terkini' );
+            $brosur_file_url       = get_option( 'options_brosur_file_url', '' );
+            $brosur_file_name      = get_option( 'options_brosur_file_name', 'Brosur Resmi Bank Syariah Wakalumi (Edisi 2026).pdf' );
+            $brosur_file_size      = get_option( 'options_brosur_file_size', 'PDF Resmi • Edisi Terkini' );
+            $brosur_cover          = get_option( 'options_brosur_cover', '' );
+            $brosur_preview_badge  = get_option( 'options_brosur_featured_badge', 'Katalog Resmi' );
+            $brosur_preview_title  = 'Katalog Brosur Digital';
+            $brosur_preview_tagline= 'Edisi 2026 • Panduan Lengkap PDF';
             ?>
 
             <!-- Desktop Menu -->
@@ -393,20 +397,56 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                             <!-- Kolom 3: Brosur & Live Hover Preview (4 Cols) -->
                             <div class="col-span-12 lg:col-span-4 flex flex-col justify-between gap-3">
                                 <div>
-                                    <!-- Live Product Hover Preview Card (Tampil di atas brosur saat produk berfoto di-hover) -->
-                                    <div id="mega-preview-container" class="hidden opacity-0 scale-95 transition-all duration-300 ease-out mb-3">
-                                        <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 shadow-md border border-slate-200/90 dark:border-slate-700/80 group/mprev">
-                                            <img id="mega-preview-img" src="" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover/mprev:scale-105" loading="lazy">
-                                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
-                                            <div class="absolute top-2.5 right-2.5 z-10">
-                                                <span id="mega-preview-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-700/60 shadow-sm"></span>
+                                    <!-- Live Product Hover Preview Card (Fixed Aspect Ratio with Smooth Crossfade - No Layout Shift) -->
+                                    <a 
+                                        id="mega-preview-link" 
+                                        href="<?php echo esc_url( home_url( '/brosur/' ) ); ?>" 
+                                        class="block mb-3 group/mprev cursor-pointer transition-all duration-300"
+                                        data-default-href="<?php echo esc_url( home_url( '/brosur/' ) ); ?>"
+                                        data-default-badge="<?php echo esc_attr( $brosur_preview_badge ); ?>"
+                                        data-default-title="<?php echo esc_attr( $brosur_preview_title ); ?>"
+                                        data-default-tagline="<?php echo esc_attr( $brosur_preview_tagline ); ?>"
+                                        data-default-img="<?php echo esc_url( $brosur_cover ); ?>"
+                                    >
+                                        <div class="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 shadow-md border border-slate-200/90 dark:border-slate-700/80 transition-all duration-300 group-hover/mprev:shadow-lg group-hover/mprev:border-teal-400/60">
+                                            <!-- Fallback Vector Artwork (Shown when no image is uploaded or idle without photo) -->
+                                            <div id="mega-preview-vector" class="absolute inset-0 bg-gradient-to-br from-teal-900 via-slate-900 to-teal-950 transition-opacity duration-300 <?php echo ! empty( $brosur_cover ) ? 'opacity-0' : 'opacity-100'; ?>">
+                                                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                                <div class="absolute -right-4 -bottom-4 w-32 h-32 opacity-25 pointer-events-none transition-transform duration-500 group-hover/mprev:scale-105">
+                                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-200">
+                                                </div>
                                             </div>
+
+                                            <!-- Product Photo Image Tag -->
+                                            <img 
+                                                id="mega-preview-img" 
+                                                src="<?php echo esc_url( ! empty( $brosur_cover ) ? $brosur_cover : '' ); ?>" 
+                                                alt="<?php echo esc_attr( $brosur_preview_title ); ?>" 
+                                                class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover/mprev:scale-105 <?php echo empty( $brosur_cover ) ? 'opacity-0' : 'opacity-100'; ?>" 
+                                                loading="lazy"
+                                            >
+
+                                            <!-- Gradient Overlay -->
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+
+                                            <!-- Badge Overlay -->
+                                            <div class="absolute top-2.5 right-2.5 z-10">
+                                                <span id="mega-preview-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-700/60 shadow-sm transition-all duration-300">
+                                                    <?php echo esc_html( $brosur_preview_badge ); ?>
+                                                </span>
+                                            </div>
+
+                                            <!-- Title & Tagline Overlay -->
                                             <div class="absolute bottom-2.5 left-3 right-3 z-10">
-                                                <h6 id="mega-preview-title" class="text-xs sm:text-sm font-black text-white leading-tight drop-shadow-md truncate"></h6>
-                                                <p id="mega-preview-tagline" class="text-[10px] text-teal-200 font-medium truncate mt-0.5"></p>
+                                                <h6 id="mega-preview-title" class="text-xs sm:text-sm font-black text-white leading-tight drop-shadow-md truncate transition-all duration-300">
+                                                    <?php echo esc_html( $brosur_preview_title ); ?>
+                                                </h6>
+                                                <p id="mega-preview-tagline" class="text-[10px] text-teal-200 font-medium truncate mt-0.5 transition-all duration-300">
+                                                    <?php echo esc_html( $brosur_preview_tagline ); ?>
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
 
                                     <!-- Featured Card: Katalog Brosur Digital (Minimalis, Modern, Tanpa Teks Menumpuk) -->
                                     <a 
@@ -719,60 +759,96 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
     <script>
     (function() {
         function initMegaHoverPreview() {
-            var c = document.getElementById('mega-preview-container');
-            var img = document.getElementById('mega-preview-img');
-            if (!c || !img || c.dataset.hoverInitialized === 'true') return;
-            c.dataset.hoverInitialized = 'true';
+            var link = document.getElementById('mega-preview-link');
+            if (!link || link.dataset.hoverInitialized === 'true') return;
+            link.dataset.hoverInitialized = 'true';
 
+            var img = document.getElementById('mega-preview-img');
+            var vector = document.getElementById('mega-preview-vector');
             var badge = document.getElementById('mega-preview-badge');
             var title = document.getElementById('mega-preview-title');
             var tagline = document.getElementById('mega-preview-tagline');
             var items = document.querySelectorAll('.product-hover-item');
             var timer = null;
 
+            var defaultHref = link.getAttribute('data-default-href') || '';
+            var defaultBadge = link.getAttribute('data-default-badge') || 'Katalog Resmi';
+            var defaultTitle = link.getAttribute('data-default-title') || 'Katalog Brosur Digital';
+            var defaultTagline = link.getAttribute('data-default-tagline') || 'Edisi 2026 • Panduan Lengkap PDF';
+            var defaultImg = link.getAttribute('data-default-img') || '';
+
             function show(el) {
                 if (timer) clearTimeout(timer);
                 var src = el.getAttribute('data-image');
-                if (!src || src.trim() === '') {
-                    hide(false);
-                    return;
-                }
-                img.src = src;
-                img.alt = el.getAttribute('data-name') || '';
-                if (badge) badge.textContent = el.getAttribute('data-badge') || '';
-                if (title) title.textContent = el.getAttribute('data-name') || '';
-                if (tagline) tagline.textContent = el.getAttribute('data-tagline') || '';
+                var name = el.getAttribute('data-name') || '';
+                var b = el.getAttribute('data-badge') || '';
+                var tag = el.getAttribute('data-tagline') || '';
+                var href = el.getAttribute('href') || defaultHref;
 
-                c.classList.remove('hidden');
-                void c.offsetWidth;
-                c.classList.remove('opacity-0', 'scale-95');
-                c.classList.add('opacity-100', 'scale-100');
+                if (badge) badge.textContent = b;
+                if (title) title.textContent = name;
+                if (tagline) tagline.textContent = tag;
+                link.setAttribute('href', href);
+
+                if (src && src.trim() !== '') {
+                    if (img) {
+                        img.src = src;
+                        img.alt = name;
+                        img.classList.remove('opacity-0');
+                        img.classList.add('opacity-100');
+                    }
+                    if (vector) {
+                        vector.classList.remove('opacity-100');
+                        vector.classList.add('opacity-0');
+                    }
+                } else {
+                    reset(false);
+                }
             }
 
-            function hide(fast) {
+            function reset(fast) {
                 if (timer) clearTimeout(timer);
-                var delay = fast ? 0 : 150;
+                var delay = fast ? 0 : 200;
                 timer = setTimeout(function() {
-                    c.classList.remove('opacity-100', 'scale-100');
-                    c.classList.add('opacity-0', 'scale-95');
-                    setTimeout(function() {
-                        if (c.classList.contains('opacity-0')) {
-                            c.classList.add('hidden');
+                    if (badge) badge.textContent = defaultBadge;
+                    if (title) title.textContent = defaultTitle;
+                    if (tagline) tagline.textContent = defaultTagline;
+                    link.setAttribute('href', defaultHref);
+
+                    if (defaultImg) {
+                        if (img) {
+                            img.src = defaultImg;
+                            img.alt = defaultTitle;
+                            img.classList.remove('opacity-0');
+                            img.classList.add('opacity-100');
                         }
-                    }, 300);
+                        if (vector) {
+                            vector.classList.remove('opacity-100');
+                            vector.classList.add('opacity-0');
+                        }
+                    } else {
+                        if (img) {
+                            img.classList.remove('opacity-100');
+                            img.classList.add('opacity-0');
+                        }
+                        if (vector) {
+                            vector.classList.remove('opacity-0');
+                            vector.classList.add('opacity-100');
+                        }
+                    }
                 }, delay);
             }
 
             items.forEach(function(item) {
                 item.addEventListener('mouseenter', function() { show(item); });
                 item.addEventListener('focus', function() { show(item); });
-                item.addEventListener('mouseleave', function() { hide(false); });
-                item.addEventListener('blur', function() { hide(false); });
+                item.addEventListener('mouseleave', function() { reset(false); });
+                item.addEventListener('blur', function() { reset(false); });
             });
 
-            var mm = c.closest('.dropdown-mega-menu');
+            var mm = link.closest('.dropdown-mega-menu');
             if (mm) {
-                mm.addEventListener('mouseleave', function() { hide(true); });
+                mm.addEventListener('mouseleave', function() { reset(true); });
             }
         }
 

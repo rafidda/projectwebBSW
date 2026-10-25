@@ -65,7 +65,7 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <!-- Left Column: Title & Intro -->
-                <div class="lg:col-span-7 xl:col-span-8" data-aos="fade-up">
+                <div class="lg:col-span-7 xl:col-span-7" data-aos="fade-up">
                     <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-100/80 dark:bg-teal-950/60 border border-teal-300/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
                         <?php echo esc_html( $header['badge'] ); ?>
@@ -94,41 +94,66 @@ $notice_wa  = ! empty( $header['notice_wa'] ) ? 'https://wa.me/' . preg_replace(
                     </div>
                 </div>
 
-                <!-- Right Column: Anti-Fraud & Employee Verification Notice Card -->
-                <div class="lg:col-span-5 xl:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-emerald-300/80 dark:border-emerald-700/60 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-emerald-500 via-teal-400 to-emerald-600">
-                        <!-- Watermark Emblem Subtle Background -->
-                        <div class="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 w-40 h-40 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-500 group-hover:scale-125 select-none">
-                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                        </div>
+                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                <div class="lg:col-span-5 xl:col-span-5" data-aos="fade-left" data-aos-delay="100">
+                    <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                        <div class="wkl-glass-shine"></div>
 
-                        <div class="relative z-10 space-y-3.5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/80 dark:to-teal-950/60 border border-emerald-200/80 dark:border-emerald-800/60 flex items-center justify-center p-1.5 shadow-inner shrink-0">
-                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Wakalumi" class="w-full h-full object-contain">
-                                </div>
-                                <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800/60">
-                                    <?php echo esc_html( $header['notice_badge'] ); ?>
-                                </span>
+                        <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                        <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-emerald-50/85 via-teal-50/40 to-white dark:from-emerald-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                            <!-- Subtle Top Accent Line -->
+                            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 opacity-90"></div>
+
+                            <!-- Interactive Slide Watermark Emblem -->
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
 
-                            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug">
-                                <?php echo esc_html( $header['notice_title'] ); ?>
-                            </h3>
+                            <!-- Soft Dual-Tone Ring Verification Shield Icon -->
+                            <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-emerald-200/80 dark:border-emerald-800/70 text-emerald-600 dark:text-emerald-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-105 transition-all duration-500 z-10">
+                                <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                                </svg>
+                            </div>
 
-                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <div class="relative z-10">
+                                <?php 
+                                $clean_notice_badge = trim( preg_replace( '/[\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{1F900}-\x{1F9FF}\x{1F1E0}-\x{1F1FF}]/u', '', $header['notice_badge'] ?? '' ) );
+                                if ( empty( $clean_notice_badge ) ) {
+                                    $clean_notice_badge = 'Verifikasi Karyawan Aktif';
+                                }
+                                ?>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <?php echo esc_html( $clean_notice_badge ); ?>
+                                </div>
+                                <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $header['notice_title'] ); ?></h4>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Dual-Tone Zone: Description, Reg Tags & Button -->
+                        <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed text-center sm:text-left">
                                 <?php echo esc_html( $header['notice_desc'] ); ?>
                             </p>
 
-                            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
-                                <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                                    Butuh validasi identitas?
+                            <div class="pt-1 flex items-center justify-center gap-2">
+                                <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Terdaftar &amp; Diawasi OJK
                                 </span>
-                                <a href="<?php echo esc_url( $notice_wa . '?text=' . rawurlencode( 'Assalamu\'alaikum CS Bank Syariah Wakalumi, saya ingin konfirmasi verifikasi keabsahan identitas karyawan...' ) ); ?>" 
-                                   target="_blank" rel="noopener noreferrer" 
-                                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all hover:scale-105">
-                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                    <span>Tanya CS</span>
+                                <span class="text-slate-300 dark:text-slate-600">•</span>
+                                <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Sistem Anti-Fraud
+                                </span>
+                            </div>
+
+                            <div class="pt-1">
+                                <a href="<?php echo esc_url( $notice_wa . '?text=' . rawurlencode( 'Assalamu\'alaikum CS Bank Syariah Wakalumi, saya ingin konfirmasi verifikasi keabsahan identitas karyawan...' ) ); ?>" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-emerald-50/80 dark:bg-slate-800/80 dark:hover:bg-emerald-950/50 border border-slate-200/80 hover:border-emerald-300 dark:border-slate-700/80 dark:hover:border-emerald-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-all duration-300 group/timbtn">
+                                    <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                    <span>Konfirmasi Validasi via WhatsApp</span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/timbtn:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
                                 </a>
                             </div>
                         </div>

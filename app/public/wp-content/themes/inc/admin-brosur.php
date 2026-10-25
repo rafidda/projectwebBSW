@@ -3,7 +3,8 @@
  * Admin Page: Pengelolaan Brosur & Dokumen Produk
  * Submenu of wakalumi-settings
  * 
- * Mengelola file brosur PDF resmi, katalog dokumen produk, dan materi literasi BPRS Wakalumi.
+ * Mengelola file brosur PDF resmi, katalog dokumen produk, kartu trust hero section,
+ * dan materi transparansi & literasi BPRS Wakalumi secara 100% dinamis.
  * 
  * @package Wakalumi
  */
@@ -14,9 +15,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // ── 1. HELPER FUNCTIONS UNTUK RETRIEVAL FRONTEND ────────────────────
 
+if ( ! function_exists( 'wakalumi_get_brosur_hero' ) ) {
+    /**
+     * Mengambil data banner hero dan kartu kepercayaan hero section brosur.
+     *
+     * @return array
+     */
+    function wakalumi_get_brosur_hero() {
+        return [
+            'badge'       => get_option( 'options_brosur_page_badge', 'Dokumen Resmi & Literasi Syariah' ),
+            'title'       => get_option( 'options_brosur_page_title', 'Pusat Unduhan Brosur & Panduan Produk' ),
+            'sub'         => get_option( 'options_brosur_page_sub', 'Akses materi resmi, ringkasan akad syariah, tarif nisbah, dan panduan persyaratan pembukaan rekening serta pengajuan pembiayaan BPRS Wakalumi dalam format digital.' ),
+            'hl_1'        => get_option( 'options_brosur_hero_hl_1', 'Format PDF High-Res' ),
+            'hl_2'        => get_option( 'options_brosur_hero_hl_2', 'Pratinjau Langsung (PDF Lightbox)' ),
+            'hl_3'        => get_option( 'options_brosur_hero_hl_3', 'Terverifikasi OJK & DPS' ),
+            'trust_badge' => get_option( 'options_brosur_hero_trust_badge', 'Publikasi Resmi BPRS' ),
+            'trust_title' => get_option( 'options_brosur_hero_trust_title', 'Akurat, Transparan & Sesuai Syariah' ),
+            'trust_desc'  => get_option( 'options_brosur_hero_trust_desc', 'Seluruh brosur dan panduan produk disusun sesuai standar keterbukaan informasi perbankan, regulasi OJK, serta prinsip syariah DSN-MUI.' ),
+            'trust_tag1'  => get_option( 'options_brosur_hero_trust_tag1', 'Diawasi OJK' ),
+            'trust_tag2'  => get_option( 'options_brosur_hero_trust_tag2', 'Dijamin LPS' ),
+            'trust_btn'   => get_option( 'options_brosur_hero_trust_btn', 'Jelajahi Katalog Brosur' ),
+            'trust_url'   => get_option( 'options_brosur_hero_trust_url', '#katalog-dokumen' ),
+        ];
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_brosur_primary' ) ) {
     /**
-     * Mengambil data brosur utama resmi BPRS Wakalumi.
+     * Mengambil data brosur utama resmi BPRS Wakalumi (Featured Spotlight & Preview Navbar).
      *
      * @return array
      */
@@ -29,6 +55,29 @@ if ( ! function_exists( 'wakalumi_get_brosur_primary' ) ) {
             'desc'           => get_option( 'options_brosur_desc', 'Katalog panduan komprehensif seluruh produk simpanan syariah, deposito mudharabah, dan pembiayaan syariah BPRS Wakalumi.' ),
             'version'        => get_option( 'options_brosur_version', 'Edisi 2026' ),
             'featured_badge' => get_option( 'options_brosur_featured_badge', 'Katalog Resmi Komprehensif' ),
+            'brand_tag'      => get_option( 'options_brosur_brand_tag', 'BPRS Wakalumi' ),
+            'verify_text'    => get_option( 'options_brosur_verify_text', 'Edisi Resmi Terverifikasi BPRS Wakalumi' ),
+            'feat_1'         => get_option( 'options_brosur_feat_1', 'Seluruh produk Tabungan & Deposito' ),
+            'feat_2'         => get_option( 'options_brosur_feat_2', 'Skema Pembiayaan & Angsuran Ringan' ),
+            'feat_3'         => get_option( 'options_brosur_feat_3', 'Tabel Nisbah & Estimasi Bagi Hasil' ),
+            'feat_4'         => get_option( 'options_brosur_feat_4', 'Persyaratan & Prosedur Pembukaan' ),
+            'btn_preview'    => get_option( 'options_brosur_btn_preview', 'Pratinjau Brosur' ),
+            'btn_download'   => get_option( 'options_brosur_btn_download', 'Unduh PDF' ),
+        ];
+    }
+}
+
+if ( ! function_exists( 'wakalumi_get_brosur_catalog_header' ) ) {
+    /**
+     * Mengambil konfigurasi judul & deskripsi seksi katalog brosur grid.
+     *
+     * @return array
+     */
+    function wakalumi_get_brosur_catalog_header() {
+        return [
+            'kicker' => get_option( 'options_brosur_catalog_kicker', 'Koleksi Lengkap' ),
+            'title'  => get_option( 'options_brosur_catalog_title', 'Katalog Dokumen & Brosur Produk' ),
+            'desc'   => get_option( 'options_brosur_catalog_desc', 'Pilih atau cari dokumen brosur produk syariah dan panduan resmi yang Anda butuhkan.' ),
         ];
     }
 }
@@ -170,6 +219,23 @@ if ( ! function_exists( 'wakalumi_get_brosur_governance' ) ) {
     }
 }
 
+if ( ! function_exists( 'wakalumi_get_brosur_cta' ) ) {
+    /**
+     * Mengambil konfigurasi banner konsultasi WhatsApp & Kantor.
+     *
+     * @return array
+     */
+    function wakalumi_get_brosur_cta() {
+        return [
+            'badge'      => get_option( 'options_brosur_cta_badge', 'Layanan Konsultasi Resmi' ),
+            'title'      => get_option( 'options_brosur_cta_title', 'Butuh Informasi Lebih Detail atau Pengiriman Fisik?' ),
+            'desc'       => get_option( 'options_brosur_cta_desc', 'Petugas Customer Care kami siap membantu mengirimkan brosur cetak, formulir pembukaan rekening, atau memberikan simulasi pembiayaan secara langsung.' ),
+            'btn_wa'     => get_option( 'options_brosur_cta_btn_wa', 'Hubungi via WhatsApp' ),
+            'btn_kantor' => get_option( 'options_brosur_cta_btn_kantor', 'Temukan Kantor Terdekat' ),
+        ];
+    }
+}
+
 // ── 2. REGISTER SUBMENU DI PENGATURAN WEBSITE ────────────────────────
 add_action( 'admin_menu', 'wakalumi_register_brosur_page', 24 );
 function wakalumi_register_brosur_page() {
@@ -198,18 +264,42 @@ function wakalumi_render_brosur_page() {
         // 1. Pengaturan Header Banner Halaman
         update_option( 'options_brosur_page_badge', sanitize_text_field( wp_unslash( $_POST['options_brosur_page_badge'] ?? 'Dokumen Resmi & Literasi Syariah' ) ) );
         update_option( 'options_brosur_page_title', sanitize_text_field( wp_unslash( $_POST['options_brosur_page_title'] ?? 'Pusat Unduhan Brosur & Panduan Produk' ) ) );
-        update_option( 'options_brosur_page_sub', sanitize_textarea_field( wp_unslash( $_POST['options_brosur_page_sub'] ?? 'Akses materi resmi, ringkasan akad syariah, tarif nisbah, dan panduan persyaratan pembukaan rekening serta pengajuan pembiayaan BPRS Wakalumi dalam format digital.' ) ) );
+        update_option( 'options_brosur_page_sub', sanitize_textarea_field( wp_unslash( $_POST['options_brosur_page_sub'] ?? '' ) ) );
+        update_option( 'options_brosur_hero_hl_1', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_hl_1'] ?? 'Format PDF High-Res' ) ) );
+        update_option( 'options_brosur_hero_hl_2', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_hl_2'] ?? 'Pratinjau Langsung (PDF Lightbox)' ) ) );
+        update_option( 'options_brosur_hero_hl_3', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_hl_3'] ?? 'Terverifikasi OJK & DPS' ) ) );
 
-        // 2. Brosur Utama Resmi (Navbar & Spotlight Featured)
+        // 2. Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+        update_option( 'options_brosur_hero_trust_badge', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_trust_badge'] ?? 'Publikasi Resmi BPRS' ) ) );
+        update_option( 'options_brosur_hero_trust_title', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_trust_title'] ?? 'Akurat, Transparan & Sesuai Syariah' ) ) );
+        update_option( 'options_brosur_hero_trust_desc', sanitize_textarea_field( wp_unslash( $_POST['options_brosur_hero_trust_desc'] ?? '' ) ) );
+        update_option( 'options_brosur_hero_trust_tag1', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_trust_tag1'] ?? 'Diawasi OJK' ) ) );
+        update_option( 'options_brosur_hero_trust_tag2', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_trust_tag2'] ?? 'Dijamin LPS' ) ) );
+        update_option( 'options_brosur_hero_trust_btn', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_trust_btn'] ?? 'Jelajahi Katalog Brosur' ) ) );
+        update_option( 'options_brosur_hero_trust_url', sanitize_text_field( wp_unslash( $_POST['options_brosur_hero_trust_url'] ?? '#katalog-dokumen' ) ) );
+
+        // 3. Brosur Utama Resmi (Navbar & Spotlight Featured)
         update_option( 'options_brosur_file_url', esc_url_raw( wp_unslash( $_POST['options_brosur_file_url'] ?? '' ) ) );
-        update_option( 'options_brosur_file_name', sanitize_text_field( wp_unslash( $_POST['options_brosur_file_name'] ?? '' ) ) );
-        update_option( 'options_brosur_file_size', sanitize_text_field( wp_unslash( $_POST['options_brosur_file_size'] ?? '' ) ) );
+        update_option( 'options_brosur_file_name', sanitize_text_field( wp_unslash( $_POST['options_brosur_file_name'] ?? 'Brosur Resmi Produk BPRS Wakalumi (Edisi 2026).pdf' ) ) );
+        update_option( 'options_brosur_file_size', sanitize_text_field( wp_unslash( $_POST['options_brosur_file_size'] ?? 'PDF Resmi • 2.4 MB' ) ) );
         update_option( 'options_brosur_cover', esc_url_raw( wp_unslash( $_POST['options_brosur_cover'] ?? '' ) ) );
         update_option( 'options_brosur_desc', sanitize_textarea_field( wp_unslash( $_POST['options_brosur_desc'] ?? '' ) ) );
         update_option( 'options_brosur_version', sanitize_text_field( wp_unslash( $_POST['options_brosur_version'] ?? 'Edisi 2026' ) ) );
-        update_option( 'options_brosur_featured_badge', sanitize_text_field( wp_unslash( $_POST['options_brosur_featured_badge'] ?? 'Brosur Resmi Komprehensif' ) ) );
+        update_option( 'options_brosur_featured_badge', sanitize_text_field( wp_unslash( $_POST['options_brosur_featured_badge'] ?? 'Katalog Resmi Komprehensif' ) ) );
+        update_option( 'options_brosur_brand_tag', sanitize_text_field( wp_unslash( $_POST['options_brosur_brand_tag'] ?? 'BPRS Wakalumi' ) ) );
+        update_option( 'options_brosur_verify_text', sanitize_text_field( wp_unslash( $_POST['options_brosur_verify_text'] ?? 'Edisi Resmi Terverifikasi BPRS Wakalumi' ) ) );
+        update_option( 'options_brosur_feat_1', sanitize_text_field( wp_unslash( $_POST['options_brosur_feat_1'] ?? 'Seluruh produk Tabungan & Deposito' ) ) );
+        update_option( 'options_brosur_feat_2', sanitize_text_field( wp_unslash( $_POST['options_brosur_feat_2'] ?? 'Skema Pembiayaan & Angsuran Ringan' ) ) );
+        update_option( 'options_brosur_feat_3', sanitize_text_field( wp_unslash( $_POST['options_brosur_feat_3'] ?? 'Tabel Nisbah & Estimasi Bagi Hasil' ) ) );
+        update_option( 'options_brosur_feat_4', sanitize_text_field( wp_unslash( $_POST['options_brosur_feat_4'] ?? 'Persyaratan & Prosedur Pembukaan' ) ) );
+        update_option( 'options_brosur_btn_preview', sanitize_text_field( wp_unslash( $_POST['options_brosur_btn_preview'] ?? 'Pratinjau Brosur' ) ) );
+        update_option( 'options_brosur_btn_download', sanitize_text_field( wp_unslash( $_POST['options_brosur_btn_download'] ?? 'Unduh PDF' ) ) );
 
-        // 3. Koleksi Brosur Spesifik (Repeater)
+        // 4. Pengaturan Header Katalog Brosur & Koleksi Brosur Spesifik (Repeater)
+        update_option( 'options_brosur_catalog_kicker', sanitize_text_field( wp_unslash( $_POST['options_brosur_catalog_kicker'] ?? 'Koleksi Lengkap' ) ) );
+        update_option( 'options_brosur_catalog_title', sanitize_text_field( wp_unslash( $_POST['options_brosur_catalog_title'] ?? 'Katalog Dokumen & Brosur Produk' ) ) );
+        update_option( 'options_brosur_catalog_desc', sanitize_textarea_field( wp_unslash( $_POST['options_brosur_catalog_desc'] ?? '' ) ) );
+
         $titles     = wp_unslash( $_POST['brosur_list_title'] ?? [] );
         $kategoris  = wp_unslash( $_POST['brosur_list_kategori'] ?? [] );
         $badges     = wp_unslash( $_POST['brosur_list_badge'] ?? [] );
@@ -248,7 +338,7 @@ function wakalumi_render_brosur_page() {
 
         update_option( 'options_brosur_list', $brosur_list );
 
-        // 4. Pengaturan Tata Kelola & Transparansi
+        // 5. Pengaturan Tata Kelola & Transparansi
         $gov_show = isset( $_POST['options_brosur_gov_show'] ) ? 'yes' : 'no';
         update_option( 'options_brosur_gov_show', $gov_show );
         update_option( 'options_brosur_gov_kicker', sanitize_text_field( wp_unslash( $_POST['options_brosur_gov_kicker'] ?? 'Tata Kelola & Transparansi' ) ) );
@@ -284,19 +374,25 @@ function wakalumi_render_brosur_page() {
 
         update_option( 'options_brosur_gov_cards', $gov_cards );
 
+        // 6. Pengaturan Banner Konsultasi WhatsApp & Kantor
+        update_option( 'options_brosur_cta_badge', sanitize_text_field( wp_unslash( $_POST['options_brosur_cta_badge'] ?? 'Layanan Konsultasi Resmi' ) ) );
+        update_option( 'options_brosur_cta_title', sanitize_text_field( wp_unslash( $_POST['options_brosur_cta_title'] ?? 'Butuh Informasi Lebih Detail atau Pengiriman Fisik?' ) ) );
+        update_option( 'options_brosur_cta_desc', sanitize_textarea_field( wp_unslash( $_POST['options_brosur_cta_desc'] ?? '' ) ) );
+        update_option( 'options_brosur_cta_btn_wa', sanitize_text_field( wp_unslash( $_POST['options_brosur_cta_btn_wa'] ?? 'Hubungi via WhatsApp' ) ) );
+        update_option( 'options_brosur_cta_btn_kantor', sanitize_text_field( wp_unslash( $_POST['options_brosur_cta_btn_kantor'] ?? 'Temukan Kantor Terdekat' ) ) );
+
         $is_saved = true;
     }
 
     // Ambil Data Opsi
-    $page_badge     = get_option( 'options_brosur_page_badge', 'Dokumen Resmi & Literasi Syariah' );
-    $page_title     = get_option( 'options_brosur_page_title', 'Pusat Unduhan Brosur & Panduan Produk' );
-    $page_sub       = get_option( 'options_brosur_page_sub', 'Akses materi resmi, ringkasan akad syariah, tarif nisbah, dan panduan persyaratan pembukaan rekening serta pengajuan pembiayaan BPRS Wakalumi dalam format digital.' );
-
+    $hero_data      = wakalumi_get_brosur_hero();
     $brosur_primary = wakalumi_get_brosur_primary();
+    $catalog_header = wakalumi_get_brosur_catalog_header();
     $brosur_list    = wakalumi_get_brosur_list();
     $brosur_gov     = wakalumi_get_brosur_governance();
+    $brosur_cta     = wakalumi_get_brosur_cta();
     ?>
-    <div class="wrap" style="max-width: 1020px; margin-top: 20px;">
+    <div class="wrap" style="max-width: 1040px; margin-top: 20px;">
         <!-- Header Judul Halaman Admin -->
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
             <div>
@@ -305,7 +401,7 @@ function wakalumi_render_brosur_page() {
                     Katalog Brosur & Dokumen Digital
                 </h1>
                 <p style="color: #64748b; font-size: 13.5px; margin: 6px 0 0 0;">
-                    Kelola file brosur PDF resmi, kartu pratinjau produk di navbar, serta pilar transparansi & regulasi BPRS Wakalumi.
+                    Kelola file brosur PDF resmi, kartu Dual-Tone hero section, sorotan spotlight 3D, serta pilar transparansi & regulasi BPRS Wakalumi.
                 </p>
             </div>
             <a href="<?php echo esc_url( home_url( '/brosur/' ) ); ?>" target="_blank" class="button" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; border-color: #088395; color: #088395; padding: 4px 14px; border-radius: 8px;">
@@ -318,12 +414,12 @@ function wakalumi_render_brosur_page() {
         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-left: 4px solid #088395; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;">
             <div style="font-weight: 700; color: #0f766e; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                 <span class="dashicons dashicons-info" style="font-size: 18px; width: 18px; height: 18px;"></span>
-                Panduan Praktis Pengelolaan Brosur:
+                Panduan Pengelolaan Katalog Brosur & Dokumen:
             </div>
             <ul style="margin: 4px 0 0 20px; color: #115e59; font-size: 12.5px; line-height: 1.6; list-style-type: disc;">
-                <li><strong>Ukuran File PDF:</strong> Disarankan di bawah <strong>5 MB</strong> agar cepat dimuat dan ramah kuota nasabah pada perangkat smartphone.</li>
-                <li><strong>Gambar Cover Dokumen:</strong> Rekomendasi rasio <strong>16:10</strong> atau <strong>4:3</strong> (format JPG/PNG/WebP, orientasi landscape/cover) agar tampil serasi dan rapi tanpa terpotong.</li>
-                <li><strong>Fitur Aksi Ganda:</strong> File PDF yang Anda unggah otomatis dapat di-<strong>Pratinjau Langsung</strong> melalui PDF Lightbox Popup dan di-<strong>Unduh</strong> oleh pengunjung website.</li>
+                <li><strong>Kontrol Penuh Teks & Brand:</strong> Seluruh teks judul, label penerbit (seperti <em>BPRS Wakalumi / BSW</em>), poin fitur, dan teks tombol dapat diatur secara mandiri.</li>
+                <li><strong>Kartu Hero Dual-Tone:</strong> Kartu samping di bagian hero section kini berseragam dengan halaman produk Tabungan, Deposito, dan Pembiayaan.</li>
+                <li><strong>Aksi Ganda Pengunjung:</strong> Setiap dokumen otomatis mendukung <strong>Pratinjau Langsung</strong> melalui PDF Lightbox Popup dan opsi <strong>Unduh PDF</strong> langsung.</li>
             </ul>
         </div>
 
@@ -345,47 +441,129 @@ function wakalumi_render_brosur_page() {
                     1. Header Banner Halaman (/brosur/)
                 </h2>
                 <p style="color: #64748b; font-size: 13px; margin: -8px 0 16px 0;">
-                    Teks judul dan pengantar yang tampil di bagian paling atas halaman katalog brosur.
+                    Teks judul, lencana, deskripsi pengantar, dan 3 pill highlight yang tampil di sisi kiri atas banner halaman.
                 </p>
 
                 <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px;">
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Lencana / Badge Kicker</label>
-                        <input type="text" name="options_brosur_page_badge" value="<?php echo esc_attr( $page_badge ); ?>" class="large-text" placeholder="Dokumen Resmi & Literasi Syariah" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_page_badge" value="<?php echo esc_attr( $hero_data['badge'] ); ?>" class="large-text" placeholder="Dokumen Resmi & Literasi Syariah" style="border-radius: 6px;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Judul Besar Halaman *</label>
-                        <input type="text" name="options_brosur_page_title" value="<?php echo esc_attr( $page_title ); ?>" class="large-text" placeholder="Pusat Unduhan Brosur & Panduan Produk" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_page_title" value="<?php echo esc_attr( $hero_data['title'] ); ?>" class="large-text" placeholder="Pusat Unduhan Brosur & Panduan Produk" style="border-radius: 6px;">
                     </div>
                 </div>
 
-                <div>
+                <div style="margin-bottom: 16px;">
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Subjudul / Deskripsi Pembuka</label>
-                    <textarea name="options_brosur_page_sub" rows="2" class="large-text" placeholder="Penjelasan singkat mengenai materi resmi dan panduan produk..." style="border-radius: 6px;"><?php echo esc_textarea( $page_sub ); ?></textarea>
+                    <textarea name="options_brosur_page_sub" rows="2" class="large-text" placeholder="Penjelasan singkat mengenai materi resmi dan panduan produk..." style="border-radius: 6px;"><?php echo esc_textarea( $hero_data['sub'] ); ?></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #334155;">3 Pill Highlight di Bawah Deskripsi:</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                        <input type="text" name="options_brosur_hero_hl_1" value="<?php echo esc_attr( $hero_data['hl_1'] ); ?>" class="large-text" placeholder="Format PDF High-Res" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_hero_hl_2" value="<?php echo esc_attr( $hero_data['hl_2'] ); ?>" class="large-text" placeholder="Pratinjau Langsung (PDF Lightbox)" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_hero_hl_3" value="<?php echo esc_attr( $hero_data['hl_3'] ); ?>" class="large-text" placeholder="Terverifikasi OJK & DPS" style="border-radius: 6px;">
+                    </div>
                 </div>
             </div>
 
             <!-- ========================================
-                 SEKSI 2: BROSUR UTAMA RESMI (FEATURED BROCHURE)
+                 SEKSI 2: KARTU SAMPING HERO SECTION (DUAL-TONE EXECUTIVE TRUST CARD)
+                 ======================================== -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;">
+                    <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-shield-alt" style="color: #088395;"></span>
+                        2. Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+                    </h2>
+                    <span style="font-size: 11px; font-weight: 700; color: #088395; background: #e0f2fe; padding: 3px 8px; border-radius: 999px;">
+                        Seragam dengan Tabungan & Pembiayaan
+                    </span>
+                </div>
+                <p style="color: #64748b; font-size: 13px; margin: -8px 0 16px 0;">
+                    Kartu kredibilitas eksekutif dua zona warna (Dual-Tone) dengan aksen logo sliding watermark di sisi kanan hero section.
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Lencana / Tag Atas (Tone 1)</label>
+                        <input type="text" name="options_brosur_hero_trust_badge" value="<?php echo esc_attr( $hero_data['trust_badge'] ); ?>" class="large-text" placeholder="Publikasi Resmi BPRS" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Judul Kartu Kepercayaan (Tone 1) *</label>
+                        <input type="text" name="options_brosur_hero_trust_title" value="<?php echo esc_attr( $hero_data['trust_title'] ); ?>" class="large-text" placeholder="Akurat, Transparan & Sesuai Syariah" style="border-radius: 6px;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Deskripsi Keterangan Kartu (Tone 2)</label>
+                    <textarea name="options_brosur_hero_trust_desc" rows="2" class="large-text" placeholder="Penjelasan standar penerbitan brosur..." style="border-radius: 6px;"><?php echo esc_textarea( $hero_data['trust_desc'] ); ?></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Tag Pengawasan 1</label>
+                        <input type="text" name="options_brosur_hero_trust_tag1" value="<?php echo esc_attr( $hero_data['trust_tag1'] ); ?>" class="large-text" placeholder="Diawasi OJK" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Tag Pengawasan 2</label>
+                        <input type="text" name="options_brosur_hero_trust_tag2" value="<?php echo esc_attr( $hero_data['trust_tag2'] ); ?>" class="large-text" placeholder="Dijamin LPS" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Teks Tombol Aksi</label>
+                        <input type="text" name="options_brosur_hero_trust_btn" value="<?php echo esc_attr( $hero_data['trust_btn'] ); ?>" class="large-text" placeholder="Jelajahi Katalog Brosur" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Target Link / Anchor</label>
+                        <input type="text" name="options_brosur_hero_trust_url" value="<?php echo esc_attr( $hero_data['trust_url'] ); ?>" class="large-text" placeholder="#katalog-dokumen" style="border-radius: 6px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================
+                 SEKSI 3: BROSUR UTAMA RESMI (SPOTLIGHT FEATURED & MOCKUP 3D)
                  ======================================== -->
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;">
                     <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
                         <span class="dashicons dashicons-star-filled" style="color: #f59e0b;"></span>
-                        2. Brosur Utama Resmi (Featured Spotlight & Preview Navbar)
+                        3. Brosur Utama Resmi (Featured Spotlight & Mockup 3D)
                     </h2>
                     <span style="font-size: 11px; font-weight: 700; color: #088395; background: #ccfbf1; padding: 3px 8px; border-radius: 999px;">
                         Sorotan Unggulan
                     </span>
                 </div>
                 <p style="color: #64748b; font-size: 13px; margin: -8px 0 16px 0;">
-                    Brosur komprehensif ini ditampilkan dalam kartu 3D berukuran besar di bagian atas halaman <code>/brosur/</code> dan sebagai informasi preview di navbar Produk.
+                    Brosur komprehensif ini ditampilkan dalam kartu 3D berukuran besar di bagian atas halaman <code>/brosur/</code> dan preview navbar Produk.
                 </p>
+
+                <!-- Identitas Brand & Verifikasi (Menjawab keluhan editable BPRS Wakalumi) -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;">
+                    <div style="font-weight: 700; font-size: 12px; color: #0f172a; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-tag" style="color: #088395; font-size: 16px;"></span>
+                        Kustomisasi Brand & Label Kartu Cover Mockup:
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Nama Brand / Penerbit (di Cover Mockup)</label>
+                            <input type="text" name="options_brosur_brand_tag" value="<?php echo esc_attr( $brosur_primary['brand_tag'] ); ?>" class="large-text" placeholder="BPRS Wakalumi" style="border-radius: 6px;">
+                            <span style="font-size: 11px; color: #64748b; margin-top: 3px; display: block;">Contoh: <code>BPRS Wakalumi</code> atau <code>BSW</code>. Tampil di atas judul cover 3D.</span>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Teks Status Verifikasi Resmi</label>
+                            <input type="text" name="options_brosur_verify_text" value="<?php echo esc_attr( $brosur_primary['verify_text'] ); ?>" class="large-text" placeholder="Edisi Resmi Terverifikasi BPRS Wakalumi" style="border-radius: 6px;">
+                            <span style="font-size: 11px; color: #64748b; margin-top: 3px; display: block;">Tampil di bawah badge spotlight sisi kanan (dengan ikon dot pulsing).</span>
+                        </div>
+                    </div>
+                </div>
 
                 <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Nama / Judul Brosur Utama *</label>
-                        <input type="text" name="options_brosur_file_name" value="<?php echo esc_attr( $brosur_primary['file_name'] ); ?>" class="large-text" placeholder="Brosur Resmi Produk BPRS Wakalumi" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_file_name" value="<?php echo esc_attr( $brosur_primary['file_name'] ); ?>" class="large-text" placeholder="Brosur Resmi Produk BPRS Wakalumi (Edisi 2026).pdf" style="border-radius: 6px;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Lencana Unggulan</label>
@@ -436,21 +614,44 @@ function wakalumi_render_brosur_page() {
                     <span style="font-size: 11px; color: #64748b; margin-top: 4px; display: block;">Jika dikosongkan, sistem otomatis menampilkan ilustrasi sampul vektor grafis resmi BPRS Wakalumi.</span>
                 </div>
 
-                <div>
+                <div style="margin-bottom: 16px;">
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Deskripsi Singkat Brosur Utama</label>
                     <textarea name="options_brosur_desc" rows="2" class="large-text" placeholder="Ringkasan isi materi brosur..." style="border-radius: 6px;"><?php echo esc_textarea( $brosur_primary['desc'] ); ?></textarea>
+                </div>
+
+                <!-- 4 Poin Fitur / Checklist Keunggulan -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #334155;">4 Poin Ringkasan Isi / Fitur Brosur Utama:</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" name="options_brosur_feat_1" value="<?php echo esc_attr( $brosur_primary['feat_1'] ); ?>" class="large-text" placeholder="Poin 1: Seluruh produk Tabungan & Deposito" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_feat_2" value="<?php echo esc_attr( $brosur_primary['feat_2'] ); ?>" class="large-text" placeholder="Poin 2: Skema Pembiayaan & Angsuran Ringan" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_feat_3" value="<?php echo esc_attr( $brosur_primary['feat_3'] ); ?>" class="large-text" placeholder="Poin 3: Tabel Nisbah & Estimasi Bagi Hasil" style="border-radius: 6px;">
+                        <input type="text" name="options_brosur_feat_4" value="<?php echo esc_attr( $brosur_primary['feat_4'] ); ?>" class="large-text" placeholder="Poin 4: Persyaratan & Prosedur Pembukaan" style="border-radius: 6px;">
+                    </div>
+                </div>
+
+                <!-- Teks Tombol Aksi -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Teks Tombol Pratinjau (Modal Popup)</label>
+                        <input type="text" name="options_brosur_btn_preview" value="<?php echo esc_attr( $brosur_primary['btn_preview'] ); ?>" class="large-text" placeholder="Pratinjau Brosur" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Teks Tombol Unduh File</label>
+                        <input type="text" name="options_brosur_btn_download" value="<?php echo esc_attr( $brosur_primary['btn_download'] ); ?>" class="large-text" placeholder="Unduh PDF" style="border-radius: 6px;">
+                    </div>
                 </div>
             </div>
 
             <!-- ========================================
-                 SEKSI 3: KOLEKSI BROSUR SPESIFIK PRODUK (REPEATER)
+                 SEKSI 4: KOLEKSI BROSUR SPESIFIK PRODUK (REPEATER)
                  ======================================== -->
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;">
                     <div>
                         <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
                             <span class="dashicons dashicons-category" style="color: #088395;"></span>
-                            3. Koleksi Brosur Spesifik Produk & Program (Filter Dinamis)
+                            4. Koleksi Brosur Spesifik Produk & Program (Filter Dinamis)
                         </h2>
                         <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">
                             Setiap kartu dokumen di bawah ini dapat difilter secara langsung oleh pengunjung website berdasarkan kategori tab maupun search bar teks.
@@ -460,6 +661,24 @@ function wakalumi_render_brosur_page() {
                         <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span>
                         + Tambah Dokumen Brosur Baru
                     </button>
+                </div>
+
+                <!-- Pengaturan Judul Seksi Katalog -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 14px; margin-bottom: 10px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Kicker Seksi Katalog</label>
+                            <input type="text" name="options_brosur_catalog_kicker" value="<?php echo esc_attr( $catalog_header['kicker'] ); ?>" class="large-text" placeholder="Koleksi Lengkap" style="border-radius: 6px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Judul Seksi Katalog *</label>
+                            <input type="text" name="options_brosur_catalog_title" value="<?php echo esc_attr( $catalog_header['title'] ); ?>" class="large-text" placeholder="Katalog Dokumen & Brosur Produk" style="border-radius: 6px;">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Deskripsi Pengantar Seksi Katalog</label>
+                        <textarea name="options_brosur_catalog_desc" rows="2" class="large-text" placeholder="Pilih atau cari dokumen brosur..." style="border-radius: 6px;"><?php echo esc_textarea( $catalog_header['desc'] ); ?></textarea>
+                    </div>
                 </div>
 
                 <div id="wkl-brosur-container" style="display: flex; flex-direction: column; gap: 16px;">
@@ -574,14 +793,14 @@ function wakalumi_render_brosur_page() {
             </div>
 
             <!-- ========================================
-                 SEKSI 4: PILAR TATA KELOLA & REGULASI (OJK, LPS, DSN-MUI)
+                 SEKSI 5: PILAR TATA KELOLA & REGULASI (OJK, LPS, DSN-MUI)
                  ======================================== -->
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;">
                     <div>
                         <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
                             <span class="dashicons dashicons-shield" style="color: #088395;"></span>
-                            4. Pilar Tata Kelola, Regulasi & Transparansi
+                            5. Pilar Tata Kelola, Regulasi & Transparansi
                         </h2>
                         <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">
                             Informasi legalitas dan kepatuhan perbankan syariah (OJK, LPS, DSN-MUI) yang tampil di bagian bawah halaman katalog brosur.
@@ -676,6 +895,46 @@ function wakalumi_render_brosur_page() {
                             </div>
                         </div>
                     <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- ========================================
+                 SEKSI 6: BANNER KONSULTASI WHATSAPP & KANTOR (CTA BANNER)
+                 ======================================== -->
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <h2 style="font-size: 16px; font-weight: 700; margin: 0 0 16px 0; color: #088395; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+                    <span class="dashicons dashicons-format-chat" style="color: #088395;"></span>
+                    6. Banner Bantuan & Konsultasi WhatsApp (CTA Banner)
+                </h2>
+                <p style="color: #64748b; font-size: 13px; margin: -8px 0 16px 0;">
+                    Banner penutup di bagian paling bawah halaman brosur yang mengarahkan pengunjung untuk chat WhatsApp atau mencari kantor terdekat.
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Lencana / Badge Banner</label>
+                        <input type="text" name="options_brosur_cta_badge" value="<?php echo esc_attr( $brosur_cta['badge'] ); ?>" class="large-text" placeholder="Layanan Konsultasi Resmi" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Judul Besar Banner *</label>
+                        <input type="text" name="options_brosur_cta_title" value="<?php echo esc_attr( $brosur_cta['title'] ); ?>" class="large-text" placeholder="Butuh Informasi Lebih Detail atau Pengiriman Fisik?" style="border-radius: 6px;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Deskripsi Banner Konsultasi</label>
+                    <textarea name="options_brosur_cta_desc" rows="2" class="large-text" placeholder="Petugas Customer Care kami siap membantu..." style="border-radius: 6px;"><?php echo esc_textarea( $brosur_cta['desc'] ); ?></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Teks Tombol WhatsApp</label>
+                        <input type="text" name="options_brosur_cta_btn_wa" value="<?php echo esc_attr( $brosur_cta['btn_wa'] ); ?>" class="large-text" placeholder="Hubungi via WhatsApp" style="border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #334155;">Teks Tombol Temukan Kantor</label>
+                        <input type="text" name="options_brosur_cta_btn_kantor" value="<?php echo esc_attr( $brosur_cta['btn_kantor'] ); ?>" class="large-text" placeholder="Temukan Kantor Terdekat" style="border-radius: 6px;">
+                    </div>
                 </div>
             </div>
 

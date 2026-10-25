@@ -1850,20 +1850,18 @@ $cta_button_secondary_text = get_field( 'cta_button_secondary_text' ) ?: 'Lihat 
 $cta_button_secondary_url  = get_field( 'cta_button_secondary_url' ) ?: '/profil/jaringan-kantor';
 ?>
 <section class="relative z-10 py-24 md:py-32 overflow-hidden">
-    <!-- Background -->
-    <div class="absolute inset-0 gradient-hero dark:gradient-hero-dark"></div>
-    <div class="hero-orb hero-orb-1 opacity-10"></div>
-    <div class="hero-orb hero-orb-2 opacity-10"></div>
-    <div class="pattern-overlay absolute inset-0"></div>
+    <!-- Background: konsisten gelap di mode terang maupun gelap -->
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 70% 90% at 50% 0%, rgba(8, 131, 149, 0.22) 0%, rgba(8, 131, 149, 0) 70%), linear-gradient(180deg, #0f1a1e 0%, #0b1215 100%);"></div>
 
     <div class="container-narrow relative z-10 text-center">
         <h2 data-aos="fade-up"
-            class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6
-                   dark:text-glow">
-            <?php echo wakalumi_dualtone_title( $cta_headline, 'text-primary-200 dark:text-primary-300' ); ?>
+            class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6"
+            style="text-shadow: 0 0 30px rgba(93, 248, 216, 0.4), 0 0 60px rgba(93, 248, 216, 0.2);">
+            <?php echo wakalumi_dualtone_title( $cta_headline, 'text-primary-300' ); ?>
         </h2>
         <p data-aos="fade-up" data-aos-delay="100"
-           class="text-lg text-primary-100/80 dark:text-slate-300 max-w-2xl mx-auto mb-10">
+           class="text-lg text-primary-100/80 dark:text-slate-300 max-w-2xl mx-auto mb-10"
+           style="text-shadow: 0 0 15px rgba(93, 248, 216, 0.3);">
             <?php echo esc_html( $cta_subtext ); ?>
         </p>
         <div data-aos="fade-up" data-aos-delay="200"

@@ -650,18 +650,60 @@ if ( ! function_exists( 'wakalumi_get_social_platform_config' ) ) {
  */
 function wakalumi_render_contact_page() {
     if ( isset( $_POST['wakalumi_save_contact'] ) && check_admin_referer( 'wakalumi_contact_nonce' ) ) {
-        // 1. Header Banner
+        // 1. Header Banner & Pills
         update_option( 'options_contact_page_badge', sanitize_text_field( $_POST['options_contact_page_badge'] ?? '' ) );
         update_option( 'options_contact_page_title', sanitize_text_field( $_POST['options_contact_page_title'] ?? '' ) );
         update_option( 'options_contact_page_desc', sanitize_textarea_field( $_POST['options_contact_page_desc'] ?? '' ) );
+        update_option( 'options_contact_pill_1', sanitize_text_field( $_POST['options_contact_pill_1'] ?? '' ) );
+        update_option( 'options_contact_pill_2', sanitize_text_field( $_POST['options_contact_pill_2'] ?? '' ) );
+        update_option( 'options_contact_pill_3', sanitize_text_field( $_POST['options_contact_pill_3'] ?? '' ) );
 
-        // 2. Kontak Langsung
+        // 2. Kartu Hero Section (Dual-Tone Executive Trust Card)
+        update_option( 'options_contact_hero_card_badge', sanitize_text_field( $_POST['options_contact_hero_card_badge'] ?? '' ) );
+        update_option( 'options_contact_hero_card_company', sanitize_text_field( $_POST['options_contact_hero_card_company'] ?? '' ) );
+        update_option( 'options_contact_hero_card_title', sanitize_text_field( $_POST['options_contact_hero_card_title'] ?? '' ) );
+        update_option( 'options_contact_hero_card_desc', sanitize_textarea_field( $_POST['options_contact_hero_card_desc'] ?? '' ) );
+        update_option( 'options_contact_hero_metric_1_lbl', sanitize_text_field( $_POST['options_contact_hero_metric_1_lbl'] ?? '' ) );
+        update_option( 'options_contact_hero_metric_1_val', sanitize_text_field( $_POST['options_contact_hero_metric_1_val'] ?? '' ) );
+        update_option( 'options_contact_hero_metric_2_lbl', sanitize_text_field( $_POST['options_contact_hero_metric_2_lbl'] ?? '' ) );
+        update_option( 'options_contact_hero_metric_2_val', sanitize_text_field( $_POST['options_contact_hero_metric_2_val'] ?? '' ) );
+        update_option( 'options_contact_hero_footer_text', sanitize_text_field( $_POST['options_contact_hero_footer_text'] ?? '' ) );
+        update_option( 'options_contact_hero_footer_btn_lbl', sanitize_text_field( $_POST['options_contact_hero_footer_btn_lbl'] ?? '' ) );
+        update_option( 'options_contact_hero_footer_btn_url', esc_url_raw( $_POST['options_contact_hero_footer_btn_url'] ?? '' ) );
+
+        // 3. Saluran Komunikasi (Header & 3 Kartu)
+        update_option( 'options_contact_channels_kicker', sanitize_text_field( $_POST['options_contact_channels_kicker'] ?? '' ) );
+        update_option( 'options_contact_channels_title', sanitize_text_field( $_POST['options_contact_channels_title'] ?? '' ) );
+        update_option( 'options_contact_channels_desc', sanitize_textarea_field( $_POST['options_contact_channels_desc'] ?? '' ) );
+        // Card 1 WhatsApp
         update_option( 'options_contact_wa', sanitize_text_field( $_POST['options_contact_wa'] ?? '' ) );
+        update_option( 'options_contact_wa_message', sanitize_text_field( $_POST['options_contact_wa_message'] ?? '' ) );
+        update_option( 'options_contact_wa_title', sanitize_text_field( $_POST['options_contact_wa_title'] ?? '' ) );
+        update_option( 'options_contact_wa_badge', sanitize_text_field( $_POST['options_contact_wa_badge'] ?? '' ) );
+        update_option( 'options_contact_wa_subinfo', sanitize_text_field( $_POST['options_contact_wa_subinfo'] ?? '' ) );
+        update_option( 'options_contact_wa_desc', sanitize_textarea_field( $_POST['options_contact_wa_desc'] ?? '' ) );
+        update_option( 'options_contact_wa_btn_text', sanitize_text_field( $_POST['options_contact_wa_btn_text'] ?? '' ) );
+        // Card 2 Telepon
         update_option( 'options_contact_phone', sanitize_text_field( $_POST['options_contact_phone'] ?? '' ) );
+        update_option( 'options_contact_phone_title', sanitize_text_field( $_POST['options_contact_phone_title'] ?? '' ) );
+        update_option( 'options_contact_phone_badge', sanitize_text_field( $_POST['options_contact_phone_badge'] ?? '' ) );
+        update_option( 'options_contact_phone_subinfo', sanitize_text_field( $_POST['options_contact_phone_subinfo'] ?? '' ) );
+        update_option( 'options_contact_phone_desc', sanitize_textarea_field( $_POST['options_contact_phone_desc'] ?? '' ) );
+        update_option( 'options_contact_phone_btn_text', sanitize_text_field( $_POST['options_contact_phone_btn_text'] ?? '' ) );
+        // Card 3 Email
         update_option( 'options_contact_email', sanitize_email( $_POST['options_contact_email'] ?? '' ) );
-        update_option( 'options_contact_address', sanitize_textarea_field( $_POST['options_contact_address'] ?? '' ) );
+        update_option( 'options_contact_email_title', sanitize_text_field( $_POST['options_contact_email_title'] ?? '' ) );
+        update_option( 'options_contact_email_badge', sanitize_text_field( $_POST['options_contact_email_badge'] ?? '' ) );
+        update_option( 'options_contact_email_subinfo', sanitize_text_field( $_POST['options_contact_email_subinfo'] ?? '' ) );
+        update_option( 'options_contact_email_desc', sanitize_textarea_field( $_POST['options_contact_email_desc'] ?? '' ) );
+        update_option( 'options_contact_email_btn_text', sanitize_text_field( $_POST['options_contact_email_btn_text'] ?? '' ) );
 
-        // 3. Media Sosial Repeater (Full CRUD)
+        // 4. Media Sosial Header
+        update_option( 'options_contact_social_kicker', sanitize_text_field( $_POST['options_contact_social_kicker'] ?? '' ) );
+        update_option( 'options_contact_social_title', sanitize_text_field( $_POST['options_contact_social_title'] ?? '' ) );
+        update_option( 'options_contact_social_desc', sanitize_textarea_field( $_POST['options_contact_social_desc'] ?? '' ) );
+
+        // 5. Media Sosial Repeater (Full CRUD)
         $soc_ids       = $_POST['soc_id'] ?? [];
         $soc_platforms = $_POST['soc_platform'] ?? [];
         $soc_titles    = $_POST['soc_title'] ?? [];
@@ -715,7 +757,20 @@ function wakalumi_render_contact_page() {
         update_option( 'options_social_linkedin', $legacy_map['linkedin'] );
         update_option( 'options_social_youtube', $legacy_map['youtube'] );
         
-        // 4. Google Maps Embed
+        // 6. Kantor Pusat, Layanan & Google Maps Embed
+        update_option( 'options_contact_office_kicker', sanitize_text_field( $_POST['options_contact_office_kicker'] ?? '' ) );
+        update_option( 'options_contact_office_title', sanitize_text_field( $_POST['options_contact_office_title'] ?? '' ) );
+        update_option( 'options_contact_office_desc', sanitize_textarea_field( $_POST['options_contact_office_desc'] ?? '' ) );
+        update_option( 'options_contact_office_badge', sanitize_text_field( $_POST['options_contact_office_badge'] ?? '' ) );
+        update_option( 'options_contact_office_status', sanitize_text_field( $_POST['options_contact_office_status'] ?? '' ) );
+        update_option( 'options_contact_office_name', sanitize_text_field( $_POST['options_contact_office_name'] ?? '' ) );
+        update_option( 'options_contact_address', sanitize_textarea_field( $_POST['options_contact_address'] ?? '' ) );
+        update_option( 'options_contact_office_svc_1', sanitize_text_field( $_POST['options_contact_office_svc_1'] ?? '' ) );
+        update_option( 'options_contact_office_svc_2', sanitize_text_field( $_POST['options_contact_office_svc_2'] ?? '' ) );
+        update_option( 'options_contact_office_svc_3', sanitize_text_field( $_POST['options_contact_office_svc_3'] ?? '' ) );
+        update_option( 'options_contact_office_svc_4', sanitize_text_field( $_POST['options_contact_office_svc_4'] ?? '' ) );
+        update_option( 'options_contact_gmaps_app_url', esc_url_raw( $_POST['options_contact_gmaps_app_url'] ?? '' ) );
+
         if ( isset( $_POST['options_maps_embed'] ) ) {
             update_option( 'options_maps_embed', wakalumi_clean_maps_embed_url( $_POST['options_maps_embed'] ) );
         }
@@ -723,11 +778,122 @@ function wakalumi_render_contact_page() {
             update_option( 'options_footer_maps_title', sanitize_text_field( $_POST['options_footer_maps_title'] ) );
         }
 
-        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Pengaturan Kontak, Media Sosial (Full CRUD) & Lokasi Peta berhasil disimpan!</strong></p></div>';
+        // 7. Himbauan Keamanan Bertransaksi (Anti-Fraud)
+        update_option( 'options_contact_fraud_show', isset( $_POST['options_contact_fraud_show'] ) ? '1' : '0' );
+        update_option( 'options_contact_fraud_badge', sanitize_text_field( $_POST['options_contact_fraud_badge'] ?? '' ) );
+        update_option( 'options_contact_fraud_subtitle', sanitize_text_field( $_POST['options_contact_fraud_subtitle'] ?? '' ) );
+        update_option( 'options_contact_fraud_title', sanitize_text_field( $_POST['options_contact_fraud_title'] ?? '' ) );
+        update_option( 'options_contact_fraud_desc', sanitize_textarea_field( $_POST['options_contact_fraud_desc'] ?? '' ) );
+        update_option( 'options_contact_fraud_p1_title', sanitize_text_field( $_POST['options_contact_fraud_p1_title'] ?? '' ) );
+        update_option( 'options_contact_fraud_p1_desc', sanitize_textarea_field( $_POST['options_contact_fraud_p1_desc'] ?? '' ) );
+        update_option( 'options_contact_fraud_p2_title', sanitize_text_field( $_POST['options_contact_fraud_p2_title'] ?? '' ) );
+        update_option( 'options_contact_fraud_p2_desc', sanitize_textarea_field( $_POST['options_contact_fraud_p2_desc'] ?? '' ) );
+        update_option( 'options_contact_fraud_p3_title', sanitize_text_field( $_POST['options_contact_fraud_p3_title'] ?? '' ) );
+        update_option( 'options_contact_fraud_p3_desc', sanitize_textarea_field( $_POST['options_contact_fraud_p3_desc'] ?? '' ) );
+
+        // 8. CTA Banner Bawah Halaman
+        update_option( 'options_contact_cta_badge', sanitize_text_field( $_POST['options_contact_cta_badge'] ?? '' ) );
+        update_option( 'options_contact_cta_title', sanitize_text_field( $_POST['options_contact_cta_title'] ?? '' ) );
+        update_option( 'options_contact_cta_desc', sanitize_textarea_field( $_POST['options_contact_cta_desc'] ?? '' ) );
+        update_option( 'options_contact_cta_btn1_text', sanitize_text_field( $_POST['options_contact_cta_btn1_text'] ?? '' ) );
+        update_option( 'options_contact_cta_btn1_url', esc_url_raw( $_POST['options_contact_cta_btn1_url'] ?? '' ) );
+        update_option( 'options_contact_cta_btn2_text', sanitize_text_field( $_POST['options_contact_cta_btn2_text'] ?? '' ) );
+        update_option( 'options_contact_cta_btn2_url', esc_url_raw( $_POST['options_contact_cta_btn2_url'] ?? '' ) );
+
+        echo '<div class="notice notice-success is-dismissible"><p><strong>Data Pengaturan Lengkap Halaman Kontak, Saluran Komunikasi & Peta berhasil disimpan!</strong></p></div>';
     }
 
+    // ── RETRIEVE ALL OPTIONS ──────────────────────────────────────────────
+    // Seksi 1: Banner Header & Pills
     $page_badge  = get_option( 'options_contact_page_badge', 'Hubungi Kami' );
     $page_title  = get_option( 'options_contact_page_title', 'Kanal Komunikasi & Layanan Resmi' );
+    $page_desc   = get_option( 'options_contact_page_desc', 'Kami siap mendengarkan, melayani, dan memberikan solusi perbankan syariah terbaik untuk Anda. Silakan hubungi kami melalui berbagai saluran resmi yang aman, terpercaya, dan profesional.' );
+    $pill_1      = get_option( 'options_contact_pill_1', 'Jam Layanan: 08:00 - 15:00 WIB' );
+    $pill_2      = get_option( 'options_contact_pill_2', '100% Layanan Resmi & Bebas Pungutan' );
+    $pill_3      = get_option( 'options_contact_pill_3', 'Berizin & Diawasi OJK' );
+
+    // Seksi 2: Hero Section Trust Card
+    $h_badge     = get_option( 'options_contact_hero_card_badge', 'Layanan Pelanggan Aktif' );
+    $h_company   = get_option( 'options_contact_hero_card_company', 'PT BPRS Wakalumi' );
+    $h_title     = get_option( 'options_contact_hero_card_title', 'Siap Melayani Kebutuhan Finansial Syariah Anda' );
+    $h_desc      = get_option( 'options_contact_hero_card_desc', 'Tim Customer Service dan staf operasional kami siap mendampingi pembukaan tabungan, simulasi bagi hasil deposito, hingga pengajuan pembiayaan usaha dengan amanah dan transparan.' );
+    $h_m1_lbl    = get_option( 'options_contact_hero_metric_1_lbl', 'Hari Kerja' );
+    $h_m1_val    = get_option( 'options_contact_hero_metric_1_val', 'Senin - Jumat' );
+    $h_m2_lbl    = get_option( 'options_contact_hero_metric_2_lbl', 'WhatsApp CS' );
+    $h_m2_val    = get_option( 'options_contact_hero_metric_2_val', 'Respon Cepat' );
+    $h_foot_text = get_option( 'options_contact_hero_footer_text', 'Butuh panduan lokasi cabang?' );
+    $h_foot_btn  = get_option( 'options_contact_hero_footer_btn_lbl', 'Jaringan Kantor' );
+    $h_foot_url  = get_option( 'options_contact_hero_footer_btn_url', '/profil/jaringan-kantor' );
+
+    // Seksi 3: 3 Saluran Komunikasi Langsung
+    $ch_kicker   = get_option( 'options_contact_channels_kicker', 'Saluran Komunikasi' );
+    $ch_title    = get_option( 'options_contact_channels_title', 'Hubungi Layanan Perbankan Syariah BSW' );
+    $ch_desc     = get_option( 'options_contact_channels_desc', 'Pilih kanal komunikasi resmi yang paling nyaman bagi Anda untuk berkonsultasi, mengajukan pertanyaan, atau menyampaikan aspirasi.' );
+
+    $wa          = get_option( 'options_contact_wa', '6281517380388' );
+    $wa_msg      = get_option( 'options_contact_wa_message', 'Halo CS Bank Syariah Wakalumi, saya ingin berkonsultasi mengenai produk dan layanan perbankan syariah.' );
+    $wa_title    = get_option( 'options_contact_wa_title', 'WhatsApp Customer Service' );
+    $wa_badge    = get_option( 'options_contact_wa_badge', 'Respon Tercepat' );
+    $wa_subinfo  = get_option( 'options_contact_wa_subinfo', 'Senin - Jumat: 08:00 - 15:00 WIB' );
+    $wa_desc     = get_option( 'options_contact_wa_desc', 'Layanan interaktif langsung bersama staf CS kami untuk konsultasi produk tabungan, deposito, simulasi pembiayaan, atau informasi persyaratan akad syariah.' );
+    $wa_btn      = get_option( 'options_contact_wa_btn_text', 'Chat WhatsApp Sekarang' );
+
+    $phone       = get_option( 'options_contact_phone', '(021) 7401667 - 7490874' );
+    $phone_title = get_option( 'options_contact_phone_title', 'Telepon Kantor Operasional' );
+    $phone_badge = get_option( 'options_contact_phone_badge', 'Panggilan Suara' );
+    $phone_sub   = get_option( 'options_contact_phone_subinfo', 'Senin - Jumat: 08:00 - 15:00 WIB' );
+    $phone_desc  = get_option( 'options_contact_phone_desc', 'Sambungan telepon langsung ke kantor pusat operasional untuk konfirmasi rekening, urusan administrasi, serta koordinasi layanan perbankan resmi.' );
+    $phone_btn   = get_option( 'options_contact_phone_btn_text', 'Hubungi Telepon Kantor' );
+
+    $email       = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
+    $email_title = get_option( 'options_contact_email_title', 'Email Resmi Perseroan' );
+    $email_badge = get_option( 'options_contact_email_badge', 'Korespondensi Formal' );
+    $email_sub   = get_option( 'options_contact_email_subinfo', 'Respon Maksimal 1 x 24 Jam Kerja' );
+    $email_desc  = get_option( 'options_contact_email_desc', 'Saluran pengiriman surat dinas, berkas kemitraan kelembagaan, penawaran kerjasama, maupun penyampaian dokumen resmi kepada pihak manajemen bank.' );
+    $email_btn   = get_option( 'options_contact_email_btn_text', 'Kirim Pesan Email' );
+
+    // Seksi 4: Media Sosial Header
+    $soc_kicker  = get_option( 'options_contact_social_kicker', 'Jejaring Komunitas' );
+    $soc_title   = get_option( 'options_contact_social_title', 'Media Sosial Resmi Bank Syariah Wakalumi' );
+    $soc_desc    = get_option( 'options_contact_social_desc', 'Ikuti akun resmi kami untuk memperoleh update warta perbankan, edukasi fikih muamalah, informasi produk, dan kegiatan CSR perseroan.' );
+    $social_list = wakalumi_get_social_media_list();
+
+    // Seksi 5: Kantor Pusat, Detail Layanan & Maps
+    $off_kicker  = get_option( 'options_contact_office_kicker', 'Lokasi Kantor' );
+    $off_title   = get_option( 'options_contact_office_title', 'Kantor Pusat Operasional & Peta Navigasi' );
+    $off_desc    = get_option( 'options_contact_office_desc', 'Kunjungi kantor kami untuk layanan tatap muka langsung, verifikasi berkas, atau konsultasi pembiayaan usaha bersama tim perbankan syariah.' );
+    $off_badge   = get_option( 'options_contact_office_badge', 'Head Office' );
+    $off_status  = get_option( 'options_contact_office_status', 'Beroperasi Normal' );
+    $off_name    = get_option( 'options_contact_office_name', 'PT BPRS Wakalumi' );
+    $address     = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
+    $svc_1       = get_option( 'options_contact_office_svc_1', 'Pembukaan Rekening Tabungan & Deposito Mudharabah' );
+    $svc_2       = get_option( 'options_contact_office_svc_2', 'Konsultasi & Pengajuan Pembiayaan Usaha / UMKM' );
+    $svc_3       = get_option( 'options_contact_office_svc_3', 'Transaksi Setoran & Penarikan Tunai Kas' );
+    $svc_4       = get_option( 'options_contact_office_svc_4', 'Layanan Pengaduan Konsumen & Customer Care' );
+    $maps        = get_option( 'options_maps_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.778980156602!2d106.76267921184164!3d-6.292752361567173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3aa7230643f%3A0xe76da8f0b25c55b0!2sBPR%20Syariah%20Wakalumi.%20PT!5e0!3m2!1sen!2sid!4v1792290594792!5m2!1sen!2sid' );
+    $maps_title  = get_option( 'options_footer_maps_title', 'Lokasi Kantor' );
+    $gmaps_url   = get_option( 'options_contact_gmaps_app_url', 'https://maps.google.com/?q=BPR+Syariah+Wakalumi+Ciputat' );
+
+    // Seksi 6: Himbauan Keamanan & CTA Banner
+    $fraud_show  = get_option( 'options_contact_fraud_show', '1' );
+    $fraud_badge = get_option( 'options_contact_fraud_badge', 'Keamanan & Kepatuhan' );
+    $fraud_sub   = get_option( 'options_contact_fraud_subtitle', 'Waspada Modus Penipuan' );
+    $fraud_title = get_option( 'options_contact_fraud_title', 'Himbauan Keamanan Bertransaksi Bagi Nasabah' );
+    $fraud_desc  = get_option( 'options_contact_fraud_desc', 'Untuk kenyamanan dan keselamatan finansial Anda, mohon perhatikan pedoman keamanan resmi Bank Syariah Wakalumi:' );
+    $fraud_p1_t  = get_option( 'options_contact_fraud_p1_title', '1. Jaga Kerahasiaan Data' );
+    $fraud_p1_d  = get_option( 'options_contact_fraud_p1_desc', 'Petugas bank TIDAK PERNAH meminta nomor PIN, password, maupun kode OTP transaksi Anda.' );
+    $fraud_p2_t  = get_option( 'options_contact_fraud_p2_title', '2. Rekening Resmi Perseroan' );
+    $fraud_p2_d  = get_option( 'options_contact_fraud_p2_desc', 'Pembayaran pembiayaan HANYA melalui rekening resmi atas nama PT BPRS Wakalumi, bukan rekening pribadi.' );
+    $fraud_p3_t  = get_option( 'options_contact_fraud_p3_title', '3. Saluran Komunikasi Sah' );
+    $fraud_p3_d  = get_option( 'options_contact_fraud_p3_desc', 'Pastikan nomor dan akun resmi yang menghubungi Anda sama persis dengan yang tercantum pada halaman ini.' );
+
+    $cta_badge   = get_option( 'options_contact_cta_badge', 'Konsultasi Perbankan Syariah' );
+    $cta_title   = get_option( 'options_contact_cta_title', 'Siap Memulai Perjalanan Finansial Berkah Bersama BSW?' );
+    $cta_desc    = get_option( 'options_contact_cta_desc', 'Hubungi tim customer service kami sekarang atau jelajahi berbagai produk tabungan, deposito, dan pembiayaan syariah yang dirancang untuk kemaslahatan Anda.' );
+    $cta_btn1_t  = get_option( 'options_contact_cta_btn1_text', 'Hubungi via WhatsApp' );
+    $cta_btn1_u  = get_option( 'options_contact_cta_btn1_url', '' );
+    $cta_btn2_t  = get_option( 'options_contact_cta_btn2_text', 'Jelajahi Produk Syariah' );
+    $cta_btn2_u  = get_option( 'options_contact_cta_btn2_url', '/produk/tabungan-syariah' );
     $page_desc   = get_option( 'options_contact_page_desc', 'Kami siap mendengarkan, melayani, dan memberikan solusi perbankan syariah terbaik untuk Anda. Silakan hubungi kami melalui berbagai saluran resmi yang aman, terpercaya, dan profesional.' );
 
     $wa          = get_option( 'options_contact_wa', '6281517380388' );
@@ -764,11 +930,11 @@ function wakalumi_render_contact_page() {
 
                 <!-- BAGIAN 1: HEADER BANNER HALAMAN KONTAK -->
                 <h2 style="font-size: 16px; margin-top: 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    🏷️ Banner Header Halaman Kontak (/kontak/)
+                    🏷️ 1. Banner Header Halaman Kontak (/kontak/)
                 </h2>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><label for="options_contact_page_badge">Lencana (Badge):</label></th>
+                        <th scope="row"><label for="options_contact_page_badge">Lencana Kicker (Badge):</label></th>
                         <td>
                             <input type="text" id="options_contact_page_badge" name="options_contact_page_badge" value="<?php echo esc_attr( $page_badge ); ?>" class="regular-text" placeholder="Hubungi Kami">
                         </td>
@@ -785,52 +951,231 @@ function wakalumi_render_contact_page() {
                             <textarea id="options_contact_page_desc" name="options_contact_page_desc" rows="3" class="large-text"><?php echo esc_textarea( $page_desc ); ?></textarea>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row"><label>Pills Highlight Spesifikasi (3 Butir):</label></th>
+                        <td>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Pill 1 (Jam Kerja):</label>
+                                    <input type="text" name="options_contact_pill_1" value="<?php echo esc_attr( $pill_1 ); ?>" class="regular-text" style="width: 100%;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Pill 2 (Layanan Resmi):</label>
+                                    <input type="text" name="options_contact_pill_2" value="<?php echo esc_attr( $pill_2 ); ?>" class="regular-text" style="width: 100%;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Pill 3 (Regulasi OJK):</label>
+                                    <input type="text" name="options_contact_pill_3" value="<?php echo esc_attr( $pill_3 ); ?>" class="regular-text" style="width: 100%;">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
 
-                <!-- BAGIAN 2: SALURAN KONTAK UTAMA -->
-                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    📞 Saluran Kontak Langsung (WhatsApp, Telepon, Email)
+                <!-- BAGIAN 2: KARTU SAMPING HERO SECTION (DUAL-TONE EXECUTIVE TRUST CARD) -->
+                <h2 style="font-size: 16px; margin-top: 35px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🛡️ 2. Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+                </h2>
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.5;">
+                        Kartu kepercayaan di sisi kanan hero section dengan arsitektur <strong>Dual-Tone</strong>, watermark logo resmi, dan indikator kesiapan customer service.
+                    </p>
+                </div>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_contact_hero_card_badge">Tone 1: Badge Status:</label></th>
+                        <td>
+                            <input type="text" id="options_contact_hero_card_badge" name="options_contact_hero_card_badge" value="<?php echo esc_attr( $h_badge ); ?>" class="regular-text" placeholder="Layanan Pelanggan Aktif">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_hero_card_company">Tone 1: Nama Institusi:</label></th>
+                        <td>
+                            <input type="text" id="options_contact_hero_card_company" name="options_contact_hero_card_company" value="<?php echo esc_attr( $h_company ); ?>" class="regular-text" placeholder="PT BPRS Wakalumi">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_hero_card_title">Tone 1: Judul Kartu:</label></th>
+                        <td>
+                            <input type="text" id="options_contact_hero_card_title" name="options_contact_hero_card_title" value="<?php echo esc_attr( $h_title ); ?>" class="large-text" placeholder="Siap Melayani Kebutuhan Finansial Syariah Anda">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_hero_card_desc">Tone 2: Deskripsi Komitmen:</label></th>
+                        <td>
+                            <textarea id="options_contact_hero_card_desc" name="options_contact_hero_card_desc" rows="3" class="large-text"><?php echo esc_textarea( $h_desc ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Tone 2: Mini Metric 1:</label></th>
+                        <td>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" name="options_contact_hero_metric_1_lbl" value="<?php echo esc_attr( $h_m1_lbl ); ?>" placeholder="Label (Hari Kerja)" style="width: 160px;">
+                                <input type="text" name="options_contact_hero_metric_1_val" value="<?php echo esc_attr( $h_m1_val ); ?>" placeholder="Nilai (Senin - Jumat)" style="width: 200px;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Tone 2: Mini Metric 2:</label></th>
+                        <td>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" name="options_contact_hero_metric_2_lbl" value="<?php echo esc_attr( $h_m2_lbl ); ?>" placeholder="Label (WhatsApp CS)" style="width: 160px;">
+                                <input type="text" name="options_contact_hero_metric_2_val" value="<?php echo esc_attr( $h_m2_val ); ?>" placeholder="Nilai (Respon Cepat)" style="width: 200px;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Tone 2: Footer Link Tautan:</label></th>
+                        <td>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <input type="text" name="options_contact_hero_footer_text" value="<?php echo esc_attr( $h_foot_text ); ?>" placeholder="Teks Pengantar (Butuh panduan lokasi cabang?)" style="width: 250px;">
+                                <input type="text" name="options_contact_hero_footer_btn_lbl" value="<?php echo esc_attr( $h_foot_btn ); ?>" placeholder="Label Tombol (Jaringan Kantor)" style="width: 150px;">
+                                <input type="text" name="options_contact_hero_footer_btn_url" value="<?php echo esc_attr( $h_foot_url ); ?>" placeholder="URL Target (/profil/jaringan-kantor)" style="width: 220px;">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- BAGIAN 3: TIGA SALURAN KOMUNIKASI LANGSUNG (DUAL-TONE FAST-ACTION) -->
+                <h2 style="font-size: 16px; margin-top: 35px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    📞 3. Tiga Saluran Komunikasi Langsung (WhatsApp, Telepon, Email)
                 </h2>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><label for="options_contact_wa">Nomor WhatsApp CS:</label></th>
+                        <th scope="row"><label>Header Seksi Saluran:</label></th>
                         <td>
-                            <input type="text" id="options_contact_wa" name="options_contact_wa" value="<?php echo esc_attr( $wa ); ?>" class="regular-text" placeholder="6281517380388">
-                            <p class="description">Format internasional tanpa spasi/tanda hubung, contoh: <code>6281517380388</code>.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_contact_phone">Nomor Telepon Kantor:</label></th>
-                        <td>
-                            <input type="text" id="options_contact_phone" name="options_contact_phone" value="<?php echo esc_attr( $phone ); ?>" class="regular-text">
-                            <p class="description">Contoh: <code>(021) 7401667 - 7490874</code></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_contact_email">Alamat Email Resmi:</label></th>
-                        <td>
-                            <input type="email" id="options_contact_email" name="options_contact_email" value="<?php echo esc_attr( $email ); ?>" class="regular-text">
-                            <p class="description">Contoh: <code>info@bprswakalumi.co.id</code></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="options_contact_address">Alamat Lengkap Kantor Pusat:</label></th>
-                        <td>
-                            <textarea id="options_contact_address" name="options_contact_address" rows="3" class="large-text"><?php echo esc_textarea( $address ); ?></textarea>
-                            <p class="description">Ditampilkan di footer dan halaman kontak.</p>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <input type="text" name="options_contact_channels_kicker" value="<?php echo esc_attr( $ch_kicker ); ?>" placeholder="Kicker (Saluran Komunikasi)" style="width: 240px;">
+                                <input type="text" name="options_contact_channels_title" value="<?php echo esc_attr( $ch_title ); ?>" placeholder="Judul Seksi" class="large-text">
+                                <textarea name="options_contact_channels_desc" rows="2" class="large-text" placeholder="Deskripsi pengantar seksi saluran komunikasi..."><?php echo esc_textarea( $ch_desc ); ?></textarea>
+                            </div>
                         </td>
                     </tr>
                 </table>
 
-                <!-- BAGIAN 3: MEDIA SOSIAL RESMI (FULL CRUD REPEATER) -->
+                <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 15px;">
+                    <!-- Kartu 1: WhatsApp -->
+                    <div style="background: #f0fdf4; border: 1px solid #86efac; border-left: 4px solid #10b981; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 10px 0; color: #065f46; font-size: 14px;">1️⃣ Kartu WhatsApp Customer Service</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Judul Kartu:</label>
+                                <input type="text" name="options_contact_wa_title" value="<?php echo esc_attr( $wa_title ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Badge Status:</label>
+                                <input type="text" name="options_contact_wa_badge" value="<?php echo esc_attr( $wa_badge ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Nomor WhatsApp:</label>
+                                <input type="text" name="options_contact_wa" value="<?php echo esc_attr( $wa ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Sub-info / Jam Layanan:</label>
+                                <input type="text" name="options_contact_wa_subinfo" value="<?php echo esc_attr( $wa_subinfo ); ?>" style="width: 100%;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Deskripsi Layanan:</label>
+                            <textarea name="options_contact_wa_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $wa_desc ); ?></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Template Pesan WA:</label>
+                                <input type="text" name="options_contact_wa_message" value="<?php echo esc_attr( $wa_msg ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Teks Tombol Aksi:</label>
+                                <input type="text" name="options_contact_wa_btn_text" value="<?php echo esc_attr( $wa_btn ); ?>" style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kartu 2: Telepon -->
+                    <div style="background: #ecfeff; border: 1px solid #a5f3fc; border-left: 4px solid #088395; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 10px 0; color: #0e7490; font-size: 14px;">2️⃣ Kartu Telepon Kantor Operasional</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Judul Kartu:</label>
+                                <input type="text" name="options_contact_phone_title" value="<?php echo esc_attr( $phone_title ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Badge Status:</label>
+                                <input type="text" name="options_contact_phone_badge" value="<?php echo esc_attr( $phone_badge ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Nomor Telepon:</label>
+                                <input type="text" name="options_contact_phone" value="<?php echo esc_attr( $phone ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Sub-info / Jam Layanan:</label>
+                                <input type="text" name="options_contact_phone_subinfo" value="<?php echo esc_attr( $phone_sub ); ?>" style="width: 100%;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Deskripsi Layanan:</label>
+                            <textarea name="options_contact_phone_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $phone_desc ); ?></textarea>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Teks Tombol Aksi:</label>
+                            <input type="text" name="options_contact_phone_btn_text" value="<?php echo esc_attr( $phone_btn ); ?>" style="width: 100%; max-width: 350px;">
+                        </div>
+                    </div>
+
+                    <!-- Kartu 3: Email -->
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-left: 4px solid #0284c7; border-radius: 8px; padding: 16px;">
+                        <h4 style="margin: 0 0 10px 0; color: #0369a1; font-size: 14px;">3️⃣ Kartu Email Resmi Perseroan</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Judul Kartu:</label>
+                                <input type="text" name="options_contact_email_title" value="<?php echo esc_attr( $email_title ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Badge Status:</label>
+                                <input type="text" name="options_contact_email_badge" value="<?php echo esc_attr( $email_badge ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Alamat Email Resmi:</label>
+                                <input type="email" name="options_contact_email" value="<?php echo esc_attr( $email ); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Sub-info / SLA Respon:</label>
+                                <input type="text" name="options_contact_email_subinfo" value="<?php echo esc_attr( $email_sub ); ?>" style="width: 100%;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Deskripsi Layanan:</label>
+                            <textarea name="options_contact_email_desc" rows="2" style="width: 100%;"><?php echo esc_textarea( $email_desc ); ?></textarea>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 3px;">Teks Tombol Aksi:</label>
+                            <input type="text" name="options_contact_email_btn_text" value="<?php echo esc_attr( $email_btn ); ?>" style="width: 100%; max-width: 350px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BAGIAN 4: MEDIA SOSIAL RESMI (FULL CRUD REPEATER) -->
                 <div style="margin-top: 35px; padding-top: 15px; border-top: 1px solid #eee;">
+                    <table class="form-table" style="margin-bottom: 15px;">
+                        <tr>
+                            <th scope="row"><label>Header Seksi Media Sosial:</label></th>
+                            <td>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <input type="text" name="options_contact_social_kicker" value="<?php echo esc_attr( $soc_kicker ); ?>" placeholder="Kicker (Jejaring Komunitas)" style="width: 240px;">
+                                    <input type="text" name="options_contact_social_title" value="<?php echo esc_attr( $soc_title ); ?>" placeholder="Judul Seksi Media Sosial" class="large-text">
+                                    <textarea name="options_contact_social_desc" rows="2" class="large-text" placeholder="Deskripsi seksi media sosial..."><?php echo esc_textarea( $soc_desc ); ?></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
                         <div>
                             <h2 style="font-size: 16px; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
-                                <span>🌐</span> Akun Media Sosial Resmi Perseroan (Full CRUD)
+                                <span>🌐</span> 4. Akun Media Sosial Resmi Perseroan (Full CRUD)
                             </h2>
                             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">
-                                Kelola kartu media sosial secara dinamis (tambah akun baru, ganti platform, atur urutan, atau hapus). Saluran yang belum memiliki akun (seperti YouTube) dapat dihapus atau dinonaktifkan, dan akan otomatis hilang dari website.
+                                Kelola kartu media sosial secara dinamis (tambah akun baru, ganti platform, atur urutan, atau hapus). Saluran yang belum memiliki akun dapat dinonaktifkan/dihapus.
                             </p>
                         </div>
                         <button type="button" id="btn-add-social" class="button button-secondary" style="font-weight: 700; color: #088395; border-color: #088395; border-radius: 6px; padding: 4px 14px;">
@@ -925,17 +1270,55 @@ function wakalumi_render_contact_page() {
                     </div>
                 </div>
 
-                <!-- BAGIAN 4: SEMATAN GOOGLE MAPS -->
+                <!-- BAGIAN 5: KANTOR PUSAT, DETAIL LAYANAN & GOOGLE MAPS -->
                 <h2 style="font-size: 16px; margin-top: 35px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
-                    🗺️ Sematan Google Maps (Halaman Kontak & Footer)
+                    🗺️ 5. Kantor Pusat Operasional, Layanan Kas & Sematan Google Maps
                 </h2>
-                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
-                    <p style="margin: 0; font-size: 13px; color: #166534; line-height: 1.5;">
-                        <strong>💡 Fleksibel & Praktis:</strong> Anda dapat menempelkan <strong>URL embed langsung</strong> (<code>https://www.google.com/maps/embed?...</code>) ATAU langsung menyalin seluruh <strong>kode HTML iframe</strong> dari Google Maps (<code>&lt;iframe src="..." ...&gt;&lt;/iframe&gt;</code>). Sistem otomatis membersihkan dan mengekstrak tautan peta secara sempurna.
-                    </p>
-                </div>
-
                 <table class="form-table">
+                    <tr>
+                        <th scope="row"><label>Header Seksi Kantor:</label></th>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <input type="text" name="options_contact_office_kicker" value="<?php echo esc_attr( $off_kicker ); ?>" placeholder="Kicker (Lokasi Kantor)" style="width: 240px;">
+                                <input type="text" name="options_contact_office_title" value="<?php echo esc_attr( $off_title ); ?>" placeholder="Judul Seksi Kantor" class="large-text">
+                                <textarea name="options_contact_office_desc" rows="2" class="large-text" placeholder="Deskripsi seksi kantor..."><?php echo esc_textarea( $off_desc ); ?></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Status & Identitas Kantor:</label></th>
+                        <td>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <input type="text" name="options_contact_office_badge" value="<?php echo esc_attr( $off_badge ); ?>" placeholder="Badge (Head Office)" style="width: 160px;">
+                                <input type="text" name="options_contact_office_status" value="<?php echo esc_attr( $off_status ); ?>" placeholder="Status (Beroperasi Normal)" style="width: 180px;">
+                                <input type="text" name="options_contact_office_name" value="<?php echo esc_attr( $off_name ); ?>" placeholder="Nama Lembaga (PT BPRS Wakalumi)" style="width: 240px;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_address">Alamat Lengkap Kantor Pusat:</label></th>
+                        <td>
+                            <textarea id="options_contact_address" name="options_contact_address" rows="3" class="large-text"><?php echo esc_textarea( $address ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>4 Layanan yang Tersedia:</label></th>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                <input type="text" name="options_contact_office_svc_1" value="<?php echo esc_attr( $svc_1 ); ?>" class="large-text" placeholder="Layanan 1">
+                                <input type="text" name="options_contact_office_svc_2" value="<?php echo esc_attr( $svc_2 ); ?>" class="large-text" placeholder="Layanan 2">
+                                <input type="text" name="options_contact_office_svc_3" value="<?php echo esc_attr( $svc_3 ); ?>" class="large-text" placeholder="Layanan 3">
+                                <input type="text" name="options_contact_office_svc_4" value="<?php echo esc_attr( $svc_4 ); ?>" class="large-text" placeholder="Layanan 4">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_contact_gmaps_app_url">Tautan Navigasi Maps (Aplikasi):</label></th>
+                        <td>
+                            <input type="url" id="options_contact_gmaps_app_url" name="options_contact_gmaps_app_url" value="<?php echo esc_attr( $gmaps_url ); ?>" class="large-text" placeholder="https://maps.google.com/?q=...">
+                            <p class="description">Tautan saat nasabah mengklik tombol <em>"Buka Navigasi di Google Maps"</em>.</p>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row"><label for="options_footer_maps_title">Judul Kolom Peta:</label></th>
                         <td>
@@ -949,6 +1332,87 @@ function wakalumi_render_contact_page() {
                             <p class="description">
                                 <strong>Langkah dari Google Maps:</strong> Cari lokasi kantor &rarr; Klik tombol <strong>Bagikan (Share)</strong> &rarr; Pilih tab <strong>Sematkan Peta (Embed a map)</strong> &rarr; Klik <strong>Salin HTML</strong> &rarr; Tempelkan langsung ke kotak di atas.
                             </p>
+                        </td>
+                    </tr>
+                </table>
+
+                <?php if ( ! empty( $maps ) ) : ?>
+                    <div style="margin-top: 15px;">
+                        <strong style="display: block; margin-bottom: 6px;">Pratinjau Peta Saat Ini:</strong>
+                        <div style="max-width: 500px; height: 200px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <iframe src="<?php echo esc_url( $maps ); ?>" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <!-- BAGIAN 6: HIMBAUAN KEAMANAN (ANTI-FRAUD) & CALL-TO-ACTION (CTA) -->
+                <h2 style="font-size: 16px; margin-top: 35px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🛡️ 6. Himbauan Keamanan Bertransaksi (Anti-Fraud) &amp; Call-to-Action (CTA)
+                </h2>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_contact_fraud_show">Tampilkan Seksi Anti-Fraud:</label></th>
+                        <td>
+                            <label style="font-weight: 600;">
+                                <input type="checkbox" id="options_contact_fraud_show" name="options_contact_fraud_show" value="1" <?php checked( $fraud_show, '1' ); ?>>
+                                Aktifkan kartu himbauan keamanan bagi nasabah
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Header Himbauan Keamanan:</label></th>
+                        <td>
+                            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                                <input type="text" name="options_contact_fraud_badge" value="<?php echo esc_attr( $fraud_badge ); ?>" placeholder="Badge (Keamanan & Kepatuhan)" style="width: 220px;">
+                                <input type="text" name="options_contact_fraud_subtitle" value="<?php echo esc_attr( $fraud_sub ); ?>" placeholder="Subjudul (Waspada Modus Penipuan)" style="width: 250px;">
+                            </div>
+                            <input type="text" name="options_contact_fraud_title" value="<?php echo esc_attr( $fraud_title ); ?>" class="large-text" placeholder="Judul Himbauan" style="margin-bottom: 8px;">
+                            <textarea name="options_contact_fraud_desc" rows="2" class="large-text" placeholder="Deskripsi pengantar..."><?php echo esc_textarea( $fraud_desc ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Poin Keamanan 1:</label></th>
+                        <td>
+                            <input type="text" name="options_contact_fraud_p1_title" value="<?php echo esc_attr( $fraud_p1_t ); ?>" class="large-text" style="margin-bottom: 4px;">
+                            <textarea name="options_contact_fraud_p1_desc" rows="2" class="large-text"><?php echo esc_textarea( $fraud_p1_d ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Poin Keamanan 2:</label></th>
+                        <td>
+                            <input type="text" name="options_contact_fraud_p2_title" value="<?php echo esc_attr( $fraud_p2_t ); ?>" class="large-text" style="margin-bottom: 4px;">
+                            <textarea name="options_contact_fraud_p2_desc" rows="2" class="large-text"><?php echo esc_textarea( $fraud_p2_d ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label>Poin Keamanan 3:</label></th>
+                        <td>
+                            <input type="text" name="options_contact_fraud_p3_title" value="<?php echo esc_attr( $fraud_p3_t ); ?>" class="large-text" style="margin-bottom: 4px;">
+                            <textarea name="options_contact_fraud_p3_desc" rows="2" class="large-text"><?php echo esc_textarea( $fraud_p3_d ); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="border-top: 1px solid #e2e8f0;"><label>CTA Banner Bawah Halaman:</label></th>
+                        <td style="border-top: 1px solid #e2e8f0;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <input type="text" name="options_contact_cta_badge" value="<?php echo esc_attr( $cta_badge ); ?>" placeholder="Badge (Konsultasi Perbankan Syariah)" style="width: 240px;">
+                                <input type="text" name="options_contact_cta_title" value="<?php echo esc_attr( $cta_title ); ?>" placeholder="Judul Banner CTA" class="large-text">
+                                <textarea name="options_contact_cta_desc" rows="2" class="large-text" placeholder="Deskripsi banner CTA..."><?php echo esc_textarea( $cta_desc ); ?></textarea>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Tombol 1 (Teks):</label>
+                                    <input type="text" name="options_contact_cta_btn1_text" value="<?php echo esc_attr( $cta_btn1_t ); ?>" style="width: 100%;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin: 6px 0 3px 0;">Tombol 1 (URL Kustom, kosongkan untuk WA otomatis):</label>
+                                    <input type="text" name="options_contact_cta_btn1_url" value="<?php echo esc_attr( $cta_btn1_u ); ?>" placeholder="https://..." style="width: 100%;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Tombol 2 (Teks):</label>
+                                    <input type="text" name="options_contact_cta_btn2_text" value="<?php echo esc_attr( $cta_btn2_t ); ?>" style="width: 100%;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin: 6px 0 3px 0;">Tombol 2 (URL Target):</label>
+                                    <input type="text" name="options_contact_cta_btn2_url" value="<?php echo esc_attr( $cta_btn2_u ); ?>" placeholder="/produk/tabungan-syariah" style="width: 100%;">
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>

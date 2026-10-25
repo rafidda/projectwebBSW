@@ -486,71 +486,101 @@ const Navbar = {
   },
 
   initMegaMenuHover() {
-    const previewContainer = document.getElementById('mega-preview-container');
-    const previewImg       = document.getElementById('mega-preview-img');
-    const previewBadge     = document.getElementById('mega-preview-badge');
-    const previewTitle     = document.getElementById('mega-preview-title');
-    const previewTagline   = document.getElementById('mega-preview-tagline');
+    const previewLink = document.getElementById('mega-preview-link');
+    if (!previewLink) return;
+    if (previewLink.dataset.hoverInitialized === 'true') return;
+    previewLink.dataset.hoverInitialized = 'true';
 
-    if (!previewContainer || !previewImg) return;
-    if (previewContainer.dataset.hoverInitialized === 'true') return;
-    previewContainer.dataset.hoverInitialized = 'true';
+    const previewImg     = document.getElementById('mega-preview-img');
+    const previewVector  = document.getElementById('mega-preview-vector');
+    const previewBadge   = document.getElementById('mega-preview-badge');
+    const previewTitle   = document.getElementById('mega-preview-title');
+    const previewTagline = document.getElementById('mega-preview-tagline');
 
     const hoverItems = document.querySelectorAll('.product-hover-item');
-    const megaMenu = previewContainer.closest('.dropdown-mega-menu');
-    let hideTimer = null;
+    const megaMenu = previewLink.closest('.dropdown-mega-menu');
+    let timer = null;
+
+    const defaultHref    = previewLink.getAttribute('data-default-href') || '';
+    const defaultBadge   = previewLink.getAttribute('data-default-badge') || 'Katalog Resmi';
+    const defaultTitle   = previewLink.getAttribute('data-default-title') || 'Katalog Brosur Digital';
+    const defaultTagline = previewLink.getAttribute('data-default-tagline') || 'Edisi 2026 • Panduan Lengkap PDF';
+    const defaultImg     = previewLink.getAttribute('data-default-img') || '';
 
     const showPreview = (item) => {
-      if (hideTimer) {
-        clearTimeout(hideTimer);
-        hideTimer = null;
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
       }
-      const img = item.getAttribute('data-image');
-      const name = item.getAttribute('data-name') || '';
-      const badge = item.getAttribute('data-badge') || '';
+      const img     = item.getAttribute('data-image');
+      const name    = item.getAttribute('data-name') || '';
+      const badge   = item.getAttribute('data-badge') || '';
       const tagline = item.getAttribute('data-tagline') || '';
+      const href    = item.getAttribute('href') || defaultHref;
 
-      if (!img || img.trim() === '') {
-        hidePreview();
-        return;
-      }
-
-      previewImg.src = img;
-      previewImg.alt = name;
       if (previewBadge) previewBadge.textContent = badge;
       if (previewTitle) previewTitle.textContent = name;
       if (previewTagline) previewTagline.textContent = tagline;
+      previewLink.setAttribute('href', href);
 
-      previewContainer.classList.remove('hidden');
-      // Trigger reflow for smooth transition
-      void previewContainer.offsetWidth;
-      previewContainer.classList.remove('opacity-0', 'scale-95');
-      previewContainer.classList.add('opacity-100', 'scale-100');
+      if (img && img.trim() !== '') {
+        if (previewImg) {
+          previewImg.src = img;
+          previewImg.alt = name;
+          previewImg.classList.remove('opacity-0');
+          previewImg.classList.add('opacity-100');
+        }
+        if (previewVector) {
+          previewVector.classList.remove('opacity-100');
+          previewVector.classList.add('opacity-0');
+        }
+      } else {
+        resetPreview(false);
+      }
     };
 
-    const hidePreview = (immediate = false) => {
-      if (hideTimer) clearTimeout(hideTimer);
-      const delay = immediate ? 0 : 150;
-      hideTimer = setTimeout(() => {
-        previewContainer.classList.remove('opacity-100', 'scale-100');
-        previewContainer.classList.add('opacity-0', 'scale-95');
-        setTimeout(() => {
-          if (previewContainer.classList.contains('opacity-0')) {
-            previewContainer.classList.add('hidden');
+    const resetPreview = (immediate = false) => {
+      if (timer) clearTimeout(timer);
+      const delay = immediate ? 0 : 200;
+      timer = setTimeout(() => {
+        if (previewBadge) previewBadge.textContent = defaultBadge;
+        if (previewTitle) previewTitle.textContent = defaultTitle;
+        if (previewTagline) previewTagline.textContent = defaultTagline;
+        previewLink.setAttribute('href', defaultHref);
+
+        if (defaultImg && defaultImg.trim() !== '') {
+          if (previewImg) {
+            previewImg.src = defaultImg;
+            previewImg.alt = defaultTitle;
+            previewImg.classList.remove('opacity-0');
+            previewImg.classList.add('opacity-100');
           }
-        }, 300);
+          if (previewVector) {
+            previewVector.classList.remove('opacity-100');
+            previewVector.classList.add('opacity-0');
+          }
+        } else {
+          if (previewImg) {
+            previewImg.classList.remove('opacity-100');
+            previewImg.classList.add('opacity-0');
+          }
+          if (previewVector) {
+            previewVector.classList.remove('opacity-0');
+            previewVector.classList.add('opacity-100');
+          }
+        }
       }, delay);
     };
 
     hoverItems.forEach(item => {
       item.addEventListener('mouseenter', () => showPreview(item));
       item.addEventListener('focus', () => showPreview(item));
-      item.addEventListener('mouseleave', () => hidePreview(false));
-      item.addEventListener('blur', () => hidePreview(false));
+      item.addEventListener('mouseleave', () => resetPreview(false));
+      item.addEventListener('blur', () => resetPreview(false));
     });
 
     if (megaMenu) {
-      megaMenu.addEventListener('mouseleave', () => hidePreview(true));
+      megaMenu.addEventListener('mouseleave', () => resetPreview(true));
     }
   }
 };
@@ -1587,13 +1617,17 @@ const InstagramSlider = {
 };
 
 // ========================================================================
-// JARINGAN KANTOR INTERACTIONS (Filter, Copy Address, & Map Modal Lightbox)
+// JARINGAN KANTOR INTERACTIONS (Filter, Copy Address, Map Modal & Full Photo/Detail Modal)
 // ========================================================================
 const KantorModule = {
+  _swupCleanBound: false,
+  _activeOfficeData: null,
+  savedScrollY: 0,
+
   init() {
     this.initFilter();
     this.initCopyAddress();
-    this.initMapModal();
+    this.initModals();
   },
 
   initFilter() {
@@ -1640,8 +1674,9 @@ const KantorModule = {
 
   initCopyAddress() {
     document.querySelectorAll('.copy-kantor-alamat-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.onclick = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const textToCopy = btn.getAttribute('data-copy');
         if (!textToCopy) return;
 
@@ -1665,7 +1700,7 @@ const KantorModule = {
         } else {
           fallbackCopy(textToCopy, onSuccess);
         }
-      });
+      };
     });
 
     function fallbackCopy(text, cb) {
@@ -1684,101 +1719,373 @@ const KantorModule = {
     }
   },
 
-  initMapModal() {
-    const modal = document.getElementById('kantor-map-modal');
-    if (!modal) return;
+  initModals() {
+    const mapModal = document.getElementById('kantor-map-modal');
+    const detailModal = document.getElementById('kantor-detail-modal');
 
-    const backdrop = document.getElementById('kantor-map-backdrop');
-    const container = document.getElementById('kantor-map-container');
-    const iframe = document.getElementById('kantor-map-iframe');
-    const loading = document.getElementById('map-modal-loading');
-    const titleEl = document.getElementById('map-modal-title');
-    const tipeEl = document.getElementById('map-modal-tipe');
-    const alamatEl = document.getElementById('map-modal-alamat');
-    const extLink = document.getElementById('map-modal-external-link');
-    const gmapsBtn = document.getElementById('map-modal-gmaps-btn');
-    const closeBtn = document.getElementById('kantor-map-close-btn');
-    const footerClose = document.getElementById('kantor-map-footer-close');
+    // Teleport both modals immediately to document.body so that Swup's #swup
+    // (.transition-fade with CSS transform) does not trap position: fixed.
+    if (mapModal && mapModal.parentElement !== document.body) {
+      document.body.appendChild(mapModal);
+    }
+    if (detailModal && detailModal.parentElement !== document.body) {
+      document.body.appendChild(detailModal);
+    }
 
-    const openModal = (btn) => {
-      const title = btn.getAttribute('data-title') || 'Peta Kantor';
-      const tipe = btn.getAttribute('data-tipe') || 'Kantor Operasional';
-      const alamat = btn.getAttribute('data-alamat') || '';
-      const gmaps = btn.getAttribute('data-gmaps') || '#';
-      const query = btn.getAttribute('data-query') || encodeURIComponent(title + ' ' + alamat);
+    // Register Swup cleanup to remove teleported modals when navigating away
+    if (window.swup && window.swup.hooks && !this._swupCleanBound) {
+      this._swupCleanBound = true;
+      window.swup.hooks.once('visit:start', () => {
+        this._swupCleanBound = false;
+        const staleMap = document.getElementById('kantor-map-modal');
+        if (staleMap && staleMap.parentElement === document.body) staleMap.remove();
+        const staleDetail = document.getElementById('kantor-detail-modal');
+        if (staleDetail && staleDetail.parentElement === document.body) staleDetail.remove();
+      });
+    }
 
-      if (titleEl) titleEl.textContent = title;
-      if (tipeEl) tipeEl.textContent = tipe;
-      if (alamatEl) alamatEl.textContent = alamat;
-      if (extLink) extLink.href = gmaps;
-      if (gmapsBtn) gmapsBtn.href = gmaps;
+    // MAP MODAL ELEMENTS
+    const mapBackdrop = document.getElementById('kantor-map-backdrop');
+    const mapContainer = document.getElementById('kantor-map-container');
+    const mapIframe = document.getElementById('kantor-map-iframe');
+    const mapLoading = document.getElementById('map-modal-loading');
+    const mapTitle = document.getElementById('map-modal-title');
+    const mapTipe = document.getElementById('map-modal-tipe');
+    const mapAlamat = document.getElementById('map-modal-alamat');
+    const mapExtLink = document.getElementById('map-modal-external-link');
+    const mapGmapsBtn = document.getElementById('map-modal-gmaps-btn');
+    const mapCloseBtn = document.getElementById('kantor-map-close-btn');
+    const mapFooterClose = document.getElementById('kantor-map-footer-close');
 
-      // Show loader
-      if (loading) {
-        loading.style.display = 'flex';
-        loading.style.opacity = '1';
+    // DETAIL MODAL ELEMENTS
+    const detailBackdrop = document.getElementById('kantor-detail-backdrop');
+    const detailContainer = document.getElementById('kantor-detail-container');
+    const detailImg = document.getElementById('kantor-detail-img');
+    const detailTitle = document.getElementById('kantor-detail-title');
+    const detailTipe = document.getElementById('kantor-detail-tipe');
+    const detailStatusText = document.getElementById('kantor-detail-status-text');
+    const detailAlamat = document.getElementById('kantor-detail-alamat');
+    const detailKotaPill = document.getElementById('kantor-detail-kota-pill');
+    const detailKotaFull = document.getElementById('kantor-detail-kota-full');
+    const detailJam = document.getElementById('kantor-detail-jam');
+    const detailTel = document.getElementById('kantor-detail-tel');
+    const detailTelLink = document.getElementById('kantor-detail-tel-link');
+    const detailWa = document.getElementById('kantor-detail-wa');
+    const detailWaLink = document.getElementById('kantor-detail-wa-link');
+    const detailLayananContainer = document.getElementById('kantor-detail-layanan-container');
+    const detailCopyBtn = document.getElementById('kantor-detail-copy-btn');
+    const detailCopyLabel = document.getElementById('kantor-detail-copy-label');
+    const detailOpenMapBtn = document.getElementById('kantor-detail-open-map-btn');
+    const detailGmapsLink = document.getElementById('kantor-detail-gmaps-link');
+    const detailCloseBtn = document.getElementById('kantor-detail-close-btn');
+    const detailFooterClose = document.getElementById('kantor-detail-footer-close');
+
+    // === MAP MODAL LOGIC ===
+    const openMapModal = (data) => {
+      const activeMap = document.getElementById('kantor-map-modal');
+      if (!activeMap) return;
+      if (activeMap.parentElement !== document.body) {
+        document.body.appendChild(activeMap);
       }
 
-      // Set embed src
-      if (iframe) {
-        iframe.onload = () => {
-          if (loading) {
-            loading.style.opacity = '0';
-            setTimeout(() => { loading.style.display = 'none'; }, 300);
-          }
-        };
-        // Standard clean Google Maps Embed without API key
-        iframe.src = `https://maps.google.com/maps?q=${query}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+      this.savedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+      const title = data.title || 'Peta Kantor';
+      const tipe = data.tipe || 'Kantor Operasional';
+      const alamat = data.alamat || '';
+      const gmaps = data.gmaps || '#';
+      
+      // Bersihkan dan normalkan string pencarian agar Google Maps langsung menampilkan pin peta penuh tanpa sidebar list
+      let rawQuery = data.query || (title + ' ' + alamat);
+      try {
+        rawQuery = decodeURIComponent(rawQuery);
+      } catch (e) {}
+      rawQuery = rawQuery.replace(/[\r\n\s]+/g, ' ').trim();
+      const cleanEncodedQuery = encodeURIComponent(rawQuery);
+
+      if (mapTitle) mapTitle.textContent = title;
+      if (mapTipe) mapTipe.textContent = tipe;
+      if (mapAlamat) mapAlamat.textContent = alamat;
+      if (mapExtLink) mapExtLink.href = gmaps;
+      if (mapGmapsBtn) mapGmapsBtn.href = gmaps;
+
+      // 1. BUKA MODAL TERLEBIH DAHULU: Pastikan modal berstatus flex dan container memiliki dimensi fisik nyata di layar
+      activeMap.classList.remove('hidden');
+      activeMap.classList.add('flex');
+
+      // Tampilkan spinner loading
+      if (mapLoading) {
+        mapLoading.style.display = 'flex';
+        mapLoading.style.opacity = '1';
       }
 
-      // Open Modal Animation
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
+      // Pastikan posisi scroll terkunci tanpa melompat
+      window.scrollTo(0, this.savedScrollY);
 
+      // 2. Beri waktu mikro layout browser selesai menghitung dimensi container sebelum iframe dimuat
       requestAnimationFrame(() => {
-        if (backdrop) {
-          backdrop.classList.remove('opacity-0');
-          backdrop.classList.add('opacity-100');
+        if (mapBackdrop) {
+          mapBackdrop.classList.remove('opacity-0');
+          mapBackdrop.classList.add('opacity-100');
         }
-        if (container) {
-          container.classList.remove('scale-95', 'opacity-0');
-          container.classList.add('scale-100', 'opacity-100');
+        if (mapContainer) {
+          mapContainer.classList.remove('scale-95', 'opacity-0');
+          mapContainer.classList.add('scale-100', 'opacity-100');
+        }
+
+        // 3. SET SRC SETELAH CONTAINER MEMILIKI UKURAN PENUH (Mencegah tile Google Maps hanya ter-load sebagian)
+        if (mapIframe) {
+          mapIframe.onload = () => {
+            if (mapLoading) {
+              mapLoading.style.opacity = '0';
+              setTimeout(() => { mapLoading.style.display = 'none'; }, 200);
+            }
+          };
+          // URL Google Maps Embed dengan hl=id tanpa iwloc kosong agar peta memenuhi layar 100%
+          mapIframe.src = `https://maps.google.com/maps?q=${cleanEncodedQuery}&hl=id&z=15&output=embed`;
         }
       });
     };
 
-    const closeModal = () => {
-      if (backdrop) {
-        backdrop.classList.remove('opacity-100');
-        backdrop.classList.add('opacity-0');
+    const closeMapModal = () => {
+      const activeMap = document.getElementById('kantor-map-modal');
+      if (!activeMap || activeMap.classList.contains('hidden')) return;
+
+      if (mapBackdrop) {
+        mapBackdrop.classList.remove('opacity-100');
+        mapBackdrop.classList.add('opacity-0');
       }
-      if (container) {
-        container.classList.remove('scale-100', 'opacity-100');
-        container.classList.add('scale-95', 'opacity-0');
+      if (mapContainer) {
+        mapContainer.classList.remove('scale-100', 'opacity-100');
+        mapContainer.classList.add('scale-95', 'opacity-0');
       }
 
       setTimeout(() => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        document.body.style.overflow = '';
-        if (iframe) iframe.src = 'about:blank';
+        activeMap.classList.add('hidden');
+        activeMap.classList.remove('flex');
+        if (mapIframe) mapIframe.src = 'about:blank';
+        window.scrollTo(0, this.savedScrollY);
       }, 250);
     };
 
-    // Attach open triggers
+    // === DETAIL & FULL PHOTO MODAL LOGIC ===
+    const openDetailModal = (el) => {
+      const activeDetail = document.getElementById('kantor-detail-modal');
+      if (!activeDetail) return;
+      if (activeDetail.parentElement !== document.body) {
+        document.body.appendChild(activeDetail);
+      }
+
+      this.savedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+      const nama = el.getAttribute('data-nama') || 'Kantor BPRS Wakalumi';
+      const tipe = el.getAttribute('data-tipe') || 'Kantor Operasional';
+      const foto = el.getAttribute('data-foto') || '';
+      const alamat = el.getAttribute('data-alamat') || '';
+      const kota = el.getAttribute('data-kota') || '';
+      const telepon = el.getAttribute('data-telepon') || '';
+      const telclean = el.getAttribute('data-telclean') || telepon;
+      const whatsapp = el.getAttribute('data-whatsapp') || '';
+      const walink = el.getAttribute('data-walink') || '#';
+      const jam = el.getAttribute('data-jam') || 'Senin - Jumat: 08.00 - 15.00 WIB';
+      const layanan = el.getAttribute('data-layanan') || '';
+      const gmaps = el.getAttribute('data-gmaps') || '#';
+      const status = el.getAttribute('data-status') || 'Beroperasi Normal';
+      const query = el.getAttribute('data-query') || encodeURIComponent(nama + ' ' + alamat);
+
+      this._activeOfficeData = {
+        title: nama,
+        tipe: tipe,
+        alamat: alamat,
+        gmaps: gmaps,
+        query: query
+      };
+
+      if (detailTitle) detailTitle.textContent = nama;
+      if (detailTipe) detailTipe.textContent = tipe;
+      if (detailStatusText) detailStatusText.textContent = status;
+      if (detailAlamat) detailAlamat.textContent = alamat;
+      if (detailKotaPill) detailKotaPill.textContent = kota;
+      if (detailKotaFull) detailKotaFull.textContent = kota ? (kota + ', Banten') : 'Indonesia';
+      if (detailJam) detailJam.textContent = jam;
+
+      if (detailTel) detailTel.textContent = telepon || '-';
+      if (detailTelLink) {
+        detailTelLink.href = telclean ? `tel:${telclean}` : '#';
+        if (!telepon) detailTelLink.classList.add('pointer-events-none', 'opacity-50');
+        else detailTelLink.classList.remove('pointer-events-none', 'opacity-50');
+      }
+
+      if (detailWa) detailWa.textContent = whatsapp || '-';
+      if (detailWaLink) {
+        detailWaLink.href = walink;
+        if (!whatsapp) detailWaLink.classList.add('pointer-events-none', 'opacity-50');
+        else detailWaLink.classList.remove('pointer-events-none', 'opacity-50');
+      }
+
+      if (detailGmapsLink) detailGmapsLink.href = gmaps;
+
+      // Populate Image Proporsional Sesuai Ukuran Asli
+      if (detailImg) {
+        detailImg.src = foto;
+        detailImg.alt = `Foto Bangunan ${nama}`;
+      }
+
+      // Populate Layanan Pills
+      if (detailLayananContainer) {
+        detailLayananContainer.innerHTML = '';
+        if (layanan) {
+          const items = layanan.split(',').map(s => s.trim()).filter(Boolean);
+          items.forEach(item => {
+            const span = document.createElement('span');
+            span.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60';
+            span.innerHTML = `<svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span>${item}</span>`;
+            detailLayananContainer.appendChild(span);
+          });
+        }
+      }
+
+      // Show Detail Modal (fixed viewport center)
+      activeDetail.classList.remove('hidden');
+      activeDetail.classList.add('flex');
+
+      // Keep scroll strictly in place
+      window.scrollTo(0, this.savedScrollY);
+
+      requestAnimationFrame(() => {
+        if (detailBackdrop) {
+          detailBackdrop.classList.remove('opacity-0');
+          detailBackdrop.classList.add('opacity-100');
+        }
+        if (detailContainer) {
+          detailContainer.classList.remove('scale-95', 'opacity-0');
+          detailContainer.classList.add('scale-100', 'opacity-100');
+        }
+      });
+    };
+
+    const closeDetailModal = () => {
+      const activeDetail = document.getElementById('kantor-detail-modal');
+      if (!activeDetail || activeDetail.classList.contains('hidden')) return;
+
+      if (detailBackdrop) {
+        detailBackdrop.classList.remove('opacity-100');
+        detailBackdrop.classList.add('opacity-0');
+      }
+      if (detailContainer) {
+        detailContainer.classList.remove('scale-100', 'opacity-100');
+        detailContainer.classList.add('scale-95', 'opacity-0');
+      }
+
+      setTimeout(() => {
+        activeDetail.classList.add('hidden');
+        activeDetail.classList.remove('flex');
+        window.scrollTo(0, this.savedScrollY);
+      }, 250);
+    };
+
+    // Attach Map Triggers
     document.querySelectorAll('.open-map-modal-btn').forEach(btn => {
-      btn.addEventListener('click', () => openModal(btn));
+      btn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openMapModal({
+          title: btn.getAttribute('data-title'),
+          tipe: btn.getAttribute('data-tipe'),
+          alamat: btn.getAttribute('data-alamat'),
+          gmaps: btn.getAttribute('data-gmaps'),
+          query: btn.getAttribute('data-query')
+        });
+      };
     });
 
-    // Close triggers
-    closeBtn?.addEventListener('click', closeModal);
-    footerClose?.addEventListener('click', closeModal);
-    backdrop?.addEventListener('click', closeModal);
+    // Attach Detail & Full Photo Triggers (Photo Area & Card Title)
+    document.querySelectorAll('.open-kantor-detail-btn').forEach(el => {
+      el.onclick = (e) => {
+        // Prevent click if clicking child interactive elements like copy or link
+        if (e.target.closest('button, a')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        openDetailModal(el);
+      };
+    });
 
+    // Detail Modal Internal Action: Switch to Map Modal
+    if (detailOpenMapBtn) {
+      detailOpenMapBtn.onclick = (e) => {
+        e.preventDefault();
+        if (this._activeOfficeData) {
+          closeDetailModal();
+          setTimeout(() => {
+            openMapModal(this._activeOfficeData);
+          }, 200);
+        }
+      };
+    }
+
+    // Detail Modal Internal Action: Copy Alamat
+    if (detailCopyBtn) {
+      detailCopyBtn.onclick = (e) => {
+        e.preventDefault();
+        const textToCopy = detailAlamat ? detailAlamat.textContent : '';
+        if (!textToCopy) return;
+
+        const origLabel = detailCopyLabel ? detailCopyLabel.textContent : 'Salin Alamat';
+        const onSuccess = () => {
+          if (detailCopyLabel) detailCopyLabel.textContent = 'Tersalin! ✓';
+          detailCopyBtn.classList.add('text-emerald-500');
+          showCopyToast('Alamat kantor berhasil disalin!');
+          setTimeout(() => {
+            if (detailCopyLabel) detailCopyLabel.textContent = origLabel;
+            detailCopyBtn.classList.remove('text-emerald-500');
+          }, 2000);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
+            fallbackTextCopy(textToCopy, onSuccess);
+          });
+        } else {
+          fallbackTextCopy(textToCopy, onSuccess);
+        }
+      };
+    }
+
+    function fallbackTextCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        cb();
+      } catch (err) {}
+      ta.remove();
+    }
+
+    // Map Close Triggers
+    mapCloseBtn?.addEventListener('click', closeMapModal);
+    mapFooterClose?.addEventListener('click', closeMapModal);
+    mapBackdrop?.addEventListener('click', closeMapModal);
+
+    // Detail Close Triggers
+    detailCloseBtn?.addEventListener('click', closeDetailModal);
+    detailFooterClose?.addEventListener('click', closeDetailModal);
+    detailBackdrop?.addEventListener('click', closeDetailModal);
+
+    // Escape Key Handling for Both Modals
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-        closeModal();
+      if (e.key === 'Escape') {
+        const activeDetail = document.getElementById('kantor-detail-modal');
+        const activeMap = document.getElementById('kantor-map-modal');
+        if (activeDetail && !activeDetail.classList.contains('hidden')) {
+          closeDetailModal();
+        } else if (activeMap && !activeMap.classList.contains('hidden')) {
+          closeMapModal();
+        }
       }
     });
   }
@@ -2636,14 +2943,17 @@ const BrosurModule = {
 
     if (!cards.length) return;
 
+    this.activeCategory = 'all';
+    this.searchQuery = '';
+
     const applyFilters = () => {
       let visibleCount = 0;
-      const query = this.searchQuery.toLowerCase().trim();
+      const query = (this.searchQuery || '').toLowerCase().trim();
 
       cards.forEach(card => {
-        const cat = card.getAttribute('data-category') || '';
-        const keywords = card.getAttribute('data-keywords') || '';
-        const title = card.getAttribute('data-title') || '';
+        const cat = (card.getAttribute('data-category') || card.getAttribute('data-filter') || '').trim();
+        const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+        const title = (card.getAttribute('data-title') || '').toLowerCase();
 
         const matchesCat = (this.activeCategory === 'all' || cat === this.activeCategory);
         const matchesSearch = !query || keywords.includes(query) || title.includes(query);
@@ -2681,20 +2991,33 @@ const BrosurModule = {
       }
     };
 
-    // Category button clicks
-    if (filterGroup) {
+    // Category button clicks (bind once per container)
+    if (filterGroup && !filterGroup._brosurFilterBound) {
+      filterGroup._brosurFilterBound = true;
       const buttons = filterGroup.querySelectorAll('.brosur-filter-btn');
       buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          this.activeCategory = btn.getAttribute('data-category') || 'all';
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetCat = btn.getAttribute('data-filter') || btn.getAttribute('data-category') || 'all';
+          this.activeCategory = targetCat;
 
           buttons.forEach(b => {
-            b.classList.remove('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
-            b.classList.add('text-slate-600', 'dark:text-slate-300');
+            b.classList.remove('active-filter', 'bg-teal-600', 'text-white', 'border-teal-600', 'shadow-sm', 'shadow-teal-600/20');
+            b.classList.add('bg-white/90', 'dark:bg-dark-card/90', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-dark-border');
+            const bBadge = b.querySelector('span');
+            if (bBadge) {
+              bBadge.classList.remove('bg-white/20');
+              bBadge.classList.add('bg-slate-100', 'dark:bg-dark-surface-alt');
+            }
           });
 
-          btn.classList.add('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
-          btn.classList.remove('text-slate-600', 'dark:text-slate-300');
+          btn.classList.add('active-filter', 'bg-teal-600', 'text-white', 'border-teal-600', 'shadow-sm', 'shadow-teal-600/20');
+          btn.classList.remove('bg-white/90', 'dark:bg-dark-card/90', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-dark-border');
+          const activeBadge = btn.querySelector('span');
+          if (activeBadge) {
+            activeBadge.classList.add('bg-white/20');
+            activeBadge.classList.remove('bg-slate-100', 'dark:bg-dark-surface-alt');
+          }
 
           applyFilters();
         });
@@ -2702,7 +3025,8 @@ const BrosurModule = {
     }
 
     // Live search input
-    if (searchInput) {
+    if (searchInput && !searchInput._brosurSearchBound) {
+      searchInput._brosurSearchBound = true;
       searchInput.addEventListener('input', (e) => {
         this.searchQuery = e.target.value;
         applyFilters();
@@ -2710,7 +3034,8 @@ const BrosurModule = {
     }
 
     // Clear search button
-    if (searchClear && searchInput) {
+    if (searchClear && searchInput && !searchClear._brosurClearBound) {
+      searchClear._brosurClearBound = true;
       searchClear.addEventListener('click', () => {
         searchInput.value = '';
         this.searchQuery = '';
@@ -2720,7 +3045,8 @@ const BrosurModule = {
     }
 
     // Reset button in empty state
-    if (resetBtn) {
+    if (resetBtn && !resetBtn._brosurResetBound) {
+      resetBtn._brosurResetBound = true;
       resetBtn.addEventListener('click', () => {
         this.activeCategory = 'all';
         this.searchQuery = '';
@@ -2729,12 +3055,21 @@ const BrosurModule = {
         if (filterGroup) {
           const buttons = filterGroup.querySelectorAll('.brosur-filter-btn');
           buttons.forEach((b, idx) => {
+            const bBadge = b.querySelector('span');
             if (idx === 0) {
-              b.classList.add('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
-              b.classList.remove('text-slate-600', 'dark:text-slate-300');
+              b.classList.add('active-filter', 'bg-teal-600', 'text-white', 'border-teal-600', 'shadow-sm', 'shadow-teal-600/20');
+              b.classList.remove('bg-white/90', 'dark:bg-dark-card/90', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-dark-border');
+              if (bBadge) {
+                bBadge.classList.add('bg-white/20');
+                bBadge.classList.remove('bg-slate-100', 'dark:bg-dark-surface-alt');
+              }
             } else {
-              b.classList.remove('active-filter', 'bg-teal-600', 'text-white', 'shadow-md');
-              b.classList.add('text-slate-600', 'dark:text-slate-300');
+              b.classList.remove('active-filter', 'bg-teal-600', 'text-white', 'border-teal-600', 'shadow-sm', 'shadow-teal-600/20');
+              b.classList.add('bg-white/90', 'dark:bg-dark-card/90', 'text-slate-600', 'dark:text-slate-300', 'border-slate-200', 'dark:border-dark-border');
+              if (bBadge) {
+                bBadge.classList.remove('bg-white/20');
+                bBadge.classList.add('bg-slate-100', 'dark:bg-dark-surface-alt');
+              }
             }
           });
         }

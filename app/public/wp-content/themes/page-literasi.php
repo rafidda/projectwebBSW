@@ -13,8 +13,17 @@ $header   = wakalumi_get_literasi_header();
 $pil_sec  = wakalumi_get_literasi_pillars_section();
 $pillars  = wakalumi_get_literasi_pillars();
 $modules  = wakalumi_get_literasi_modules();
-$form_set = wakalumi_get_literasi_form_settings();
-$cta      = wakalumi_get_literasi_cta();
+$form_set  = wakalumi_get_literasi_form_settings();
+$cta       = wakalumi_get_literasi_cta();
+$hero_card = function_exists( 'wakalumi_get_literasi_hero_card' ) ? wakalumi_get_literasi_hero_card() : [
+    'badge' => 'POJK Literasi & Inklusi',
+    'title' => 'Ekosistem Muamalah Adil & Berdaya',
+    'desc'  => 'Kami hadir tidak sekadar sebagai lembaga intermediasi perbankan, melainkan mitra belajar masyarakat dalam mengelola rezeki secara berkah, mempermudah permodalan usaha halal, dan mewujudkan kemandirian finansial yang amanah.',
+    'tag1'  => '3 Program Nyata',
+    'tag2'  => 'Panduan Edukasi Resmi',
+    'btn'   => 'Ajukan Kemitraan Edukasi',
+    'url'   => '#form-kemitraan',
+];
 
 $total_modules = count( $modules );
 
@@ -173,62 +182,69 @@ $module_category_palettes = [
                     </div>
                 </div>
 
-                <!-- Right Column: Elevated Dual-Tone Overview Card -->
-                <div class="lg:col-span-5 xl:col-span-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="spotlight-card group relative rounded-3xl bg-white dark:bg-dark-card border border-teal-300/80 dark:border-teal-700/60 shadow-xl shadow-teal-500/10 hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-500 overflow-hidden flex flex-col justify-between">
-                        
-                        <!-- Top Accent Line -->
-                        <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 relative z-10"></div>
+                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                <div class="lg:col-span-5 xl:col-span-5" data-aos="fade-left" data-aos-delay="100">
+                    <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                        <div class="wkl-glass-shine"></div>
 
-                        <!-- TONE 1: TINTED HEADER BAR -->
-                        <div class="p-6 bg-gradient-to-br from-teal-50/90 via-emerald-50/40 to-white/10 dark:from-teal-950/80 dark:via-teal-950/40 dark:to-dark-surface/90 border-b border-teal-100/90 dark:border-dark-border relative overflow-hidden z-10">
-                            <!-- Glass Shine Glint -->
-                            <div class="wkl-glass-shine"></div>
+                        <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                        <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                            <!-- Subtle Top Accent Line -->
+                            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500 opacity-90"></div>
 
-                            <div class="flex items-center justify-between gap-2 mb-3 relative z-10">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-teal-100 text-teal-800 dark:bg-teal-900/80 dark:text-teal-200 border border-teal-300/70 dark:border-teal-700/60 shadow-2xs whitespace-nowrap">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
-                                    POJK Literasi &amp; Inklusi
-                                </span>
-                                <span class="text-xs font-bold text-slate-500 dark:text-slate-300 tracking-wide whitespace-nowrap">
-                                    Bank Syariah Wakalumi
-                                </span>
+                            <!-- Interactive Slide Watermark Emblem -->
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
 
-                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug relative z-10 truncate" title="Ekosistem Muamalah Adil &amp; Berdaya">
-                                Ekosistem Muamalah Adil &amp; Berdaya
-                            </h3>
+                            <!-- Soft Dual-Tone Ring Education Icon -->
+                            <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                                <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                                </svg>
+                            </div>
+
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                    <?php echo esc_html( $hero_card['badge'] ); ?>
+                                </div>
+                                <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $hero_card['title'] ); ?></h4>
+                            </div>
                         </div>
 
-                        <!-- TONE 2: CLEAN READABLE BODY -->
-                        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between bg-white dark:bg-dark-card space-y-4 relative z-10">
-                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-200 leading-relaxed">
-                                Kami hadir tidak sekadar sebagai lembaga intermediasi perbankan, melainkan mitra belajar masyarakat dalam mengelola rezeki secara berkah, mempermudah permodalan usaha halal, dan mewujudkan kemandirian finansial yang amanah.
+                        <!-- Bottom Dual-Tone Zone: Description, Mini Metrics & Button -->
+                        <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed text-center sm:text-left">
+                                <?php echo esc_html( $hero_card['desc'] ); ?>
                             </p>
 
                             <!-- Mini Metrics Inside Card -->
-                            <div class="grid grid-cols-2 gap-3 pt-1">
-                                <div class="p-3.5 rounded-2xl bg-teal-50/70 dark:bg-teal-950/50 border border-teal-200/70 dark:border-teal-800/60">
-                                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-teal-200/90 whitespace-nowrap">Pilar Inklusi</span>
-                                    <span class="block text-xs sm:text-sm font-black text-teal-700 dark:text-teal-300 mt-0.5 whitespace-nowrap truncate">
-                                        3 Program Nyata
-                                    </span>
+                            <div class="grid grid-cols-2 gap-2.5 pt-1 text-left">
+                                <div class="p-3 rounded-xl bg-teal-50/70 dark:bg-teal-950/50 border border-teal-200/70 dark:border-teal-800/60 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/80 text-teal-700 dark:text-teal-300 flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25A2.25 2.25 0 018.25 10.5H6A2.25 2.25 0 013.75 8.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Pilar Inklusi</span>
+                                        <span class="block text-xs font-black text-teal-700 dark:text-teal-300 truncate">3 Program</span>
+                                    </div>
                                 </div>
-                                <div class="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60">
-                                    <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-emerald-200/90 whitespace-nowrap">Modul Edukasi</span>
-                                    <span class="block text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400 mt-0.5 whitespace-nowrap truncate">
-                                        <?php echo $total_modules; ?> Panduan Resmi
-                                    </span>
+                                <div class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Modul Edukasi</span>
+                                        <span class="block text-xs font-black text-emerald-700 dark:text-emerald-300 truncate"><?php echo (int) $total_modules; ?> Panduan</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="pt-3.5 border-t border-slate-100 dark:border-dark-border flex items-center justify-between gap-3 text-xs">
-                                <span class="text-slate-500 dark:text-slate-300 font-medium">
-                                    Ingin sosialisasi di komunitas Anda?
-                                </span>
-                                <a href="#form-kemitraan" class="inline-flex items-center gap-1.5 text-teal-700 dark:text-teal-300 font-black hover:underline group/cta whitespace-nowrap">
-                                    <span>Ajukan Kemitraan</span>
-                                    <svg class="w-3.5 h-3.5 group-hover/cta:translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                            <div class="pt-1">
+                                <a href="<?php echo esc_url( $hero_card['url'] ); ?>" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/lpsbtn">
+                                    <span><?php echo esc_html( $hero_card['btn'] ); ?></span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                                 </a>
                             </div>
                         </div>

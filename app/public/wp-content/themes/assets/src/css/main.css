@@ -1139,6 +1139,28 @@ img:not([loading="lazy"]) {
 
 .kantor-card.is-fallback .card-photo-fallback {
   display: flex !important;
+}
+
+#kantor-map-modal,
+#kantor-detail-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+}
+
+#kantor-map-modal.hidden,
+#kantor-detail-modal.hidden {
+  display: none !important;
+}
+
+#kantor-map-modal.flex,
+#kantor-detail-modal.flex {
+  display: flex !important;
 }/* ========================================================================
    GLASS SHINE / CARD GLARE EFFECT  (.wkl-glass-shine)
    Inspired by iOS app icon glints & Apple Card reflections.

@@ -40,8 +40,13 @@ module.exports = {
       fontFamily: {
         sans: ['"Nunito"', '"Quicksand"', '"Varela Round"', ...defaultTheme.fontFamily.sans],
         display: ['"Rubik"', '"Nunito"', '"Quicksand"', ...defaultTheme.fontFamily.sans],
+        rubik: ['"Rubik"', '"Nunito"', '"Quicksand"', ...defaultTheme.fontFamily.sans],
         body: ['"Comfortaa"', '"Nunito"', '"Quicksand"', '"Varela Round"', ...defaultTheme.fontFamily.sans],
         accent: ['"Quicksand"', '"Varela Round"', '"Nunito"', ...defaultTheme.fontFamily.sans],
+      },
+      dropShadow: {
+        'emblem-light': '0 10px 24px rgba(15, 23, 42, 0.08)',
+        'emblem-dark': '0 0 28px rgba(45, 212, 191, 0.25)',
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out forwards',

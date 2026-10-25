@@ -273,6 +273,45 @@ if ( ! function_exists( 'wakalumi_get_laporan_header' ) ) {
     }
 }
 
+if ( ! function_exists( 'wakalumi_get_laporan_hero_card' ) ) {
+    /**
+     * Mengambil konfigurasi Kartu Samping Hero Section (Dual-Tone Executive Trust Card).
+     *
+     * @return array
+     */
+    function wakalumi_get_laporan_hero_card() {
+        return [
+            'badge' => get_option( 'options_laporan_hero_badge', 'Keterbukaan Informasi Publik' ),
+            'title' => get_option( 'options_laporan_hero_title', 'Transparansi, Akuntabilitas & Kepatuhan' ),
+            'desc'  => get_option( 'options_laporan_hero_desc', 'BPRS Wakalumi berkomitmen menerapkan prinsip keterbukaan informasi perbankan syariah sesuai standar OJK dan tata kelola yang amanah.' ),
+            'tag1'  => get_option( 'options_laporan_hero_tag1', 'Diawasi OJK' ),
+            'tag2'  => get_option( 'options_laporan_hero_tag2', 'Penjaminan LPS' ),
+            'btn'   => get_option( 'options_laporan_hero_btn', 'Telusuri Arsip Laporan' ),
+            'url'   => get_option( 'options_laporan_hero_url', '#laporan-main-tabs' ),
+        ];
+    }
+}
+
+if ( ! function_exists( 'wakalumi_get_laporan_cta' ) ) {
+    /**
+     * Mengambil konfigurasi Banner Kepatuhan & Call-to-Action (CTA) Bawah Halaman.
+     *
+     * @return array
+     */
+    function wakalumi_get_laporan_cta() {
+        return [
+            'badge'     => get_option( 'options_laporan_cta_badge', 'Kepatuhan & Akuntabilitas Publik' ),
+            'title'     => get_option( 'options_laporan_cta_title', 'Komitmen Tata Kelola BPRS Wakalumi' ),
+            'desc'      => get_option( 'options_laporan_cta_desc', 'Seluruh laporan keuangan dan tata kelola dipublikasikan secara resmi sebagai wujud kepatuhan terhadap POJK No. 37/POJK.03/2019 tentang Transparansi dan Publikasi Laporan Bank serta regulasi tata kelola BPR Syariah.' ),
+            'note'      => get_option( 'options_laporan_cta_note', 'Untuk pertanyaan mengenai laporan publikasi, permintaan dokumen cetak, atau konfirmasi audit, silakan hubungi Bagian Kepatuhan / Sekretariat Perusahaan BPRS Wakalumi.' ),
+            'btn1_text' => get_option( 'options_laporan_cta_btn1_text', 'Hubungi Sekretariat Bank' ),
+            'btn1_url'  => get_option( 'options_laporan_cta_btn1_url', '' ),
+            'btn2_text' => get_option( 'options_laporan_cta_btn2_text', 'Lihat Legalitas Perusahaan' ),
+            'btn2_url'  => get_option( 'options_laporan_cta_btn2_url', home_url( '/profil/legalitas/' ) ),
+        ];
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_laporan_triwulan_list' ) ) {
     /**
      * Mengambil daftar Laporan Publikasi Triwulanan (5 Tahun: 2026 s/d 2022).
@@ -1011,6 +1050,25 @@ function wakalumi_render_laporan_page() {
             update_option( 'options_laporan_subtitle', sanitize_textarea_field( wp_unslash( $_POST['options_laporan_subtitle'] ?? '' ) ) );
             update_option( 'options_laporan_disclaimer', sanitize_textarea_field( wp_unslash( $_POST['options_laporan_disclaimer'] ?? '' ) ) );
 
+            // Simpan Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+            update_option( 'options_laporan_hero_badge', sanitize_text_field( wp_unslash( $_POST['options_laporan_hero_badge'] ?? 'Keterbukaan Informasi Publik' ) ) );
+            update_option( 'options_laporan_hero_title', sanitize_text_field( wp_unslash( $_POST['options_laporan_hero_title'] ?? 'Transparansi, Akuntabilitas & Kepatuhan' ) ) );
+            update_option( 'options_laporan_hero_desc', sanitize_textarea_field( wp_unslash( $_POST['options_laporan_hero_desc'] ?? '' ) ) );
+            update_option( 'options_laporan_hero_tag1', sanitize_text_field( wp_unslash( $_POST['options_laporan_hero_tag1'] ?? 'Diawasi OJK' ) ) );
+            update_option( 'options_laporan_hero_tag2', sanitize_text_field( wp_unslash( $_POST['options_laporan_hero_tag2'] ?? 'Penjaminan LPS' ) ) );
+            update_option( 'options_laporan_hero_btn', sanitize_text_field( wp_unslash( $_POST['options_laporan_hero_btn'] ?? 'Telusuri Arsip Laporan' ) ) );
+            update_option( 'options_laporan_hero_url', sanitize_text_field( wp_unslash( $_POST['options_laporan_hero_url'] ?? '#laporan-main-tabs' ) ) );
+
+            // Simpan Call-to-Action (CTA) Bawah Halaman
+            update_option( 'options_laporan_cta_badge', sanitize_text_field( wp_unslash( $_POST['options_laporan_cta_badge'] ?? 'Kepatuhan & Akuntabilitas Publik' ) ) );
+            update_option( 'options_laporan_cta_title', sanitize_text_field( wp_unslash( $_POST['options_laporan_cta_title'] ?? 'Komitmen Tata Kelola BPRS Wakalumi' ) ) );
+            update_option( 'options_laporan_cta_desc', sanitize_textarea_field( wp_unslash( $_POST['options_laporan_cta_desc'] ?? '' ) ) );
+            update_option( 'options_laporan_cta_note', sanitize_textarea_field( wp_unslash( $_POST['options_laporan_cta_note'] ?? '' ) ) );
+            update_option( 'options_laporan_cta_btn1_text', sanitize_text_field( wp_unslash( $_POST['options_laporan_cta_btn1_text'] ?? 'Hubungi Sekretariat Bank' ) ) );
+            update_option( 'options_laporan_cta_btn1_url', esc_url_raw( wp_unslash( $_POST['options_laporan_cta_btn1_url'] ?? '' ) ) );
+            update_option( 'options_laporan_cta_btn2_text', sanitize_text_field( wp_unslash( $_POST['options_laporan_cta_btn2_text'] ?? 'Lihat Legalitas Perusahaan' ) ) );
+            update_option( 'options_laporan_cta_btn2_url', esc_url_raw( wp_unslash( $_POST['options_laporan_cta_btn2_url'] ?? '' ) ) );
+
             // Simpan tema warna global juga dari tab banner jika disubmit
             if ( isset( $_POST['options_laporan_color_triwulan'] ) ) {
                 update_option( 'options_laporan_color_triwulan', sanitize_text_field( $_POST['options_laporan_color_triwulan'] ) );
@@ -1028,7 +1086,7 @@ function wakalumi_render_laporan_page() {
                 update_option( 'options_laporan_color_lainnya', sanitize_text_field( $_POST['options_laporan_color_lainnya'] ) );
             }
 
-            $message = '✅ Pengaturan Banner Header, Teks Regulasi & Tema Warna berhasil disimpan!';
+            $message = '✅ Pengaturan Banner Header, Kartu Hero, CTA Bawah & Tema Warna berhasil disimpan!';
         }
 
         $current_tab = $active_tab;
@@ -1041,6 +1099,8 @@ function wakalumi_render_laporan_page() {
     $berkelanjutan_list = wakalumi_get_laporan_berkelanjutan_list();
     $lainnya_list       = wakalumi_get_laporan_lainnya_list();
     $header_cfg         = wakalumi_get_laporan_header();
+    $hero_card_cfg      = wakalumi_get_laporan_hero_card();
+    $cta_cfg            = wakalumi_get_laporan_cta();
 
     // Ambil Pengaturan Warna Saat Ini
     $color_tw      = wakalumi_get_laporan_category_color( 'triwulan' );
@@ -1722,7 +1782,7 @@ function wakalumi_render_laporan_page() {
                 <!-- Header Banner Card -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
                     <h2 style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
-                        Header Banner Halaman Laporan
+                        1. Header Banner Halaman Laporan
                     </h2>
 
                     <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
@@ -1740,13 +1800,110 @@ function wakalumi_render_laporan_page() {
                             <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Subheadline / Deskripsi Pengantar</label>
                             <textarea name="options_laporan_subtitle" rows="3" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; line-height: 1.5;"><?php echo esc_textarea( $header_cfg['subtitle'] ); ?></textarea>
                         </div>
+                    </div>
+                </div>
 
+                <!-- Kartu Samping Hero Section (Dual-Tone Executive Trust Card) -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                    <h2 style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 8px;">
+                        <span>🛡️</span> 2. Kartu Samping Hero Section (Dual-Tone Executive Trust Card)
+                    </h2>
+                    <p style="font-size: 13px; color: #64748b; margin: 0 0 18px 0;">
+                        Kustomisasi isi kartu kredibilitas eksekutif di samping hero header dengan efek watermarked emblem dan gaya 2-zona warna.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px;">
                         <div>
-                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Komitmen Regulasi &amp; Dasar Hukum POJK</label>
-                            <textarea name="options_laporan_disclaimer" rows="3" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; line-height: 1.5;"><?php echo esc_textarea( $header_cfg['disclaimer'] ); ?></textarea>
-                            <p class="description" style="font-size: 11px; color: #64748b; margin-top: 4px;">
-                                Teks ini ditampilkan pada kartu penutup kepatuhan regulasi di bagian bawah halaman laporan.
-                            </p>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Lencana Kicker Kartu</label>
+                            <input type="text" name="options_laporan_hero_badge" value="<?php echo esc_attr( $hero_card_cfg['badge'] ); ?>" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: 600;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Judul Kartu Kepercayaan</label>
+                            <input type="text" name="options_laporan_hero_title" value="<?php echo esc_attr( $hero_card_cfg['title'] ); ?>" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: 700;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Deskripsi Pernyataan Komitmen</label>
+                        <textarea name="options_laporan_hero_desc" rows="2" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; line-height: 1.5;"><?php echo esc_textarea( $hero_card_cfg['desc'] ); ?></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Tag Regulasi 1</label>
+                            <input type="text" name="options_laporan_hero_tag1" value="<?php echo esc_attr( $hero_card_cfg['tag1'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Tag Regulasi 2</label>
+                            <input type="text" name="options_laporan_hero_tag2" value="<?php echo esc_attr( $hero_card_cfg['tag2'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Tombol Aksi</label>
+                            <input type="text" name="options_laporan_hero_btn" value="<?php echo esc_attr( $hero_card_cfg['btn'] ); ?>" style="width: 100%; border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: 600;">
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <input type="hidden" name="options_laporan_hero_url" value="<?php echo esc_attr( $hero_card_cfg['url'] ); ?>">
+                    </div>
+                </div>
+
+                <!-- Pengaturan Banner Kepatuhan & Kontak CTA (Bawah Halaman) -->
+                <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                    <h2 style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 8px;">
+                        <span>📢</span> 3. Pengaturan Banner Kepatuhan &amp; Call-to-Action (CTA Bawah Halaman)
+                    </h2>
+                    <p style="font-size: 13px; color: #64748b; margin: 0 0 18px 0;">
+                        Seluruh elemen pada seksi ajakan/konsultasi tata kelola di bagian bawah halaman laporan kini 100% dapat dimodifikasi.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Badge CTA</label>
+                            <input type="text" name="options_laporan_cta_badge" value="<?php echo esc_attr( $cta_cfg['badge'] ); ?>" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; font-weight: 600;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Judul Utama Banner CTA</label>
+                            <input type="text" name="options_laporan_cta_title" value="<?php echo esc_attr( $cta_cfg['title'] ); ?>" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; font-size: 14px; font-weight: 800;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Komitmen Regulasi &amp; Dasar Hukum POJK</label>
+                        <textarea name="options_laporan_cta_desc" rows="3" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; line-height: 1.5;"><?php echo esc_textarea( $cta_cfg['desc'] ); ?></textarea>
+                        <!-- Sinkronkan ke options_laporan_disclaimer untuk backwards compatibility -->
+                        <input type="hidden" name="options_laporan_disclaimer" value="<?php echo esc_attr( $cta_cfg['desc'] ); ?>">
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Teks Petunjuk Kontak / Bantuan Sekretariat</label>
+                        <textarea name="options_laporan_cta_note" rows="2" style="width: 100%; border-radius: 6px; padding: 8px 12px; border: 1px solid #cbd5e1; line-height: 1.5;"><?php echo esc_textarea( $cta_cfg['note'] ); ?></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;">
+                        <!-- Tombol 1 -->
+                        <div>
+                            <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 800; color: #0f766e;">Tombol Aksi 1 (WhatsApp / Kontak)</h4>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol 1</label>
+                                <input type="text" name="options_laporan_cta_btn1_text" value="<?php echo esc_attr( $cta_cfg['btn1_text'] ); ?>" style="width: 100%; border-radius: 6px; padding: 6px 10px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">URL / Link Kustom (Kosongkan jika default WA)</label>
+                                <input type="text" name="options_laporan_cta_btn1_url" value="<?php echo esc_attr( $cta_cfg['btn1_url'] ); ?>" placeholder="https://wa.me/..." style="width: 100%; border-radius: 6px; padding: 6px 10px; border: 1px solid #cbd5e1;">
+                            </div>
+                        </div>
+
+                        <!-- Tombol 2 -->
+                        <div>
+                            <h4 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 800; color: #1e40af;">Tombol Aksi 2 (Legalitas / Halaman Lain)</h4>
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol 2</label>
+                                <input type="text" name="options_laporan_cta_btn2_text" value="<?php echo esc_attr( $cta_cfg['btn2_text'] ); ?>" style="width: 100%; border-radius: 6px; padding: 6px 10px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 4px;">URL / Link Halaman</label>
+                                <input type="text" name="options_laporan_cta_btn2_url" value="<?php echo esc_attr( $cta_cfg['btn2_url'] ); ?>" style="width: 100%; border-radius: 6px; padding: 6px 10px; border: 1px solid #cbd5e1;">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,16 @@ $trust_title = get_option( 'options_pembiayaan_trust_title', 'Izin Resmi OJK & D
 $trust_desc  = get_option( 'options_pembiayaan_trust_desc', 'Seluruh produk penyaluran dana BPRS Wakalumi beroperasi di bawah pengawasan Otoritas Jasa Keuangan (OJK) serta dipandu oleh Dewan Pengawas Syariah (DPS) yang tersertifikasi DSN-MUI.' );
 $trust_btn   = get_option( 'options_pembiayaan_trust_btn', 'Simulasi Angsuran Syariah' );
 
+// ── PENGATURAN SECTION KATALOG PRODUK DARI ADMIN ──────────────────
+$katalog_kicker = get_option( 'options_pembiayaan_katalog_kicker', 'Katalog Pembiayaan Syariah' );
+$katalog_title  = get_option( 'options_pembiayaan_katalog_title', 'Pilihan Akad Sesuai Karakteristik Kebutuhan Anda' );
+$katalog_desc   = get_option( 'options_pembiayaan_katalog_desc', 'Setiap pembiayaan didesain berlandaskan prinsip fikih muamalah yang adil, menenangkan, dan memberikan kepastian usaha.' );
+
+// ── PENGATURAN SECTION MATRIKS KOMPARASI DARI ADMIN ───────────────
+$komp_kicker = get_option( 'options_pembiayaan_komp_kicker', 'Matriks Perbandingan' );
+$komp_title  = get_option( 'options_pembiayaan_komp_title', 'Tabel Komparasi Fitur Pembiayaan' );
+$komp_desc   = get_option( 'options_pembiayaan_komp_desc', 'Bandingkan skema akad, batas plafon, dan jangka waktu tenor untuk menemukan solusi pembiayaan yang paling tepat.' );
+
 // ── DAFTAR PRODUK PEMBIAYAAN DINAMIS ──────────────────────────────
 $pembiayaan_list = function_exists( 'wakalumi_get_pembiayaan_list' ) ? wakalumi_get_pembiayaan_list() : [];
 
@@ -46,18 +56,34 @@ if ( $calc_rate_unit === 'bulan' && strpos( $calc_note, 'per tahun' ) !== false 
 $calc_btn_text  = get_option( 'options_pembiayaan_calc_btn_text', 'Ajukan Pembiayaan via WhatsApp' );
 $calc_presets   = function_exists( 'wakalumi_get_pembiayaan_calc_presets' ) ? wakalumi_get_pembiayaan_calc_presets() : [];
 
-// ── ALUR 4 LANGKAH PENGAJUAN ──────────────────────────────────────
+// ── ALUR 4 LANGKAH PENGAJUAN (PROSES MUDAH & CEPAT) ───────────────
 $alur_kicker    = get_option( 'options_pembiayaan_alur_kicker', 'Proses Mudah & Cepat' );
 $alur_title     = get_option( 'options_pembiayaan_alur_title', '4 Tahapan Mudah Pengajuan Pembiayaan' );
 $alur_sub       = get_option( 'options_pembiayaan_alur_sub', 'Panduan tahapan transparan mulai dari konsultasi awal hingga dana pembiayaan cair ke rekening Anda.' );
-$step_1_title   = get_option( 'options_pembiayaan_step_1_title', '1. Konsultasi & Formulir' );
-$step_1_desc    = get_option( 'options_pembiayaan_step_1_desc', 'Hubungi tim relationship manager via WhatsApp atau kunjungi kantor BPRS Wakalumi untuk konsultasi kebutuhan dana.' );
-$step_2_title   = get_option( 'options_pembiayaan_step_2_title', '2. Verifikasi Dokumen' );
-$step_2_desc    = get_option( 'options_pembiayaan_step_2_desc', 'Serahkan berkas identitas, bukti usaha/penghasilan, dan dokumen jaminan untuk verifikasi bersahabat.' );
-$step_3_title   = get_option( 'options_pembiayaan_step_3_title', '3. Akad Syariah Transparan' );
-$step_3_desc    = get_option( 'options_pembiayaan_step_3_desc', 'Penandatanganan akad (Murabahah/Mudharabah/Ijarah) dilakukan secara transparan tanpa klausul jebakan.' );
-$step_4_title   = get_option( 'options_pembiayaan_step_4_title', '4. Pencairan Cepat' );
-$step_4_desc    = get_option( 'options_pembiayaan_step_4_desc', 'Dana dicairkan ke rekening Anda untuk mendukung kemajuan usaha atau kebutuhan dengan pendampingan berkala.' );
+
+$step_1_title   = get_option( 'options_pembiayaan_step_1_title', 'Konsultasi & Pengisian Formulir' );
+$step_1_tag     = get_option( 'options_pembiayaan_step_1_tag', 'Tahap 1: Konsultasi Ramah' );
+$step_1_icon    = get_option( 'options_pembiayaan_step_1_icon', 'chat' );
+$step_1_color   = get_option( 'options_pembiayaan_step_1_color', 'teal' );
+$step_1_desc    = get_option( 'options_pembiayaan_step_1_desc', 'Hubungi tim relationship manager kami via WhatsApp atau kunjungi kantor BPRS Wakalumi untuk konsultasi kebutuhan dana dan pengisian formulir pengajuan.' );
+
+$step_2_title   = get_option( 'options_pembiayaan_step_2_title', 'Kelengkapan Berkas & Verifikasi' );
+$step_2_tag     = get_option( 'options_pembiayaan_step_2_tag', 'Tahap 2: Verifikasi Cepat' );
+$step_2_icon    = get_option( 'options_pembiayaan_step_2_icon', 'document' );
+$step_2_color   = get_option( 'options_pembiayaan_step_2_color', 'sky' );
+$step_2_desc    = get_option( 'options_pembiayaan_step_2_desc', 'Serahkan dokumen persyaratan (identitas, legalitas usaha/surat guru, dan jaminan). Tim kami akan melakukan verifikasi dan survei usaha secara bersahabat.' );
+
+$step_3_title   = get_option( 'options_pembiayaan_step_3_title', 'Persetujuan & Ijab Qabul Akad' );
+$step_3_tag     = get_option( 'options_pembiayaan_step_3_tag', 'Tahap 3: Bebas Riba & Transparan' );
+$step_3_icon    = get_option( 'options_pembiayaan_step_3_icon', 'signature' );
+$step_3_color   = get_option( 'options_pembiayaan_step_3_color', 'indigo' );
+$step_3_desc    = get_option( 'options_pembiayaan_step_3_desc', 'Setelah pengajuan disetujui, penandatanganan akad syariah (ijab-qabul) dilakukan secara transparan tanpa ada pasal jebakan atau biaya tersembunyi.' );
+
+$step_4_title   = get_option( 'options_pembiayaan_step_4_title', 'Pencairan Dana Cepat & Pendampingan' );
+$step_4_tag     = get_option( 'options_pembiayaan_step_4_tag', 'Tahap 4: Dana Siap Berkembang' );
+$step_4_icon    = get_option( 'options_pembiayaan_step_4_icon', 'cash' );
+$step_4_color   = get_option( 'options_pembiayaan_step_4_color', 'emerald' );
+$step_4_desc    = get_option( 'options_pembiayaan_step_4_desc', 'Dana pembiayaan langsung dicairkan ke rekening Anda untuk mendukung kemajuan usaha atau pemenuhan kebutuhan dengan pendampingan berkala.' );
 
 // ── FAQ PEMBIAYAAN ────────────────────────────────────────────────
 $faq_badge      = get_option( 'options_pembiayaan_faq_badge', 'Tanya Jawab (FAQ)' );
@@ -331,39 +357,49 @@ $color_themes = [
                 <?php endif; ?>
             </div>
 
-            <!-- Kartu Pengawasan OJK & DPS (Side Trust Card) -->
+            <!-- Kartu Pengawasan OJK & DPS (Side Trust Card) - Dual-Tone Executive Card (Separated Header & Body) -->
             <div class="lg:col-span-4" data-aos="fade-left">
-                <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-slate-900/90 border border-teal-200/80 dark:border-teal-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 hover:border-teal-500 dark:hover:border-teal-400 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 via-cyan-400 to-teal-600">
-                    <!-- Interactive Slide Watermark Emblem -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                    <div class="wkl-glass-shine"></div>
 
-                    <!-- Holographic Shield Icon with Glow -->
-                    <div class="relative w-16 h-16 rounded-2xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto shadow-lg shadow-teal-500/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
-                        <div class="absolute inset-0 rounded-2xl bg-teal-400/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <svg class="w-8 h-8 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                        </svg>
-                    </div>
+                    <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                    <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                        <!-- Subtle Top Accent Line -->
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500 opacity-90"></div>
 
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                            <?php echo esc_html( $trust_tag ); ?>
+                        <!-- Interactive Slide Watermark Emblem -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <h4 class="text-lg font-black text-slate-900 dark:text-white"><?php echo esc_html( $trust_title ); ?></h4>
+
+                        <!-- Shield Icon with Soft Dual-Tone Ring -->
+                        <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                            <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <?php echo esc_html( $trust_tag ); ?>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $trust_title ); ?></h4>
+                        </div>
                     </div>
 
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                        <?php echo esc_html( $trust_desc ); ?>
-                    </p>
+                    <!-- Bottom Dual-Tone Zone: Isi Keterangan & Button -->
+                    <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            <?php echo esc_html( $trust_desc ); ?>
+                        </p>
 
-                    <div class="pt-2 relative z-10">
-                        <a href="#kalkulator" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-teal-600 hover:text-teal-700 dark:text-teal-300 dark:hover:text-teal-200 transition-colors">
-                            <span><?php echo esc_html( $trust_btn ); ?></span>
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                        </a>
+                        <div class="pt-1">
+                            <a href="#kalkulator" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/lpsbtn">
+                                <span><?php echo esc_html( $trust_btn ); ?></span>
+                                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -403,13 +439,13 @@ $color_themes = [
     <div class="container-wide">
         <div class="text-center max-w-2xl mx-auto mb-12" data-aos="fade-up">
             <span class="text-xs font-black uppercase tracking-wider text-teal-600 dark:text-teal-400 block mb-2">
-                Katalog Pembiayaan Syariah
+                <?php echo esc_html( $katalog_kicker ); ?>
             </span>
             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Pilihan Akad Sesuai Karakteristik Kebutuhan Anda
+                <?php echo esc_html( $katalog_title ); ?>
             </h2>
             <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">
-                Setiap pembiayaan didesain berlandaskan prinsip fikih muamalah yang adil, menenangkan, dan memberikan kepastian usaha.
+                <?php echo esc_html( $katalog_desc ); ?>
             </p>
         </div>
 
@@ -584,13 +620,13 @@ $color_themes = [
     <div class="container-wide">
         <div class="text-center max-w-2xl mx-auto mb-10" data-aos="fade-up">
             <span class="text-xs font-black uppercase tracking-wider text-teal-600 dark:text-teal-400 block mb-2">
-                Matriks Perbandingan
+                <?php echo esc_html( $komp_kicker ); ?>
             </span>
             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Tabel Komparasi Fitur Pembiayaan
+                <?php echo esc_html( $komp_title ); ?>
             </h2>
             <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">
-                Bandingkan skema akad, batas plafon, dan jangka waktu tenor untuk menemukan solusi pembiayaan yang paling tepat.
+                <?php echo esc_html( $komp_desc ); ?>
             </p>
         </div>
 
@@ -865,108 +901,160 @@ $color_themes = [
         </div>
 
         <?php 
+        $palette_themes = [
+            'teal' => [
+                'border'     => 'border-teal-200/90 dark:border-teal-900/60 hover:border-teal-500/80 dark:hover:border-teal-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-teal-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-teal-50/90 via-emerald-50/50 to-teal-100/30 dark:from-teal-950/80 dark:via-teal-900/40 dark:to-slate-900/90 border-b border-teal-100 dark:border-teal-900/50',
+                'icon_solid' => 'bg-teal-600 dark:bg-teal-500 text-white shadow-md shadow-teal-600/30 ring-4 ring-teal-100/80 dark:ring-teal-950/80',
+                'title'      => 'group-hover:text-teal-600 dark:group-hover:text-teal-300',
+                'footer_bg'  => 'bg-teal-50/70 dark:bg-teal-950/50 border-t border-teal-100/80 dark:border-teal-900/40 text-teal-800 dark:text-teal-200',
+                'badge_icon' => 'bg-teal-600/15 text-teal-600 dark:text-teal-300',
+            ],
+            'sky' => [
+                'border'     => 'border-sky-200/90 dark:border-sky-900/60 hover:border-sky-500/80 dark:hover:border-sky-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-sky-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-sky-50/90 via-blue-50/50 to-sky-100/30 dark:from-sky-950/80 dark:via-sky-900/40 dark:to-slate-900/90 border-b border-sky-100 dark:border-sky-900/50',
+                'icon_solid' => 'bg-sky-600 dark:bg-sky-500 text-white shadow-md shadow-sky-600/30 ring-4 ring-sky-100/80 dark:ring-sky-950/80',
+                'title'      => 'group-hover:text-sky-600 dark:group-hover:text-sky-300',
+                'footer_bg'  => 'bg-sky-50/70 dark:bg-sky-950/50 border-t border-sky-100/80 dark:border-sky-900/40 text-sky-800 dark:text-sky-200',
+                'badge_icon' => 'bg-sky-600/15 text-sky-600 dark:text-sky-300',
+            ],
+            'amber' => [
+                'border'     => 'border-amber-200/90 dark:border-amber-900/60 hover:border-amber-500/80 dark:hover:border-amber-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-amber-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-amber-50/90 via-yellow-50/50 to-amber-100/30 dark:from-amber-950/80 dark:via-amber-900/40 dark:to-slate-900/90 border-b border-amber-100 dark:border-amber-900/50',
+                'icon_solid' => 'bg-amber-600 dark:bg-amber-500 text-white shadow-md shadow-amber-600/30 ring-4 ring-amber-100/80 dark:ring-amber-950/80',
+                'title'      => 'group-hover:text-amber-600 dark:group-hover:text-amber-300',
+                'footer_bg'  => 'bg-amber-50/70 dark:bg-amber-950/50 border-t border-amber-100/80 dark:border-amber-900/40 text-amber-800 dark:text-amber-200',
+                'badge_icon' => 'bg-amber-600/15 text-amber-600 dark:text-amber-300',
+            ],
+            'indigo' => [
+                'border'     => 'border-indigo-200/90 dark:border-indigo-900/60 hover:border-indigo-500/80 dark:hover:border-indigo-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-indigo-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-indigo-50/90 via-purple-50/50 to-indigo-100/30 dark:from-indigo-950/80 dark:via-indigo-900/40 dark:to-slate-900/90 border-b border-indigo-100 dark:border-indigo-900/50',
+                'icon_solid' => 'bg-indigo-600 dark:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 ring-4 ring-indigo-100/80 dark:ring-indigo-950/80',
+                'title'      => 'group-hover:text-indigo-600 dark:group-hover:text-indigo-300',
+                'footer_bg'  => 'bg-indigo-50/70 dark:bg-indigo-950/50 border-t border-indigo-100/80 dark:border-indigo-900/40 text-indigo-800 dark:text-indigo-200',
+                'badge_icon' => 'bg-indigo-600/15 text-indigo-600 dark:text-indigo-300',
+            ],
+            'rose' => [
+                'border'     => 'border-rose-200/90 dark:border-rose-900/60 hover:border-rose-500/80 dark:hover:border-rose-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-rose-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-rose-50/90 via-pink-50/50 to-rose-100/30 dark:from-rose-950/80 dark:via-rose-900/40 dark:to-slate-900/90 border-b border-rose-100 dark:border-rose-900/50',
+                'icon_solid' => 'bg-rose-600 dark:bg-rose-500 text-white shadow-md shadow-rose-600/30 ring-4 ring-rose-100/80 dark:ring-rose-950/80',
+                'title'      => 'group-hover:text-rose-600 dark:group-hover:text-rose-300',
+                'footer_bg'  => 'bg-rose-50/70 dark:bg-rose-950/50 border-t border-rose-100/80 dark:border-rose-900/40 text-rose-800 dark:text-rose-200',
+                'badge_icon' => 'bg-rose-600/15 text-rose-600 dark:text-rose-300',
+            ],
+            'emerald' => [
+                'border'     => 'border-emerald-200/90 dark:border-emerald-900/60 hover:border-emerald-500/80 dark:hover:border-emerald-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-emerald-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-emerald-50/90 via-teal-50/50 to-emerald-100/30 dark:from-emerald-950/80 dark:via-emerald-900/40 dark:to-slate-900/90 border-b border-emerald-100 dark:border-emerald-900/50',
+                'icon_solid' => 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 ring-4 ring-emerald-100/80 dark:ring-emerald-950/80',
+                'title'      => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-300',
+                'footer_bg'  => 'bg-emerald-50/70 dark:bg-emerald-950/50 border-t border-emerald-100/80 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-200',
+                'badge_icon' => 'bg-emerald-600/15 text-emerald-600 dark:text-emerald-300',
+            ],
+        ];
+        $palette_order = [ 'teal', 'sky', 'indigo', 'emerald' ];
+
         $clean_step_1 = preg_replace( '/^\d+\.\s*/', '', $step_1_title );
         $clean_step_2 = preg_replace( '/^\d+\.\s*/', '', $step_2_title );
         $clean_step_3 = preg_replace( '/^\d+\.\s*/', '', $step_3_title );
         $clean_step_4 = preg_replace( '/^\d+\.\s*/', '', $step_4_title );
+
+        $alur_items = [
+            [
+                'title' => $clean_step_1,
+                'desc'  => $step_1_desc,
+                'icon'  => $step_1_icon,
+                'tag'   => ! empty( $step_1_tag ) ? $step_1_tag : 'Tahap 1: Konsultasi Ramah',
+                'color' => $step_1_color,
+            ],
+            [
+                'title' => $clean_step_2,
+                'desc'  => $step_2_desc,
+                'icon'  => $step_2_icon,
+                'tag'   => ! empty( $step_2_tag ) ? $step_2_tag : 'Tahap 2: Verifikasi Cepat',
+                'color' => $step_2_color,
+            ],
+            [
+                'title' => $clean_step_3,
+                'desc'  => $step_3_desc,
+                'icon'  => $step_3_icon,
+                'tag'   => ! empty( $step_3_tag ) ? $step_3_tag : 'Tahap 3: Bebas Riba & Transparan',
+                'color' => $step_3_color,
+            ],
+            [
+                'title' => $clean_step_4,
+                'desc'  => $step_4_desc,
+                'icon'  => $step_4_icon,
+                'tag'   => ! empty( $step_4_tag ) ? $step_4_tag : 'Tahap 4: Dana Siap Berkembang',
+                'color' => $step_4_color,
+            ],
+        ];
         ?>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Step 1 (Dual-Tone Teal) -->
-            <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-0 group-hover:before:scale-x-100 before:transition-transform before:duration-500 z-10" data-aos="fade-up" data-aos-delay="0">
-                <!-- Top Zone (Header Tone) -->
-                <div class="p-5 sm:p-6 bg-teal-50/60 dark:bg-teal-950/30 border-b border-teal-100/80 dark:border-teal-900/40 transition-colors duration-300">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="w-10 h-10 rounded-xl bg-teal-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-teal-500/25 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                            01
-                        </span>
-                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-teal-700 dark:text-teal-300 px-2.5 py-0.5 rounded-full bg-teal-100/80 dark:bg-teal-900/60 border border-teal-200 dark:border-teal-800">
-                            Tahap 1
-                        </span>
-                    </div>
-                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                        <?php echo esc_html( $clean_step_1 ); ?>
-                    </h3>
-                </div>
-                <!-- Bottom Zone (Body Tone) -->
-                <div class="p-5 sm:p-6 bg-white dark:bg-slate-900/95 flex-1 flex flex-col justify-between">
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        <?php echo esc_html( $step_1_desc ); ?>
-                    </p>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-aos="fade-up">
+            <?php foreach ( $alur_items as $a_idx => $a_item ) : 
+                $a_color = $a_item['color'] ?? 'auto';
+                if ( ! empty( $a_color ) && $a_color !== 'auto' && isset( $palette_themes[ $a_color ] ) ) {
+                    $theme = $palette_themes[ $a_color ];
+                } else {
+                    $theme_key = $palette_order[ $a_idx % count( $palette_order ) ];
+                    $theme = $palette_themes[ $theme_key ];
+                }
+                $a_icon = $a_item['icon'] ?? 'chat';
+            ?>
+                <!-- 3-Tone Card (Tone 1: Header Solid Icon & Title | Tone 2: Body Description & Watermark | Tone 3: Footer Pill Tag) -->
+                <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border <?php echo esc_attr( $theme['border'] ); ?> shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] <?php echo esc_attr( $theme['shadow'] ); ?> hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default">
+                    
+                    <!-- TONE 1: HEADER BAR (Icon Solid di Kiri + Judul di Sampingnya) -->
+                    <div class="px-5 py-4 sm:px-6 sm:py-5 <?php echo esc_attr( $theme['header_bg'] ); ?> flex items-center gap-3.5">
+                        <!-- Solid App Icon Box -->
+                        <div class="w-12 h-12 rounded-2xl <?php echo esc_attr( $theme['icon_solid'] ); ?> flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                            <?php if ( function_exists( 'wakalumi_render_step_icon' ) ) : ?>
+                                <?php echo wakalumi_render_step_icon( $a_icon ); ?>
+                            <?php else : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            <?php endif; ?>
+                        </div>
 
-            <!-- Step 2 (Dual-Tone Indigo) -->
-            <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-indigo-500 before:to-purple-400 before:scale-x-0 group-hover:before:scale-x-100 before:transition-transform before:duration-500 z-10" data-aos="fade-up" data-aos-delay="100">
-                <!-- Top Zone (Header Tone) -->
-                <div class="p-5 sm:p-6 bg-indigo-50/60 dark:bg-indigo-950/30 border-b border-indigo-100/80 dark:border-indigo-900/40 transition-colors duration-300">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-indigo-500/25 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                            02
-                        </span>
-                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 px-2.5 py-0.5 rounded-full bg-indigo-100/80 dark:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800">
-                            Tahap 2
-                        </span>
+                        <!-- Judul di Samping Icon -->
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug <?php echo esc_attr( $theme['title'] ); ?> transition-colors">
+                                <?php echo esc_html( $a_item['title'] ); ?>
+                            </h4>
+                        </div>
                     </div>
-                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                        <?php echo esc_html( $clean_step_2 ); ?>
-                    </h3>
-                </div>
-                <!-- Bottom Zone (Body Tone) -->
-                <div class="p-5 sm:p-6 bg-white dark:bg-slate-900/95 flex-1 flex flex-col justify-between">
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        <?php echo esc_html( $step_2_desc ); ?>
-                    </p>
-                </div>
-            </div>
 
-            <!-- Step 3 (Dual-Tone Emerald) -->
-            <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-emerald-500 before:to-teal-400 before:scale-x-0 group-hover:before:scale-x-100 before:transition-transform before:duration-500 z-10" data-aos="fade-up" data-aos-delay="200">
-                <!-- Top Zone (Header Tone) -->
-                <div class="p-5 sm:p-6 bg-emerald-50/60 dark:bg-emerald-950/30 border-b border-emerald-100/80 dark:border-emerald-900/40 transition-colors duration-300">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-emerald-500/25 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                            03
-                        </span>
-                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 px-2.5 py-0.5 rounded-full bg-emerald-100/80 dark:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800">
-                            Tahap 3
-                        </span>
-                    </div>
-                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                        <?php echo esc_html( $clean_step_3 ); ?>
-                    </h3>
-                </div>
-                <!-- Bottom Zone (Body Tone) -->
-                <div class="p-5 sm:p-6 bg-white dark:bg-slate-900/95 flex-1 flex flex-col justify-between">
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        <?php echo esc_html( $step_3_desc ); ?>
-                    </p>
-                </div>
-            </div>
+                    <!-- TONE 2: CARD BODY (Keterangan Rapi & Watermark Logo Interaktif) -->
+                    <div class="p-5 sm:p-6 relative flex-grow flex flex-col justify-between overflow-hidden bg-white dark:bg-slate-900/95">
+                        <!-- Sliding Watermark Logo on Hover -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy">
+                        </div>
 
-            <!-- Step 4 (Dual-Tone Amber) -->
-            <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md relative group hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-amber-500 before:to-orange-400 before:scale-x-0 group-hover:before:scale-x-100 before:transition-transform before:duration-500 z-10" data-aos="fade-up" data-aos-delay="300">
-                <!-- Top Zone (Header Tone) -->
-                <div class="p-5 sm:p-6 bg-amber-50/60 dark:bg-amber-950/30 border-b border-amber-100/80 dark:border-amber-900/40 transition-colors duration-300">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="w-10 h-10 rounded-xl bg-amber-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-amber-500/25 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                            04
-                        </span>
-                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-300 px-2.5 py-0.5 rounded-full bg-amber-100/80 dark:bg-amber-900/60 border border-amber-200 dark:border-amber-800">
-                            Tahap 4
-                        </span>
+                        <div class="relative z-10">
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                                <?php echo esc_html( $a_item['desc'] ); ?>
+                            </p>
+                        </div>
                     </div>
-                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                        <?php echo esc_html( $clean_step_4 ); ?>
-                    </h3>
+
+                    <!-- TONE 3: FOOTER BAR (Tag Komitmen Alur dengan Checkmark) -->
+                    <?php if ( ! empty( $a_item['tag'] ) ) : ?>
+                        <div class="px-5 sm:px-6 py-3.5 <?php echo esc_attr( $theme['footer_bg'] ); ?> flex items-center justify-between gap-2 text-xs font-semibold relative z-10">
+                            <span class="truncate"><?php echo esc_html( $a_item['tag'] ); ?></span>
+                            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full <?php echo esc_attr( $theme['badge_icon'] ); ?> shrink-0">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            </span>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
-                <!-- Bottom Zone (Body Tone) -->
-                <div class="p-5 sm:p-6 bg-white dark:bg-slate-900/95 flex-1 flex flex-col justify-between">
-                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        <?php echo esc_html( $step_4_desc ); ?>
-                    </p>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

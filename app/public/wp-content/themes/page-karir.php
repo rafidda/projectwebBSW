@@ -85,65 +85,72 @@ foreach ( $all_jobs as $j ) {
                     </div>
                 </div>
 
-                <!-- Right Column: Elevated Status & Portal Verification Card -->
-                <div class="lg:col-span-5 xl:col-span-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="p-[1.5px] rounded-3xl bg-gradient-to-br from-teal-400 via-emerald-400 to-cyan-500 shadow-xl shadow-teal-500/10 group">
-                        <div class="relative rounded-[22px] p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl overflow-hidden">
-                            <!-- Glass Shine Glint -->
-                            <div class="wkl-glass-shine"></div>
-                            <!-- Watermark Emblem Subtle Background -->
-                            <div class="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 w-40 h-40 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-500 group-hover:scale-125 select-none">
+                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                <div class="lg:col-span-5 xl:col-span-5" data-aos="fade-left" data-aos-delay="100">
+                    <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                        <div class="wkl-glass-shine"></div>
+
+                        <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                        <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                            <!-- Subtle Top Accent Line -->
+                            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500 opacity-90"></div>
+
+                            <!-- Interactive Slide Watermark Emblem -->
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                                 <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
 
-                            <div class="relative z-10 space-y-4">
-                                <div class="flex items-center gap-3.5">
-                                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/80 dark:to-emerald-950/60 border border-teal-200/80 dark:border-teal-800/60 flex items-center justify-center p-2 shadow-inner shrink-0">
-                                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="Wakalumi" class="w-full h-full object-contain">
+                            <!-- Soft Dual-Tone Ring Career Icon -->
+                            <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                                <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                                </svg>
+                            </div>
+
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                    Portal Rekrutmen Resmi
+                                </div>
+                                <h4 class="text-lg font-extrabold text-slate-900 dark:text-white">Proses Seleksi Transparan &amp; Berorientasi Integritas</h4>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Dual-Tone Zone: Description, Live Metrics & Button -->
+                        <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed text-center sm:text-left">
+                                Seluruh penerimaan karyawan dilaksanakan secara objektif melalui formulir daring resmi. Kami menyambut insan profesional yang berintegritas tinggi untuk memajukan ekonomi syariah.
+                            </p>
+
+                            <!-- Mini Metrics Inside Card -->
+                            <div class="grid grid-cols-2 gap-2.5 pt-1 text-left">
+                                <div class="p-3 rounded-xl bg-teal-50/70 dark:bg-teal-950/50 border border-teal-200/70 dark:border-teal-800/60 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/80 text-teal-700 dark:text-teal-300 flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300/70 dark:border-teal-700/60 shadow-2xs mb-0.5">
-                                            Portal Rekrutmen Resmi
-                                        </span>
-                                        <span class="block text-xs font-bold text-slate-600 dark:text-slate-300 tracking-wide truncate">
-                                            PT BPRS Wakalumi
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Status Formasi</span>
+                                        <span class="block text-xs font-black <?php echo $open_jobs > 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'; ?> truncate">
+                                            <?php echo $open_jobs > 0 ? $open_jobs . ' Posisi Dibuka' : 'Terisi Penuh'; ?>
                                         </span>
                                     </div>
                                 </div>
-
-                                <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white leading-snug">
-                                    Proses Seleksi Transparan &amp; Berorientasi Integritas
-                                </h3>
-
-                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    Seluruh penerimaan karyawan dilaksanakan secara objektif melalui formulir daring resmi. Kami menyambut insan profesional yang berintegritas tinggi untuk memajukan ekonomi syariah.
-                                </p>
-
-                                <!-- Mini Metrics Inside Card -->
-                                <div class="grid grid-cols-2 gap-3 pt-2">
-                                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-dark-surface/70 border border-slate-200/80 dark:border-dark-border">
-                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Status Formasi</span>
-                                        <span class="block text-xs sm:text-sm font-extrabold <?php echo $open_jobs > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'; ?> mt-0.5">
-                                            <?php echo $open_jobs > 0 ? $open_jobs . ' Posisi Terbuka' : 'Terisi Penuh'; ?>
-                                        </span>
+                                <div class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
                                     </div>
-                                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-dark-surface/70 border border-slate-200/80 dark:border-dark-border">
-                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Biaya Seleksi</span>
-                                        <span class="block text-xs sm:text-sm font-extrabold text-teal-700 dark:text-teal-300 mt-0.5">
-                                            100% Gratis (Rp 0)
-                                        </span>
+                                    <div class="min-w-0">
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Biaya Seleksi</span>
+                                        <span class="block text-xs font-black text-emerald-700 dark:text-emerald-300 truncate">100% Bebas Biaya</span>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
-                                    <span class="text-slate-500 dark:text-slate-400 font-medium">
-                                        Ketersediaan posisi formasi
-                                    </span>
-                                    <a href="#daftar-lowongan" class="inline-flex items-center gap-1.5 text-teal-700 dark:text-teal-300 font-extrabold hover:underline">
-                                        <span>Cek Status Formasi</span>
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
-                                    </a>
-                                </div>
+                            <div class="pt-1">
+                                <a href="#daftar-lowongan" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/karirbtn">
+                                    <span>Cek Formasi Lowongan Aktif</span>
+                                    <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/karirbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                </a>
                             </div>
                         </div>
                     </div>

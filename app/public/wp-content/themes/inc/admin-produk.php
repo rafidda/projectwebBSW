@@ -425,18 +425,34 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
         update_option( 'options_tabungan_komparasi_desc', sanitize_textarea_field( $_POST['options_tabungan_komparasi_desc'] ?? '' ) );
         update_option( 'options_tabungan_komparasi_lps_note', sanitize_textarea_field( $_POST['options_tabungan_komparasi_lps_note'] ?? '' ) );
 
-        // 2c. Tabungan: 4 Keunggulan Menabung Syariah
+        // 2c. Tabungan: 4 Keunggulan Menabung Syariah (3-Tone & Dinamis)
         update_option( 'options_tabungan_keung_kicker', sanitize_text_field( $_POST['options_tabungan_keung_kicker'] ?? '' ) );
         update_option( 'options_tabungan_keung_title', sanitize_text_field( $_POST['options_tabungan_keung_title'] ?? '' ) );
         update_option( 'options_tabungan_keung_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_desc'] ?? '' ) );
+        
         update_option( 'options_tabungan_keung_1_title', sanitize_text_field( $_POST['options_tabungan_keung_1_title'] ?? '' ) );
         update_option( 'options_tabungan_keung_1_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_1_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_1_icon', sanitize_text_field( $_POST['options_tabungan_keung_1_icon'] ?? 'shield' ) );
+        update_option( 'options_tabungan_keung_1_tag', sanitize_text_field( $_POST['options_tabungan_keung_1_tag'] ?? 'Akad Murni Syariah' ) );
+        update_option( 'options_tabungan_keung_1_color', sanitize_text_field( $_POST['options_tabungan_keung_1_color'] ?? 'teal' ) );
+
         update_option( 'options_tabungan_keung_2_title', sanitize_text_field( $_POST['options_tabungan_keung_2_title'] ?? '' ) );
         update_option( 'options_tabungan_keung_2_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_2_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_2_icon', sanitize_text_field( $_POST['options_tabungan_keung_2_icon'] ?? 'check' ) );
+        update_option( 'options_tabungan_keung_2_tag', sanitize_text_field( $_POST['options_tabungan_keung_2_tag'] ?? 'Tanpa Potongan Admin' ) );
+        update_option( 'options_tabungan_keung_2_color', sanitize_text_field( $_POST['options_tabungan_keung_2_color'] ?? 'sky' ) );
+
         update_option( 'options_tabungan_keung_3_title', sanitize_text_field( $_POST['options_tabungan_keung_3_title'] ?? '' ) );
         update_option( 'options_tabungan_keung_3_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_3_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_3_icon', sanitize_text_field( $_POST['options_tabungan_keung_3_icon'] ?? 'trending' ) );
+        update_option( 'options_tabungan_keung_3_tag', sanitize_text_field( $_POST['options_tabungan_keung_3_tag'] ?? 'Nisbah Bagi Hasil Adil' ) );
+        update_option( 'options_tabungan_keung_3_color', sanitize_text_field( $_POST['options_tabungan_keung_3_color'] ?? 'amber' ) );
+
         update_option( 'options_tabungan_keung_4_title', sanitize_text_field( $_POST['options_tabungan_keung_4_title'] ?? '' ) );
         update_option( 'options_tabungan_keung_4_desc', sanitize_textarea_field( $_POST['options_tabungan_keung_4_desc'] ?? '' ) );
+        update_option( 'options_tabungan_keung_4_icon', sanitize_text_field( $_POST['options_tabungan_keung_4_icon'] ?? 'lock' ) );
+        update_option( 'options_tabungan_keung_4_tag', sanitize_text_field( $_POST['options_tabungan_keung_4_tag'] ?? 'Terdaftar & Dijamin LPS' ) );
+        update_option( 'options_tabungan_keung_4_color', sanitize_text_field( $_POST['options_tabungan_keung_4_color'] ?? 'indigo' ) );
 
         // 3. Tabungan: Pengaturan Kalkulator
         update_option( 'options_tabungan_calc_badge', sanitize_text_field( $_POST['options_tabungan_calc_badge'] ?? '' ) );
@@ -732,18 +748,34 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
     $tab_komp_desc     = get_option( 'options_tabungan_komparasi_desc', 'Bandingkan fitur utama produk simpanan syariah BPRS Wakalumi secara transparan dan amanah.' );
     $tab_komp_lps      = get_option( 'options_tabungan_komparasi_lps_note', 'Dijamin Lembaga Penjamin Simpanan (LPS) s.d. Rp 2 Miliar per nasabah & Diawasi Otoritas Jasa Keuangan (OJK)' );
 
-    // Tabungan: 4 Keunggulan
+    // Tabungan: 4 Keunggulan (3-Tone & Dinamis)
     $tab_keung_kicker  = get_option( 'options_tabungan_keung_kicker', 'Keunggulan Simpanan Syariah' );
     $tab_keung_title   = get_option( 'options_tabungan_keung_title', 'Mengapa Memilih Menabung di BPRS Wakalumi?' );
     $tab_keung_desc    = get_option( 'options_tabungan_keung_desc', 'Kami memastikan setiap rupiah yang Anda simpan dikelola secara profesional, amanah, dan mendatangkan kemaslahatan bagi umat.' );
+    
     $tab_keung_1_title = get_option( 'options_tabungan_keung_1_title', 'Murni Bebas Riba' );
     $tab_keung_1_desc  = get_option( 'options_tabungan_keung_1_desc', 'Pengelolaan berlandaskan akad syariah yang diawasi langsung oleh Dewan Pengawas Syariah (DPS) dan DSN-MUI.' );
+    $tab_keung_1_icon  = get_option( 'options_tabungan_keung_1_icon', 'shield' );
+    $tab_keung_1_tag   = get_option( 'options_tabungan_keung_1_tag', 'Akad Murni Syariah' );
+    $tab_keung_1_color = get_option( 'options_tabungan_keung_1_color', 'teal' );
+
     $tab_keung_2_title = get_option( 'options_tabungan_keung_2_title', 'Bebas Biaya Bulanan' );
     $tab_keung_2_desc  = get_option( 'options_tabungan_keung_2_desc', 'Saldo tabungan Anda tidak akan tergerus oleh biaya administrasi bulanan, sehingga dana Anda aman dan optimal.' );
+    $tab_keung_2_icon  = get_option( 'options_tabungan_keung_2_icon', 'check' );
+    $tab_keung_2_tag   = get_option( 'options_tabungan_keung_2_tag', 'Tanpa Potongan Admin' );
+    $tab_keung_2_color = get_option( 'options_tabungan_keung_2_color', 'sky' );
+
     $tab_keung_3_title = get_option( 'options_tabungan_keung_3_title', 'Bagi Hasil Kompetitif' );
     $tab_keung_3_desc  = get_option( 'options_tabungan_keung_3_desc', 'Keuntungan hasil pembiayaan produktif sektor riil dibagikan secara adil dan transparan kepada para penabung setiap bulan.' );
+    $tab_keung_3_icon  = get_option( 'options_tabungan_keung_3_icon', 'trending' );
+    $tab_keung_3_tag   = get_option( 'options_tabungan_keung_3_tag', 'Nisbah Bagi Hasil Adil' );
+    $tab_keung_3_color = get_option( 'options_tabungan_keung_3_color', 'amber' );
+
     $tab_keung_4_title = get_option( 'options_tabungan_keung_4_title', 'Dijamin LPS Rp 2 Miliar' );
     $tab_keung_4_desc  = get_option( 'options_tabungan_keung_4_desc', 'Dana simpanan masyarakat dijamin secara sah oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan regulasi yang berlaku.' );
+    $tab_keung_4_icon  = get_option( 'options_tabungan_keung_4_icon', 'lock' );
+    $tab_keung_4_tag   = get_option( 'options_tabungan_keung_4_tag', 'Terdaftar & Dijamin LPS' );
+    $tab_keung_4_color = get_option( 'options_tabungan_keung_4_color', 'indigo' );
 
     // Tabungan: Kalkulator
     $tab_calc_badge    = get_option( 'options_tabungan_calc_badge', 'Simulasi Finansial Syariah' );
@@ -1177,6 +1209,9 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                                 <div>
                                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Ketentuan Penarikan (Tabel Komparasi)</label>
                                     <input type="text" name="tab_penarikan[]" value="<?php echo esc_attr( $prod['penarikan'] ?? '' ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Fleksibel: Kapan pun pada jam operasional kantor">
+                                    <p class="description" style="font-size: 11px; color: #088395; margin-top: 3px;">
+                                        💡 <em>Gunakan tanda <code>:</code> (misal: <code>Fleksibel: Kapan pun...</code>) atau <code>**teks**</code> agar kata kunci otomatis berwarna & tebal.</em>
+                                    </p>
                                 </div>
 
                                 <div>
@@ -1258,7 +1293,7 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                 <!-- 4. 4 Keunggulan Menabung di BPRS Wakalumi -->
                 <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                     <h2 style="font-size: 16px; font-weight: 700; color: #088395; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
-                        4. Keunggulan Simpanan Syariah (4 Kartu Eksekutif)
+                        4. Keunggulan Simpanan Syariah (4 Kartu Eksekutif 3-Tone)
                     </h2>
                     <table class="form-table" style="margin: 0 0 20px 0;">
                         <tr>
@@ -1275,56 +1310,192 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                         </tr>
                     </table>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
                         <!-- Keunggulan 1 -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #088395; border-radius: 10px; padding: 16px;">
-                            <span style="font-size: 11px; font-weight: 800; color: #088395; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 01</span>
-                            <div style="margin-bottom: 10px;">
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 1</label>
-                                <input type="text" name="options_tabungan_keung_1_title" value="<?php echo esc_attr( $tab_keung_1_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
-                            </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #088395; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 1</label>
-                                <textarea name="options_tabungan_keung_1_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_1_desc ); ?></textarea>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 11px; font-weight: 800; color: #088395; text-transform: uppercase;">Kartu 01 (3-Tone)</span>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Keunggulan</label>
+                                    <input type="text" name="options_tabungan_keung_1_title" value="<?php echo esc_attr( $tab_keung_1_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tipe Icon</label>
+                                        <select name="options_tabungan_keung_1_icon" style="width: 100%;">
+                                            <option value="shield" <?php selected( $tab_keung_1_icon, 'shield' ); ?>>🛡️ Syariah / DPS</option>
+                                            <option value="check" <?php selected( $tab_keung_1_icon, 'check' ); ?>>✅ Bebas Biaya</option>
+                                            <option value="trending" <?php selected( $tab_keung_1_icon, 'trending' ); ?>>📈 Bagi Hasil</option>
+                                            <option value="lock" <?php selected( $tab_keung_1_icon, 'lock' ); ?>>🔒 Aman / LPS</option>
+                                            <option value="star" <?php selected( $tab_keung_1_icon, 'star' ); ?>>⭐ Bintang / Prima</option>
+                                            <option value="award" <?php selected( $tab_keung_1_icon, 'award' ); ?>>🏆 Penghargaan</option>
+                                            <option value="users" <?php selected( $tab_keung_1_icon, 'users' ); ?>>👥 Ramah / Umat</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tema Warna</label>
+                                        <select name="options_tabungan_keung_1_color" style="width: 100%;">
+                                            <option value="auto" <?php selected( $tab_keung_1_color, 'auto' ); ?>>🔄 Otomatis</option>
+                                            <option value="teal" <?php selected( $tab_keung_1_color, 'teal' ); ?>>🟢 Teal (Syariah)</option>
+                                            <option value="sky" <?php selected( $tab_keung_1_color, 'sky' ); ?>>🔵 Sky (Perbankan)</option>
+                                            <option value="amber" <?php selected( $tab_keung_1_color, 'amber' ); ?>>🟡 Amber (Emas)</option>
+                                            <option value="indigo" <?php selected( $tab_keung_1_color, 'indigo' ); ?>>🟣 Indigo (Modern)</option>
+                                            <option value="rose" <?php selected( $tab_keung_1_color, 'rose' ); ?>>🔴 Rose (Proteksi)</option>
+                                            <option value="emerald" <?php selected( $tab_keung_1_color, 'emerald' ); ?>>🌿 Emerald (Berkah)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Uraian Penjelasan</label>
+                                    <textarea name="options_tabungan_keung_1_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_1_desc ); ?></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Status Bawah (Pill Footer)</label>
+                                    <input type="text" name="options_tabungan_keung_1_tag" value="<?php echo esc_attr( $tab_keung_1_tag ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Akad Murni Syariah">
+                                </div>
                             </div>
                         </div>
 
                         <!-- Keunggulan 2 -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #2563eb; border-radius: 10px; padding: 16px;">
-                            <span style="font-size: 11px; font-weight: 800; color: #2563eb; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 02</span>
-                            <div style="margin-bottom: 10px;">
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 2</label>
-                                <input type="text" name="options_tabungan_keung_2_title" value="<?php echo esc_attr( $tab_keung_2_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
-                            </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #2563eb; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 2</label>
-                                <textarea name="options_tabungan_keung_2_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_2_desc ); ?></textarea>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 11px; font-weight: 800; color: #2563eb; text-transform: uppercase;">Kartu 02 (3-Tone)</span>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Keunggulan</label>
+                                    <input type="text" name="options_tabungan_keung_2_title" value="<?php echo esc_attr( $tab_keung_2_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tipe Icon</label>
+                                        <select name="options_tabungan_keung_2_icon" style="width: 100%;">
+                                            <option value="shield" <?php selected( $tab_keung_2_icon, 'shield' ); ?>>🛡️ Syariah / DPS</option>
+                                            <option value="check" <?php selected( $tab_keung_2_icon, 'check' ); ?>>✅ Bebas Biaya</option>
+                                            <option value="trending" <?php selected( $tab_keung_2_icon, 'trending' ); ?>>📈 Bagi Hasil</option>
+                                            <option value="lock" <?php selected( $tab_keung_2_icon, 'lock' ); ?>>🔒 Aman / LPS</option>
+                                            <option value="star" <?php selected( $tab_keung_2_icon, 'star' ); ?>>⭐ Bintang / Prima</option>
+                                            <option value="award" <?php selected( $tab_keung_2_icon, 'award' ); ?>>🏆 Penghargaan</option>
+                                            <option value="users" <?php selected( $tab_keung_2_icon, 'users' ); ?>>👥 Ramah / Umat</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tema Warna</label>
+                                        <select name="options_tabungan_keung_2_color" style="width: 100%;">
+                                            <option value="auto" <?php selected( $tab_keung_2_color, 'auto' ); ?>>🔄 Otomatis</option>
+                                            <option value="teal" <?php selected( $tab_keung_2_color, 'teal' ); ?>>🟢 Teal (Syariah)</option>
+                                            <option value="sky" <?php selected( $tab_keung_2_color, 'sky' ); ?>>🔵 Sky (Perbankan)</option>
+                                            <option value="amber" <?php selected( $tab_keung_2_color, 'amber' ); ?>>🟡 Amber (Emas)</option>
+                                            <option value="indigo" <?php selected( $tab_keung_2_color, 'indigo' ); ?>>🟣 Indigo (Modern)</option>
+                                            <option value="rose" <?php selected( $tab_keung_2_color, 'rose' ); ?>>🔴 Rose (Proteksi)</option>
+                                            <option value="emerald" <?php selected( $tab_keung_2_color, 'emerald' ); ?>>🌿 Emerald (Berkah)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Uraian Penjelasan</label>
+                                    <textarea name="options_tabungan_keung_2_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_2_desc ); ?></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Status Bawah (Pill Footer)</label>
+                                    <input type="text" name="options_tabungan_keung_2_tag" value="<?php echo esc_attr( $tab_keung_2_tag ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Tanpa Potongan Admin">
+                                </div>
                             </div>
                         </div>
 
                         <!-- Keunggulan 3 -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #d97706; border-radius: 10px; padding: 16px;">
-                            <span style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 03</span>
-                            <div style="margin-bottom: 10px;">
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 3</label>
-                                <input type="text" name="options_tabungan_keung_3_title" value="<?php echo esc_attr( $tab_keung_3_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
-                            </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #d97706; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 3</label>
-                                <textarea name="options_tabungan_keung_3_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_3_desc ); ?></textarea>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase;">Kartu 03 (3-Tone)</span>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Keunggulan</label>
+                                    <input type="text" name="options_tabungan_keung_3_title" value="<?php echo esc_attr( $tab_keung_3_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tipe Icon</label>
+                                        <select name="options_tabungan_keung_3_icon" style="width: 100%;">
+                                            <option value="shield" <?php selected( $tab_keung_3_icon, 'shield' ); ?>>🛡️ Syariah / DPS</option>
+                                            <option value="check" <?php selected( $tab_keung_3_icon, 'check' ); ?>>✅ Bebas Biaya</option>
+                                            <option value="trending" <?php selected( $tab_keung_3_icon, 'trending' ); ?>>📈 Bagi Hasil</option>
+                                            <option value="lock" <?php selected( $tab_keung_3_icon, 'lock' ); ?>>🔒 Aman / LPS</option>
+                                            <option value="star" <?php selected( $tab_keung_3_icon, 'star' ); ?>>⭐ Bintang / Prima</option>
+                                            <option value="award" <?php selected( $tab_keung_3_icon, 'award' ); ?>>🏆 Penghargaan</option>
+                                            <option value="users" <?php selected( $tab_keung_3_icon, 'users' ); ?>>👥 Ramah / Umat</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tema Warna</label>
+                                        <select name="options_tabungan_keung_3_color" style="width: 100%;">
+                                            <option value="auto" <?php selected( $tab_keung_3_color, 'auto' ); ?>>🔄 Otomatis</option>
+                                            <option value="teal" <?php selected( $tab_keung_3_color, 'teal' ); ?>>🟢 Teal (Syariah)</option>
+                                            <option value="sky" <?php selected( $tab_keung_3_color, 'sky' ); ?>>🔵 Sky (Perbankan)</option>
+                                            <option value="amber" <?php selected( $tab_keung_3_color, 'amber' ); ?>>🟡 Amber (Emas)</option>
+                                            <option value="indigo" <?php selected( $tab_keung_3_color, 'indigo' ); ?>>🟣 Indigo (Modern)</option>
+                                            <option value="rose" <?php selected( $tab_keung_3_color, 'rose' ); ?>>🔴 Rose (Proteksi)</option>
+                                            <option value="emerald" <?php selected( $tab_keung_3_color, 'emerald' ); ?>>🌿 Emerald (Berkah)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Uraian Penjelasan</label>
+                                    <textarea name="options_tabungan_keung_3_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_3_desc ); ?></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Status Bawah (Pill Footer)</label>
+                                    <input type="text" name="options_tabungan_keung_3_tag" value="<?php echo esc_attr( $tab_keung_3_tag ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Nisbah Bagi Hasil Adil">
+                                </div>
                             </div>
                         </div>
 
                         <!-- Keunggulan 4 -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #059669; border-radius: 10px; padding: 16px;">
-                            <span style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase; display: block; margin-bottom: 8px;">Kartu 04</span>
-                            <div style="margin-bottom: 10px;">
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Poin 4</label>
-                                <input type="text" name="options_tabungan_keung_4_title" value="<?php echo esc_attr( $tab_keung_4_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
-                            </div>
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-top: 3px solid #059669; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Ulasan Poin 4</label>
-                                <textarea name="options_tabungan_keung_4_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_4_desc ); ?></textarea>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                    <span style="font-size: 11px; font-weight: 800; color: #059669; text-transform: uppercase;">Kartu 04 (3-Tone)</span>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Keunggulan</label>
+                                    <input type="text" name="options_tabungan_keung_4_title" value="<?php echo esc_attr( $tab_keung_4_title ); ?>" class="regular-text" style="width: 100%; font-weight: bold;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tipe Icon</label>
+                                        <select name="options_tabungan_keung_4_icon" style="width: 100%;">
+                                            <option value="shield" <?php selected( $tab_keung_4_icon, 'shield' ); ?>>🛡️ Syariah / DPS</option>
+                                            <option value="check" <?php selected( $tab_keung_4_icon, 'check' ); ?>>✅ Bebas Biaya</option>
+                                            <option value="trending" <?php selected( $tab_keung_4_icon, 'trending' ); ?>>📈 Bagi Hasil</option>
+                                            <option value="lock" <?php selected( $tab_keung_4_icon, 'lock' ); ?>>🔒 Aman / LPS</option>
+                                            <option value="star" <?php selected( $tab_keung_4_icon, 'star' ); ?>>⭐ Bintang / Prima</option>
+                                            <option value="award" <?php selected( $tab_keung_4_icon, 'award' ); ?>>🏆 Penghargaan</option>
+                                            <option value="users" <?php selected( $tab_keung_4_icon, 'users' ); ?>>👥 Ramah / Umat</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tema Warna</label>
+                                        <select name="options_tabungan_keung_4_color" style="width: 100%;">
+                                            <option value="auto" <?php selected( $tab_keung_4_color, 'auto' ); ?>>🔄 Otomatis</option>
+                                            <option value="teal" <?php selected( $tab_keung_4_color, 'teal' ); ?>>🟢 Teal (Syariah)</option>
+                                            <option value="sky" <?php selected( $tab_keung_4_color, 'sky' ); ?>>🔵 Sky (Perbankan)</option>
+                                            <option value="amber" <?php selected( $tab_keung_4_color, 'amber' ); ?>>🟡 Amber (Emas)</option>
+                                            <option value="indigo" <?php selected( $tab_keung_4_color, 'indigo' ); ?>>🟣 Indigo (Modern)</option>
+                                            <option value="rose" <?php selected( $tab_keung_4_color, 'rose' ); ?>>🔴 Rose (Proteksi)</option>
+                                            <option value="emerald" <?php selected( $tab_keung_4_color, 'emerald' ); ?>>🌿 Emerald (Berkah)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Uraian Penjelasan</label>
+                                    <textarea name="options_tabungan_keung_4_desc" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea( $tab_keung_4_desc ); ?></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Status Bawah (Pill Footer)</label>
+                                    <input type="text" name="options_tabungan_keung_4_tag" value="<?php echo esc_attr( $tab_keung_4_tag ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Terdaftar & Dijamin LPS">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2280,6 +2451,9 @@ function wakalumi_render_produk_admin_page( $default_tab = 'tabungan' ) {
                 <div>
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Ketentuan Penarikan (Tabel Komparasi)</label>
                     <input type="text" name="tab_penarikan[]" value="" class="regular-text" style="width: 100%;" placeholder="misal: Fleksibel: Kapan pun pada jam operasional kantor">
+                    <p class="description" style="font-size: 11px; color: #088395; margin-top: 3px;">
+                        💡 <em>Gunakan tanda <code>:</code> (misal: <code>Fleksibel: Kapan pun...</code>) atau <code>**teks**</code> agar kata kunci otomatis berwarna & tebal.</em>
+                    </p>
                 </div>
 
                 <div>

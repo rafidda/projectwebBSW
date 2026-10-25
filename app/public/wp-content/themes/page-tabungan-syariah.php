@@ -36,12 +36,27 @@ $tab_keung_title   = get_option( 'options_tabungan_keung_title', 'Mengapa Memili
 $tab_keung_desc    = get_option( 'options_tabungan_keung_desc', 'Kami memastikan setiap rupiah yang Anda simpan dikelola secara profesional, amanah, dan mendatangkan kemaslahatan bagi umat.' );
 $tab_keung_1_title = get_option( 'options_tabungan_keung_1_title', 'Murni Bebas Riba' );
 $tab_keung_1_desc  = get_option( 'options_tabungan_keung_1_desc', 'Pengelolaan berlandaskan akad syariah yang diawasi langsung oleh Dewan Pengawas Syariah (DPS) dan DSN-MUI.' );
+$tab_keung_1_icon  = get_option( 'options_tabungan_keung_1_icon', 'shield' );
+$tab_keung_1_tag   = get_option( 'options_tabungan_keung_1_tag', 'Akad Murni Syariah' );
+$tab_keung_1_color = get_option( 'options_tabungan_keung_1_color', 'teal' );
+
 $tab_keung_2_title = get_option( 'options_tabungan_keung_2_title', 'Bebas Biaya Bulanan' );
 $tab_keung_2_desc  = get_option( 'options_tabungan_keung_2_desc', 'Saldo tabungan Anda tidak akan tergerus oleh biaya administrasi bulanan, sehingga dana Anda aman dan optimal.' );
+$tab_keung_2_icon  = get_option( 'options_tabungan_keung_2_icon', 'check' );
+$tab_keung_2_tag   = get_option( 'options_tabungan_keung_2_tag', 'Tanpa Potongan Admin' );
+$tab_keung_2_color = get_option( 'options_tabungan_keung_2_color', 'sky' );
+
 $tab_keung_3_title = get_option( 'options_tabungan_keung_3_title', 'Bagi Hasil Kompetitif' );
 $tab_keung_3_desc  = get_option( 'options_tabungan_keung_3_desc', 'Keuntungan hasil pembiayaan produktif sektor riil dibagikan secara adil dan transparan kepada para penabung setiap bulan.' );
+$tab_keung_3_icon  = get_option( 'options_tabungan_keung_3_icon', 'trending' );
+$tab_keung_3_tag   = get_option( 'options_tabungan_keung_3_tag', 'Nisbah Bagi Hasil Adil' );
+$tab_keung_3_color = get_option( 'options_tabungan_keung_3_color', 'amber' );
+
 $tab_keung_4_title = get_option( 'options_tabungan_keung_4_title', 'Dijamin LPS Rp 2 Miliar' );
 $tab_keung_4_desc  = get_option( 'options_tabungan_keung_4_desc', 'Dana simpanan masyarakat dijamin secara sah oleh Lembaga Penjamin Simpanan (LPS) sesuai ketentuan regulasi yang berlaku.' );
+$tab_keung_4_icon  = get_option( 'options_tabungan_keung_4_icon', 'lock' );
+$tab_keung_4_tag   = get_option( 'options_tabungan_keung_4_tag', 'Terdaftar & Dijamin LPS' );
+$tab_keung_4_color = get_option( 'options_tabungan_keung_4_color', 'indigo' );
 
 // ── PENGATURAN KALKULATOR DARI ADMIN ─────────────────────────────
 $calc_badge   = get_option( 'options_tabungan_calc_badge', 'Simulasi Finansial Syariah' );
@@ -391,39 +406,49 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                 <?php endif; ?>
             </div>
 
-            <!-- LPS & Security Badge (4 Kolom) - Enhanced Animation & Holographic Badge -->
+            <!-- LPS & Security Badge (4 Kolom) - Dual-Tone Executive Card (Separated Header & Body) -->
             <div class="lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-slate-900/90 border border-teal-200/80 dark:border-teal-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 via-cyan-400 to-teal-600">
-                    <!-- Interactive Slide Watermark Emblem -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                    <div class="wkl-glass-shine"></div>
 
-                    <!-- Holographic Shield Icon with Glow -->
-                    <div class="relative w-16 h-16 rounded-2xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto shadow-lg shadow-teal-500/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
-                        <div class="absolute inset-0 rounded-2xl bg-teal-400/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <svg class="w-8 h-8 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                        </svg>
-                    </div>
+                    <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                    <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                        <!-- Subtle Top Accent Line -->
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500 opacity-90"></div>
 
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                            <?php echo esc_html( $tab_lps_tag ); ?>
+                        <!-- Interactive Slide Watermark Emblem -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <h4 class="text-lg font-black text-slate-900 dark:text-white"><?php echo esc_html( $tab_lps_title ); ?></h4>
+
+                        <!-- Shield Icon with Soft Dual-Tone Ring -->
+                        <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                            <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <?php echo esc_html( $tab_lps_tag ); ?>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $tab_lps_title ); ?></h4>
+                        </div>
                     </div>
 
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                        <?php echo esc_html( $tab_lps_desc ); ?>
-                    </p>
+                    <!-- Bottom Dual-Tone Zone: Isi Keterangan & Button -->
+                    <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            <?php echo esc_html( $tab_lps_desc ); ?>
+                        </p>
 
-                    <div class="pt-2 relative z-10">
-                        <a href="#kalkulator" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-teal-600 hover:text-teal-700 dark:text-teal-300 dark:hover:text-teal-200 transition-colors">
-                            <span><?php echo esc_html( $tab_lps_btn ); ?></span>
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                        </a>
+                        <div class="pt-1">
+                            <a href="#kalkulator" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/lpsbtn">
+                                <span><?php echo esc_html( $tab_lps_btn ); ?></span>
+                                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -477,9 +502,9 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
             <!-- 2. Subtle Card Surface Gradient Glow on Hover -->
             <div class="absolute inset-0 bg-gradient-to-br <?php echo esc_attr( $c_theme['glow_ambient'] ); ?> opacity-0 group-hover/card:opacity-100 pointer-events-none transition-opacity duration-700 ease-out"></div>
 
-            <!-- 3. Sliding GPU-accelerated Watermark Emblem (untitled4.png) -->
-            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-64 sm:w-80 h-64 sm:h-80 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover/card:left-full group-hover/card:-translate-x-1/2 group-hover/card:scale-125 group-hover/card:opacity-[0.075] dark:group-hover/card:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden z-0">
-                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+            <!-- 3. Corner Static Watermark Emblem (Ukuran 2x Lebih Besar, Tanpa Miring, Hover Membesar Halus) -->
+            <div class="absolute -right-16 -bottom-16 sm:-right-24 sm:-bottom-24 w-96 sm:w-[480px] h-96 sm:h-[480px] opacity-[0.035] dark:opacity-[0.025] pointer-events-none select-none overflow-hidden transition-all duration-700 ease-out group-hover/card:scale-105 group-hover/card:opacity-[0.065] dark:group-hover/card:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen z-0">
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy">
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
@@ -546,10 +571,7 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                 <!-- Kolom Kanan: Info Setoran, Syarat & Aksi (5 Kolom) -->
                 <div class="lg:col-span-5 bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-slate-800/95 dark:to-slate-850/90 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-md relative overflow-hidden transition-all duration-500 ease-out group-hover/card:shadow-xl <?php echo esc_attr( $c_theme['subcard_hover'] ); ?>">
                     
-                    <!-- Sub-card subtle watermark emblem -->
-                    <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none select-none overflow-hidden transition-all duration-700 ease-out group-hover/card:scale-125 group-hover/card:opacity-[0.08] mix-blend-multiply dark:mix-blend-screen z-0">
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
+
 
                     <div class="relative z-10">
                         <!-- Metrics: Setoran & Biaya Admin Bulanan -->
@@ -779,19 +801,37 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
                                     <span>Fleksibilitas Penarikan</span>
                                 </div>
                             </td>
-                            <?php foreach ( $tabungan_list as $prod ) : ?>
-                                <td class="p-4 sm:p-5 text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
-                                    <?php 
-                                    if ( ! empty( $prod['penarikan'] ) ) {
-                                        echo esc_html( $prod['penarikan'] );
-                                    } elseif ( $prod['slug'] === 'haji-umroh' ) {
-                                        echo '<span class="font-bold text-amber-700 dark:text-amber-300">Terencana:</span> Saat pelunasan / keberangkatan ibadah';
-                                    } elseif ( $prod['slug'] === 'ukhuwah' ) {
-                                        echo '<span class="font-bold text-purple-700 dark:text-purple-300">Komitmen:</span> Periode program berhadiah';
+                            <?php foreach ( $tabungan_list as $prod ) : 
+                                $c_theme = $color_themes[ $prod['color'] ?? 'teal' ] ?? $color_themes['teal'];
+                                $val = trim( $prod['penarikan'] ?? '' );
+                                if ( empty( $val ) ) {
+                                    if ( ( $prod['slug'] ?? '' ) === 'haji-umroh' ) {
+                                        $val = 'Terencana: Saat pelunasan / keberangkatan ibadah';
+                                    } elseif ( ( $prod['slug'] ?? '' ) === 'ukhuwah' ) {
+                                        $val = 'Komitmen: Periode program berhadiah';
                                     } else {
-                                        echo '<span class="font-bold text-teal-700 dark:text-teal-300">Fleksibel:</span> Kapan pun pada jam operasional kantor';
+                                        $val = 'Fleksibel: Kapan pun pada jam operasional kantor';
                                     }
-                                    ?>
+                                }
+
+                                $color_class = $c_theme['th_text'] ?? 'text-teal-700 dark:text-teal-300';
+
+                                // Parsing cerdas: jika ada **teks** atau pola "Kata: Penjelasan", warnai kata kuncinya
+                                if ( preg_match( '/\*\*(.*?)\*\*(.*)/s', $val, $matches ) ) {
+                                    $prefix = trim( $matches[1] );
+                                    $suffix = $matches[2];
+                                    $output_penarikan = '<span class="font-bold ' . esc_attr( $color_class ) . '">' . esc_html( $prefix ) . '</span>' . esc_html( $suffix );
+                                } elseif ( strpos( $val, ':' ) !== false ) {
+                                    $parts = explode( ':', $val, 2 );
+                                    $prefix = trim( $parts[0] ) . ':';
+                                    $suffix = ' ' . ltrim( $parts[1] );
+                                    $output_penarikan = '<span class="font-bold ' . esc_attr( $color_class ) . '">' . esc_html( $prefix ) . '</span>' . esc_html( $suffix );
+                                } else {
+                                    $output_penarikan = esc_html( $val );
+                                }
+                            ?>
+                                <td class="p-4 sm:p-5 text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
+                                    <?php echo $output_penarikan; ?>
                                 </td>
                             <?php endforeach; ?>
                         </tr>
@@ -1034,60 +1074,165 @@ if ( ! function_exists( 'wakalumi_render_tabungan_card_icon' ) ) {
         </div>
 
         <?php
+        // Palet Warna Tematik Dinamis (3-Tone Card)
+        $palette_themes = [
+            'teal' => [
+                'border'     => 'border-teal-200/90 dark:border-teal-900/60 hover:border-teal-500/80 dark:hover:border-teal-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-teal-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-teal-50/90 via-emerald-50/50 to-teal-100/30 dark:from-teal-950/80 dark:via-teal-900/40 dark:to-slate-900/90 border-b border-teal-100 dark:border-teal-900/50',
+                'icon_solid' => 'bg-teal-600 dark:bg-teal-500 text-white shadow-md shadow-teal-600/30 ring-4 ring-teal-100/80 dark:ring-teal-950/80',
+                'title'      => 'group-hover:text-teal-600 dark:group-hover:text-teal-300',
+                'footer_bg'  => 'bg-teal-50/70 dark:bg-teal-950/50 border-t border-teal-100/80 dark:border-teal-900/40 text-teal-800 dark:text-teal-200',
+                'badge_icon' => 'bg-teal-600/15 text-teal-600 dark:text-teal-300',
+            ],
+            'sky' => [
+                'border'     => 'border-sky-200/90 dark:border-sky-900/60 hover:border-sky-500/80 dark:hover:border-sky-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-sky-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-sky-50/90 via-blue-50/50 to-sky-100/30 dark:from-sky-950/80 dark:via-sky-900/40 dark:to-slate-900/90 border-b border-sky-100 dark:border-sky-900/50',
+                'icon_solid' => 'bg-sky-600 dark:bg-sky-500 text-white shadow-md shadow-sky-600/30 ring-4 ring-sky-100/80 dark:ring-sky-950/80',
+                'title'      => 'group-hover:text-sky-600 dark:group-hover:text-sky-300',
+                'footer_bg'  => 'bg-sky-50/70 dark:bg-sky-950/50 border-t border-sky-100/80 dark:border-sky-900/40 text-sky-800 dark:text-sky-200',
+                'badge_icon' => 'bg-sky-600/15 text-sky-600 dark:text-sky-300',
+            ],
+            'amber' => [
+                'border'     => 'border-amber-200/90 dark:border-amber-900/60 hover:border-amber-500/80 dark:hover:border-amber-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-amber-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-amber-50/90 via-yellow-50/50 to-amber-100/30 dark:from-amber-950/80 dark:via-amber-900/40 dark:to-slate-900/90 border-b border-amber-100 dark:border-amber-900/50',
+                'icon_solid' => 'bg-amber-600 dark:bg-amber-500 text-white shadow-md shadow-amber-600/30 ring-4 ring-amber-100/80 dark:ring-amber-950/80',
+                'title'      => 'group-hover:text-amber-600 dark:group-hover:text-amber-300',
+                'footer_bg'  => 'bg-amber-50/70 dark:bg-amber-950/50 border-t border-amber-100/80 dark:border-amber-900/40 text-amber-800 dark:text-amber-200',
+                'badge_icon' => 'bg-amber-600/15 text-amber-600 dark:text-amber-300',
+            ],
+            'indigo' => [
+                'border'     => 'border-indigo-200/90 dark:border-indigo-900/60 hover:border-indigo-500/80 dark:hover:border-indigo-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-indigo-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-indigo-50/90 via-purple-50/50 to-indigo-100/30 dark:from-indigo-950/80 dark:via-indigo-900/40 dark:to-slate-900/90 border-b border-indigo-100 dark:border-indigo-900/50',
+                'icon_solid' => 'bg-indigo-600 dark:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 ring-4 ring-indigo-100/80 dark:ring-indigo-950/80',
+                'title'      => 'group-hover:text-indigo-600 dark:group-hover:text-indigo-300',
+                'footer_bg'  => 'bg-indigo-50/70 dark:bg-indigo-950/50 border-t border-indigo-100/80 dark:border-indigo-900/40 text-indigo-800 dark:text-indigo-200',
+                'badge_icon' => 'bg-indigo-600/15 text-indigo-600 dark:text-indigo-300',
+            ],
+            'rose' => [
+                'border'     => 'border-rose-200/90 dark:border-rose-900/60 hover:border-rose-500/80 dark:hover:border-rose-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-rose-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-rose-50/90 via-pink-50/50 to-rose-100/30 dark:from-rose-950/80 dark:via-rose-900/40 dark:to-slate-900/90 border-b border-rose-100 dark:border-rose-900/50',
+                'icon_solid' => 'bg-rose-600 dark:bg-rose-500 text-white shadow-md shadow-rose-600/30 ring-4 ring-rose-100/80 dark:ring-rose-950/80',
+                'title'      => 'group-hover:text-rose-600 dark:group-hover:text-rose-300',
+                'footer_bg'  => 'bg-rose-50/70 dark:bg-rose-950/50 border-t border-rose-100/80 dark:border-rose-900/40 text-rose-800 dark:text-rose-200',
+                'badge_icon' => 'bg-rose-600/15 text-rose-600 dark:text-rose-300',
+            ],
+            'emerald' => [
+                'border'     => 'border-emerald-200/90 dark:border-emerald-900/60 hover:border-emerald-500/80 dark:hover:border-emerald-400',
+                'shadow'     => 'hover:shadow-xl hover:shadow-emerald-500/15',
+                'header_bg'  => 'bg-gradient-to-r from-emerald-50/90 via-teal-50/50 to-emerald-100/30 dark:from-emerald-950/80 dark:via-emerald-900/40 dark:to-slate-900/90 border-b border-emerald-100 dark:border-emerald-900/50',
+                'icon_solid' => 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 ring-4 ring-emerald-100/80 dark:ring-emerald-950/80',
+                'title'      => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-300',
+                'footer_bg'  => 'bg-emerald-50/70 dark:bg-emerald-950/50 border-t border-emerald-100/80 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-200',
+                'badge_icon' => 'bg-emerald-600/15 text-emerald-600 dark:text-emerald-300',
+            ],
+        ];
+        $palette_order = [ 'teal', 'sky', 'amber', 'indigo', 'rose', 'emerald' ];
+
         $tab_keunggulan_items = [
             [
                 'title' => $tab_keung_1_title,
                 'desc'  => $tab_keung_1_desc,
-                'icon'  => '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
-                'theme' => 'teal',
+                'icon'  => $tab_keung_1_icon,
+                'tag'   => $tab_keung_1_tag,
+                'color' => $tab_keung_1_color,
             ],
             [
                 'title' => $tab_keung_2_title,
                 'desc'  => $tab_keung_2_desc,
-                'icon'  => '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>',
-                'theme' => 'cyan',
+                'icon'  => $tab_keung_2_icon,
+                'tag'   => $tab_keung_2_tag,
+                'color' => $tab_keung_2_color,
             ],
             [
                 'title' => $tab_keung_3_title,
                 'desc'  => $tab_keung_3_desc,
-                'icon'  => '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>',
-                'theme' => 'emerald',
+                'icon'  => $tab_keung_3_icon,
+                'tag'   => $tab_keung_3_tag,
+                'color' => $tab_keung_3_color,
             ],
             [
                 'title' => $tab_keung_4_title,
                 'desc'  => $tab_keung_4_desc,
-                'icon'  => '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-                'theme' => 'indigo',
+                'icon'  => $tab_keung_4_icon,
+                'tag'   => $tab_keung_4_tag,
+                'color' => $tab_keung_4_color,
             ],
         ];
         ?>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-aos="fade-up">
             <?php foreach ( $tab_keunggulan_items as $k_idx => $k_item ) : 
-                $num_badge = sprintf( '%02d', $k_idx + 1 );
+                $k_color = $k_item['color'] ?? 'auto';
+                if ( ! empty( $k_color ) && $k_color !== 'auto' && isset( $palette_themes[ $k_color ] ) ) {
+                    $theme = $palette_themes[ $k_color ];
+                } else {
+                    $theme_key = $palette_order[ $k_idx % count( $palette_order ) ];
+                    $theme = $palette_themes[ $theme_key ];
+                }
+                $k_icon = $k_item['icon'] ?? 'shield';
             ?>
-                <div class="hub-product-card relative overflow-hidden p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-out group cursor-default flex flex-col justify-between before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-teal-500 before:to-cyan-400 before:scale-x-75 group-hover:before:scale-x-100 before:transition-transform before:duration-700 before:ease-out">
-                    <!-- Sliding Watermark untitled4.png -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy">
+                <!-- 3-Tone Card (Tone 1: Header Solid Icon & Title | Tone 2: Body Description & Watermark | Tone 3: Footer Pill Tag) -->
+                <div class="spotlight-card tilt-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border <?php echo esc_attr( $theme['border'] ); ?> shadow-md shadow-slate-100 dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] <?php echo esc_attr( $theme['shadow'] ); ?> hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-default">
+                    
+                    <!-- TONE 1: HEADER BAR (Icon Solid di Kiri + Judul di Sampingnya) -->
+                    <div class="px-5 py-4 sm:px-6 sm:py-5 <?php echo esc_attr( $theme['header_bg'] ); ?> flex items-center gap-3.5">
+                        <!-- Solid App Icon Box -->
+                        <div class="w-12 h-12 rounded-2xl <?php echo esc_attr( $theme['icon_solid'] ); ?> flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                            <?php if ( $k_icon === 'check' ) : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            <?php elseif ( $k_icon === 'trending' ) : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            <?php elseif ( $k_icon === 'lock' ) : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            <?php elseif ( $k_icon === 'star' ) : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                            <?php elseif ( $k_icon === 'award' ) : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                            <?php elseif ( $k_icon === 'users' ) : ?>
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <?php else : ?>
+                                <!-- shield default -->
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Judul di Samping Icon -->
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug <?php echo esc_attr( $theme['title'] ); ?> transition-colors">
+                                <?php echo esc_html( $k_item['title'] ); ?>
+                            </h4>
+                        </div>
                     </div>
 
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-5">
-                            <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out shadow-sm">
-                                <?php echo $k_item['icon']; ?>
-                            </div>
-                            <span class="text-xs font-black text-slate-400 dark:text-slate-500 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:text-teal-600 dark:group-hover:text-teal-400 group-hover:bg-teal-50 dark:group-hover:bg-teal-950/60 transition-colors">
-                                <?php echo esc_html( $num_badge ); ?>
+                    <!-- TONE 2: CARD BODY (Keterangan Rapi & Watermark Logo Interaktif) -->
+                    <div class="p-5 sm:p-6 relative flex-grow flex flex-col justify-between overflow-hidden bg-white dark:bg-slate-900/95">
+                        <!-- Sliding Watermark Logo on Hover -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100" loading="lazy">
+                        </div>
+
+                        <div class="relative z-10">
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                                <?php echo esc_html( $k_item['desc'] ); ?>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- TONE 3: FOOTER BAR (Tag Komitmen Keunggulan dengan Checkmark) -->
+                    <?php if ( ! empty( $k_item['tag'] ) ) : ?>
+                        <div class="px-5 sm:px-6 py-3.5 <?php echo esc_attr( $theme['footer_bg'] ); ?> flex items-center justify-between gap-2 text-xs font-semibold relative z-10">
+                            <span class="truncate"><?php echo esc_html( $k_item['tag'] ); ?></span>
+                            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full <?php echo esc_attr( $theme['badge_icon'] ); ?> shrink-0">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                             </span>
                         </div>
-                        <h4 class="text-base font-extrabold text-slate-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-                            <?php echo esc_html( $k_item['title'] ); ?>
-                        </h4>
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                            <?php echo esc_html( $k_item['desc'] ); ?>
-                        </p>
-                    </div>
+                    <?php endif; ?>
+
                 </div>
             <?php endforeach; ?>
         </div>

@@ -9,12 +9,23 @@
 
 get_header();
 
-// ── 1. AMBIL PENGATURAN HEADER BANNER DARI ADMIN ───────────────────
-$page_badge = get_option( 'options_brosur_page_badge', 'Dokumen Resmi & Literasi Syariah' );
-$page_title = get_option( 'options_brosur_page_title', 'Pusat Unduhan Brosur & Panduan Produk' );
-$page_sub   = get_option( 'options_brosur_page_sub', 'Akses materi resmi, ringkasan akad syariah, tarif nisbah, dan panduan persyaratan pembukaan rekening serta pengajuan pembiayaan BPRS Wakalumi dalam format digital.' );
+// ── 1. AMBIL DATA HERO & KARTU KEPERCAYAAN DARI ADMIN ──────────────
+$hero_data    = function_exists( 'wakalumi_get_brosur_hero' ) ? wakalumi_get_brosur_hero() : [];
+$page_badge   = $hero_data['badge'] ?? 'Dokumen Resmi & Literasi Syariah';
+$page_title   = $hero_data['title'] ?? 'Pusat Unduhan Brosur & Panduan Produk';
+$page_sub     = $hero_data['sub'] ?? 'Akses materi resmi, ringkasan akad syariah, tarif nisbah, dan panduan persyaratan pembukaan rekening serta pengajuan pembiayaan BPRS Wakalumi dalam format digital.';
+$hero_hl_1    = $hero_data['hl_1'] ?? 'Format PDF High-Res';
+$hero_hl_2    = $hero_data['hl_2'] ?? 'Pratinjau Langsung (PDF Lightbox)';
+$hero_hl_3    = $hero_data['hl_3'] ?? 'Terverifikasi OJK & DPS';
+$trust_badge  = $hero_data['trust_badge'] ?? 'Publikasi Resmi BPRS';
+$trust_title  = $hero_data['trust_title'] ?? 'Akurat, Transparan & Sesuai Syariah';
+$trust_desc   = $hero_data['trust_desc'] ?? 'Seluruh brosur dan panduan produk disusun sesuai standar keterbukaan informasi perbankan, regulasi OJK, serta prinsip syariah DSN-MUI.';
+$trust_tag1   = $hero_data['trust_tag1'] ?? 'Diawasi OJK';
+$trust_tag2   = $hero_data['trust_tag2'] ?? 'Dijamin LPS';
+$trust_btn    = $hero_data['trust_btn'] ?? 'Jelajahi Katalog Brosur';
+$trust_url    = $hero_data['trust_url'] ?? '#katalog-dokumen';
 
-// ── 2. AMBIL DATA BROSUR UTAMA RESMI (FEATURED BROCHURE) ───────────
+// ── 2. AMBIL DATA BROSUR UTAMA RESMI (FEATURED SPOTLIGHT & 3D MOCKUP) ──
 $primary_brosur = function_exists( 'wakalumi_get_brosur_primary' ) ? wakalumi_get_brosur_primary() : [];
 $p_file         = $primary_brosur['file_url'] ?? '';
 $p_name         = ! empty( $primary_brosur['file_name'] ) ? $primary_brosur['file_name'] : 'Brosur Resmi Produk BPRS Wakalumi (Edisi 2026).pdf';
@@ -23,9 +34,21 @@ $p_cover        = $primary_brosur['cover'] ?? '';
 $p_desc         = ! empty( $primary_brosur['desc'] ) ? $primary_brosur['desc'] : 'Katalog panduan komprehensif seluruh produk simpanan syariah, deposito mudharabah, dan pembiayaan syariah BPRS Wakalumi.';
 $p_version      = ! empty( $primary_brosur['version'] ) ? $primary_brosur['version'] : 'Edisi 2026';
 $p_badge        = ! empty( $primary_brosur['featured_badge'] ) ? $primary_brosur['featured_badge'] : 'Katalog Resmi Komprehensif';
+$p_brand        = ! empty( $primary_brosur['brand_tag'] ) ? $primary_brosur['brand_tag'] : 'BPRS Wakalumi';
+$p_verify       = ! empty( $primary_brosur['verify_text'] ) ? $primary_brosur['verify_text'] : 'Edisi Resmi Terverifikasi BPRS Wakalumi';
+$p_feat_1       = ! empty( $primary_brosur['feat_1'] ) ? $primary_brosur['feat_1'] : 'Seluruh produk Tabungan & Deposito';
+$p_feat_2       = ! empty( $primary_brosur['feat_2'] ) ? $primary_brosur['feat_2'] : 'Skema Pembiayaan & Angsuran Ringan';
+$p_feat_3       = ! empty( $primary_brosur['feat_3'] ) ? $primary_brosur['feat_3'] : 'Tabel Nisbah & Estimasi Bagi Hasil';
+$p_feat_4       = ! empty( $primary_brosur['feat_4'] ) ? $primary_brosur['feat_4'] : 'Persyaratan & Prosedur Pembukaan';
+$p_btn_preview  = ! empty( $primary_brosur['btn_preview'] ) ? $primary_brosur['btn_preview'] : 'Pratinjau Brosur';
+$p_btn_download = ! empty( $primary_brosur['btn_download'] ) ? $primary_brosur['btn_download'] : 'Unduh PDF';
 
-// ── 3. AMBIL DAFTAR BROSUR SPESIFIK PRODUK ─────────────────────────
-$brosur_list = function_exists( 'wakalumi_get_brosur_list' ) ? wakalumi_get_brosur_list() : [];
+// ── 3. AMBIL DATA HEADER KATALOG & DAFTAR BROSUR SPESIFIK ───────────
+$catalog_header = function_exists( 'wakalumi_get_brosur_catalog_header' ) ? wakalumi_get_brosur_catalog_header() : [];
+$katalog_kicker = $catalog_header['kicker'] ?? 'Koleksi Lengkap';
+$katalog_title  = $catalog_header['title'] ?? 'Katalog Dokumen & Brosur Produk';
+$katalog_desc   = $catalog_header['desc'] ?? 'Pilih atau cari dokumen brosur produk syariah dan panduan resmi yang Anda butuhkan.';
+$brosur_list    = function_exists( 'wakalumi_get_brosur_list' ) ? wakalumi_get_brosur_list() : [];
 
 // ── 4. AMBIL DATA TATA KELOLA & REGULASI DINAMIS ────────────────────
 $brosur_gov = function_exists( 'wakalumi_get_brosur_governance' ) ? wakalumi_get_brosur_governance() : [
@@ -34,6 +57,15 @@ $brosur_gov = function_exists( 'wakalumi_get_brosur_governance' ) ? wakalumi_get
     'title'  => 'Keamanan, Legalitas & Kepatuhan Terjamin',
     'desc'   => 'Seluruh produk perbankan syariah dan penerbitan materi informasi BPRS Wakalumi dijalankan berlandaskan regulasi resmi otoritas keuangan nasional.',
     'cards'  => [],
+];
+
+// ── 5. AMBIL DATA BANNER KONSULTASI & WHATSAPP ──────────────────────
+$brosur_cta = function_exists( 'wakalumi_get_brosur_cta' ) ? wakalumi_get_brosur_cta() : [
+    'badge'      => 'Layanan Konsultasi Resmi',
+    'title'      => 'Butuh Informasi Lebih Detail atau Pengiriman Fisik?',
+    'desc'       => 'Petugas Customer Care kami siap membantu mengirimkan brosur cetak, formulir pembukaan rekening, atau memberikan simulasi pembiayaan secara langsung.',
+    'btn_wa'     => 'Hubungi via WhatsApp',
+    'btn_kantor' => 'Temukan Kantor Terdekat',
 ];
 
 // ── 5. WHATSAPP & KONTAK ───────────────────────────────────────────
@@ -348,57 +380,74 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 <div class="flex flex-wrap items-center gap-3 pt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                     <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-sm font-medium">
                         <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>Format PDF High-Res</span>
+                        <span><?php echo esc_html( $hero_hl_1 ); ?></span>
                     </div>
                     <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-sm font-medium">
                         <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        <span>Pratinjau Langsung (PDF Lightbox)</span>
+                        <span><?php echo esc_html( $hero_hl_2 ); ?></span>
                     </div>
                     <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-sm font-medium">
                         <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                        <span>Terverifikasi OJK & DPS</span>
+                        <span><?php echo esc_html( $hero_hl_3 ); ?></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Governance Badge Card with Watermark -->
-            <div class="lg:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="spotlight-card relative overflow-hidden rounded-3xl p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border border-teal-200/80 dark:border-dark-border shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 text-center space-y-4 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5 before:bg-gradient-to-r before:from-teal-500 via-cyan-400 to-teal-600">
-                    <!-- Interactive Slide Watermark Emblem -->
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-36 h-36 opacity-[0.045] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.08] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
-                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
-                    </div>
+            <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+            <div class="lg:col-span-4" data-aos="fade-left" data-aos-delay="100">
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
+                    <div class="wkl-glass-shine"></div>
 
-                    <!-- Holographic Shield Icon -->
-                    <div class="relative w-16 h-16 rounded-2xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto shadow-lg shadow-teal-500/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
-                        <div class="absolute inset-0 rounded-2xl bg-teal-400/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <svg class="w-8 h-8 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                        </svg>
-                    </div>
+                    <!-- Top Dual-Tone Zone: Header, Icon & Title -->
+                    <div class="relative px-6 pt-7 pb-5 bg-gradient-to-b from-teal-50/85 via-sky-50/40 to-white dark:from-teal-950/45 dark:via-slate-900/80 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden">
+                        <!-- Subtle Top Accent Line -->
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500 opacity-90"></div>
 
-                    <div class="relative z-10">
-                        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 text-[10px] font-extrabold uppercase tracking-wider mb-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                            Publikasi Resmi BPRS
+                        <!-- Interactive Slide Watermark Emblem -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[30%] w-32 h-32 opacity-[0.04] dark:opacity-[0.03] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-110 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
-                        <h4 class="text-lg font-black text-slate-900 dark:text-white">Akurat, Transparan & Sesuai Syariah</h4>
+
+                        <!-- Shield Icon with Soft Dual-Tone Ring -->
+                        <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
+                            <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/90 dark:bg-slate-800 text-teal-700 dark:text-teal-300 border border-teal-200/70 dark:border-teal-800/60 text-[10px] font-bold uppercase tracking-wider mb-1.5 shadow-2xs">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <?php echo esc_html( $trust_badge ); ?>
+                            </div>
+                            <h4 class="text-lg font-extrabold text-slate-900 dark:text-white"><?php echo esc_html( $trust_title ); ?></h4>
+                        </div>
                     </div>
 
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">
-                        Seluruh brosur dan panduan produk disusun sesuai standar keterbukaan informasi perbankan, regulasi OJK, serta prinsip syariah DSN-MUI.
-                    </p>
+                    <!-- Bottom Dual-Tone Zone: Isi Keterangan & Button -->
+                    <div class="p-5 sm:px-6 bg-white dark:bg-slate-900/95 space-y-4 relative z-10">
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            <?php echo esc_html( $trust_desc ); ?>
+                        </p>
 
-                    <div class="pt-1 relative z-10 flex items-center justify-center gap-2">
-                        <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Diawasi OJK
-                        </span>
-                        <span class="text-slate-300 dark:text-slate-600">•</span>
-                        <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Dijamin LPS
-                        </span>
+                        <div class="pt-1 flex items-center justify-center gap-2">
+                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <?php echo esc_html( $trust_tag1 ); ?>
+                            </span>
+                            <span class="text-slate-300 dark:text-slate-600">•</span>
+                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <?php echo esc_html( $trust_tag2 ); ?>
+                            </span>
+                        </div>
+
+                        <div class="pt-1">
+                            <a href="<?php echo esc_url( $trust_url ); ?>" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/lpsbtn">
+                                <span><?php echo esc_html( $trust_btn ); ?></span>
+                                <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -462,7 +511,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                                 <div class="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-teal-300/40 p-2 flex items-center justify-center mb-3 shadow-lg shadow-teal-500/20">
                                     <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="Logo Wakalumi" class="w-full h-full object-contain filter drop-shadow">
                                 </div>
-                                <p class="text-[11px] font-extrabold text-teal-300 uppercase tracking-wider mb-1">BPRS Wakalumi</p>
+                                <p class="text-[11px] font-extrabold text-teal-300 uppercase tracking-wider mb-1"><?php echo esc_html( $p_brand ); ?></p>
                                 <h3 class="text-lg font-black text-white leading-snug drop-shadow-md">
                                     <?php echo esc_html( $p_name ); ?>
                                 </h3>
@@ -488,7 +537,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                             </div>
                             <p class="text-xs text-slate-300 font-medium mt-1 flex items-center gap-2">
                                 <span class="inline-block w-1.5 h-1.5 rounded-full bg-teal-400"></span>
-                                Edisi Resmi Terverifikasi BPRS Wakalumi
+                                <?php echo esc_html( $p_verify ); ?>
                             </p>
                         </div>
                     </div>
@@ -503,22 +552,13 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
 
                     <!-- Feature Checklist -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
-                            <svg class="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            <span>Seluruh produk Tabungan & Deposito</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
-                            <svg class="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            <span>Skema Pembiayaan & Angsuran Ringan</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
-                            <svg class="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            <span>Tabel Nisbah & Estimasi Bagi Hasil</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
-                            <svg class="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            <span>Persyaratan & Prosedur Pembukaan</span>
-                        </div>
+                        <?php foreach ( [$p_feat_1, $p_feat_2, $p_feat_3, $p_feat_4] as $feat_item ) : 
+                            if ( empty( $feat_item ) ) continue; ?>
+                            <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
+                                <svg class="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span><?php echo esc_html( $feat_item ); ?></span>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
 
                     <!-- Meta specs bar -->
@@ -546,7 +586,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                             <!-- Shimmer Sweep -->
                             <span class="absolute inset-0 w-1/2 h-full bg-white/30 transform -skew-x-12 -translate-x-full group-hover/pbtn:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none"></span>
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            <span>Pratinjau Brosur</span>
+                            <span><?php echo esc_html( $p_btn_preview ); ?></span>
                         </button>
 
                         <!-- Direct Download Button -->
@@ -559,7 +599,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                                 class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]"
                             >
                                 <svg class="w-4 h-4 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                                <span>Unduh PDF</span>
+                                <span><?php echo esc_html( $p_btn_download ); ?></span>
                             </a>
                         <?php else : ?>
                             <button 
@@ -570,7 +610,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                                 data-size="<?php echo esc_attr( $p_size ); ?>"
                             >
                                 <svg class="w-4 h-4 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                                <span>Unduh PDF</span>
+                                <span><?php echo esc_html( $p_btn_download ); ?></span>
                             </button>
                         <?php endif; ?>
                     </div>
@@ -579,6 +619,9 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
         </div>
     </div>
 </section>
+
+<!-- Anchor Link Target untuk Tombol Hero Card -->
+<div id="katalog-dokumen" class="scroll-mt-24"></div>
 
 <!-- ========================================================================
      SECTION 3: INTERACTIVE FILTER & LIVE SEARCH TOOLBAR (BACKDROP BLUR)
@@ -613,6 +656,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 <button 
                     type="button" 
                     data-filter="all" 
+                    data-category="all"
                     class="brosur-filter-btn active-filter px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 border bg-teal-600 text-white border-teal-600 shadow-sm shadow-teal-600/20"
                 >
                     Semua Dokumen
@@ -621,6 +665,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 <button 
                     type="button" 
                     data-filter="penghimpunan-dana" 
+                    data-category="penghimpunan-dana"
                     class="brosur-filter-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 border bg-white/90 dark:bg-dark-card/90 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-dark-border hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 shadow-sm"
                 >
                     Penghimpunan Dana
@@ -631,6 +676,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 <button 
                     type="button" 
                     data-filter="penyaluran-dana" 
+                    data-category="penyaluran-dana"
                     class="brosur-filter-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 border bg-white/90 dark:bg-dark-card/90 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-dark-border hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 shadow-sm"
                 >
                     Penyaluran Dana
@@ -641,6 +687,7 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                 <button 
                     type="button" 
                     data-filter="program-khusus" 
+                    data-category="program-khusus"
                     class="brosur-filter-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 border bg-white/90 dark:bg-dark-card/90 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-dark-border hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 shadow-sm"
                 >
                     Program Khusus & Akad
@@ -668,6 +715,21 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
      ======================================================================== -->
 <section class="py-12 md:py-16 bg-transparent min-h-[500px] relative">
     <div class="container-wide relative z-10">
+        <!-- Section Header -->
+        <div class="text-center max-w-2xl mx-auto mb-10" data-aos="fade-up">
+            <span class="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 block mb-1">
+                <?php echo esc_html( $katalog_kicker ); ?>
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                <?php echo esc_html( $katalog_title ); ?>
+            </h2>
+            <?php if ( ! empty( $katalog_desc ) ) : ?>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                    <?php echo esc_html( $katalog_desc ); ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
         <!-- Grid Container -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="brosur-grid-container">
             <?php foreach ( $brosur_list as $index => $item ) : 
@@ -965,13 +1027,13 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
             <div class="relative z-10 max-w-2xl mx-auto space-y-4">
                 <span class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-teal-300 bg-teal-950/80 px-3.5 py-1.5 rounded-full border border-teal-800 mb-1">
                     <svg class="w-3.5 h-3.5 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
-                    Layanan Konsultasi Resmi
+                    <?php echo esc_html( $brosur_cta['badge'] ); ?>
                 </span>
                 <h3 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
-                    Butuh Informasi Lebih Detail atau Pengiriman Fisik?
+                    <?php echo esc_html( $brosur_cta['title'] ); ?>
                 </h3>
                 <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-8">
-                    Petugas Customer Care kami siap membantu mengirimkan brosur cetak, formulir pembukaan rekening, atau memberikan simulasi pembiayaan secara langsung.
+                    <?php echo esc_html( $brosur_cta['desc'] ); ?>
                 </p>
 
                 <div class="flex flex-wrap items-center justify-center gap-4">
@@ -987,14 +1049,14 @@ function wakalumi_get_gov_dual_tone_theme( $color = 'rose', $index = 0 ) {
                         <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                         </svg>
-                        <span>Hubungi via WhatsApp</span>
+                        <span><?php echo esc_html( $brosur_cta['btn_wa'] ); ?></span>
                     </a>
                     <a 
                         href="<?php echo esc_url( home_url( '/kantor/' ) ); ?>" 
                         class="py-3.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 inline-flex items-center gap-2 transition-colors"
                     >
                         <svg class="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                        <span>Temukan Kantor Terdekat</span>
+                        <span><?php echo esc_html( $brosur_cta['btn_kantor'] ); ?></span>
                     </a>
                 </div>
             </div>
