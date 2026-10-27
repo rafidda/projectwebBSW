@@ -80,9 +80,21 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
             $slide_headline    = metadata_exists( 'post', $slide_id, 'slide_headline' ) ? get_post_meta( $slide_id, 'slide_headline', true ) : get_the_title();
             $slide_subheadline = get_post_meta( $slide_id, 'slide_subheadline', true ) ?: ( get_field( 'slide_subheadline' ) ?: '' );
             $slide_cta_text    = get_post_meta( $slide_id, 'slide_cta_text', true ) ?: ( get_field( 'slide_cta_text' ) ?: 'Hubungi Kami' );
-            $slide_cta_url     = get_post_meta( $slide_id, 'slide_cta_url', true ) ?: ( get_field( 'slide_cta_url' ) ?: $wa_url );
+            
+            // JANGAN gunakan fallback WhatsApp bila meta kosong: jika link tidak diisi, maka tidak ada aksi/link apapun
+            $raw_cta_url       = get_post_meta( $slide_id, 'slide_cta_url', true );
+            if ( $raw_cta_url === false || $raw_cta_url === '' ) {
+                $raw_cta_url = function_exists( 'get_field' ) ? get_field( 'slide_cta_url', $slide_id ) : '';
+            }
+            $slide_cta_url     = is_string( $raw_cta_url ) ? trim( $raw_cta_url ) : '';
+
             $slide_cta_text_2  = get_post_meta( $slide_id, 'slide_cta_text_2', true ) ?: ( get_field( 'slide_cta_text_2' ) ?: 'Lihat Produk' );
-            $slide_cta_url_2   = get_post_meta( $slide_id, 'slide_cta_url_2', true ) ?: ( get_field( 'slide_cta_url_2' ) ?: home_url( '/produk' ) );
+            
+            $raw_cta_url_2     = get_post_meta( $slide_id, 'slide_cta_url_2', true );
+            if ( $raw_cta_url_2 === false || $raw_cta_url_2 === '' ) {
+                $raw_cta_url_2 = function_exists( 'get_field' ) ? get_field( 'slide_cta_url_2', $slide_id ) : '';
+            }
+            $slide_cta_url_2   = is_string( $raw_cta_url_2 ) ? trim( $raw_cta_url_2 ) : '';
             $slide_opacity_val = get_post_meta( $slide_id, 'slide_overlay_opacity', true );
             $slide_opacity     = ( $slide_opacity_val !== '' && $slide_opacity_val !== false ) ? intval( $slide_opacity_val ) : ( get_field( 'slide_overlay_opacity' ) ?: 60 );
 
@@ -176,19 +188,22 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
 
             <!-- Content -->
             <?php if ( $slide_text_mode === 'hide_all' ) : ?>
-                <?php if ( ! empty( $slide_cta_url ) ) : ?>
+                <?php if ( ! empty( $slide_cta_url ) && $slide_cta_url !== '#' ) : ?>
                     <!-- Full-Slide Clickable Target if in Clean Graphic Mode with URL -->
                     <a href="<?php echo esc_url( $slide_cta_url ); ?>" class="absolute inset-0 z-10 cursor-pointer" aria-label="<?php echo esc_attr( $slide_headline ?: 'Promo Bank Syariah Wakalumi' ); ?>"></a>
                 <?php endif; ?>
             <?php elseif ( $slide_text_mode === 'cta_only' ) : ?>
+                <?php if ( ( ! empty( $slide_cta_url ) && $slide_cta_url !== '#' ) || ( ! empty( $slide_cta_url_2 ) && $slide_cta_url_2 !== '#' ) ) : ?>
                 <!-- CTA Only Floating Bar (Headline & Subheadline Hidden for Text-embedded Banners) -->
                 <div class="hero-slide-content container-wide relative z-10 flex flex-col justify-end md:justify-center min-h-[90vh] md:min-h-screen pt-28 sm:pt-32 md:pt-36 lg:pt-40 pb-28 sm:pb-32 md:pb-36">
                     <div class="hero-content-card inline-flex flex-wrap items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-white/[0.08] dark:bg-black/35 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-2xl relative z-10 w-fit">
+                        <?php if ( ! empty( $slide_cta_url ) && $slide_cta_url !== '#' ) : ?>
                         <a href="<?php echo esc_url( $slide_cta_url ); ?>"
                            class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
                             <?php echo esc_html( $slide_cta_text ); ?>
                         </a>
-                        <?php if ( $slide_cta_url_2 ) : ?>
+                        <?php endif; ?>
+                        <?php if ( ! empty( $slide_cta_url_2 ) && $slide_cta_url_2 !== '#' ) : ?>
                             <a href="<?php echo esc_url( $slide_cta_url_2 ); ?>"
                                class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
                                 <?php echo esc_html( $slide_cta_text_2 ); ?>
@@ -196,6 +211,7 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
                         <?php endif; ?>
                     </div>
                 </div>
+                <?php endif; ?>
             <?php else : ?>
                 <!-- Standard Full Content Card -->
                 <div class="hero-slide-content container-wide relative z-10 flex flex-col justify-center min-h-[90vh] md:min-h-screen pt-28 sm:pt-32 md:pt-36 lg:pt-40 pb-28 sm:pb-32 md:pb-36">
@@ -225,18 +241,22 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
                         <?php endif; ?>
 
                         <!-- CTA -->
+                        <?php if ( ( ! empty( $slide_cta_url ) && $slide_cta_url !== '#' ) || ( ! empty( $slide_cta_url_2 ) && $slide_cta_url_2 !== '#' ) ) : ?>
                         <div class="slide-cta flex flex-wrap items-center gap-3 sm:gap-4">
+                            <?php if ( ! empty( $slide_cta_url ) && $slide_cta_url !== '#' ) : ?>
                             <a href="<?php echo esc_url( $slide_cta_url ); ?>"
                                class="btn bg-white text-primary-800 hover:bg-teal-50 hover:shadow-xl hover:shadow-white/20 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-extrabold dark:bg-primary-300 dark:text-slate-900 dark:hover:bg-primary-200 shadow-md transition-all duration-200">
                                 <?php echo esc_html( $slide_cta_text ); ?>
                             </a>
-                            <?php if ( $slide_cta_url_2 ) : ?>
+                            <?php endif; ?>
+                            <?php if ( ! empty( $slide_cta_url_2 ) && $slide_cta_url_2 !== '#' ) : ?>
                                 <a href="<?php echo esc_url( $slide_cta_url_2 ); ?>"
                                    class="btn border border-white/40 text-white hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold backdrop-blur-sm dark:border-primary-300/30 dark:text-primary-200 dark:hover:bg-primary-400/10 transition-all duration-200">
                                     <?php echo esc_html( $slide_cta_text_2 ); ?>
                                 </a>
                             <?php endif; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -1485,9 +1505,7 @@ $ig_profile  = get_option( 'options_social_instagram', 'https://www.instagram.co
                 <?php endif; ?>
             </div>
             
-            <!-- Fade Edges for Scroll Indication (Desktop) -->
-            <div class="hidden md:block absolute top-0 left-0 bottom-8 w-8 bg-gradient-to-r from-white/90 dark:from-dark-surface/90 to-transparent pointer-events-none"></div>
-            <div class="hidden md:block absolute top-0 right-0 bottom-8 w-12 bg-gradient-to-l from-white/90 dark:from-dark-surface/90 to-transparent pointer-events-none"></div>
+
         </div>
         
         <?php if ( $ig_profile ) : ?>
@@ -1589,6 +1607,146 @@ if ( $berita_query->have_posts() ) :
             endif; 
             ?>
         </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- ========================================
+     SECTION: MITRA KAMI (PARTNERS LOGO TICKER)
+     Dapat diaktifkan/dinonaktifkan oleh Admin
+     Multi-Row Otomatis: >12 mitra = 2 baris berlawanan, >24 mitra = 3 baris
+     ======================================== -->
+<?php
+$mitra_active   = get_option( 'options_mitra_active', '1' );
+$mitra_badge    = get_option( 'options_mitra_badge', 'Sinergi & Kerjasama' );
+$mitra_title    = get_option( 'options_mitra_title', 'Mitra Kerjasama *BSW*' );
+$mitra_subtitle = get_option( 'options_mitra_subtitle', 'Bersinergi bersama institusi terpercaya dalam memajukan inklusi ekonomi syariah.' );
+$raw_mitra_items = get_option( 'options_mitra_items', [] );
+
+// Saring item yang valid (memiliki logo atau nama)
+$mitra_items = [];
+if ( is_array( $raw_mitra_items ) ) {
+    foreach ( $raw_mitra_items as $item ) {
+        if ( ! empty( $item['logo'] ) || ! empty( $item['name'] ) ) {
+            $mitra_items[] = $item;
+        }
+    }
+}
+
+// Hanya render jika admin mengaktifkan ($mitra_active === '1') DAN memiliki daftar mitra
+if ( $mitra_active === '1' && ! empty( $mitra_items ) ) :
+    $total_mitra = count( $mitra_items );
+
+    // Aturan kelipatan baris:
+    // > 24 mitra => 3 baris
+    // > 12 mitra => 2 baris
+    // <= 12 mitra => 1 baris
+    if ( $total_mitra > 24 ) {
+        $num_rows = 3;
+    } elseif ( $total_mitra > 12 ) {
+        $num_rows = 2;
+    } else {
+        $num_rows = 1;
+    }
+
+    // Distribusi mitra ke masing-masing baris secara proporsional
+    $rows_data = [];
+    for ( $r = 0; $r < $num_rows; $r++ ) {
+        $rows_data[$r] = [];
+    }
+    foreach ( $mitra_items as $idx => $m_item ) {
+        $rows_data[ $idx % $num_rows ][] = $m_item;
+    }
+?>
+<section id="section-mitra-kami" class="py-16 sm:py-20 bg-slate-50/70 dark:bg-dark-surface/40 border-t border-slate-200/80 dark:border-dark-border/80 relative z-10 overflow-hidden">
+    <div class="container-wide mb-10 text-center" data-aos="fade-up">
+        <?php if ( ! empty( $mitra_badge ) ) : ?>
+            <span class="section-label mb-3 inline-block"><?php echo esc_html( $mitra_badge ); ?></span>
+        <?php endif; ?>
+        <?php if ( ! empty( $mitra_title ) ) : ?>
+            <h2 class="section-title mb-3"><?php echo wakalumi_dualtone_title( $mitra_title ); ?></h2>
+        <?php endif; ?>
+        <?php if ( ! empty( $mitra_subtitle ) ) : ?>
+            <p class="section-subtitle max-w-2xl mx-auto"><?php echo esc_html( $mitra_subtitle ); ?></p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Rows Wrapper (Support 1, 2, atau 3 Baris Berlawanan Arah) -->
+    <div class="flex flex-col gap-4 sm:gap-6 w-full" data-aos="fade-up" data-aos-delay="100">
+        <?php foreach ( $rows_data as $row_idx => $row_items ) : 
+            if ( empty( $row_items ) ) continue;
+
+            // Baris ganjil (0, 2) = normal (kanan ke kiri). Baris genap (1) = reverse (kiri ke kanan / berlawanan)
+            $is_reverse = ( $row_idx % 2 !== 0 );
+
+            // Normalisasi set: pastikan minimal 6 item per track agar lebar track selalu penuh
+            $single_set = $row_items;
+            while ( count( $single_set ) < 6 ) {
+                $single_set = array_merge( $single_set, $row_items );
+            }
+        ?>
+            <!-- Baris <?php echo $row_idx + 1; ?> <?php echo $is_reverse ? '(Arah Berlawanan / Reverse)' : '(Arah Normal)'; ?> -->
+            <div class="mitra-ticker-container">
+                <!-- Track Group 1 -->
+                <div class="mitra-track-group <?php echo $is_reverse ? 'reverse' : ''; ?>">
+                    <?php foreach ( $single_set as $mitra ) : 
+                        $m_name = ! empty( $mitra['name'] ) ? $mitra['name'] : 'Mitra Bank Syariah Wakalumi';
+                        $m_logo = ! empty( $mitra['logo'] ) ? $mitra['logo'] : '';
+                        $m_url  = ! empty( $mitra['url'] ) ? $mitra['url'] : '';
+                    ?>
+                        <?php if ( ! empty( $m_url ) ) : ?>
+                            <a href="<?php echo esc_url( $m_url ); ?>" target="_blank" rel="noopener noreferrer" 
+                               title="<?php echo esc_attr( $m_name ); ?>"
+                               class="mitra-glass-tile cursor-pointer">
+                                <?php if ( ! empty( $m_logo ) ) : ?>
+                                    <img src="<?php echo esc_url( $m_logo ); ?>" alt="<?php echo esc_attr( $m_name ); ?>" class="mitra-adaptive-logo" loading="lazy">
+                                <?php else : ?>
+                                    <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 text-center leading-snug"><?php echo esc_html( $m_name ); ?></span>
+                                <?php endif; ?>
+                            </a>
+                        <?php else : ?>
+                            <div class="mitra-glass-tile">
+                                <?php if ( ! empty( $m_logo ) ) : ?>
+                                    <img src="<?php echo esc_url( $m_logo ); ?>" alt="<?php echo esc_attr( $m_name ); ?>" class="mitra-adaptive-logo" loading="lazy">
+                                <?php else : ?>
+                                    <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 text-center leading-snug"><?php echo esc_html( $m_name ); ?></span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Track Group 2 (Identik persis untuk seamless loop) -->
+                <div class="mitra-track-group <?php echo $is_reverse ? 'reverse' : ''; ?>" aria-hidden="true">
+                    <?php foreach ( $single_set as $mitra ) : 
+                        $m_name = ! empty( $mitra['name'] ) ? $mitra['name'] : 'Mitra Bank Syariah Wakalumi';
+                        $m_logo = ! empty( $mitra['logo'] ) ? $mitra['logo'] : '';
+                        $m_url  = ! empty( $mitra['url'] ) ? $mitra['url'] : '';
+                    ?>
+                        <?php if ( ! empty( $m_url ) ) : ?>
+                            <a href="<?php echo esc_url( $m_url ); ?>" target="_blank" rel="noopener noreferrer" 
+                               title="<?php echo esc_attr( $m_name ); ?>"
+                               tabindex="-1"
+                               class="mitra-glass-tile cursor-pointer">
+                                <?php if ( ! empty( $m_logo ) ) : ?>
+                                    <img src="<?php echo esc_url( $m_logo ); ?>" alt="<?php echo esc_attr( $m_name ); ?>" class="mitra-adaptive-logo" loading="lazy">
+                                <?php else : ?>
+                                    <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 text-center leading-snug"><?php echo esc_html( $m_name ); ?></span>
+                                <?php endif; ?>
+                            </a>
+                        <?php else : ?>
+                            <div class="mitra-glass-tile">
+                                <?php if ( ! empty( $m_logo ) ) : ?>
+                                    <img src="<?php echo esc_url( $m_logo ); ?>" alt="<?php echo esc_attr( $m_name ); ?>" class="mitra-adaptive-logo" loading="lazy">
+                                <?php else : ?>
+                                    <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 text-center leading-snug"><?php echo esc_html( $m_name ); ?></span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
 </section>
 <?php endif; ?>

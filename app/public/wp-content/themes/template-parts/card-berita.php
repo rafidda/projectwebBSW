@@ -4,7 +4,7 @@
  * High-End Banking Editorial Card Component
  *
  * @package Wakalumi
- */
+ */;
 
 $delay      = $args['delay'] ?? 100;
 $ringkasan  = get_field( 'berita_ringkasan' ) ?: get_the_excerpt();

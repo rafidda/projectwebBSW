@@ -1,5 +1,3 @@
-itg
-
 # 🚀 Panduan Implementasi Produksi (Hosting) & Operasional WP-Admin
 
 **Project:** Website Resmi PT BPRS Wakalumi (Bank Syariah Wakalumi)
@@ -15,7 +13,9 @@ itg
 3. [Tahapan Step-by-Step Migrasi dari LocalWP ke Hosting](#3-tahapan-step-by-step-migrasi-dari-localwp-ke-hosting)
 4. [Proteksi Otomatis yang Sudah Ditanamkan (Bug-Fix &amp; Auto-Domain Guard)](#4-proteksi-otomatis-yang-sudah-ditanamkan-bug-fix--auto-domain-guard)
 5. [Panduan Operasional Lengkap WP-Admin (Tata Cara Edit Konten)](#5-panduan-operasional-lengkap-wp-admin-tata-cara-edit-konten)
-6. [Checklist Pemeriksaan Akhir Setelah Publish](#6-checklist-pemeriksaan-akhir-setelah-publish)
+6. [Panduan Manajemen SEO &amp; Optimasi Mesin Pencari (Google &amp; Share WhatsApp)](#6-panduan-manajemen-seo--optimasi-mesin-pencari-google--share-whatsapp)
+7. [Checklist Pemeriksaan Akhir Setelah Publish](#7-checklist-pemeriksaan-akhir-setelah-publish)
+8. [Daftar Konten Starter &amp; Poin Optimalisasi Bersama Staf Terkait](#8-daftar-konten-starter--poin-optimalisasi-bersama-staf-terkait)
 
 ---
 
@@ -40,10 +40,10 @@ Project website Bank Syariah Wakalumi dibangun menggunakan arsitektur **Custom H
 ### B. Struktur Penyimpanan Data di Database
 
 1. **Custom Admin Modules (`wp_options`)**:
-   - Hampir seluruh konten halaman statis dan katalog (Tentang Kami, Legalitas, Pengurus, Jaringan Kantor, Tabungan, Deposito, Pembiayaan, Brosur, Laporan Publikasi, Pengaduan, Pengumuman, Lelang, Kegiatan, Galeri, Tim Kami, Karir, serta Literasi & Inklusi) disimpan secara terstruktur di tabel `wp_options` dengan prefix `options_*` dan `wakalumi_*`.
-   - **Keunggulan**: Sangat cepat diakses, tidak membebani query database, dan setiap modul memiliki data *fallback* (default) otomatis jika belum diisi.
+   - Hampir seluruh konten halaman statis dan katalog (Tentang Kami, Legalitas, Pengurus, Jaringan Kantor, Tabungan, Deposito, Pembiayaan, Brosur, **Layanan Perbankan / VA (`wakalumi_layanan_settings`)**, **Baitul Maal BSW (`wakalumi_baitul_maal_settings`)**, Laporan Publikasi, Pengaduan, Pengumuman, Lelang, Kegiatan, Galeri, Tim Kami, Karir, serta Literasi & Inklusi) disimpan secara terstruktur di tabel `wp_options` dengan prefix `options_*` dan `wakalumi_*`.
+   - **Keunggulan**: Sangat cepat diakses, tidak membebani query database, dan setiap modul memiliki data *fallback* (default starter) otomatis jika belum diisi.
 2. **Custom Post Types (`wp_posts` & `wp_postmeta`)**:
-   - Digunakan untuk konten berbasis artikel dan entitas dinamis seperti **Berita & Artikel (`berita`)**, **Hero Slider (`hero_slide`)**, **Produk (`produk`)**, dan **Anggota Tim (`anggota_tim`)**.
+   - Digunakan untuk konten berbasis artikel dan entitas dinamis seperti **Berita & Artikel (`berita`)** (termasuk metadata Headline `_wakalumi_is_headline`), **Hero Slider (`hero_slide`)**, **Produk (`produk`)**, dan **Anggota Tim (`anggota_tim`)**.
 
 ### C. Lokasi Direktori Tema
 
@@ -94,7 +94,16 @@ Saat mengunggah foto pengurus, gambar berita, brosur PDF, atau laporan publikasi
 
 ### 4. Konfigurasi `.htaccess` & Permalink
 
-Setelah pindah ke hosting, struktur URL halaman (seperti `/profil/tentang-kami/` atau `/produk/tabungan-syariah/`) memerlukan file `.htaccess` yang sesuai dengan server hosting. Cara memperbaruinya sangat mudah: cukup buka **WP-Admin ➡️ Settings ➡️ Permalinks**, lalu klik tombol **Save Changes** satu kali tanpa mengubah apa pun.
+Setelah pindah ke hosting, struktur URL halaman (seperti `/profil/tentang-kami/`, `/produk/tabungan-syariah/`, `/layanan-kami/`, atau `/baitul-maal/`) memerlukan file `.htaccess` yang sesuai dengan server hosting. Cara memperbaruinya sangat mudah: cukup buka **WP-Admin ➡️ Settings ➡️ Permalinks**, lalu klik tombol **Save Changes** satu kali tanpa mengubah apa pun.
+
+### 5. Konfigurasi PHP Limit di Hosting (`max_input_vars` & `upload_max_filesize`)
+
+Karena panel admin kustom Wakalumi (seperti **Kelola Produk**, **Layanan BSW**, dan **Baitul Maal BSW**) memiliki fitur *Repeater* dinamis yang mengirimkan banyak kolom input sekaligus saat disimpan, pastikan pengaturan PHP di cPanel hosting (**Select PHP Version ➡️ Options** atau **MultiPHP INI Editor**) disesuaikan sebagai berikut agar data form yang panjang tidak terpotong:
+
+- `max_input_vars = 5000` *(Default hosting biasanya `1000`, naikkan ke `3000` atau `5000`)*
+- `upload_max_filesize = 64M` *(Agar leluasa mengunggah file PDF Laporan Tahunan / Brosur)*
+- `post_max_size = 64M`
+- `memory_limit = 256M` (atau `512M`)
 
 ---
 
@@ -161,8 +170,12 @@ Untuk memastikan website langsung berjalan mulus begitu di-upload ke hosting, ka
    - Fitur pratinjau PDF (Brosur & Laporan Publikasi) mengekstrak path relatif `/wp-content/uploads/...` langsung ke sistem file server lokal hosting tanpa bergantung pada nama domain lama, sehingga pratinjau PDF dijamin tetap berfungsi 100% setelah migrasi.
 3. **Auto-Redirect Halaman Induk (`functions.php`)**:
    - Mengarahkan pengunjung yang mengakses URL induk kosong (`/profil/`, `/produk/`, `/informasi/`) secara otomatis ke sub-halaman utama masing-masing (`/profil/tentang-kami/`, `/produk/tabungan-syariah/`, `/informasi/laporan-publikasi/`).
-4. **Standarisasi Kontras Dark Mode & Hero Section**:
-   - Seluruh halaman internal telah menggunakan sistem warna teks adaptif (`dark:text-slate-200` / `dark:text-white`) serta *Hero Surface* yang menyatu sempurna dengan *Navbar*.
+4. **Auto-Provision Halaman Layanan & Baitul Maal (`inc/admin-layanan.php` & `inc/admin-baitul-maal.php`)**:
+   - Halaman `/layanan-kami/` (`page-layanan.php`) dan `/baitul-maal/` (`page-baitul-maal.php`) secara otomatis dibuat dan dihubungkan ke template yang tepat oleh sistem apabila belum tersedia di database.
+5. **Swup SPA Interactive Re-initialization (`assets/src/js/app.js`)**:
+   - Seluruh komponen interaktif (Modal Pengumuman, Modal Kegiatan, Lightbox Galeri, Tab Layanan, dan Tab Baitul Maal) telah dilengkapi mekanisme *event delegation* dan *re-init* otomatis pada setiap perpindahan halaman SPA (`page:view`), sehingga tombol dan kartu selalu dapat diklik tanpa perlu *reload* manual.
+6. **Standarisasi Kontras Dark Mode, Alignment Gambar Berita & Hero Section**:
+   - Seluruh halaman internal menggunakan warna teks adaptif (`dark:text-slate-200` / `dark:text-white`), *Hero Surface* yang menyatu dengan *Navbar*, serta dukungan penuh perataan gambar (`aligncenter`, `alignleft`, `alignright`) di artikel berita.
 
 ---
 
@@ -274,20 +287,58 @@ Seluruh halaman di bawah menu **Produk** dikelola melalui sub-menu berikut:
    - Klik **Tambah Berita Baru**:
      - Masukkan **Judul Berita** dan tulis isi berita di editor utama.
      - Pilih **Kategori Berita** di panel kanan dan unggah **Gambar Utama (*Featured Image*)**.
+     - **Mengatur Berita Utama (Headline Slider)**: Pada kotak pengaturanberita (*Metabox*), centang opsi **"⭐ Jadikan Berita Utama (Headline)"** agar berita tersebut tampil paling depan di Banner Besar halaman `/berita/` (mendukung hingga 3 berita Headline sekaligus dalam bentuk *Interactive Slider*). Jika tidak ada berita yang dicentang sebagai Headline, sistem otomatis menampilkan berita terbaru sebagai Headline.
+     - **Perataan Foto di Dalam Isi Berita**: Anda dapat mengatur posisi gambar di dalam editor (*Align Center*, *Align Left*, atau *Align Right*), dan tampilan di halaman baca berita (`/berita/...`) akan otomatis mengikuti perataan tersebut secara presisi.
      - **Fitur Khusus Liputan Media Eksternal**: Jika berita tersebut adalah liputan dari portal berita luar (misal *Republika*, *Detik*, *Kompas*), Anda dapat mencentang opsi **Berita Eksternal**, mengisi nama media sumber, URL berita asli, dan memilih apakah pengunjung akan membaca ringkasannya dulu atau langsung dialihkan (*Direct Link*) ke portal media tersebut.
 3. **Pengaduan Konsumen (`Pengaturan Wakalumi ➡️ Info: Pengaduan`)**:
    - Mengelola informasi resmi Mekanisme & Alur Pengaduan Nasabah sesuai POJK Pelindungan Konsumen, SLA waktu penyelesaian, kanal pengaduan resmi, dan integrasi LAPS SJK / Kontak OJK 157.
 4. **Literasi & Inklusi Keuangan (`Pengaturan Wakalumi ➡️ Info: Literasi`)**:
    - Mengelola materi edukasi perbankan syariah, kamus istilah akad (Wadiah, Mudharabah, Murabahah, Ijarah, dll.), tabel perbandingan Bank Syariah vs Bank Konvensional, tips keamanan transaksi digital, dan FAQ literasi.
 5. **Pengumuman Resmi (`Pengaturan Wakalumi ➡️ Info: Pengumuman`)**:
-   - Mempublikasikan pengumuman operasional bank (misal: Jadwal Libur Hari Raya, Perubahan Jam Layanan, Pemenang Undian Tabungan, atau Himbauan Resmi) lengkap dengan lampiran dokumen PDF jika ada.
+   - Mempublikasikan pengumuman operasional bank (misal: Jadwal Libur Hari Raya, Perubahan Jam Layanan, Peluncuran Layanan Virtual Account, atau Himbauan Resmi) lengkap dengan lampiran dokumen PDF jika ada.
 6. **Katalog Lelang Agunan (`Pengaturan Wakalumi ➡️ Info: Lelang`)**:
    - Mengelola daftar aset/properti agunan yang dilelang atau dijual sukarela, lengkap dengan foto properti, harga limit, lokasi, spesifikasi luas tanah/bangunan, status lelang, tautan KPKNL, dan tombol kontak petugas lelang.
 7. **Dokumentasi Kegiatan, Galeri Foto, Tim Kami & Karir**:
    - **`Info: Kegiatan`**: Mengelola daftar agenda & dokumentasi kegiatan sosial/edukasi/korporat bank.
-   - **`Info: Galeri`**: Mengelola album foto dokumentasi fasilitas dan aktivitas bank.
+   - **`Info: Galeri`**: Mengelola album foto dokumentasi fasilitas dan aktivitas bank (mendukung upload banyak foto per album sekaligus dengan tampilan *Masonry Grid* & *Lightbox*).
    - **`Info: Tim Kami`**: Mengelola profil tim manajemen & staf pelayanan.
    - **`Info: Karir`**: Membuka/menutup informasi lowongan kerja resmi di Bank Syariah Wakalumi beserta kualifikasi dan tata cara melamar.
+
+---
+
+### F. Mengelola Halaman Layanan Perbankan (`Layanan BSW`)
+
+Halaman **`/layanan-kami/`** (diakses dari menu Navbar **Layanan ➡️ Layanan Kami**) dikelola sepenuhnya melalui menu **`Sidebar Kiri WP-Admin ➡️ Layanan BSW`**:
+
+1. **Tab 1 — Hero & Kartu Bantuan**:
+   - Mengatur teks *Kicker*, Judul Halaman, Deskripsi Hero, 3 *Pill Highlight*, Kartu Ringkasan Kanan di Hero, serta kontak WhatsApp & jam layanan *Customer Service* di sidebar kiri.
+2. **Tab 2 — Daftar Layanan (Sidebar & Konten)**:
+   - Anda dapat mengubah layanan yang sudah ada (**Layanan Virtual Account (VA)** dan **Layanan Jemput Setoran / Pick-Up Service**) atau mengklik tombol **"+ Tambah Menu Layanan Baru"** untuk menambahkan layanan baru di sidebar kiri.
+   - Setiap item layanan mendukung pengaturan:
+     - **Judul & Ringkasan Sidebar**, Badge, serta Pilihan Ikon.
+     - **Keunggulan Utama Layanan** (Ditampilkan dalam grid kartu berikon).
+     - **Panduan Langkah demi Langkah per Kanal / Bank Mitra** (Misalnya panduan transfer Virtual Account melalui **BSI Mobile / BYOND**, **PermataMobile X / ATM Permata**, serta **ATM Bersama / Prima / BI-FAST Bank Lain**).
+     - **Galeri Gambar / Infografis Panduan** dan **Daftar FAQ (Tanya Jawab)** khusus per layanan.
+
+---
+
+### G. Mengelola Halaman Baitul Maal BSW (`Baitul Maal BSW`)
+
+Halaman **`/baitul-maal/`** (diakses dari menu Navbar **Layanan ➡️ Baitul Maal BSW**) dirancang sangat fleksibel untuk menampilkan kegiatan kepedulian sosial, program kemaslahatan umat, maupun edukasi ZISWAF. Seluruhnya dikelola melalui menu **`Sidebar Kiri WP-Admin ➡️ Baitul Maal BSW`**:
+
+1. **Tab 1 — Hero, Kontak & Rekening ZISWAF**:
+   - Mengatur teks Hero Section, Kartu Ringkasan Kanan, serta kontak layanan informasi di sidebar kiri.
+   - **Daftar Rekening Dana Sosial & ZISWAF**: Secara bawaan (*default*) opsi ini **dinonaktifkan** karena BSW belum mempublikasikan nomor rekening khusus ZISWAF. Jika di kemudian hari sudah tersedia, cukup centang **"Tampilkan Card Rekening Dana Sosial / ZISWAF di Sidebar Kiri"** dan tambahkan nama bank serta nomor rekeningnya.
+2. **Tab 2 — Menu Sidebar & Konten Baitul Maal**:
+   - Tersedia **3 Menu Sidebar Starter** yang sudah terisi rapi dan siap pakai:
+     1. **Tentang Baitul Maal** (Pengenalan, Kartu Tujuan, Sasaran, Manfaat + FAQ)
+     2. **Program & Kemaslahatan** (4 Kartu Bidang Fokus: Sosial & Kemanusiaan, Pendidikan & Literasi, Pemberdayaan Ekonomi, Kemaslahatan Umum + Seksi Prinsip Tata Kelola)
+     3. **Edukasi ZISWAF** (Panduan Zakat & 8 Asnaf + Syarat Wajib, Infak & Sedekah, serta Wakaf)
+   - **Variasi Warna & Ikon**: Setiap kartu dan blok seksi dilengkapi pilihan **8 Tema Warna Profesional** (*Teal, Emerald, Biru, Indigo, Emas/Amber, Ungu, Sky, Cyan*) dan **16 Pilihan Ikon SVG** sehingga tampilan halaman selalu hidup, berwarna, dan tidak monoton.
+   - **Kebebasan Mengatur Seksi (Simpel maupun Kompleks)**:
+     - Anda dapat mencentang/menghapus centang pada seksi mana pun sesuai kebutuhan.
+     - Seluruh judul seksi dapat diubah bebas (tidak terbatas pada Zakat).
+     - Tersedia tombol **"+ Tambah Blok Seksi Konten Kustom"** di dalam setiap menu apabila ke depannya Admin ingin menambahkan blok pembahasan baru dengan judul, warna, ikon, foto, kutipan, dan daftar poin bebas tanpa batasan!
 
 ---
 
@@ -336,7 +387,24 @@ Tema **Wakalumi** telah dilengkapi dengan **Mesin SEO & Open Graph Otomatis (Bui
 Setelah website selesai dimigrasikan ke hosting, lakukan pengecekan singkat berikut (kurang lebih 5 menit):
 
 - [ ] Buka `https://bprswakalumi.co.id` — pastikan gembok **SSL (HTTPS)** aktif dan halaman Beranda tampil sempurna dengan font baru **BSW (Rounded Water Philosophy — Nunito & Quicksand)**.
-- [ ] Klik menu navigasi satu per satu (**Profil**, **Produk**, **Informasi**, **Kontak**) — pastikan perpindahan halaman berjalan mulus dan tidak ada error `404 Not Found`.
+- [ ] Klik menu navigasi satu per satu (**Profil**, **Produk**, **Layanan** ➡️ *Layanan Kami* & *Baitul Maal BSW*, **Informasi**, **Kontak**) — pastikan perpindahan halaman SPA berjalan mulus, seluruh modal/tab interaktif dapat diklik tanpa perlu reload, dan tidak ada error `404 Not Found`.
 - [ ] Uji tombol **Mode Gelap / Terang (Dark Mode)** di bagian kanan atas navbar.
 - [ ] Buka halaman **Laporan Publikasi** dan **Brosur**, lalu klik tombol **Lihat Pratinjau PDF** — pastikan modal pembaca PDF terbuka dengan lancar.
+- [ ] Buka halaman **Berita (`/berita/`)** — pastikan **Headline Berita** tampil sesuai artikel yang dicentang di WP-Admin.
 - [ ] Uji kirim link `https://bprswakalumi.co.id` ke chat **WhatsApp** untuk memastikan gambar pratinjau (OG Image) dan deskripsi SEO tampil rapi.
+
+---
+
+## 8. Daftar Konten Starter & Poin Optimalisasi Bersama Staf Terkait
+
+Seluruh halaman dan modul di website ini telah diisi dengan **konten starter profesional** yang siap tayang (*production-ready*). Untuk menyempurnakan data spesifik internal bersama staf terkait (Operasional, SDI, Bisnis, atau Kepatuhan), berikut daftar bagian yang dapat diperbarui bertahap melalui WP-Admin tanpa menyentuh kode:
+
+| Modul / Halaman | Lokasi Edit di WP-Admin | Hal yang Dapat Dioptimalisasi Bersama Staf Terkait |
+| :--- | :--- | :--- |
+| **Berita & Artikel** | `Berita / Posts` | Mengganti gambar sampul (*Featured Image*) pada artikel starter dengan foto dokumentasi asli kegiatan BSW serta memilih 1–3 berita prioritas sebagai **Headline Utama**. |
+| **Pengumuman Resmi** | `Pengaturan Wakalumi ➡️ Info: Pengumuman` | Memperbarui nomor surat resmi pada pengumuman (jika ingin mencantumkan nomor surat internal) serta melampirkan file PDF surat edaran resmi. |
+| **Agenda & Kegiatan** | `Pengaturan Wakalumi ➡️ Info: Kegiatan` | Menyesuaikan foto dokumentasi kegiatan FGD, Pelatihan/Bimtek, Literasi Keuangan, dan Santunan Sosial dengan koleksi foto terbaru milik Humas BSW. |
+| **Galeri Foto** | `Pengaturan Wakalumi ➡️ Info: Galeri` | Menambahkan foto-foto baru ke masing-masing album kegiatan melalui tombol **"+ Tambah Foto ke Album"**. |
+| **Baitul Maal BSW** | `Sidebar Kiri ➡️ Baitul Maal BSW` | 1) Menyesuaikan rincian program sosial BSW yang sedang berjalan.<br>2) Mengunggah foto dokumentasi penyerahan santunan/zakat.<br>3) Mengaktifkan **Card Rekening Dana Sosial / ZISWAF** apabila nomor rekening khusus Baitul Maal BSW sudah siap dipublikasikan. |
+| **Layanan Perbankan (VA)** | `Sidebar Kiri ➡️ Layanan BSW` | Menyesuaikan kode prefix atau instruksi spesifik Virtual Account jika ada penambahan bank mitra baru di kemudian hari. |
+| **Profil Pengurus & Tim** | `Pengaturan Wakalumi ➡️ Profil: Pengurus` | Memastikan foto profil resmi Dewan Komisaris, Direksi, dan DPS serta nomor SK/sertifikat terbaru sudah sesuai dengan dokumen SDM terakhir. |

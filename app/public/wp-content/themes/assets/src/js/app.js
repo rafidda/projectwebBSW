@@ -299,6 +299,9 @@ const Navbar = {
           } else if (currentPath.startsWith('/produk') || currentPath.startsWith('/brosur') || currentPath === '/brosur') {
             const trigger = Array.from(desktopLinks).find(l => l.classList.contains('dropdown-trigger') && l.textContent.trim().toLowerCase().startsWith('produk'));
             if (trigger) trigger.classList.add('active');
+          } else if (currentPath.startsWith('/layanan') || currentPath.startsWith('/baitul-maal')) {
+            const trigger = Array.from(desktopLinks).find(l => l.classList.contains('dropdown-trigger') && l.textContent.trim().toLowerCase().startsWith('layanan'));
+            if (trigger) trigger.classList.add('active');
           } else if (currentPath.startsWith('/informasi') || currentPath.startsWith('/berita')) {
             const trigger = Array.from(desktopLinks).find(l => l.classList.contains('dropdown-trigger') && l.textContent.trim().toLowerCase().startsWith('informasi'));
             if (trigger) trigger.classList.add('active');
@@ -913,7 +916,7 @@ const SpotlightTilt = {
           const centerY = rect.height / 2;
           const tiltX = ((centerY - y) / centerY) * 4;
           const tiltY = ((x - centerX) / centerX) * 4;
-          card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateY(-3px)`;
+          card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateY(-6px)`;
         }
       };
 
@@ -1041,11 +1044,19 @@ const ExecutiveParallax = {
     if (!this.members || this.members.length === 0) return;
 
     if (this.section) {
-      this.initDesktop();
+      try {
+        this.initDesktop();
+      } catch (e) {
+        console.warn('Desktop parallax init warning:', e);
+      }
     }
 
     if (mobSection) {
-      this.initMobile();
+      try {
+        this.initMobile();
+      } catch (e) {
+        console.error('Mobile showcase init error:', e);
+      }
     }
   },
 
@@ -1164,7 +1175,7 @@ const ExecutiveParallax = {
       window.scrollTo({ top: sectionTop, behavior: 'smooth' });
     } else {
       this.applyMorphLayout('spotlight', index);
-      const targetProgress = 0.14 + (index / (this.members.length - 1 || 1)) * 0.82;
+      const targetProgress = 0.10 + (index / this.members.length) * 0.90 + (0.90 / this.members.length) * 0.45;
       const targetScroll = sectionTop + targetProgress * stageHeight;
       window.scrollTo({ top: targetScroll, behavior: 'smooth' });
     }
@@ -1172,7 +1183,7 @@ const ExecutiveParallax = {
     clearTimeout(this.scrollTimeout);
     this.scrollTimeout = setTimeout(() => {
       this.isManualScrolling = false;
-    }, 1050);
+    }, 750);
   },
 
   bindDesktopEvents() {
@@ -1187,14 +1198,14 @@ const ExecutiveParallax = {
       if (scrolled >= 0 && scrolled <= stageHeight) {
         const progress = scrolled / stageHeight;
 
-        // Phase 1: 0% - 12% = Overview Mode (comfortable top runway)
-        if (progress < 0.12) {
+        // Phase 1: 0% - 10% = Overview Mode (comfortable top runway)
+        if (progress < 0.10) {
           if (this.currentMode !== 'overview') {
             this.applyMorphLayout('overview', 0);
           }
         } else {
-          // Phase 2: 12% - 100% = Spotlight Mode (Smooth Sequential Handoff)
-          const spotlightProgress = (progress - 0.12) / 0.88;
+          // Phase 2: 10% - 100% = Spotlight Mode (Smooth Sequential Handoff)
+          const spotlightProgress = (progress - 0.10) / 0.90;
           const targetIndex = Math.min(
             this.members.length - 1,
             Math.max(0, Math.floor(spotlightProgress * this.members.length))
@@ -1276,108 +1287,261 @@ const ExecutiveParallax = {
         }
       });
     });
+
+    // Keyboard navigation (Arrow keys when spotlight stage is in viewport)
+    window.addEventListener('keydown', (e) => {
+      if (!this.section) return;
+      const rect = this.section.getBoundingClientRect();
+      if (rect.top <= 120 && rect.bottom >= 200) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          if (this.currentMode === 'overview') {
+            e.preventDefault();
+            this.scrollToMember(0);
+          } else if (this.currentIndex < this.members.length - 1) {
+            e.preventDefault();
+            this.scrollToMember(this.currentIndex + 1);
+          }
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          if (this.currentMode === 'spotlight') {
+            if (this.currentIndex > 0) {
+              e.preventDefault();
+              this.scrollToMember(this.currentIndex - 1);
+            } else {
+              e.preventDefault();
+              this.scrollToMember(-1);
+            }
+          }
+        }
+      }
+    });
   },
 
   initMobile() {
     let mobIndex = 0;
+    const backdrop = document.getElementById('mob-drawer-backdrop');
+    const drawer = document.getElementById('mob-drawer');
+    const drawerBody = document.getElementById('mob-drawer-body');
+    const closeBtn = document.getElementById('mob-drawer-close');
+    const dragHandle = document.getElementById('mob-drawer-handle');
+    const prevBtn = document.getElementById('mob-drawer-prev');
+    const nextBtn = document.getElementById('mob-drawer-next');
 
-    const updateMob = (idx) => {
+    // Teleport drawer and backdrop to document.body to avoid CSS clipping or transform traps from Swup/parent containers
+    if (backdrop && backdrop.parentElement !== document.body) {
+      document.body.appendChild(backdrop);
+    }
+    if (drawer && drawer.parentElement !== document.body) {
+      document.body.appendChild(drawer);
+    }
+
+    // ── 1. Category Filter Buttons ──────────────────────────────
+    const filterBtns = document.querySelectorAll('.mob-filter-btn');
+    const execItems = document.querySelectorAll('.mob-exec-item');
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+
+        // Update active class on filter buttons
+        filterBtns.forEach((b) => {
+          if (b === btn) {
+            b.classList.add('bg-primary-600', 'text-white', 'shadow-sm');
+            b.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'border', 'border-slate-200', 'dark:border-slate-700');
+          } else {
+            b.classList.remove('bg-primary-600', 'text-white', 'shadow-sm');
+            b.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'border', 'border-slate-200', 'dark:border-slate-700');
+          }
+        });
+
+        // Filter cards in the directory
+        execItems.forEach((item) => {
+          const itemKat = item.getAttribute('data-mob-kategori');
+          if (filter === 'all' || itemKat === filter) {
+            item.style.display = '';
+            item.classList.add('animate-fadeIn');
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // ── 2. Open Drawer with Member Data ─────────────────────────
+    const openDrawer = (idx) => {
       if (idx < 0 || idx >= this.members.length) return;
       mobIndex = idx;
       const m = this.members[idx];
 
-      const img = document.getElementById('mob-exec-img');
-      const name = document.getElementById('mob-exec-name');
-      const role = document.getElementById('mob-exec-role');
-      const kat = document.getElementById('mob-exec-kategori');
-      const karir = document.getElementById('mob-exec-karir');
-      const pend = document.getElementById('mob-exec-pendidikan');
-      const sertif = document.getElementById('mob-exec-sertifikasi');
-      const quote = document.getElementById('mob-exec-quote');
-      const quoteWrap = document.getElementById('mob-exec-quote-wrap');
-      const counter = document.getElementById('mob-exec-counter');
-      const card = document.getElementById('mob-exec-card');
-
-      if (card) {
-        card.classList.add('exec-transitioning');
-        setTimeout(() => card.classList.remove('exec-transitioning'), 300);
-      }
+      const img = document.getElementById('mob-drawer-img');
+      const name = document.getElementById('mob-drawer-name');
+      const role = document.getElementById('mob-drawer-role');
+      const kat = document.getElementById('mob-drawer-kategori');
+      const status = document.getElementById('mob-drawer-status');
+      const statusDot = document.getElementById('mob-drawer-status-dot');
+      const karir = document.getElementById('mob-drawer-karir');
+      const pend = document.getElementById('mob-drawer-pendidikan');
+      const sertif = document.getElementById('mob-drawer-sertifikasi');
+      const quote = document.getElementById('mob-drawer-quote');
+      const quoteWrap = document.getElementById('mob-drawer-quote-wrap');
+      const counter = document.getElementById('mob-drawer-counter');
 
       if (img) img.src = m.foto || '';
       if (name) name.textContent = m.nama || '';
       if (role) role.textContent = m.jabatan || '';
       if (kat) kat.textContent = m.kategori || '';
-      if (karir) karir.textContent = m.riwayat_karir || '';
-      if (pend) pend.textContent = m.pendidikan || '—';
+      if (status) status.textContent = m.status || 'Aktif';
+      if (statusDot) {
+        statusDot.className = (m.status === 'Proses Perizinan OJK')
+          ? 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse'
+          : 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+      }
+
+      if (karir) {
+        const lines = (m.riwayat_karir || '').split(/\r?\n|│/).map(s => s.trim().replace(/^[•\-\s]+/, '')).filter(Boolean);
+        karir.innerHTML = lines.map(line => `
+          <div class="flex items-start gap-2 leading-relaxed">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-500 mt-2 shrink-0"></span>
+            <span class="flex-1 text-slate-800 dark:text-slate-100 font-medium">${line}</span>
+          </div>
+        `).join('') || '—';
+      }
+
+      if (pend) {
+        const pLines = (m.pendidikan || '').split(/\r?\n|│/).map(s => s.trim().replace(/^[•\-\s]+/, '')).filter(Boolean);
+        if (pLines.length > 1) {
+          pend.innerHTML = pLines.map(line => `
+            <div class="flex items-start gap-1.5 leading-snug">
+              <span class="w-1 h-1 rounded-full bg-teal-500 mt-1.5 shrink-0"></span>
+              <span class="flex-1">${line}</span>
+            </div>
+          `).join('');
+        } else {
+          pend.textContent = m.pendidikan || '—';
+        }
+      }
       if (sertif) sertif.textContent = m.sertifikasi || '—';
 
       if (quote && quoteWrap) {
         if (m.kutipan && m.kutipan.trim() !== '') {
           quote.textContent = `"${m.kutipan}"`;
-          quoteWrap.style.display = '';
+          quoteWrap.style.display = 'flex';
         } else {
           quoteWrap.style.display = 'none';
         }
       }
 
       if (counter) {
-        counter.textContent = `${idx + 1} dari ${this.members.length}`;
+        counter.textContent = `Tokoh ${String(idx + 1).padStart(2, '0')} dari ${String(this.members.length).padStart(2, '0')}`;
       }
 
-      const pills = document.querySelectorAll('.mob-exec-pill');
-      pills.forEach((p) => {
-        const pIdx = parseInt(p.getAttribute('data-mob-index'), 10);
-        if (pIdx === idx) {
-          p.className = 'mob-exec-pill shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all bg-primary-600 text-white shadow-sm';
-          p.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        } else {
-          p.className = 'mob-exec-pill shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400';
-        }
-      });
+      if (prevBtn) prevBtn.disabled = idx === 0;
+      if (nextBtn) nextBtn.disabled = idx === this.members.length - 1;
 
-      const prev = document.getElementById('mob-btn-prev');
-      const next = document.getElementById('mob-btn-next');
-      if (prev) prev.disabled = idx === 0;
-      if (next) next.disabled = idx === this.members.length - 1;
+      // Show backdrop & slide up drawer
+      if (backdrop) {
+        backdrop.classList.add('is-open');
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100', 'pointer-events-auto');
+      }
+      if (drawer) {
+        drawer.classList.add('is-open');
+        drawer.classList.remove('translate-y-full', 'pointer-events-none');
+        drawer.classList.add('translate-y-0', 'pointer-events-auto');
+      }
+      if (drawerBody) {
+        drawerBody.scrollTop = 0;
+      }
+      document.body.classList.add('overflow-hidden');
     };
 
-    document.querySelectorAll('.mob-exec-pill').forEach((pill) => {
-      pill.addEventListener('click', () => {
-        const idx = parseInt(pill.getAttribute('data-mob-index'), 10);
-        updateMob(idx);
+    // ── 3. Close Drawer ──────────────────────────────────────────
+    const closeDrawer = () => {
+      if (backdrop) {
+        backdrop.classList.remove('is-open', 'opacity-100', 'pointer-events-auto');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+      }
+      if (drawer) {
+        drawer.classList.remove('is-open', 'translate-y-0', 'pointer-events-auto');
+        drawer.classList.add('translate-y-full', 'pointer-events-none');
+      }
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    // ── 4. Bind Card Item Clicks (Direct + Delegated) ────────────
+    execItems.forEach((item) => {
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const idx = parseInt(item.getAttribute('data-mob-card-index'), 10);
+        if (!isNaN(idx)) openDrawer(idx);
       });
     });
 
-    const prev = document.getElementById('mob-btn-prev');
-    const next = document.getElementById('mob-btn-next');
-    if (prev) {
-      prev.addEventListener('click', () => {
-        if (mobIndex > 0) updateMob(mobIndex - 1);
-      });
-    }
-    if (next) {
-      next.addEventListener('click', () => {
-        if (mobIndex < this.members.length - 1) updateMob(mobIndex + 1);
+    const mobList = document.getElementById('mob-exec-list');
+    if (mobList) {
+      mobList.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const item = e.target.closest('.mob-exec-item');
+        if (item) {
+          const idx = parseInt(item.getAttribute('data-mob-card-index'), 10);
+          if (!isNaN(idx)) openDrawer(idx);
+        }
       });
     }
 
-    const card = document.getElementById('mob-exec-card');
-    if (card) {
+    // ── 5. Bind Drawer Controls ──────────────────────────────────
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (dragHandle) dragHandle.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (mobIndex > 0) openDrawer(mobIndex - 1);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (mobIndex < this.members.length - 1) openDrawer(mobIndex + 1);
+      });
+    }
+
+    // Escape key closes drawer
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+
+    // ── 6. Touch Gestures on Drawer ──────────────────────────────
+    if (drawer) {
       let touchStartX = 0;
-      let touchEndX = 0;
-      card.addEventListener('touchstart', (e) => {
+      let touchStartY = 0;
+
+      drawer.addEventListener('touchstart', (e) => {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
       }, { passive: true });
 
-      card.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 45) {
-          if (diff > 0 && mobIndex < this.members.length - 1) {
-            updateMob(mobIndex + 1);
-          } else if (diff < 0 && mobIndex > 0) {
-            updateMob(mobIndex - 1);
+      drawer.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+
+        // Swipe horizontal to switch member
+        if (Math.abs(diffX) > 60 && Math.abs(diffY) < 50) {
+          if (diffX > 0 && mobIndex < this.members.length - 1) {
+            openDrawer(mobIndex + 1);
+          } else if (diffX < 0 && mobIndex > 0) {
+            openDrawer(mobIndex - 1);
           }
+        }
+
+        // Swipe down on the handle or top bar to dismiss
+        if (diffY < -80 && Math.abs(diffX) < 60 && drawerBody && drawerBody.scrollTop <= 5) {
+          closeDrawer();
         }
       }, { passive: true });
     }
@@ -4363,6 +4527,20 @@ function initSwup() {
     document.querySelectorAll('.dropdown.open, .dropdown.is-open, .dropdown.hovered').forEach(d => {
       d.classList.remove('open', 'is-open', 'hovered');
     });
+
+    // Central cleanup: remove any teleported modals or overlays in document.body
+    const staleModals = document.querySelectorAll(
+      '#ann-detail-modal, #kegiatan-detail-modal, #galeri-story-lightbox, #lelang-bid-modal, #tim-kami-detail-modal, #karir-apply-modal, #brosur-pdf-modal, #laporan-pdf-modal, #wkl-lightbox-modal, #wkl-bm-lightbox-modal, #video-modal, #mob-drawer, #mob-drawer-backdrop'
+    );
+    staleModals.forEach(m => {
+      if (m && m.parentElement === document.body) {
+        m.remove();
+      }
+    });
+
+    // Ensure body scroll and overflow lock is cleanly released
+    document.body.style.overflow = '';
+    document.body.classList.remove('overflow-hidden');
 
     try {
       const targetUrl = new URL(visit.to.url, window.location.origin);

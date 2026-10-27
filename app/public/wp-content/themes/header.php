@@ -126,7 +126,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
             $is_page_home      = ( is_front_page() || is_home() || $req_uri === '/' );
             $is_page_profil    = ( ! $is_page_home && ( strpos( $req_uri, '/profil' ) === 0 || is_page( [ 'tentang-kami', 'legalitas', 'susunan-pengurus', 'jaringan-kantor' ] ) ) );
             $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || strpos( $req_uri, '/brosur' ) === 0 || is_page( 'brosur' ) || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
-            $is_page_layanan   = ( ! $is_page_home && ( strpos( $req_uri, '/layanan' ) === 0 || is_page( [ 'layanan-kami', 'layanan' ] ) ) );
+            $is_page_layanan   = ( ! $is_page_home && ( strpos( $req_uri, '/layanan' ) === 0 || strpos( $req_uri, '/baitul-maal' ) === 0 || is_page( [ 'layanan-kami', 'layanan', 'baitul-maal', 'baitul-maal-bsw' ] ) ) );
             $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/pengumuman' ) === 0 || strpos( $req_uri, '/lelang' ) === 0 || strpos( $req_uri, '/tim-kami' ) === 0 || is_page( [ 'pengumuman', 'lelang', 'tim-kami' ] ) || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
 
@@ -142,10 +142,10 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
 
             <!-- Desktop Menu -->
             <div class="hidden lg:flex items-center gap-1 xl:gap-2">
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="nav-link <?php echo $is_page_home ? 'active' : ''; ?> px-4 py-2 rounded-full">Beranda</a>
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="nav-link font-bold <?php echo $is_page_home ? 'active' : ''; ?> px-4 py-2 rounded-full">Beranda</a>
                 
                 <div class="dropdown relative">
-                    <button class="dropdown-trigger nav-link <?php echo $is_page_profil ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                    <button class="dropdown-trigger nav-link font-bold <?php echo $is_page_profil ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Profil
                         <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -229,7 +229,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
 
                 <!-- PRODUK: INTERACTIVE 3-COLUMN BANKING MEGA-MENU -->
                 <div class="dropdown relative">
-                    <button class="dropdown-trigger nav-link <?php echo $is_page_produk ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                    <button class="dropdown-trigger nav-link font-bold <?php echo $is_page_produk ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Produk
                         <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -504,12 +504,65 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     </div>
                 </div>
 
-                <!-- LAYANAN KAMI (Direct Link to Service Hub) -->
-                <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="nav-link <?php echo $is_page_layanan ? 'active' : ''; ?> px-4 py-2 rounded-full">Layanan</a>
+                <!-- LAYANAN & BAITUL MAAL DROPDOWN -->
+                <div class="dropdown relative">
+                    <button class="dropdown-trigger nav-link font-bold whitespace-nowrap <?php echo $is_page_layanan ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                        Layanan dan Baitul Maal
+                        <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu w-[360px] sm:w-[390px] p-4 lg:p-5 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-2xl">
+                        <!-- Header Kicker -->
+                        <div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-teal-50 dark:bg-teal-950 text-teal-800 dark:text-teal-300 w-fit mb-3 border border-teal-200/50 dark:border-teal-800/50">
+                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                            </svg>
+                            <span class="text-xs font-black uppercase tracking-wider">Layanan dan Baitul Maal</span>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <!-- 1. Layanan Kami -->
+                            <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/layanan' ) === 0 || is_page( 'layanan-kami' ) ) ? 'active' : ''; ?>">
+                                <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Layanan Kami</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Pembayaran Virtual Account 24/7 &amp; jemput setoran</span>
+                                </div>
+                            </a>
+
+                            <!-- 2. Baitul Maal BSW -->
+                            <a href="<?php echo esc_url( home_url( '/baitul-maal/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/baitul-maal' ) === 0 || is_page( 'baitul-maal' ) ) ? 'active' : ''; ?>">
+                                <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Baitul Maal BSW</span>
+                                    <span class="text-xs text-slate-600 dark:text-slate-300 font-medium block leading-snug">Fungsi sosial syariah, zakat, infak, sedekah &amp; wakaf</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Footer Info Strip -->
+                        <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-2 text-xs text-slate-500 dark:text-slate-400">
+                            <span class="inline-flex items-center gap-1.5 font-semibold text-teal-700 dark:text-teal-300">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Fasilitas Transaksi &amp; Sosial Syariah
+                            </span>
+                            <span class="font-bold uppercase tracking-wider text-[11px] text-slate-400 dark:text-slate-500">BSW</span>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- INFORMASI: 3-COLUMN BANKING MEGA-MENU -->
                 <div class="dropdown relative">
-                    <button class="dropdown-trigger nav-link <?php echo $is_page_informasi ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
+                    <button class="dropdown-trigger nav-link font-bold <?php echo $is_page_informasi ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
                         Informasi
                         <svg class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -582,7 +635,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                                         <!-- Pengumuman Resmi Bank -->
                                         <a href="<?php echo esc_url( home_url( '/informasi/pengumuman/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/informasi/pengumuman' ) !== false ) ? 'active' : ''; ?>">
                                             <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform shadow-xs">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.455a20.01 20.01 0 01-1.341-3.67m3.003-.549c.562-.05 1.135-.08 1.716-.08h.277c1.192 0 2.275.642 2.872 1.681l1.109 1.93c.31.54.103 1.232-.444 1.518l-.684.356c-.53.275-1.187.11-1.503-.396l-.99-1.587m-2.357-4.422a21.464 21.464 0 00-.737-2.617m0 0a21.465 21.465 0 01.737-2.618m0 5.235c.24.02.48.035.72.047m-1.44-.094c-.24.02-.48.035-.72.047" /></svg>
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
                                             </div>
                                             <div>
                                                 <span class="text-sm font-extrabold text-slate-900 dark:text-white group-hover/item:text-primary-600 dark:group-hover/item:text-teal-300 block leading-snug">Pengumuman Resmi</span>
@@ -709,7 +762,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     </div>
                 </div>
 
-                <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="nav-link <?php echo $is_page_kontak ? 'active' : ''; ?> px-4 py-2 rounded-full">Kontak</a>
+                <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="nav-link font-bold <?php echo $is_page_kontak ? 'active' : ''; ?> px-4 py-2 rounded-full">Kontak</a>
             </div>
 
             <!-- Right Actions -->
@@ -911,13 +964,13 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
         <!-- Nav Links -->
         <div class="flex-1 overflow-y-auto py-4 px-4 space-y-1" id="mobile-menu-items">
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>"
-               class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_home ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+               class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_home ? 'bg-primary-50 text-primary-700 font-extrabold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                 Beranda
             </a>
 
             <!-- Profil -->
             <div class="mobile-nav-group">
-                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_profil ? 'bg-primary-50/70 text-primary-700 font-semibold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_profil ? 'bg-primary-50/70 text-primary-700 font-extrabold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                     Profil
                     <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_profil ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -953,7 +1006,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
 
             <!-- Produk -->
             <div class="mobile-nav-group">
-                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_produk ? 'bg-primary-50/70 text-primary-700 font-semibold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_produk ? 'bg-primary-50/70 text-primary-700 font-extrabold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                     Produk
                     <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_produk ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -1027,15 +1080,33 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                 </div>
             </div>
 
-            <!-- Layanan Kami (Mobile) -->
-            <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>"
-               class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_layanan ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
-                Layanan Kami
-            </a>
+            <!-- Layanan & Baitul Maal (Mobile Dropdown) -->
+            <div class="mobile-nav-group">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_layanan ? 'bg-primary-50/70 text-primary-700 font-extrabold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+                    Layanan dan Baitul Maal
+                    <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_layanan ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </button>
+                <div class="<?php echo $is_page_layanan ? '' : 'hidden'; ?> pl-2 mt-1 space-y-1 mobile-dropdown-content">
+                    <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/layanan' ) === 0 || is_page( 'layanan-kami' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Layanan Kami (VA 24/7 &amp; Jemput Setoran)</span>
+                    </a>
+                    <a href="<?php echo esc_url( home_url( '/baitul-maal/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/baitul-maal' ) === 0 || is_page( 'baitul-maal' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
+                        <span class="w-6 h-6 rounded-md bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                        </span>
+                        <span class="text-xs font-semibold">Baitul Maal BSW (ZISWAF &amp; Sosial)</span>
+                    </a>
+                </div>
+            </div>
 
             <!-- Informasi -->
             <div class="mobile-nav-group">
-                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_informasi ? 'bg-primary-50/70 text-primary-700 font-semibold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+                <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_informasi ? 'bg-primary-50/70 text-primary-700 font-extrabold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
                     Informasi
                     <svg class="dropdown-icon w-4 h-4 transition-transform duration-200 <?php echo $is_page_informasi ? 'rotate-180' : ''; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -1071,7 +1142,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     </div>
                     <a href="<?php echo esc_url( home_url( '/informasi/pengumuman/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/informasi/pengumuman' ) !== false ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
                         <span class="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.455a20.01 20.01 0 01-1.341-3.67m3.003-.549c.562-.05 1.135-.08 1.716-.08h.277c1.192 0 2.275.642 2.872 1.681l1.109 1.93c.31.54.103 1.232-.444 1.518l-.684.356c-.53.275-1.187.11-1.503-.396l-.99-1.587m-2.357-4.422a21.464 21.464 0 00-.737-2.617m0 0a21.465 21.465 0 01.737-2.618m0 5.235c.24.02.48.035.72.047m-1.44-.094c-.24.02-.48.035-.72.047" /></svg>
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
                         </span>
                         <span class="text-xs font-semibold">Pengumuman Resmi Bank</span>
                     </a>
@@ -1125,7 +1196,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                 </div>
             </div>
 
-            <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-medium transition-colors <?php echo $is_page_kontak ? 'bg-primary-50 text-primary-700 font-semibold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-700 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-300 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">Kontak</a>
+            <a href="<?php echo esc_url( home_url( '/kontak' ) ); ?>" class="mobile-nav-link block px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_kontak ? 'bg-primary-50 text-primary-700 font-extrabold dark:bg-primary-400/20 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">Kontak</a>
         </div>
 
         <!-- Footer CTA -->

@@ -39,7 +39,7 @@ $cta          = function_exists( 'wakalumi_get_berita_cta' ) ? wakalumi_get_beri
 $display_author = ( $is_external && ! empty( $external_source ) ) ? $external_source : $penulis;
 ?>
 
-<div class="min-h-screen bg-transparent text-slate-800 dark:text-slate-200 pb-24">
+<div class="min-h-screen bg-slate-50/60 dark:bg-dark/50 text-slate-800 dark:text-slate-200 pb-24">
 
     <!-- ========================================================================
          ARTICLE HEADER & BREADCRUMBS
@@ -191,80 +191,93 @@ $display_author = ( $is_external && ! empty( $external_source ) ) ? $external_so
 
 
     <!-- ========================================================================
-         ARTICLE MAIN CONTENT & SHOWCASE
+         ARTICLE MAIN CONTENT & SHOWCASE (SOLID HIGH-CONTRAST CARD CONTAINER)
          ======================================================================== -->
-    <article class="py-12 bg-transparent relative z-10">
+    <article class="py-10 md:py-14 bg-transparent relative z-10">
         <div class="container-narrow">
             
             <?php while ( have_posts() ) : the_post(); ?>
 
-                <!-- Featured Image Showcase -->
-                <?php if ( has_post_thumbnail() ) : ?>
-                    <div class="mb-12 rounded-3xl overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-2xl" data-aos="fade-up">
-                        <?php the_post_thumbnail( 'hero-large', [
-                            'class' => 'w-full aspect-[16/9] object-cover',
-                        ] ); ?>
-                        <?php if ( get_the_post_thumbnail_caption() ) : ?>
-                            <div class="p-3 text-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-dark-card border-t border-slate-200/50 dark:border-dark-border">
-                                📷 <?php echo esc_html( get_the_post_thumbnail_caption() ); ?>
-                            </div>
-                        <?php endif; ?>
+                <!-- Solid Editorial Reading Container (Non-Transparent, Clean & Elevated) -->
+                <div class="rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border shadow-xl p-6 sm:p-10 lg:p-12 mb-10 relative overflow-hidden" data-aos="fade-up">
+                    
+                    <!-- Top Subtle Accent Bar -->
+                    <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-500 absolute top-0 left-0 right-0"></div>
+
+                    <!-- Watermark Emblem Motif -->
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 w-80 h-80 opacity-[0.025] dark:opacity-[0.04] pointer-events-none select-none z-0 mix-blend-multiply dark:mix-blend-screen">
+                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain grayscale">
                     </div>
-                <?php endif; ?>
 
-                <!-- Rich Prose Body -->
-                <div class="prose prose-lg lg:prose-xl prose-slate dark:prose-invert max-w-none leading-relaxed
-                            prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-white
-                            prose-a:text-teal-600 dark:prose-a:text-teal-400 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
-                            prose-img:rounded-3xl prose-img:shadow-lg prose-img:border prose-img:border-slate-200 dark:prose-img:border-dark-border
-                            prose-blockquote:border-l-teal-500 prose-blockquote:bg-teal-50/50 dark:prose-blockquote:bg-teal-950/20 prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-2xl" data-aos="fade-up">
-                    <?php the_content(); ?>
-                </div>
+                    <!-- Featured Image Showcase -->
+                    <?php if ( has_post_thumbnail() ) : ?>
+                        <div class="mb-10 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-md relative z-10">
+                            <?php the_post_thumbnail( 'hero-large', [
+                                'class' => 'w-full aspect-[16/9] object-cover',
+                            ] ); ?>
+                            <?php if ( get_the_post_thumbnail_caption() ) : ?>
+                                <div class="p-3 text-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-dark-surface border-t border-slate-200/50 dark:border-dark-border font-medium">
+                                    📷 <?php echo esc_html( get_the_post_thumbnail_caption() ); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
 
-                <!-- Bottom Referral Card for External Media -->
-                <?php if ( $is_external && ! empty( $external_url ) ) : ?>
-                    <div class="my-10 p-7 sm:p-9 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-teal-950 text-white border border-cyan-500/30 shadow-2xl relative overflow-hidden group" data-aos="fade-up">
-                        <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-cyan-500/10 blur-2xl pointer-events-none"></div>
-                        <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                            <div class="space-y-2">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
-                                    🌐 Kanal Penerbit Resmi
-                                </span>
-                                <h3 class="text-xl sm:text-2xl font-black text-white leading-snug">
-                                    Ingin Membaca Liputan Lengkap di <?php echo esc_html( ! empty( $external_source ) ? $external_source : 'Situs Sumber' ); ?>?
-                                </h3>
-                                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
-                                    Akses naskah utuh, infografis, dan dokumentasi lengkap langsung dari portal media penerbit aslinya.
-                                </p>
+                    <!-- Rich Prose Body -->
+                    <div class="prose prose-lg lg:prose-xl prose-slate dark:prose-invert max-w-none leading-relaxed relative z-10
+                                prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-white
+                                prose-a:text-teal-600 dark:prose-a:text-teal-400 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+                                prose-blockquote:border-l-teal-500 prose-blockquote:bg-teal-50/50 dark:prose-blockquote:bg-teal-950/20 prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-2xl">
+                        <?php the_content(); ?>
+                    </div>
+
+                    <!-- Bottom Referral Card for External Media -->
+                    <?php if ( $is_external && ! empty( $external_url ) ) : ?>
+                        <div class="my-10 p-7 sm:p-9 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-teal-950 text-white border border-cyan-500/30 shadow-2xl relative overflow-hidden group z-10">
+                            <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-cyan-500/10 blur-2xl pointer-events-none"></div>
+                            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                                <div class="space-y-2">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                                        🌐 Kanal Penerbit Resmi
+                                    </span>
+                                    <h3 class="text-xl sm:text-2xl font-black text-white leading-snug">
+                                        Ingin Membaca Liputan Lengkap di <?php echo esc_html( ! empty( $external_source ) ? $external_source : 'Situs Sumber' ); ?>?
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+                                        Akses naskah utuh, infografis, dan dokumentasi lengkap langsung dari portal media penerbit aslinya.
+                                    </p>
+                                </div>
+                                <a href="<?php echo esc_url( $external_url ); ?>" target="_blank" rel="noopener noreferrer"
+                                   class="btn-primary text-xs sm:text-sm font-black px-6 py-3.5 rounded-xl shadow-lg hover:scale-105 transition-all flex items-center gap-2 shrink-0">
+                                    <span>Kunjungi <?php echo esc_html( ! empty( $external_source ) ? $external_source : 'Situs Asli' ); ?></span>
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                                </a>
                             </div>
-                            <a href="<?php echo esc_url( $external_url ); ?>" target="_blank" rel="noopener noreferrer"
-                               class="btn-primary text-xs sm:text-sm font-black px-6 py-3.5 rounded-xl shadow-lg hover:scale-105 transition-all flex items-center gap-2 shrink-0">
-                                <span>Kunjungi <?php echo esc_html( ! empty( $external_source ) ? $external_source : 'Situs Asli' ); ?></span>
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Bottom Share Bar -->
+                    <div class="mt-10 pt-8 border-t border-slate-200 dark:border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+                        <span class="text-sm font-extrabold text-slate-900 dark:text-white">
+                            Bagikan warta ini kepada rekan &amp; keluarga:
+                        </span>
+                        <div class="flex items-center gap-2.5">
+                            <a href="<?php echo esc_url( $wa_share_url ); ?>" target="_blank" rel="noopener noreferrer"
+                               class="btn-whatsapp text-xs font-bold px-4 py-2 rounded-xl shadow-xs">
+                                WhatsApp
                             </a>
+                            <a href="<?php echo esc_url( $fb_share_url ); ?>" target="_blank" rel="noopener noreferrer"
+                               class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-colors">
+                                Facebook
+                            </a>
+                            <button type="button" 
+                                    onclick="wakalumiCopyLink(this, '<?php echo esc_js( $post_url ); ?>')" 
+                                    class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-surface dark:hover:bg-dark-surface-alt text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors">
+                                📋 Salin Tautan
+                            </button>
                         </div>
                     </div>
-                <?php endif; ?>
-                <!-- Bottom Share Bar -->
-                <div class="mt-10 pt-8 border-t border-slate-200 dark:border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <span class="text-sm font-extrabold text-slate-900 dark:text-white">
-                        Bagikan warta ini kepada rekan &amp; keluarga:
-                    </span>
-                    <div class="flex items-center gap-2.5">
-                        <a href="<?php echo esc_url( $wa_share_url ); ?>" target="_blank" rel="noopener noreferrer"
-                           class="btn-whatsapp text-xs font-bold px-4 py-2 rounded-xl shadow-xs">
-                            WhatsApp
-                        </a>
-                        <a href="<?php echo esc_url( $fb_share_url ); ?>" target="_blank" rel="noopener noreferrer"
-                           class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-colors">
-                            Facebook
-                        </a>
-                        <button type="button" 
-                                onclick="wakalumiCopyLink(this, '<?php echo esc_js( $post_url ); ?>')" 
-                                class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-card dark:hover:bg-dark-border text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors">
-                            📋 Salin Tautan
-                        </button>
-                    </div>
+
                 </div>
 
                 <!-- Navigasi Antar Berita (Prev / Next Post) -->

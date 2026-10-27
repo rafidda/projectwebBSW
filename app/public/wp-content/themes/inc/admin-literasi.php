@@ -427,7 +427,7 @@ function wakalumi_render_literasi_admin_page() {
         <!-- METRIC STATUS BAR -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Pilar Inklusi Utama</div>
+                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Program Inklusi Aktif</div>
                 <div style="font-size: 24px; font-weight: 800; color: #0f766e; margin-top: 4px;"><?php echo count( $pillars ); ?> Program</div>
             </div>
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
@@ -444,38 +444,43 @@ function wakalumi_render_literasi_admin_page() {
             <?php wp_nonce_field( 'wkl_literasi_save_action', 'wkl_literasi_save_nonce' ); ?>
 
             <!-- ================================================================
-                 SECTION 1: PENGATURAN PILAR AKSI NYATA INKLUSI KEUANGAN (DINAMIS)
+                 SECTION 1: PENGATURAN PROGRAM AKSI NYATA INKLUSI KEUANGAN (DINAMIS REPEATER)
                  ================================================================ -->
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-                <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 18px;">
-                    <h2 style="font-size: 16px; font-weight: 700; color: #0f766e; margin: 0; display: flex; align-items: center; gap: 8px;">
-                        <span class="dashicons dashicons-networking" style="font-size: 18px; width: 18px; height: 18px;"></span>
-                        Pengaturan Seksi &amp; 3 Pilar Aksi Nyata Inklusi Keuangan
-                    </h2>
-                    <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">
-                        Kelola judul seksi, deskripsi pengantar, dan ketiga pilar program inklusi perbankan syariah yang tampil di halaman web.
-                    </p>
+                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="font-size: 16px; font-weight: 700; color: #0f766e; margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <span class="dashicons dashicons-networking" style="font-size: 18px; width: 18px; height: 18px;"></span>
+                            Pengaturan Seksi &amp; Kartu Program Inklusi Keuangan (Cards Repeater)
+                        </h2>
+                        <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">
+                            Kelola judul seksi, deskripsi pengantar, serta tambah atau kurangi kartu program aksi nyata inklusi perbankan syariah yang tampil di halaman web.
+                        </p>
+                    </div>
+                    <button type="button" id="btn-add-pillar" class="button button-primary" style="background: #0f766e; border-color: #0d9488; font-weight: 700;">
+                        + Tambah Program Baru
+                    </button>
                 </div>
 
                 <!-- Section Header Inputs -->
                 <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Badge Seksi Pilar</label>
+                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Badge Seksi Program</label>
                         <input type="text" name="options_literasi_pillars_badge" value="<?php echo esc_attr( $pillars_sec['badge'] ); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px;">
                     </div>
                     <div>
-                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Judul Utama Seksi Pilar</label>
+                        <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Judul Utama Seksi Program</label>
                         <input type="text" name="options_literasi_pillars_title" value="<?php echo esc_attr( $pillars_sec['title'] ); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px;">
                     </div>
                 </div>
 
                 <div style="margin-bottom: 22px;">
-                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Deskripsi Pengantar Seksi Pilar</label>
+                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Deskripsi Pengantar Seksi Program</label>
                     <textarea name="options_literasi_pillars_desc" rows="2" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 13px;"><?php echo esc_textarea( $pillars_sec['desc'] ); ?></textarea>
                 </div>
 
-                <!-- 3 Pillars Cards Editor -->
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Dynamic Program Cards Repeater Container -->
+                <div id="pillar-list-container" style="display: flex; flex-direction: column; gap: 16px;">
                     <?php 
                     foreach ( $pillars as $p_idx => $pil ) : 
                         $p_id    = esc_attr( $pil['id'] ?? ( 'pilar_' . ( $p_idx + 1 ) ) );
@@ -485,49 +490,66 @@ function wakalumi_render_literasi_admin_page() {
                         $p_tag   = esc_attr( $pil['tag'] ?? '' );
                         $p_icon  = esc_attr( $pil['icon'] ?? 'truck' );
                     ?>
-                        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid #0f766e; border-radius: 10px; padding: 18px;">
+                        <div class="pillar-card-item" data-id="<?php echo $p_id; ?>" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid #0f766e; border-radius: 10px; padding: 18px; transition: all 0.2s;">
                             <input type="hidden" name="pillar_id[]" value="<?php echo $p_id; ?>">
 
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
-                                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">
-                                    Pilar Inklusi #<?php echo ( $p_idx + 1 ); ?>
-                                </span>
-                                <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #ccfbf1; color: #0f766e;">
-                                    Aktif di Halaman
-                                </span>
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-weight: 800; font-size: 14px; color: #0f172a;" class="pillar-title-display">
+                                        #<?php echo ( $p_idx + 1 ); ?> — <?php echo esc_html( $p_title ?: 'Program Inklusi Baru' ); ?>
+                                    </span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #ccfbf1; color: #0f766e;">
+                                        Aktif di Halaman
+                                    </span>
+                                    <button type="button" class="button button-link-delete btn-delete-pillar" style="color: #ef4444; font-size: 12px; padding: 2px 6px;">
+                                        Hapus
+                                    </button>
+                                </div>
                             </div>
 
                             <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; gap: 12px; margin-bottom: 12px;">
                                 <div>
-                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Nama Program Pilar</label>
-                                    <input type="text" name="pillar_title[]" value="<?php echo $p_title; ?>" placeholder="Contoh: Kemitraan Guru Sekolah" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; background: #fff;" required>
+                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Nama Program</label>
+                                    <input type="text" name="pillar_title[]" value="<?php echo $p_title; ?>" class="pillar-title-input" placeholder="Contoh: Kemitraan Guru Sekolah" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; background: #fff;" required>
                                 </div>
                                 <div>
-                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Sub-Judul Pilar</label>
+                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Sub-Judul Program</label>
                                     <input type="text" name="pillar_sub[]" value="<?php echo $p_sub; ?>" placeholder="Contoh: Solusi Finansial Pendidik" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
                                 </div>
                                 <div>
-                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Label Tag / Kategori</label>
+                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Label Tag / Target</label>
                                     <input type="text" name="pillar_tag[]" value="<?php echo $p_tag; ?>" placeholder="Contoh: Inklusi Guru" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
                                 </div>
                             </div>
 
-                            <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 12px;">
+                            <div style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 12px;">
                                 <div>
-                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Deskripsi Aksi Inklusi</label>
-                                    <textarea name="pillar_desc[]" rows="3" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px; background: #fff;"><?php echo $p_desc; ?></textarea>
+                                    <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Deskripsi Program Inklusi</label>
+                                    <textarea name="pillar_desc[]" rows="3" placeholder="Jelaskan sasaran dan bentuk aksi nyata program ini..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px; background: #fff;"><?php echo $p_desc; ?></textarea>
                                 </div>
                                 <div>
                                     <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Ikon Vektor</label>
                                     <select name="pillar_icon[]" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 13px; background: #fff;">
-                                        <option value="truck" <?php selected( $p_icon, 'truck' ); ?>>Truk / Jemput Bola</option>
+                                        <option value="truck" <?php selected( $p_icon, 'truck' ); ?>>Truk / Jemput Bola Pasar</option>
                                         <option value="academic-cap" <?php selected( $p_icon, 'academic-cap' ); ?>>Topi Toga / Pendidikan &amp; Guru</option>
-                                        <option value="sparkles" <?php selected( $p_icon, 'sparkles' ); ?>>Kilau / UMKM Berkah</option>
+                                        <option value="sparkles" <?php selected( $p_icon, 'sparkles' ); ?>>Kilau / UMKM &amp; Inovasi Berkah</option>
+                                        <option value="store" <?php selected( $p_icon, 'store' ); ?>>Toko / Warung &amp; Pasar Tradisional</option>
+                                        <option value="users" <?php selected( $p_icon, 'users' ); ?>>Komunitas / Kelompok Masyarakat</option>
+                                        <option value="shield" <?php selected( $p_icon, 'shield' ); ?>>Perisai / Perlindungan &amp; Keamanan</option>
+                                        <option value="banknotes" <?php selected( $p_icon, 'banknotes' ); ?>>Tabungan / Finansial &amp; Permodalan</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
+                </div>
+
+                <div style="margin-top: 15px; text-align: right;">
+                    <button type="button" id="btn-add-pillar-bottom" class="button button-secondary" style="border-color: #0f766e; color: #0f766e; font-weight: 700;">
+                        + Tambah Program Inklusi
+                    </button>
                 </div>
             </div>
 
@@ -777,7 +799,7 @@ function wakalumi_render_literasi_admin_page() {
             <!-- SAVE BUTTON STICKY FOOTER -->
             <div style="position: sticky; bottom: 15px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 15px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; z-index: 50;">
                 <div style="color: #64748b; font-size: 13px;">
-                    Perubahan pada 3 pilar inklusi, modul edukasi, dan formulir kemitraan akan langsung aktif di halaman web.
+                    Perubahan pada program inklusi, modul edukasi, dan formulir kemitraan akan langsung aktif di halaman web.
                 </div>
                 <button type="submit" class="button button-primary" style="background: #0f766e; border-color: #0d9488; font-weight: 800; font-size: 14px; padding: 6px 30px; border-radius: 6px;">
                     Simpan Seluruh Pengaturan Literasi
@@ -788,9 +810,137 @@ function wakalumi_render_literasi_admin_page() {
 
     </div>
 
-    <!-- INLINE JAVASCRIPT FOR DYNAMIC MODULE CARDS -->
+    <!-- INLINE JAVASCRIPT FOR DYNAMIC PROGRAM & MODULE CARDS REPEATER -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        /* ====================================================================
+           1. PROGRAM INKLUSI CARDS REPEATER
+           ==================================================================== */
+        const pContainer = document.getElementById('pillar-list-container');
+        const btnAddPillarTop = document.getElementById('btn-add-pillar');
+        const btnAddPillarBottom = document.getElementById('btn-add-pillar-bottom');
+
+        function renumberPillars() {
+            if (!pContainer) return;
+            const items = pContainer.querySelectorAll('.pillar-card-item');
+            items.forEach((item, index) => {
+                const titleInput = item.querySelector('.pillar-title-input');
+                const titleDisp  = item.querySelector('.pillar-title-display');
+                const titleVal   = titleInput && titleInput.value.trim() ? titleInput.value.trim() : 'Program Inklusi Baru';
+                if (titleDisp) {
+                    titleDisp.textContent = '#' + (index + 1) + ' — ' + titleVal;
+                }
+            });
+        }
+
+        function bindPillarCard(card) {
+            const inputTitle = card.querySelector('.pillar-title-input');
+            const titleDisp  = card.querySelector('.pillar-title-display');
+            const btnDelete  = card.querySelector('.btn-delete-pillar');
+
+            if (inputTitle && titleDisp) {
+                inputTitle.addEventListener('input', function() {
+                    const idxMatch = titleDisp.textContent.match(/^#(\d+)/);
+                    const idxStr = idxMatch ? idxMatch[0] : '#';
+                    const val = this.value.trim() || 'Program Inklusi Baru';
+                    titleDisp.textContent = idxStr + ' — ' + val;
+                });
+            }
+
+            if (btnDelete) {
+                btnDelete.addEventListener('click', function() {
+                    const total = pContainer.querySelectorAll('.pillar-card-item').length;
+                    if (total <= 1) {
+                        alert('Minimal harus menyisakan 1 kartu program inklusi.');
+                        return;
+                    }
+                    if (confirm('Apakah Anda yakin ingin menghapus kartu program inklusi ini?')) {
+                        card.remove();
+                        renumberPillars();
+                    }
+                });
+            }
+        }
+
+        if (pContainer) {
+            pContainer.querySelectorAll('.pillar-card-item').forEach(bindPillarCard);
+
+            function addNewPillarCard() {
+                const count = pContainer.querySelectorAll('.pillar-card-item').length;
+                const newIndex = count + 1;
+                const newId = 'pilar_' + Date.now();
+
+                const cardHtml = `
+                    <div class="pillar-card-item" data-id="${newId}" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid #0f766e; border-radius: 10px; padding: 18px; transition: all 0.2s;">
+                        <input type="hidden" name="pillar_id[]" value="${newId}">
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-weight: 800; font-size: 14px; color: #0f172a;" class="pillar-title-display">
+                                    #${newIndex} — Program Inklusi Baru
+                                </span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #ccfbf1; color: #0f766e;">
+                                    Aktif di Halaman
+                                </span>
+                                <button type="button" class="button button-link-delete btn-delete-pillar" style="color: #ef4444; font-size: 12px; padding: 2px 6px;">
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Nama Program</label>
+                                <input type="text" name="pillar_title[]" value="" class="pillar-title-input" placeholder="Contoh: Tabungan SimPel Berhadiah" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; background: #fff;" required>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Sub-Judul Program</label>
+                                <input type="text" name="pillar_sub[]" value="" placeholder="Contoh: Edukasi Gemar Menabung Sejak Dini" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Label Tag / Target</label>
+                                <input type="text" name="pillar_tag[]" value="Inklusi Pelajar" placeholder="Contoh: Pelajar &amp; Sekolah" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 3fr 1.2fr; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Deskripsi Program Inklusi</label>
+                                <textarea name="pillar_desc[]" rows="3" placeholder="Jelaskan tujuan, sasaran, dan implementasi nyata program inklusi ini..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px; background: #fff;"></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Ikon Vektor</label>
+                                <select name="pillar_icon[]" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 13px; background: #fff;">
+                                    <option value="truck">Truk / Jemput Bola Pasar</option>
+                                    <option value="academic-cap">Topi Toga / Pendidikan &amp; Guru</option>
+                                    <option value="sparkles">Kilau / Inovasi &amp; Berkah</option>
+                                    <option value="store">Toko / Warung &amp; Pasar Tradisional</option>
+                                    <option value="users">Komunitas / Kelompok Masyarakat</option>
+                                    <option value="shield">Perisai / Perlindungan &amp; Keamanan</option>
+                                    <option value="banknotes">Tabungan / Finansial &amp; Permodalan</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cardHtml.trim();
+                const newEl = tempDiv.firstElementChild;
+                pContainer.appendChild(newEl);
+                bindPillarCard(newEl);
+                newEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            if (btnAddPillarTop) btnAddPillarTop.addEventListener('click', addNewPillarCard);
+            if (btnAddPillarBottom) btnAddPillarBottom.addEventListener('click', addNewPillarCard);
+        }
+
+        /* ====================================================================
+           2. MODUL EDUKASI CARDS REPEATER
+           ==================================================================== */
         const container = document.getElementById('module-list-container');
         const btnAddTop = document.getElementById('btn-add-module');
         const btnAddBottom = document.getElementById('btn-add-module-bottom');
@@ -816,86 +966,88 @@ function wakalumi_render_literasi_admin_page() {
             }
         }
 
-        // Bind existing
-        container.querySelectorAll('.module-card-item').forEach(bindModuleCard);
+        // Bind existing modules
+        if (container) {
+            container.querySelectorAll('.module-card-item').forEach(bindModuleCard);
 
-        function addNewModuleCard() {
-            const count = container.querySelectorAll('.module-card-item').length;
-            const newIndex = count + 1;
-            const newId = 'modul_' + Date.now();
+            function addNewModuleCard() {
+                const count = container.querySelectorAll('.module-card-item').length;
+                const newIndex = count + 1;
+                const newId = 'modul_' + Date.now();
 
-            const cardHtml = `
-                <div class="module-card-item" data-id="${newId}" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid #0f766e; border-radius: 10px; padding: 20px; transition: all 0.2s;">
-                    <input type="hidden" name="modul_id[]" value="${newId}">
+                const cardHtml = `
+                    <div class="module-card-item" data-id="${newId}" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid #0f766e; border-radius: 10px; padding: 20px; transition: all 0.2s;">
+                        <input type="hidden" name="modul_id[]" value="${newId}">
 
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-weight: 800; font-size: 15px; color: #0f172a;" class="module-title-display">
-                                #${newIndex} — Topik Edukasi Baru
-                            </span>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-weight: 800; font-size: 15px; color: #0f172a;" class="module-title-display">
+                                    #${newIndex} — Topik Edukasi Baru
+                                </span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: #e0f2fe; color: #0369a1;">
+                                    ● Masyarakat Umum
+                                </span>
+                                <button type="button" class="button button-link-delete btn-delete-module" style="color: #ef4444; font-size: 12px; padding: 2px 6px;">
+                                    Hapus
+                                </button>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: #e0f2fe; color: #0369a1;">
-                                ● Masyarakat Umum
-                            </span>
-                            <button type="button" class="button button-link-delete btn-delete-module" style="color: #ef4444; font-size: 12px; padding: 2px 6px;">
-                                Hapus
-                            </button>
+
+                        <div style="display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 0.6fr; gap: 14px; margin-bottom: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Judul Topik Edukasi</label>
+                                <input type="text" name="modul_judul[]" value="" class="module-title-input" placeholder="Contoh: Mengapa Menabung Syariah Lebih Berkah" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; background: #fff;" required>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Kategori Modul</label>
+                                <select name="modul_kategori[]" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 13px; background: #fff;">
+                                    <option value="dasar">Prinsip Dasar Syariah</option>
+                                    <option value="simpanan">Simpanan &amp; Tabungan</option>
+                                    <option value="pembiayaan">Pembiayaan Syariah</option>
+                                    <option value="keuangan">Manajemen Finansial</option>
+                                    <option value="keamanan">Keamanan Finansial (Anti-Fraud)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Sasaran Pembaca</label>
+                                <input type="text" name="modul_sasaran[]" value="Masyarakat Umum" placeholder="Contoh: Pelaku UMKM" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Urutan</label>
+                                <input type="number" name="modul_urutan[]" value="${newIndex}" min="1" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 4px; font-size: 13px; text-align: center; background: #fff;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">
+                                    Ringkasan Singkat (Tampil pada Kartu Depan)
+                                </label>
+                                <textarea name="modul_ringkasan[]" rows="5" placeholder="Tuliskan 1-2 kalimat ringkasan inti topik ini..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #fff;"></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">
+                                    Uraian &amp; Poin Lengkap (Tampil di Popup Baca Edukasi)
+                                </label>
+                                <textarea name="modul_isi_lengkap[]" rows="5" placeholder="Uraikan penjelasan lengkap, poin-poin fikih, atau tips praktis..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #fff;"></textarea>
+                            </div>
                         </div>
                     </div>
+                `;
 
-                    <div style="display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 0.6fr; gap: 14px; margin-bottom: 12px;">
-                        <div>
-                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Judul Topik Edukasi</label>
-                            <input type="text" name="modul_judul[]" value="" class="module-title-input" placeholder="Contoh: Mengapa Menabung Syariah Lebih Berkah" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; background: #fff;" required>
-                        </div>
-                        <div>
-                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Kategori Modul</label>
-                            <select name="modul_kategori[]" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 13px; background: #fff;">
-                                <option value="dasar">Prinsip Dasar Syariah</option>
-                                <option value="simpanan">Simpanan &amp; Tabungan</option>
-                                <option value="pembiayaan">Pembiayaan Syariah</option>
-                                <option value="keuangan">Manajemen Finansial</option>
-                                <option value="keamanan">Keamanan Finansial (Anti-Fraud)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Sasaran Pembaca</label>
-                            <input type="text" name="modul_sasaran[]" value="Masyarakat Umum" placeholder="Contoh: Pelaku UMKM" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px; background: #fff;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Urutan</label>
-                            <input type="number" name="modul_urutan[]" value="${newIndex}" min="1" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 4px; font-size: 13px; text-align: center; background: #fff;">
-                        </div>
-                    </div>
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cardHtml.trim();
+                const newEl = tempDiv.firstElementChild;
+                container.appendChild(newEl);
+                bindModuleCard(newEl);
+                newEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
 
-                    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px;">
-                        <div>
-                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">
-                                Ringkasan Singkat (Tampil pada Kartu Depan)
-                            </label>
-                            <textarea name="modul_ringkasan[]" rows="5" placeholder="Tuliskan 1-2 kalimat ringkasan inti topik ini..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #fff;"></textarea>
-                        </div>
-                        <div>
-                            <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">
-                                Uraian &amp; Poin Lengkap (Tampil di Popup Baca Edukasi)
-                            </label>
-                            <textarea name="modul_isi_lengkap[]" rows="5" placeholder="Uraikan penjelasan lengkap, poin-poin fikih, atau tips praktis..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; font-size: 12px; background: #fff;"></textarea>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = cardHtml.trim();
-            const newEl = tempDiv.firstElementChild;
-            container.appendChild(newEl);
-            bindModuleCard(newEl);
-            newEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (btnAddTop) btnAddTop.addEventListener('click', addNewModuleCard);
+            if (btnAddBottom) btnAddBottom.addEventListener('click', addNewModuleCard);
         }
-
-        if (btnAddTop) btnAddTop.addEventListener('click', addNewModuleCard);
-        if (btnAddBottom) btnAddBottom.addEventListener('click', addNewModuleCard);
     });
     </script>
     <?php

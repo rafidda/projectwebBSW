@@ -180,24 +180,43 @@ $featured_headline_id = 0;
          ======================================================================== -->
     <?php
     if ( $settings['show_headline'] && $paged <= 1 && ! $is_category ) :
+        // 1. Prioritaskan berita yang secara eksplisit ditandai sebagai Headline di WP-Admin
         $headline_query = new WP_Query( [
             'post_type'      => 'berita',
             'posts_per_page' => 1,
             'post_status'    => 'publish',
+            'meta_query'     => [
+                [
+                    'key'     => 'berita_is_headline',
+                    'value'   => '1',
+                    'compare' => '=',
+                ],
+            ],
             'orderby'        => 'date',
             'order'          => 'DESC',
         ] );
 
+        // 2. Fallback: jika belum ada berita yang ditandai headline, ambil 1 berita terbaru
+        if ( ! $headline_query->have_posts() ) {
+            $headline_query = new WP_Query( [
+                'post_type'      => 'berita',
+                'posts_per_page' => 1,
+                'post_status'    => 'publish',
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+            ] );
+        }
+
         if ( $headline_query->have_posts() ) :
             while ( $headline_query->have_posts() ) : $headline_query->the_post();
                 $featured_headline_id = get_the_ID();
-                $headline_ringkasan   = get_field( 'berita_ringkasan' ) ?: get_the_excerpt();
+                $headline_ringkasan   = get_post_meta( get_the_ID(), 'berita_ringkasan', true ) ?: ( function_exists( 'get_field' ) ? get_field( 'berita_ringkasan' ) : '' ) ?: get_the_excerpt();
                 $headline_categories  = get_the_terms( get_the_ID(), 'kategori_berita' );
                 $headline_cat_name    = ( $headline_categories && ! is_wp_error( $headline_categories ) ) ? $headline_categories[0]->name : 'Berita Utama';
                 $headline_read_time   = function_exists( 'wakalumi_calculate_reading_time' ) 
                     ? wakalumi_calculate_reading_time( get_the_content() ) 
                     : '4 mnt baca';
-                $headline_penulis     = get_field( 'berita_penulis' ) ?: 'Redaksi BPRS Wakalumi';
+                $headline_penulis     = get_post_meta( get_the_ID(), 'berita_penulis', true ) ?: ( function_exists( 'get_field' ) ? get_field( 'berita_penulis' ) : '' ) ?: 'Redaksi BPRS Wakalumi';
 
                 // External Source Metadata
                 $headline_is_ext     = get_post_meta( get_the_ID(), 'berita_is_external', true ) === '1' || ! empty( get_post_meta( get_the_ID(), 'berita_external_url', true ) );

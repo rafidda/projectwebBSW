@@ -113,55 +113,79 @@ function wakalumi_render_pengurus_page() {
         $is_saved = true;
     }
 
-    // Default pre-populated data for repeater
+    // Default pre-populated data for repeater (6 Tokoh Lengkap & Terverifikasi: DPS -> Dewan Komisaris -> Direksi)
     $default_pengurus = array(
         array(
-            'nama'          => 'H. Abdul Rokhim',
+            'nama'          => 'Haryanto, S.E., M.M.',
             'kategori'      => 'Dewan Pengawas Syariah',
             'jabatan'       => 'Ketua Dewan Pengawas Syariah',
-            'foto'          => defined('WAKALUMI_URI') ? WAKALUMI_URI . '/assets/img/pengurus/dps-ketua.png' : '/assets/img/pengurus/dps-ketua.png',
-            'riwayat_karir' => 'Berpengalaman lebih dari 20 tahun di bidang ekonomi syariah dan fatwa keuangan Islam. Aktif sebagai narasumber di berbagai forum perbankan syariah nasional dan pelatihan sertifikasi DPS yang diselenggarakan oleh DSN-MUI.',
-            'pendidikan'    => 'S1 Syariah, Universitas Islam Negeri (UIN)',
-            'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI)',
-            'kutipan'       => 'Menjaga kemurnian prinsip syariah adalah fondasi kepercayaan nasabah.',
+            'foto'          => 'http://wakalumibprscoid.local/wp-content/themes/assets/../assets/img/pengurus/dps-anggota.png',
+            'riwayat_karir' => "• Ketua Dewan Pengawas Syariah PT. BPRS Wakalumi (2024 – saat ini)\n• Dewan Pengawas Syariah PT. BPRS Al-Hijrah Amanah\n• Dewan Pengawas Syariah Asuransi Ramayana Syariah\n• Praktisi dan konsultan akuntansi, audit keuangan, dan kepatuhan perbankan syariah nasional.",
+            'pendidikan'    => "• Magister Manajemen (S2) Manajemen Keuangan, Universitas Krisnadwipayana (UNKRIS) Jakarta, Lulus Tahun 2004.\n• Sarjana Ekonomi (S1) Akuntansi, Universitas Islam As-Syafi'iyah (UNIAT) Jakarta, Lulus Tahun 1998.",
+            'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI / LSP-KS), Sertifikasi Akuntansi Keuangan Syariah.',
+            'kutipan'       => 'Mengawal kemurnian prinsip syariah pada setiap produk dan akad keuangan adalah amanah ukhrawi yang harus dijaga teguh.',
             'status'        => 'Aktif',
             'urutan'        => 1
         ),
         array(
-            'nama'          => 'Fathan Budiman',
+            'nama'          => 'Drs. H. Zarkasih Nur',
             'kategori'      => 'Dewan Pengawas Syariah',
             'jabatan'       => 'Anggota Dewan Pengawas Syariah',
-            'foto'          => defined('WAKALUMI_URI') ? WAKALUMI_URI . '/assets/img/pengurus/dps-anggota.png' : '/assets/img/pengurus/dps-anggota.png',
-            'riwayat_karir' => 'Memiliki keahlian mendalam dalam fikih muamalah dan hukum ekonomi syariah. Berkontribusi aktif dalam pengembangan produk-produk keuangan syariah yang inovatif dan sesuai fatwa DSN-MUI.',
-            'pendidikan'    => 'S1 Hukum Ekonomi Syariah',
-            'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI)',
-            'kutipan'       => 'Inovasi keuangan harus tetap berpijak pada kaidah syariah yang kokoh.',
+            'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/KPN_Zarkasih_Nur.png',
+            'riwayat_karir' => "• Anggota Dewan Pengawas Syariah PT. BPRS Wakalumi (sebelumnya menjabat Ketua DPS PT. BPRS Wakalumi)\n• Menteri Negara Koperasi dan UKM Republik Indonesia pada Kabinet Persatuan Nasional (1999 – 2001)\n• Pimpinan Fraksi & Ketua DPP Partai Persatuan Pembangunan (1998 – 2003)\n• Anggota DPR / MPR RI (1987 – 1999)\n• Anggota DPRD Kabupaten Tangerang (1971 – 1977)",
+            'pendidikan'    => 'Sarjana (Drs.) Ilmu Keagamaan Islam, IAIN Syarif Hidayatullah Jakarta (kini UIN Syarif Hidayatullah), Lulus Tahun 1973.',
+            'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI), Tokoh Nasional Penggerak Koperasi & Keuangan Syariah.',
+            'kutipan'       => 'Pemberdayaan ekonomi umat dan UMKM harus berlandaskan pada keadilan, keberkahan, dan prinsip syariah yang murni.',
             'status'        => 'Aktif',
             'urutan'        => 2
         ),
         array(
-            'nama'          => 'H. Rudi Dogar Harahap',
+            'nama'          => 'Budi Satoto, S.Si.',
             'kategori'      => 'Dewan Komisaris',
             'jabatan'       => 'Komisaris Utama',
-            'foto'          => defined('WAKALUMI_URI') ? WAKALUMI_URI . '/assets/img/pengurus/komisaris-utama.png' : '/assets/img/pengurus/komisaris-utama.png',
-            'riwayat_karir' => 'Profesional perbankan dengan pengalaman luas di industri keuangan dan perbankan. Memiliki rekam jejak kepemimpinan strategis dalam pengawasan tata kelola perusahaan perbankan syariah yang sehat dan berkelanjutan.',
-            'pendidikan'    => 'S1 Ekonomi & Manajemen',
-            'sertifikasi'   => 'Sertifikasi Komisaris BPR/BPRS (OJK), Manajemen Risiko Perbankan',
-            'kutipan'       => 'Tata kelola yang baik adalah kunci pertumbuhan berkelanjutan.',
+            'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/IMG_4830-scaled-e1792897033291.jpg',
+            'riwayat_karir' => "• Komisaris Utama PT. BPRS Wakalumi (BSW) (2008 – sekarang)\n• Direktur PT Eka Lestary Realty (2024 – 2008)\n• Ketua Dewan Pengawas Komudera (Koperasi Konsumen Muslim Depok Jaya) (2017 – sekarang)\n• Ketua Dewan Pengawas KSPPS Koperasi Asy Syirkah Muamalah Indonesia (2017 – sekarang)\n• Komisaris Utama PT. BPRS Al-Hijrah Amanah (2017 – sekarang)\n• Dosen Tamu IPB & Universitas YARSI (1995 – 2003, 2011 – 2018)\n• Komisaris PT FPS Indonesia (member of FPS group, Singapore) (2013 – 2018)\n• Komisaris BPRS Rif'atul Ummah (2006)\n• Corporate Business & Secretary PT Iska Niaga Darma (2004 – 2014)\n• Direktur Keuangan PT Asuransi Syariah Mubarakah (2002 – 2003)\n• Auditor BPPN Badan Penyehatan Perbankan Nasional, KAP Heliantono & Basyiruddin - BPPN (2000)\n• Dept. Head (Kredit program) Bank Nusa (1994 – 2000)\n• Account Officer Bank Duta (1989 – 1994)",
+            'pendidikan'    => 'Sarjana (S1) Program Studi Agrometeorologi, FMIPA - Institut Pertanian Bogor (IPB), Lulus Tahun 1998.',
+            'sertifikasi'   => 'Sertifikasi Kompetensi Komisaris BPR/BPRS (OJK / Certif), Manajemen Risiko Perbankan Syariah.',
+            'kutipan'       => 'Penerapan tata kelola yang baik (GCG) dan pengawasan yang prudent adalah kunci pertumbuhan berkelanjutan perbankan syariah.',
             'status'        => 'Aktif',
             'urutan'        => 3
         ),
         array(
-            'nama'          => 'Arief Rachmat Dian Boediono',
+            'nama'          => 'Rena Bangun Luhur, S.Pd.',
             'kategori'      => 'Dewan Komisaris',
             'jabatan'       => 'Komisaris',
-            'foto'          => defined('WAKALUMI_URI') ? WAKALUMI_URI . '/assets/img/pengurus/komisaris.png' : '/assets/img/pengurus/komisaris.png',
-            'riwayat_karir' => 'Berpengalaman di bidang keuangan korporasi dan pengawasan kepatuhan. Berperan aktif dalam memastikan implementasi prinsip kehati-hatian dan kepatuhan regulasi OJK di lingkungan BPRS Wakalumi.',
-            'pendidikan'    => 'S1 Manajemen Keuangan',
-            'sertifikasi'   => 'Sertifikasi Komisaris BPR/BPRS (OJK)',
-            'kutipan'       => 'Kepatuhan dan kehati-hatian adalah pilar kepercayaan.',
+            'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/WhatsApp-Image-2026-09-23-at-11.44.45-AM.jpeg',
+            'riwayat_karir' => "• Dewan Komisaris PT. BPRS Wakalumi (2024 – saat ini)\n• Manajer Operasional & IT KSPPS Tamzis Bina Utama (2022 – saat ini)\n• Manajer Kantor Pelayanan Operasional (KPO) KSPPS Tamzis Bina Utama (2018 – 2022)\n• Manajer Marketing Wilayah KSPPS Tamzis Bina Utama (2012 – 2018)\n• Manajer Marketing Area KSPPS Tamzis Bina Utama (2009 – 2012)\n• Manajer Marketing Cabang KSPPS Tamzis Bina Utama (2009)",
+            'pendidikan'    => 'Sarjana (S1) Fakultas Ilmu Sosial / Pendidikan Ekonomi Koperasi, Universitas Negeri Yogyakarta (UNY), Lulus Tahun 2004.',
+            'sertifikasi'   => 'Sertifikasi Kompetensi Komisaris BPR/BPRS (OJK), Manajemen Operasional & IT Lembaga Keuangan Syariah.',
+            'kutipan'       => 'Kepatuhan regulasi, tata kelola teknologi, dan mitigasi risiko operasional adalah fondasi utama kepercayaan nasabah.',
             'status'        => 'Aktif',
             'urutan'        => 4
+        ),
+        array(
+            'nama'          => 'Kiftiah Hindun, S.P., M.M.',
+            'kategori'      => 'Direksi',
+            'jabatan'       => 'Direktur Utama',
+            'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/WhatsApp-Image-2026-09-23-at-11.45.08-AM-e1792482502383.jpeg',
+            'riwayat_karir' => "• Direktur Utama PT. BPRS Wakalumi (2026 – saat ini)\n• Manajer IT & Pelaporan PT. BPRS Baiturridha Pusaka (2025 – 2026)\n• Direktur Operasional yang Membawahi Fungsi Kepatuhan PT. BPRS AlSalaam Amal Salman (2021 – 2025)\n• Direktur Operasional PT. BPRS AlSalaam Amal Salman (2017 – 2021)\n• Kepala Divisi Operasional & Funding PT. BPRS AlSalaam Amal Salman (2014 – 2017)\n• Kepala Cabang PT. BPRS AlSalaam Amal Salman (2012 – 2014)\n• Supervisor Layanan & Operasional PT. BPRS AlSalaam Amal Salman (2006 – 2012)",
+            'pendidikan'    => "• Magister Manajemen (S2), UPN Veteran Jawa Timur, Lulus Tahun 2026.\n• Sarjana Pertanian (S1), Universitas Brawijaya (UB) Malang, Lulus Tahun 2002.",
+            'sertifikasi'   => 'Sertifikasi Direktur BPR/BPRS Tingkat II (OJK / Certif), Sertifikasi Manajemen Risiko Perbankan Syariah, Sertifikasi Fungsi Kepatuhan Perbankan.',
+            'kutipan'       => 'Transformasi layanan digital dan operational excellence adalah komitmen kami dalam menghadirkan perbankan syariah yang modern dan maslahat.',
+            'status'        => 'Aktif',
+            'urutan'        => 5
+        ),
+        array(
+            'nama'          => 'Lukman Nugroho, S.E.',
+            'kategori'      => 'Direksi',
+            'jabatan'       => 'Direktur Bisnis',
+            'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/WhatsApp-Image-2026-09-22-at-2-removebackgrounds-ai-1.png',
+            'riwayat_karir' => "• Anggota Direksi / Direktur Bisnis PT. BPRS Wakalumi (Oktober 2026 – saat ini)\n• Manajer Marketing Area KSPPS Tamzis Bina Utama (2013 – 2026)\n• Manajer Marketing Cabang KSPPS Tamzis Bina Utama (2007 – 2013)\n• Marketing Officer KSPPS Tamzis Bina Utama (2005 – 2007)",
+            'pendidikan'    => 'Sarjana Ekonomi (S1) Program Studi Manajemen, STIE Widya Wiwaha Yogyakarta, Lulus Tahun 2016.',
+            'sertifikasi'   => 'Sertifikasi Direksi BPR/BPRS (OJK), Sertifikasi Manajemen Risiko Perbankan Syariah, Analisis Pembiayaan Produktif UMKM.',
+            'kutipan'       => 'Mendampingi pengusaha mikro dan UMKM untuk tumbuh bersama melalui pembiayaan syariah yang solutif, amanah, dan berkah.',
+            'status'        => 'Aktif',
+            'urutan'        => 6
         )
     );
 

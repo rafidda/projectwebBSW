@@ -15,55 +15,79 @@ $page_title    = get_option( 'options_pengurus_page_title', 'Jajaran Kepemimpina
 $page_subtitle = get_option( 'options_pengurus_page_subtitle', 'Dipimpin oleh para profesional berpengalaman yang berkomitmen pada prinsip perbankan syariah, tata kelola yang baik (GCG), dan pelayanan terbaik bagi nasabah.' );
 $page_intro    = get_option( 'options_pengurus_page_intro', 'Sesuai dengan prinsip Good Corporate Governance (GCG), BPRS Wakalumi menghadirkan transparansi penuh atas jajaran kepemimpinan yang menjaga amanah nasabah dan integritas operasional perbankan syariah.' );
 
-// ── DAFTAR PENGURUS DEFAULT (4 TOKOH DENGAN FOTO CROPPED) ─────────
+// ── DAFTAR PENGURUS DEFAULT (6 TOKOH LENGKAP & TERVERIFIKASI: DPS -> Dewan Komisaris -> Direksi) ─────────
 $default_pengurus = [
     [
-        'nama'          => 'H. Rudi Dogar Harahap',
-        'kategori'      => 'Dewan Komisaris',
-        'jabatan'       => 'Komisaris Utama',
-        'foto'          => get_template_directory_uri() . '/assets/img/pengurus/komisaris-utama.png',
-        'riwayat_karir' => 'Profesional perbankan senior dengan pengalaman lebih dari 25 tahun di industri perbankan nasional dan keuangan syariah. Memiliki rekam jejak kepemimpinan strategis dalam pengawasan tata kelola perusahaan perbankan syariah yang sehat, prudent, dan berkelanjutan.',
-        'pendidikan'    => 'S1 Ekonomi & Manajemen Perbankan',
-        'sertifikasi'   => 'Sertifikasi Komisaris BPR/BPRS (OJK), Manajemen Risiko Perbankan Tingkat II',
-        'kutipan'       => 'Tata kelola yang baik dan prinsip kehati-hatian adalah kunci pertumbuhan berkelanjutan bank syariah.',
+        'nama'          => 'Haryanto, S.E., M.M.',
+        'kategori'      => 'Dewan Pengawas Syariah',
+        'jabatan'       => 'Ketua Dewan Pengawas Syariah',
+        'foto'          => 'http://wakalumibprscoid.local/wp-content/themes/assets/../assets/img/pengurus/dps-anggota.png',
+        'riwayat_karir' => "• Ketua Dewan Pengawas Syariah PT. BPRS Wakalumi (2024 – saat ini)\n• Dewan Pengawas Syariah PT. BPRS Al-Hijrah Amanah\n• Dewan Pengawas Syariah Asuransi Ramayana Syariah\n• Praktisi dan konsultan akuntansi, audit keuangan, dan kepatuhan perbankan syariah nasional.",
+        'pendidikan'    => "• Magister Manajemen (S2) Manajemen Keuangan, Universitas Krisnadwipayana (UNKRIS) Jakarta, Lulus Tahun 2004.\n• Sarjana Ekonomi (S1) Akuntansi, Universitas Islam As-Syafi'iyah (UNIAT) Jakarta, Lulus Tahun 1998.",
+        'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI / LSP-KS), Sertifikasi Akuntansi Keuangan Syariah.',
+        'kutipan'       => 'Mengawal kemurnian prinsip syariah pada setiap produk dan akad keuangan adalah amanah ukhrawi yang harus dijaga teguh.',
         'status'        => 'Aktif',
         'urutan'        => 1,
     ],
     [
-        'nama'          => 'Arief Rachmat Dian Boediono',
-        'kategori'      => 'Dewan Komisaris',
-        'jabatan'       => 'Komisaris',
-        'foto'          => get_template_directory_uri() . '/assets/img/pengurus/komisaris.png',
-        'riwayat_karir' => 'Berpengalaman luas di bidang keuangan korporasi, audit internal, dan pengawasan kepatuhan regulasi perbankan. Berperan aktif memastikan seluruh kebijakan dan operasional BPRS Wakalumi senantiasa mematuhi standar OJK dan prinsip perlindungan nasabah.',
-        'pendidikan'    => 'S1 Manajemen Keuangan & Perbankan',
-        'sertifikasi'   => 'Sertifikasi Komisaris BPR/BPRS (OJK), Sertifikasi Kepatuhan Perbankan',
-        'kutipan'       => 'Kepatuhan regulasi dan integritas pengawasan adalah fondasi utama kepercayaan nasabah.',
+        'nama'          => 'Drs. H. Zarkasih Nur',
+        'kategori'      => 'Dewan Pengawas Syariah',
+        'jabatan'       => 'Anggota Dewan Pengawas Syariah',
+        'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/KPN_Zarkasih_Nur.png',
+        'riwayat_karir' => "• Anggota Dewan Pengawas Syariah PT. BPRS Wakalumi (sebelumnya menjabat Ketua DPS PT. BPRS Wakalumi)\n• Menteri Negara Koperasi dan UKM Republik Indonesia pada Kabinet Persatuan Nasional (1999 – 2001)\n• Pimpinan Fraksi & Ketua DPP Partai Persatuan Pembangunan (1998 – 2003)\n• Anggota DPR / MPR RI (1987 – 1999)\n• Anggota DPRD Kabupaten Tangerang (1971 – 1977)",
+        'pendidikan'    => 'Sarjana (Drs.) Ilmu Keagamaan Islam, IAIN Syarif Hidayatullah Jakarta (kini UIN Syarif Hidayatullah), Lulus Tahun 1973.',
+        'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI), Tokoh Nasional Penggerak Koperasi & Keuangan Syariah.',
+        'kutipan'       => 'Pemberdayaan ekonomi umat dan UMKM harus berlandaskan pada keadilan, keberkahan, dan prinsip syariah yang murni.',
         'status'        => 'Aktif',
         'urutan'        => 2,
     ],
     [
-        'nama'          => 'H. Abdul Rokhim',
-        'kategori'      => 'Dewan Pengawas Syariah',
-        'jabatan'       => 'Ketua Dewan Pengawas Syariah',
-        'foto'          => get_template_directory_uri() . '/assets/img/pengurus/dps-ketua.png',
-        'riwayat_karir' => 'Ulama dan pakar fikih muamalah dengan pengalaman lebih dari 20 tahun di bidang fatwa keuangan Islam. Aktif sebagai narasumber forum perbankan syariah nasional serta pengajar dalam program sertifikasi DPS yang diselenggarakan Dewan Syariah Nasional (DSN-MUI).',
-        'pendidikan'    => 'S1 Syariah, Universitas Islam Negeri (UIN)',
-        'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI), Ahli Perbankan Syariah',
-        'kutipan'       => 'Menjaga kemurnian prinsip syariah bukan sekadar kewajiban hukum, melainkan amanah ukhrawi.',
+        'nama'          => 'Budi Satoto, S.Si.',
+        'kategori'      => 'Dewan Komisaris',
+        'jabatan'       => 'Komisaris Utama',
+        'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/IMG_4830-scaled-e1792897033291.jpg',
+        'riwayat_karir' => "• Komisaris Utama PT. BPRS Wakalumi (BSW) (2008 – sekarang)\n• Direktur PT Eka Lestary Realty (2024 – 2008)\n• Ketua Dewan Pengawas Komudera (Koperasi Konsumen Muslim Depok Jaya) (2017 – sekarang)\n• Ketua Dewan Pengawas KSPPS Koperasi Asy Syirkah Muamalah Indonesia (2017 – sekarang)\n• Komisaris Utama PT. BPRS Al-Hijrah Amanah (2017 – sekarang)\n• Dosen Tamu IPB & Universitas YARSI (1995 – 2003, 2011 – 2018)\n• Komisaris PT FPS Indonesia (member of FPS group, Singapore) (2013 – 2018)\n• Komisaris BPRS Rif'atul Ummah (2006)\n• Corporate Business & Secretary PT Iska Niaga Darma (2004 – 2014)\n• Direktur Keuangan PT Asuransi Syariah Mubarakah (2002 – 2003)\n• Auditor BPPN Badan Penyehatan Perbankan Nasional, KAP Heliantono & Basyiruddin - BPPN (2000)\n• Dept. Head (Kredit program) Bank Nusa (1994 – 2000)\n• Account Officer Bank Duta (1989 – 1994)",
+        'pendidikan'    => 'Sarjana (S1) Program Studi Agrometeorologi, FMIPA - Institut Pertanian Bogor (IPB), Lulus Tahun 1998.',
+        'sertifikasi'   => 'Sertifikasi Kompetensi Komisaris BPR/BPRS (OJK / Certif), Manajemen Risiko Perbankan Syariah.',
+        'kutipan'       => 'Penerapan tata kelola yang baik (GCG) dan pengawasan yang prudent adalah kunci pertumbuhan berkelanjutan perbankan syariah.',
         'status'        => 'Aktif',
         'urutan'        => 3,
     ],
     [
-        'nama'          => 'Fathan Budiman',
-        'kategori'      => 'Dewan Pengawas Syariah',
-        'jabatan'       => 'Anggota Dewan Pengawas Syariah',
-        'foto'          => get_template_directory_uri() . '/assets/img/pengurus/dps-anggota.png',
-        'riwayat_karir' => 'Memiliki keahlian mendalam dalam fikih muamalah kontemporer dan harmonisasi hukum positif dengan fatwa DSN-MUI. Berkontribusi aktif memastikan setiap akad produk pembiayaan dan pendanaan BPRS Wakalumi bebas dari unsur riba, gharar, dan maisir.',
-        'pendidikan'    => 'S1 Hukum Ekonomi Syariah (Muamalah)',
-        'sertifikasi'   => 'Sertifikasi Dewan Pengawas Syariah (DSN-MUI)',
-        'kutipan'       => 'Inovasi produk keuangan harus senantiasa berpijak kokoh pada kaidah-kaidah syariah.',
+        'nama'          => 'Rena Bangun Luhur, S.Pd.',
+        'kategori'      => 'Dewan Komisaris',
+        'jabatan'       => 'Komisaris',
+        'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/WhatsApp-Image-2026-09-23-at-11.44.45-AM.jpeg',
+        'riwayat_karir' => "• Dewan Komisaris PT. BPRS Wakalumi (2024 – saat ini)\n• Manajer Operasional & IT KSPPS Tamzis Bina Utama (2022 – saat ini)\n• Manajer Kantor Pelayanan Operasional (KPO) KSPPS Tamzis Bina Utama (2018 – 2022)\n• Manajer Marketing Wilayah KSPPS Tamzis Bina Utama (2012 – 2018)\n• Manajer Marketing Area KSPPS Tamzis Bina Utama (2009 – 2012)\n• Manajer Marketing Cabang KSPPS Tamzis Bina Utama (2009)",
+        'pendidikan'    => 'Sarjana (S1) Fakultas Ilmu Sosial / Pendidikan Ekonomi Koperasi, Universitas Negeri Yogyakarta (UNY), Lulus Tahun 2004.',
+        'sertifikasi'   => 'Sertifikasi Kompetensi Komisaris BPR/BPRS (OJK), Manajemen Operasional & IT Lembaga Keuangan Syariah.',
+        'kutipan'       => 'Kepatuhan regulasi, tata kelola teknologi, dan mitigasi risiko operasional adalah fondasi utama kepercayaan nasabah.',
         'status'        => 'Aktif',
         'urutan'        => 4,
+    ],
+    [
+        'nama'          => 'Kiftiah Hindun, S.P., M.M.',
+        'kategori'      => 'Direksi',
+        'jabatan'       => 'Direktur Utama',
+        'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/WhatsApp-Image-2026-09-23-at-11.45.08-AM-e1792482502383.jpeg',
+        'riwayat_karir' => "• Direktur Utama PT. BPRS Wakalumi (2026 – saat ini)\n• Manajer IT & Pelaporan PT. BPRS Baiturridha Pusaka (2025 – 2026)\n• Direktur Operasional yang Membawahi Fungsi Kepatuhan PT. BPRS AlSalaam Amal Salman (2021 – 2025)\n• Direktur Operasional PT. BPRS AlSalaam Amal Salman (2017 – 2021)\n• Kepala Divisi Operasional & Funding PT. BPRS AlSalaam Amal Salman (2014 – 2017)\n• Kepala Cabang PT. BPRS AlSalaam Amal Salman (2012 – 2014)\n• Supervisor Layanan & Operasional PT. BPRS AlSalaam Amal Salman (2006 – 2012)",
+        'pendidikan'    => "• Magister Manajemen (S2), UPN Veteran Jawa Timur, Lulus Tahun 2026.\n• Sarjana Pertanian (S1), Universitas Brawijaya (UB) Malang, Lulus Tahun 2002.",
+        'sertifikasi'   => 'Sertifikasi Direktur BPR/BPRS Tingkat II (OJK / Certif), Sertifikasi Manajemen Risiko Perbankan Syariah, Sertifikasi Fungsi Kepatuhan Perbankan.',
+        'kutipan'       => 'Transformasi layanan digital dan operational excellence adalah komitmen kami dalam menghadirkan perbankan syariah yang modern dan maslahat.',
+        'status'        => 'Aktif',
+        'urutan'        => 5,
+    ],
+    [
+        'nama'          => 'Lukman Nugroho, S.E.',
+        'kategori'      => 'Direksi',
+        'jabatan'       => 'Direktur Bisnis',
+        'foto'          => 'http://wakalumibprscoid.local/wp-content/uploads/2026/10/WhatsApp-Image-2026-09-22-at-2-removebackgrounds-ai-1.png',
+        'riwayat_karir' => "• Anggota Direksi / Direktur Bisnis PT. BPRS Wakalumi (Oktober 2026 – saat ini)\n• Manajer Marketing Area KSPPS Tamzis Bina Utama (2013 – 2026)\n• Manajer Marketing Cabang KSPPS Tamzis Bina Utama (2007 – 2013)\n• Marketing Officer KSPPS Tamzis Bina Utama (2005 – 2007)",
+        'pendidikan'    => 'Sarjana Ekonomi (S1) Program Studi Manajemen, STIE Widya Wiwaha Yogyakarta, Lulus Tahun 2016.',
+        'sertifikasi'   => 'Sertifikasi Direksi BPR/BPRS (OJK), Sertifikasi Manajemen Risiko Perbankan Syariah, Analisis Pembiayaan Produktif UMKM.',
+        'kutipan'       => 'Mendampingi pengusaha mikro dan UMKM untuk tumbuh bersama melalui pembiayaan syariah yang solutif, amanah, dan berkah.',
+        'status'        => 'Aktif',
+        'urutan'        => 6,
     ],
 ];
 
@@ -92,27 +116,30 @@ foreach ( $pengurus_list as $p ) {
 $cat_config = [
     'Dewan Pengawas Syariah' => [
         'color'      => 'teal',
-        'badge_bg'   => 'bg-teal-500/10 dark:bg-teal-400/10 text-teal-700 dark:text-teal-300 border-teal-500/20',
+        'badge_bg'   => 'bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border-teal-300/80 dark:border-teal-700/60',
         'glow'       => 'shadow-teal-500/20',
         'ring'       => 'ring-teal-400',
         'accent_bar' => 'from-teal-400 via-primary-500 to-teal-600',
         'abbr'       => 'DPS',
+        'dot'        => 'bg-teal-400',
     ],
     'Dewan Komisaris' => [
-        'color'      => 'teal',
-        'badge_bg'   => 'bg-teal-500/10 dark:bg-teal-400/10 text-teal-700 dark:text-teal-300 border-teal-500/20',
-        'glow'       => 'shadow-teal-500/20',
-        'ring'       => 'ring-teal-400',
-        'accent_bar' => 'from-teal-400 via-primary-500 to-teal-600',
+        'color'      => 'emerald',
+        'badge_bg'   => 'bg-emerald-100/90 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-300/80 dark:border-emerald-700/60',
+        'glow'       => 'shadow-emerald-500/20',
+        'ring'       => 'ring-emerald-400',
+        'accent_bar' => 'from-emerald-400 via-primary-500 to-teal-600',
         'abbr'       => 'KOM',
+        'dot'        => 'bg-emerald-400',
     ],
     'Direksi' => [
-        'color'      => 'teal',
-        'badge_bg'   => 'bg-teal-500/10 dark:bg-teal-400/10 text-teal-700 dark:text-teal-300 border-teal-500/20',
-        'glow'       => 'shadow-teal-500/20',
-        'ring'       => 'ring-teal-400',
-        'accent_bar' => 'from-teal-400 via-primary-500 to-teal-600',
+        'color'      => 'cyan',
+        'badge_bg'   => 'bg-cyan-100/90 dark:bg-cyan-950/80 text-cyan-800 dark:text-cyan-300 border-cyan-300/80 dark:border-cyan-700/60',
+        'glow'       => 'shadow-cyan-500/20',
+        'ring'       => 'ring-cyan-400',
+        'accent_bar' => 'from-cyan-400 via-primary-500 to-teal-600',
         'abbr'       => 'DIR',
+        'dot'        => 'bg-cyan-400',
     ],
 ];
 
@@ -316,8 +343,8 @@ $total_members = count( $pengurus_list );
      Visible on lg+ screens (>= 1024px)
      ======================================================================== -->
 <?php if ( $total_members > 0 ) : 
-    // Calculate total scroll height based on number of members (160vh base for Overview + 110vh per member for smooth morph spotlight pacing)
-    $scroll_height_vh = 160 + ( ( $total_members - 1 ) * 110 );
+    // Calculate total scroll height based on number of members (60vh base for Overview + 45vh per member for smooth responsive card switching)
+    $scroll_height_vh = 60 + ( $total_members * 45 );
 ?>
 <section id="executive-spotlight-section" 
          class="hidden lg:block relative" 
@@ -328,7 +355,7 @@ $total_members = count( $pengurus_list );
     <div id="executive-sticky-stage" 
          class="is-overview sticky top-20 h-[calc(100vh-5rem)] flex flex-col justify-center overflow-hidden py-4 z-10">
 
-        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between h-[650px] relative z-10">
+        <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between min-h-[660px] h-[680px] relative z-10">
 
             <!-- ══════════════════════════════════════════════════════════════════════════
                  TOP STAGE HEADER: OVERVIEW TITLE vs SPOTLIGHT CONTROLS
@@ -367,11 +394,11 @@ $total_members = count( $pengurus_list );
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kategori:</span>
                         <div id="exec-category-pills" class="flex items-center gap-2">
                             <button type="button" class="exec-filter-btn active px-3 py-1 rounded-full text-xs font-semibold transition-all bg-primary-600 text-white shadow-sm" data-filter="all">Semua (<?php echo $total_members; ?>)</button>
-                            <?php if ( $count_kom > 0 ) : ?>
-                                <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Komisaris">Komisaris (<?php echo $count_kom; ?>)</button>
-                            <?php endif; ?>
                             <?php if ( $count_dps > 0 ) : ?>
                                 <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Pengawas Syariah">DPS (<?php echo $count_dps; ?>)</button>
+                            <?php endif; ?>
+                            <?php if ( $count_kom > 0 ) : ?>
+                                <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Dewan Komisaris">Komisaris (<?php echo $count_kom; ?>)</button>
                             <?php endif; ?>
                             <?php if ( $count_dir > 0 ) : ?>
                                 <button type="button" class="exec-filter-btn px-3 py-1 rounded-full text-xs font-semibold transition-all bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" data-filter="Direksi">Direksi (<?php echo $count_dir; ?>)</button>
@@ -422,10 +449,10 @@ $total_members = count( $pengurus_list );
                     <!-- Top Gradient Accent Bar for this card -->
                     <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r <?php echo $cfg['accent_bar']; ?> z-20"></div>
 
-                    <!-- SUB-VIEW 1: OVERVIEW CARD (Rest / All-members lineup) -->
+                    <!-- SUB-VIEW 1: OVERVIEW CARD (Rest / All-members lineup - Padat, Rapi & Elegan) -->
                     <div class="morph-view-overview flex flex-col justify-between h-full">
-                        <!-- Portrait Photo (Flush Edge-to-Edge) -->
-                        <div class="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 shrink-0">
+                        <!-- Portrait Photo (Proporsional & Mengisi Kartu) -->
+                        <div class="relative w-full h-[270px] xl:h-[290px] overflow-hidden bg-slate-100 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 shrink-0">
                             <?php if ( ! empty( $item['foto'] ) ) : ?>
                                 <img src="<?php echo esc_url( $item['foto'] ); ?>" 
                                      alt="<?php echo esc_attr( $item['nama'] ); ?>" 
@@ -440,31 +467,76 @@ $total_members = count( $pengurus_list );
                             <?php endif; ?>
 
                             <!-- Subtle glass shine gradient -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent pointer-events-none"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
 
-                            <!-- Category Pill Overlay -->
+                            <!-- Category Pill Overlay (Top Left on Photo - Solid High Contrast) -->
                             <div class="absolute top-3 left-3 z-10">
-                                <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full backdrop-blur-md shadow-sm <?php echo $cfg['badge_bg']; ?>">
-                                    <?php echo esc_html( $cfg['abbr'] ); ?>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md shadow-md bg-slate-900/90 text-white border border-white/20">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo $cfg['dot']; ?>"></span>
+                                    <span><?php echo esc_html( $cfg['abbr'] ); ?></span>
+                                </span>
+                            </div>
+
+                            <!-- Status Pill (Bottom Left on Photo) -->
+                            <div class="absolute bottom-2.5 left-3 z-10">
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md bg-slate-900/70 text-white border border-white/20 shadow-xs">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-400' : 'bg-emerald-400'; ?> animate-pulse"></span>
+                                    <span><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
                                 </span>
                             </div>
                         </div>
 
-                        <!-- Text Info & Action (with clean padding) -->
-                        <div class="flex-1 flex flex-col justify-between p-3.5 sm:p-4 text-center">
-                            <div class="space-y-1">
-                                <div class="text-[11px] font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wide truncate">
+                        <!-- Text Info, Cuplikan Rekam Jejak Terkini & Prompt Interaktif -->
+                        <div class="flex-1 flex flex-col justify-between p-3.5 xl:p-4 text-center">
+                            <!-- Identitas Singkat -->
+                            <div>
+                                <div class="text-[11px] xl:text-xs font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wide truncate">
                                     <?php echo esc_html( $item['jabatan'] ); ?>
                                 </div>
-                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white line-clamp-2 leading-snug">
+                                <h3 class="text-xs sm:text-sm xl:text-base font-extrabold text-slate-900 dark:text-white line-clamp-2 leading-snug mt-1">
                                     <?php echo esc_html( $item['nama'] ); ?>
                                 </h3>
                             </div>
 
-                            <!-- Hover Prompt -->
-                            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500 group-hover:text-primary-600 dark:group-hover:text-teal-400 transition-colors">
-                                <span>Lihat Rekam Jejak</span>
-                                <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            <!-- Cuplikan Rekam Jejak Terkini (Penyeimbang Ruang Vertikal) -->
+                            <?php 
+                            $raw_karir = preg_split( '/\r\n|\r|\n|│/', trim( $item['riwayat_karir'] ?? '' ) );
+                            $karir_terkini = [];
+                            foreach ( $raw_karir as $rk ) {
+                                $rk = trim( $rk );
+                                if ( ! empty( $rk ) ) {
+                                    $karir_terkini[] = ltrim( $rk, "•- \t\n\r\0\x0B" );
+                                }
+                            }
+                            $top_karir = array_slice( $karir_terkini, 0, 2 );
+                            ?>
+                            <div class="my-auto py-1.5">
+                                <div class="p-2.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 text-left">
+                                    <div class="flex items-center gap-1.5 text-[9px] uppercase font-bold text-slate-400 dark:text-teal-400/90 mb-1.5 tracking-wider">
+                                        <svg class="w-3 h-3 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                                        <span>Rekam Jejak Terkini</span>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <?php if ( ! empty( $top_karir ) ) : ?>
+                                            <?php foreach ( $top_karir as $tk ) : ?>
+                                                <div class="flex items-start gap-1.5 text-[10.5px] xl:text-[11px] font-semibold text-slate-700 dark:text-slate-200 leading-tight">
+                                                    <span class="w-1 h-1 rounded-full bg-teal-500 mt-1.5 shrink-0"></span>
+                                                    <span class="line-clamp-1" title="<?php echo esc_attr( $tk ); ?>"><?php echo esc_html( $tk ); ?></span>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <p class="text-[11px] text-slate-500 dark:text-slate-400 italic">Profil kepemimpinan syariah</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Prompt (Buka Profil) -->
+                            <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                                <div class="w-full py-1.5 px-2.5 rounded-xl bg-primary-50/80 dark:bg-primary-950/40 group-hover:bg-primary-600 text-primary-700 dark:text-teal-300 group-hover:text-white transition-all duration-300 text-xs font-bold flex items-center justify-center gap-1 shadow-2xs">
+                                    <span>Lihat Profil</span>
+                                    <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -487,17 +559,17 @@ $total_members = count( $pengurus_list );
                         <!-- Details -->
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full <?php echo $cfg['badge_bg']; ?>">
+                                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full <?php echo $cfg['badge_bg']; ?>">
                                     <?php echo esc_html( $cfg['abbr'] ); ?>
                                 </span>
-                                <span class="text-[11px] font-semibold text-primary-600 dark:text-teal-300 truncate">
+                                <span class="text-xs font-bold text-primary-600 dark:text-teal-300 truncate">
                                     <?php echo esc_html( $item['jabatan'] ); ?>
                                 </span>
                             </div>
-                            <h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">
+                            <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
                                 <?php echo esc_html( $item['nama'] ); ?>
                             </h4>
-                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5">
                                 <span class="w-1.5 h-1.5 rounded-full <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-500' : 'bg-emerald-500'; ?>"></span>
                                 <span><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
                             </p>
@@ -509,14 +581,16 @@ $total_members = count( $pengurus_list );
                         </div>
                     </div>
 
-                    <!-- SUB-VIEW 3: SPOTLIGHT CARD (Expanded full dossier on the left) -->
-                    <div class="morph-view-spotlight flex flex-col justify-between">
-                        <div class="grid grid-cols-12 gap-6 items-start">
+                    <!-- SUB-VIEW 3: SPOTLIGHT CARD (Expanded full dossier on the left - 2 Kolom Asli, Foto Proporsional & Bebas Tabrakan) -->
+                    <div class="morph-view-spotlight flex flex-col justify-between h-full box-border">
+                        <!-- TOP & MIDDLE BODY (Grid 12 Kolom: Kiri Foto & Status, Kanan Dossier Lengkap) -->
+                        <div class="grid grid-cols-12 gap-6 xl:gap-8 items-start flex-1 min-h-0 overflow-hidden">
                             
-                            <!-- Left: Big Portrait Showcase (col-span-4) -->
-                            <div class="col-span-4 flex flex-col items-center text-center">
-                                <div class="relative w-40 h-40 xl:w-44 xl:h-44 rounded-3xl p-1 bg-gradient-to-br from-teal-400/40 via-primary-500/20 to-transparent shadow-xl">
-                                    <div class="w-full h-full rounded-[22px] overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-white/80 dark:border-slate-700">
+                            <!-- KOLOM KIRI (col-span-4): Foto Showcase Lebih Besar, Status, Kategori & Kutipan Integritas -->
+                            <div class="col-span-4 flex flex-col items-center text-center h-full justify-start shrink-0">
+                                <!-- Foto Portrait Showcase Eksekutif (Lebih Besar & Berwibawa) -->
+                                <div class="relative w-44 h-52 xl:w-48 xl:h-56 shrink-0 rounded-2xl p-1 bg-gradient-to-br from-teal-400/40 via-primary-500/20 to-transparent shadow-xl">
+                                    <div class="w-full h-full rounded-[14px] overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-white/80 dark:border-slate-700">
                                         <?php if ( ! empty( $item['foto'] ) ) : ?>
                                             <img src="<?php echo esc_url( $item['foto'] ); ?>" 
                                                  alt="<?php echo esc_attr( $item['nama'] ); ?>" 
@@ -528,89 +602,134 @@ $total_members = count( $pengurus_list );
                                             </div>
                                         <?php endif; ?>
                                     </div>
-                                    <!-- Status Dot Badge -->
-                                    <div class="absolute -bottom-2 -right-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-500' : 'bg-emerald-500'; ?> text-white shadow-md flex items-center gap-1.5 border-2 border-white dark:border-slate-900">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                                        <span><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
+                                    <!-- Status Badge Pill -->
+                                    <div class="absolute -bottom-2.5 inset-x-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-500' : 'bg-emerald-500'; ?> text-white shadow-md flex items-center justify-center gap-1.5 border-2 border-white dark:border-slate-900 truncate">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0"></span>
+                                        <span class="truncate"><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
                                     </div>
                                 </div>
 
                                 <!-- Category Badge -->
-                                <div class="mt-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider <?php echo $cfg['badge_bg']; ?> border border-primary-500/20">
+                                <div class="mt-4 shrink-0">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider <?php echo $cfg['badge_bg']; ?> border border-primary-500/20 shadow-xs">
                                         <?php echo esc_html( $item['kategori'] ); ?>
                                     </span>
                                 </div>
+
+                                <!-- Kutipan Integritas di Bawah Foto (Lengkap, Elegan & Adaptif) -->
+                                <?php if ( ! empty( $item['kutipan'] ) ) : ?>
+                                <div class="mt-3 px-0.5 w-full shrink-0">
+                                    <div class="p-2.5 xl:p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 shadow-2xs text-left">
+                                        <div class="flex items-start gap-1.5">
+                                            <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                                            </svg>
+                                            <div class="flex-1 max-h-[125px] xl:max-h-[140px] overflow-y-auto no-scrollbar">
+                                                <p class="text-[11px] xl:text-[11.5px] italic text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                                                    "<?php echo esc_html( $item['kutipan'] ); ?>"
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
                             </div>
 
-                            <!-- Right: Name, Titles, and Rich Dossier (col-span-8) -->
-                            <div class="col-span-8 flex flex-col">
-                                <!-- Role & Full Name -->
-                                <div class="mb-3">
-                                    <div class="text-xs font-bold text-primary-600 dark:text-teal-400 tracking-wide uppercase mb-1">
+                            <!-- KOLOM KANAN (col-span-8): Jabatan, Nama, Riwayat Rekam Jejak, Pendidikan & Sertifikasi -->
+                            <div class="col-span-8 flex flex-col h-full min-h-0 justify-between">
+                                <!-- Header Identitas (Shrink-0) -->
+                                <div class="shrink-0 pb-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                    <div class="text-xs sm:text-sm font-extrabold text-primary-600 dark:text-teal-400 tracking-wider uppercase">
                                         <?php echo esc_html( $item['jabatan'] ); ?>
                                     </div>
-                                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+                                    <h2 class="text-2xl xl:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-snug mt-0.5 truncate">
                                         <?php echo esc_html( $item['nama'] ); ?>
                                     </h2>
                                 </div>
 
-                                <!-- Dossier Scrollable Area -->
-                                <div class="space-y-3 pr-2 overflow-y-auto max-h-[250px] custom-scroll">
-                                    <!-- Career Narrative -->
+                                <!-- Dossier Scrollable Body (Guaranteed Safe from Collision) -->
+                                <div class="flex-1 min-h-0 overflow-y-auto no-scrollbar space-y-3 pt-2.5 pr-1">
+                                    <!-- Bagian Riwayat & Rekam Jejak -->
                                     <div>
-                                        <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-teal-400 mb-1">
-                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                                            Riwayat & Rekam Jejak
+                                        <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-teal-400 mb-1.5">
+                                            <svg class="w-4 h-4 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                                            <span>Riwayat & Rekam Jejak</span>
                                         </div>
-                                        <p class="text-xs text-slate-700 dark:text-slate-100 leading-relaxed font-normal">
-                                            <?php echo esc_html( $item['riwayat_karir'] ?? '' ); ?>
-                                        </p>
+
+                                        <?php 
+                                        $raw_lines = preg_split( '/\r\n|\r|\n|│/', trim( $item['riwayat_karir'] ?? '' ) );
+                                        $clean_lines = [];
+                                        foreach ( $raw_lines as $l ) {
+                                            $l = trim( $l );
+                                            if ( ! empty( $l ) ) {
+                                                $clean_lines[] = ltrim( $l, "•- \t\n\r\0\x0B" );
+                                            }
+                                        }
+                                        $total_lines = count( $clean_lines );
+                                        $is_dense = ( $total_lines > 6 );
+                                        ?>
+
+                                        <?php if ( $is_dense ) : ?>
+                                            <!-- 2 Kolom Kompak: 13 Poin Terpampang Rapi & Jelas Tanpa Tabrakan -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs xl:text-[12.5px] text-slate-700 dark:text-slate-200 font-medium leading-snug">
+                                                <?php foreach ( $clean_lines as $line ) : ?>
+                                                    <div class="flex items-start gap-1.5">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 shrink-0"></span>
+                                                        <span class="flex-1"><?php echo esc_html( $line ); ?></span>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php else : ?>
+                                            <!-- 1 Kolom Rapi untuk 3-6 Poin -->
+                                            <div class="space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium">
+                                                <?php foreach ( $clean_lines as $line ) : ?>
+                                                    <div class="flex items-start gap-2 leading-relaxed">
+                                                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500 mt-2 shrink-0"></span>
+                                                        <span class="flex-1"><?php echo esc_html( $line ); ?></span>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
 
-                                    <!-- Education & Certification (2 cols) -->
-                                    <div class="grid grid-cols-2 gap-2.5 pt-1">
-                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/90 p-2.5 border border-slate-100 dark:border-slate-700">
-                                            <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300 mb-0.5">
-                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
-                                                Pendidikan
+                                    <!-- Bagian Pendidikan & Sertifikasi (2 Kolom Berdampingan) -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 shrink-0">
+                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2.5 border border-slate-100 dark:border-slate-700/60 shadow-xs">
+                                            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
+                                                <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+                                                <span>Pendidikan</span>
                                             </div>
-                                            <p class="text-[11px] font-semibold text-slate-800 dark:text-white">
-                                                <?php echo esc_html( $item['pendidikan'] ?? '—' ); ?>
+                                            <p class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2 mt-0.5 leading-snug">
+                                                <?php echo nl2br( esc_html( $item['pendidikan'] ?? '—' ) ); ?>
                                             </p>
                                         </div>
 
-                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/90 p-2.5 border border-slate-100 dark:border-slate-700">
-                                            <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300 mb-0.5">
-                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
-                                                Sertifikasi
+                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2.5 border border-slate-100 dark:border-slate-700/60 shadow-xs">
+                                            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
+                                                <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                                                <span>Sertifikasi & Lisensi</span>
                                             </div>
-                                            <p class="text-[11px] font-semibold text-slate-800 dark:text-white">
+                                            <p class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2 mt-0.5 leading-snug">
                                                 <?php echo esc_html( $item['sertifikasi'] ?? '—' ); ?>
                                             </p>
                                         </div>
                                     </div>
-
-                                    <!-- Integrity Quote -->
-                                    <?php if ( ! empty( $item['kutipan'] ) ) : ?>
-                                    <div class="pt-1.5 border-t border-slate-100 dark:border-slate-800">
-                                        <blockquote class="relative pl-3 border-l-2 border-primary-400 dark:border-teal-500">
-                                            <p class="text-[11px] italic text-slate-600 dark:text-slate-200 leading-relaxed">
-                                                "<?php echo esc_html( $item['kutipan'] ); ?>"
-                                            </p>
-                                        </blockquote>
-                                    </div>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Bottom Progress Indicator -->
-                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1 overflow-hidden mr-4">
-                                <div class="bg-gradient-to-r from-teal-400 to-primary-600 h-full rounded-full" style="width: <?php echo ( ( $index + 1 ) / $total_members ) * 100; ?>%;"></div>
+                        <!-- BOTTOM NAVIGATION BAR (Permanen di Bawah & Bebas Tabrakan) -->
+                        <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400 shrink-0">
+                            <div class="flex items-center gap-3">
+                                <span class="font-extrabold text-primary-600 dark:text-teal-400 text-xs sm:text-sm">Tokoh <?php echo sprintf('%02d', $index + 1); ?> dari <?php echo sprintf('%02d', $total_members); ?></span>
+                                <div class="w-32 sm:w-40 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-gradient-to-r from-teal-400 to-primary-600 h-full rounded-full transition-all duration-300" style="width: <?php echo ( ( $index + 1 ) / $total_members ) * 100; ?>%;"></div>
+                                </div>
                             </div>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-400 whitespace-nowrap">Scroll untuk berpindah tokoh</span>
+                            <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                                <span>Gulir atau klik untuk berpindah tokoh</span>
+                                <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                            </div>
                         </div>
                     </div>
 
@@ -641,92 +760,263 @@ $total_members = count( $pengurus_list );
 
 
 <!-- ========================================================================
-     MOBILE & TABLET VIEW: EXECUTIVE SPOTLIGHT & SWIPE CAROUSEL (< 1024px)
-     Smooth touch-driven showcase with bottom sheet/expanded card
+     MOBILE & TABLET VIEW: EXECUTIVE DIRECTORY & BOTTOM SHEET DRAWER (< 1024px)
+     Skema 1: Direktori Seluruh Pengurus + Laci Detail Lengkap Interaktif
      ======================================================================== -->
-<section id="exec-mobile-showcase" class="block lg:hidden py-8 px-4 bg-white dark:bg-dark border-b border-slate-100 dark:border-slate-800">
+<section id="exec-mobile-showcase" class="block lg:hidden py-10 px-4 sm:px-6 bg-slate-50/60 dark:bg-dark border-b border-slate-100 dark:border-slate-800">
     <div class="max-w-xl mx-auto">
         
-        <!-- Mobile Header & Stepper -->
-        <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-teal-400">Jajaran Pengurus</span>
-            <div class="flex items-center gap-2">
-                <span id="mob-exec-counter" class="text-xs font-bold text-slate-700 dark:text-slate-200">1 dari <?php echo $total_members; ?></span>
+        <!-- Mobile Section Header & Category Filter Pills -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary-500/10 dark:bg-primary-400/10 text-primary-700 dark:text-teal-300 border border-primary-500/20">
+                    <span class="w-2 h-2 rounded-full bg-primary-500 dark:bg-teal-400 animate-pulse"></span>
+                    Jajaran Kepemimpinan
+                </span>
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    Total <?php echo $total_members; ?> Tokoh
+                </span>
+            </div>
+            
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                Susunan Pengurus BPRS Wakalumi
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                Ketuk kartu tokoh untuk membaca rekam jejak, riwayat pendidikan, sertifikasi, dan komitmen integritas.
+            </p>
+
+            <!-- Filter Pills (Semua, DPS, Komisaris, Direksi) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 mt-4 scrollbar-none" id="mob-filter-pills">
+                <button type="button" 
+                        class="mob-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-primary-600 text-white shadow-sm shrink-0" 
+                        data-filter="all">
+                    Semua (<?php echo $total_members; ?>)
+                </button>
+                <?php if ( $count_dps > 0 ) : ?>
+                <button type="button" 
+                        class="mob-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" 
+                        data-filter="Dewan Pengawas Syariah">
+                    DPS (<?php echo $count_dps; ?>)
+                </button>
+                <?php endif; ?>
+                <?php if ( $count_kom > 0 ) : ?>
+                <button type="button" 
+                        class="mob-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" 
+                        data-filter="Dewan Komisaris">
+                    Komisaris (<?php echo $count_kom; ?>)
+                </button>
+                <?php endif; ?>
+                <?php if ( $count_dir > 0 ) : ?>
+                <button type="button" 
+                        class="mob-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" 
+                        data-filter="Direksi">
+                    Direksi (<?php echo $count_dir; ?>)
+                </button>
+                <?php endif; ?>
             </div>
         </div>
 
-        <!-- Mobile Horizontal Selector Pills -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-4 scrollbar-none">
-            <?php foreach ( $pengurus_list as $mi => $item ) : ?>
-            <button type="button" 
-                    class="mob-exec-pill shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all <?php echo $mi === 0 ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200'; ?>"
-                    data-mob-index="<?php echo $mi; ?>">
-                <?php echo esc_html( $item['nama'] ); ?>
-            </button>
+        <!-- Mobile Executive Cards Directory List -->
+        <div class="space-y-4" id="mob-exec-list">
+            <?php foreach ( $pengurus_list as $mi => $item ) : 
+                $kat = $item['kategori'] ?? 'Dewan Komisaris';
+                $cfg = $cat_config[ $kat ] ?? $cat_config['Dewan Komisaris'];
+                
+                // Ambil 1-2 rekam jejak terkini
+                $raw_lines = preg_split( '/\r\n|\r|\n|│/', trim( $item['riwayat_karir'] ?? '' ) );
+                $clean_karir = [];
+                foreach ( $raw_lines as $rk ) {
+                    $rk = trim( $rk );
+                    if ( ! empty( $rk ) ) $clean_karir[] = ltrim( $rk, "•- \t\n\r\0\x0B" );
+                }
+                $top_karir = array_slice( $clean_karir, 0, 2 );
+            ?>
+            <div class="mob-exec-item rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md transition-all active:scale-[0.99] cursor-pointer overflow-hidden group"
+                 data-mob-card-index="<?php echo $mi; ?>"
+                 data-mob-kategori="<?php echo esc_attr( $kat ); ?>">
+                
+                <!-- Top Accent Bar -->
+                <div class="h-1.5 bg-gradient-to-r <?php echo $cfg['accent_bar']; ?>"></div>
+
+                <div class="p-4 sm:p-5">
+                    <!-- Top Row: Photo + Identity -->
+                    <div class="flex items-center gap-3.5 sm:gap-4">
+                        <!-- Portrait Photo Thumbnail (Clean & Unobstructed, Wajah Tokoh Terlihat Jelas) -->
+                        <div class="w-20 h-24 sm:w-24 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-100 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shadow-sm">
+                            <?php if ( ! empty( $item['foto'] ) ) : ?>
+                                <img src="<?php echo esc_url( $item['foto'] ); ?>" 
+                                     alt="<?php echo esc_attr( $item['nama'] ); ?>" 
+                                     class="w-full h-full object-cover">
+                            <?php else : ?>
+                                <div class="w-full h-full flex items-center justify-center bg-teal-50 dark:bg-slate-800 p-2">
+                                    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled3.png' ); ?>" alt="" class="w-full h-full object-contain">
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Identity Info -->
+                        <div class="flex-1 min-w-0">
+                            <!-- Category Badge + Jabatan Row -->
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider <?php echo $cfg['badge_bg']; ?>">
+                                    <span class="w-1 h-1 rounded-full <?php echo $cfg['dot']; ?>"></span>
+                                    <span><?php echo esc_html( $cfg['abbr'] ); ?></span>
+                                </span>
+                                <span class="text-[11px] sm:text-xs font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wide truncate">
+                                    <?php echo esc_html( $item['jabatan'] ); ?>
+                                </span>
+                            </div>
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug line-clamp-2">
+                                <?php echo esc_html( $item['nama'] ); ?>
+                            </h3>
+                            <div class="mt-1 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                <span class="w-1.5 h-1.5 rounded-full <?php echo ( ( $item['status'] ?? '' ) === 'Proses Perizinan OJK' ) ? 'bg-amber-400' : 'bg-emerald-400'; ?> animate-pulse"></span>
+                                <span><?php echo esc_html( $item['status'] ?? 'Aktif' ); ?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rekam Jejak Terkini Box -->
+                    <?php if ( ! empty( $top_karir ) ) : ?>
+                    <div class="mt-3.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+                        <div class="flex items-center gap-1 text-[9px] uppercase font-bold text-slate-400 dark:text-teal-400/90 mb-1 tracking-wider">
+                            <svg class="w-3 h-3 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                            <span>Rekam Jejak Terkini</span>
+                        </div>
+                        <div class="space-y-1">
+                            <?php foreach ( $top_karir as $tk ) : ?>
+                            <div class="flex items-start gap-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 leading-tight">
+                                <span class="w-1 h-1 rounded-full bg-teal-500 mt-1.5 shrink-0"></span>
+                                <span class="line-clamp-1"><?php echo esc_html( $tk ); ?></span>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Action Button Prompt -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-primary-600 dark:text-teal-400 group-hover:text-primary-700 dark:group-hover:text-teal-300">
+                        <span>Lihat Profil & Riwayat Lengkap</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                    </div>
+                </div>
+            </div>
             <?php endforeach; ?>
         </div>
 
-        <!-- Mobile Active Spotlight Card -->
-        <div id="mob-exec-card" class="rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-700/80 p-6 shadow-lg relative overflow-hidden">
-            <div id="mob-exec-bar" class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 to-primary-600"></div>
+    </div>
 
-            <div class="flex items-center gap-4 mb-4">
-                <div class="w-16 h-16 rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0 border-2 border-primary-500/30 dark:border-teal-500/40">
-                    <img id="mob-exec-img" src="<?php echo esc_url( $pengurus_list[0]['foto'] ?? '' ); ?>" alt="" class="w-full h-full object-cover">
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         EXECUTIVE BOTTOM SHEET DRAWER (MODAL LACI DETAIL LENGKAP)
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <!-- Drawer Backdrop Overlay -->
+    <div id="mob-drawer-backdrop" 
+         class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[9998] transition-opacity duration-300 opacity-0 pointer-events-none"
+         aria-hidden="true"></div>
+
+    <!-- Drawer Container -->
+    <div id="mob-drawer" 
+         class="fixed inset-x-0 bottom-0 max-h-[92vh] bg-white dark:bg-slate-900 rounded-t-[28px] border-t border-slate-200/80 dark:border-slate-700/80 z-[9999] flex flex-col shadow-2xl transition-transform duration-300 ease-out translate-y-full pointer-events-none"
+         role="dialog" aria-modal="true" aria-labelledby="mob-drawer-name">
+
+        <!-- Top Drag Handle & Close Bar -->
+        <div class="pt-3 pb-2 px-5 shrink-0 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+            <div class="w-8"></div><!-- Spacer for centering handle -->
+            <div class="w-12 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700 cursor-pointer" id="mob-drawer-handle" title="Tutup laci"></div>
+            <button type="button" id="mob-drawer-close" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors text-sm font-bold shadow-2xs" aria-label="Tutup">
+                ✕
+            </button>
+        </div>
+
+        <!-- Drawer Member Header (Shrink-0) -->
+        <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-4 shrink-0 bg-slate-50/70 dark:bg-slate-800/40">
+            <!-- Big Photo Showcase (Clean & Unobstructed) -->
+            <div class="w-20 h-24 sm:w-24 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2 border-primary-500/30 dark:border-teal-500/40 shadow-sm bg-slate-100 dark:bg-slate-800">
+                <img id="mob-drawer-img" src="" alt="" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Identity -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                    <span id="mob-drawer-kategori" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20">
+                        DPS
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                        <span id="mob-drawer-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="mob-drawer-status">Aktif</span>
+                    </span>
                 </div>
-                <div>
-                    <span id="mob-exec-role" class="text-xs font-bold text-primary-600 dark:text-teal-400 uppercase">
-                        <?php echo esc_html( $pengurus_list[0]['jabatan'] ?? '' ); ?>
-                    </span>
-                    <h3 id="mob-exec-name" class="text-lg font-bold text-slate-900 dark:text-white leading-tight">
-                        <?php echo esc_html( $pengurus_list[0]['nama'] ?? '' ); ?>
-                    </h3>
-                    <span id="mob-exec-kategori" class="text-[10px] font-semibold text-slate-500 dark:text-teal-300">
-                        <?php echo esc_html( $pengurus_list[0]['kategori'] ?? '' ); ?>
-                    </span>
+                <div id="mob-drawer-role" class="text-xs font-bold text-primary-600 dark:text-teal-400 uppercase tracking-wider truncate">
+                    Ketua Dewan Pengawas Syariah
+                </div>
+                <h3 id="mob-drawer-name" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug mt-0.5 truncate">
+                    Haryanto, S.E., M.M.
+                </h3>
+            </div>
+        </div>
+
+        <!-- Drawer Scrollable Body -->
+        <div class="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 space-y-4" id="mob-drawer-body">
+            <!-- Riwayat & Rekam Jejak (Lengkap) -->
+            <div>
+                <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-teal-400 mb-2">
+                    <svg class="w-4 h-4 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                    <span>Riwayat & Rekam Jejak</span>
+                </div>
+                <div id="mob-drawer-karir" class="space-y-1.5 text-xs sm:text-sm text-slate-800 dark:text-slate-100 font-medium">
+                    <!-- Populated via JS -->
                 </div>
             </div>
 
-            <!-- Mobile Dossier Details -->
-            <div class="space-y-3 pt-3 border-t border-slate-200/60 dark:border-slate-700/80">
-                <div>
-                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-400 mb-1">Riwayat & Pengalaman</div>
-                    <p id="mob-exec-karir" class="text-xs text-slate-700 dark:text-slate-100 leading-relaxed">
-                        <?php echo esc_html( $pengurus_list[0]['riwayat_karir'] ?? '' ); ?>
+            <!-- Pendidikan & Sertifikasi (2 Cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-3 border border-slate-100 dark:border-slate-700/60 shadow-2xs">
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
+                        <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+                        <span>Pendidikan</span>
+                    </div>
+                    <p id="mob-drawer-pendidikan" class="text-xs font-semibold text-slate-900 dark:text-white mt-1 leading-snug">
+                        <!-- Populated via JS -->
                     </p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 pt-1">
-                    <div class="rounded-lg bg-slate-50 dark:bg-slate-800/90 p-2.5 border border-slate-100 dark:border-slate-700">
-                        <div class="text-[9px] font-bold uppercase text-slate-400 dark:text-teal-300">Pendidikan</div>
-                        <p id="mob-exec-pendidikan" class="text-[11px] font-semibold text-slate-800 dark:text-white mt-0.5">
-                            <?php echo esc_html( $pengurus_list[0]['pendidikan'] ?? '' ); ?>
-                        </p>
+                <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-3 border border-slate-100 dark:border-slate-700/60 shadow-2xs">
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
+                        <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                        <span>Sertifikasi & Lisensi</span>
                     </div>
-                    <div class="rounded-lg bg-slate-50 dark:bg-slate-800/90 p-2.5 border border-slate-100 dark:border-slate-700">
-                        <div class="text-[9px] font-bold uppercase text-slate-400 dark:text-teal-300">Sertifikasi</div>
-                        <p id="mob-exec-sertifikasi" class="text-[11px] font-semibold text-slate-800 dark:text-white mt-0.5">
-                            <?php echo esc_html( $pengurus_list[0]['sertifikasi'] ?? '' ); ?>
-                        </p>
-                    </div>
-                </div>
-
-                <blockquote id="mob-exec-quote-wrap" class="pl-3 border-l-2 border-teal-500 pt-1">
-                    <p id="mob-exec-quote" class="text-xs italic text-slate-600 dark:text-slate-200">
-                        "<?php echo esc_html( $pengurus_list[0]['kutipan'] ?? '' ); ?>"
+                    <p id="mob-drawer-sertifikasi" class="text-xs font-semibold text-slate-900 dark:text-white mt-1 leading-snug">
+                        <!-- Populated via JS -->
                     </p>
-                </blockquote>
+                </div>
             </div>
 
-            <!-- Mobile Controls -->
-            <div class="flex items-center justify-between mt-5 pt-3 border-t border-slate-200/60 dark:border-slate-700/80">
-                <button type="button" id="mob-btn-prev" class="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700 flex items-center gap-1">
-                    ← Sebelumnya
-                </button>
-                <button type="button" id="mob-btn-next" class="px-4 py-2 rounded-xl bg-primary-600 text-xs font-bold text-white shadow-sm flex items-center gap-1">
-                    Selanjutnya →
-                </button>
+            <!-- Kutipan Integritas (Adaptive) -->
+            <div id="mob-drawer-quote-wrap" class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 shadow-2xs flex items-start gap-2">
+                <svg class="w-4 h-4 text-primary-500 dark:text-teal-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                </svg>
+                <p id="mob-drawer-quote" class="text-xs italic text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                    <!-- Populated via JS -->
+                </p>
             </div>
+        </div>
+
+        <!-- Drawer Sticky Bottom Navigation Controls (Shrink-0) -->
+        <div class="shrink-0 p-3.5 sm:p-4 bg-slate-50/90 dark:bg-slate-800/90 border-t border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-3">
+            <button type="button" id="mob-drawer-prev" class="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95">
+                <svg class="w-3.5 h-3.5 text-primary-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                <span>Sebelumnya</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+                <span id="mob-drawer-counter" class="text-xs font-extrabold text-primary-600 dark:text-teal-400 whitespace-nowrap">Tokoh 01 dari 06</span>
+            </div>
+
+            <button type="button" id="mob-drawer-next" class="px-3.5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-xs font-bold text-white shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95">
+                <span>Selanjutnya</span>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
         </div>
     </div>
 </section>

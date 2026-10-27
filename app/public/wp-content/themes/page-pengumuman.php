@@ -406,7 +406,14 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                             <span class="data-link-text"><?php echo esc_html( $link_text ); ?></span>
                             <span class="data-link-url"><?php echo esc_url( $link_url ); ?></span>
                             <span class="data-link-target"><?php echo esc_attr( $link_target ); ?></span>
-                            <div class="data-content"><?php echo nl2br( esc_html( $isi_lengkap ? $isi_lengkap : $ringkasan ) ); ?></div>
+                            <div class="data-content"><?php 
+                                $c_body = ! empty( $isi_lengkap ) ? $isi_lengkap : $ringkasan;
+                                if ( strip_tags( $c_body ) === $c_body ) {
+                                    echo nl2br( esc_html( $c_body ) );
+                                } else {
+                                    echo wp_kses_post( $c_body );
+                                }
+                            ?></div>
                         </div>
 
                     </article>
@@ -486,7 +493,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 </div>
 
                 <!-- Main Body Content -->
-                <div id="modal-body" class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed space-y-4"></div>
+                <div id="modal-body" class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed space-y-3 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3 [&_li]:mb-1 [&_strong]:font-bold [&_h3]:text-base sm:[&_h3]:text-lg [&_h3]:font-black [&_h3]:mt-4 [&_h3]:mb-2 [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-slate-300 [&_th]:dark:border-dark-border [&_th]:p-2.5 [&_th]:bg-slate-50 [&_th]:dark:bg-dark-surface [&_td]:border [&_td]:border-slate-300 [&_td]:dark:border-dark-border [&_td]:p-2.5 [&_code]:bg-slate-100 [&_code]:dark:bg-dark-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-xs [&_a]:text-teal-600 [&_a]:dark:text-teal-400 [&_a]:font-bold [&_a]:underline"></div>
 
                 <!-- PDF Attachment Box -->
                 <div id="modal-pdf-box" class="hidden rounded-2xl p-4 sm:p-5 bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/80 dark:border-teal-800/60 flex items-center justify-between gap-4 flex-wrap">
@@ -1041,11 +1048,6 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
         document.addEventListener('DOMContentLoaded', initAnnouncementPage);
     } else {
         initAnnouncementPage();
-    }
-
-    // Support Swup SPA navigation
-    if (window.swup && window.swup.hooks) {
-        window.swup.hooks.on('page:view', initAnnouncementPage);
     }
 })();
 </script>

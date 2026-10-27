@@ -7,7 +7,7 @@
 
 // Get options data with Fallbacks (Dummy data) if empty
 $footer_about   = get_option( 'options_footer_about', 'Bank Syariah modern yang mengutamakan pelayanan prima dan prinsip keadilan untuk kesejahteraan bersama.' );
-$phone          = get_option( 'options_contact_phone', '(021) 7401667' );
+$phone          = get_option( 'options_contact_phone', '(021) 5966 2196' );
 $email          = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
 $address        = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3, Jl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
 
@@ -54,16 +54,18 @@ if ( empty( $culture_logo ) ) {
 $culture_height = get_option( 'options_footer_culture_height', 99 );
 $culture_url    = get_option( 'options_footer_culture_url', '' );
 
-$brand          = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
-    'logo_url'      => get_option( 'options_site_logo', '' ),
-    'logo_id'       => get_option( 'options_site_logo_id', 0 ),
-    'logo_dark_url' => get_option( 'options_site_logo_dark', '' ),
-    'logo_dark_id'  => get_option( 'options_site_logo_dark_id', 0 ),
-    'name'          => get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' ),
-    'tagline'       => get_option( 'options_site_brand_tagline', 'BSW' ),
-    'display_mode'  => get_option( 'options_site_logo_display', 'both' ),
-    'logo_height'   => get_option( 'options_site_logo_height', 42 ),
-];
+$brand          = function_exists( 'wakalumi_get_footer_brand_identity' ) 
+    ? wakalumi_get_footer_brand_identity() 
+    : ( function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_brand_identity() : [
+        'logo_url'      => get_option( 'options_site_logo', '' ),
+        'logo_id'       => get_option( 'options_site_logo_id', 0 ),
+        'logo_dark_url' => get_option( 'options_site_logo_dark', '' ),
+        'logo_dark_id'  => get_option( 'options_site_logo_dark_id', 0 ),
+        'name'          => get_option( 'options_site_brand_name', 'Bank Syariah Wakalumi' ),
+        'tagline'       => get_option( 'options_site_brand_tagline', 'BSW' ),
+        'display_mode'  => get_option( 'options_site_logo_display', 'both' ),
+        'logo_height'   => get_option( 'options_site_logo_height', 42 ),
+    ] );
 
 $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) ) 
     ? 'py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-10' 
@@ -95,14 +97,12 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
             <div class="lg:col-span-1">
                 <div class="flex items-center gap-3 mb-5">
                     <?php if ( $brand['display_mode'] !== 'text_only' ) : ?>
-                        <?php if ( ! empty( $brand['logo_dark_url'] ) || ! empty( $brand['logo_url'] ) ) : 
-                            $footer_logo = ! empty( $brand['logo_dark_url'] ) ? $brand['logo_dark_url'] : $brand['logo_url'];
-                        ?>
+                        <?php if ( ! empty( $brand['logo_url'] ) ) : ?>
                             <div class="flex items-center flex-shrink-0">
-                                <img src="<?php echo esc_url( $footer_logo ); ?>" 
+                                <img src="<?php echo esc_url( $brand['logo_url'] ); ?>" 
                                      alt="<?php echo esc_attr( $brand['name'] ); ?>" 
-                                     class="w-auto object-contain"
-                                     style="height: <?php echo esc_attr( $brand['logo_height'] ); ?>px; max-height: 52px;" />
+                                     class="w-auto object-contain transition-transform group-hover:scale-105"
+                                     style="height: <?php echo esc_attr( $brand['logo_height'] ); ?>px; max-height: 80px;" />
                             </div>
                         <?php else: ?>
                             <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold">
@@ -155,6 +155,15 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                     </a>
                     <?php endif; ?>
+                </div>
+
+                <!-- Button Jaringan Kantor (Tepat di Bawah Ikuti Kami) -->
+                <div class="mt-6">
+                    <a href="<?php echo esc_url( home_url( '/profil/jaringan-kantor' ) ); ?>" 
+                       title="Lihat Jaringan Kantor Bank Syariah Wakalumi"
+                       class="flex items-center justify-center w-full py-4 rounded-xl bg-slate-800 hover:bg-primary-600 text-slate-300 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md text-center">
+                        <span class="text-sm font-bold uppercase tracking-wider">Jaringan Kantor</span>
+                    </a>
                 </div>
             </div>
 
@@ -288,7 +297,11 @@ $footer_grid_class = ( $show_prayer && ! empty( $prayer_data ) )
                 </div>
 
                 <!-- Back to Top Button -->
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-slate-800 hover:bg-primary-600 text-slate-300 hover:text-white transition-all duration-300">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                        type="button"
+                        aria-label="Kembali ke Atas"
+                        title="Kembali ke Atas"
+                        class="group flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-slate-800 hover:bg-primary-600 text-slate-300 hover:text-white transition-all duration-300 mt-auto cursor-pointer shadow-sm hover:shadow-md">
                     <span class="text-sm font-bold uppercase tracking-wider">Kembali ke Atas</span>
                     <svg class="w-4 h-4 group-hover:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />

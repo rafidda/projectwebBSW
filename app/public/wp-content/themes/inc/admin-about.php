@@ -262,25 +262,50 @@ function wakalumi_render_about_admin_page() {
     $belief_title   = get_option( 'options_about_page_belief_title', 'Komitmen ISHLAH Berkelanjutan' );
     $belief_text    = get_option( 'options_about_page_belief', 'BPRS Wakalumi berkomitmen untuk selalu melakukan ISHLAH, yakni kami terus melakukan perbaikan berkelanjutan.' );
 
-    $values_badge = get_option( 'options_about_page_values_badge', "Budaya Kerja 'SAPA'" );
-    $values_title = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)' );
-    $values_desc  = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya SAPA yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk hasil optimal dalam aktivitas kerja.' );
-    $values_tag   = get_option( 'options_about_page_values_tag', 'Pilar Budaya SAPA' );
+    $values_badge = get_option( 'options_about_page_values_badge', 'Budaya Kerja #WAQF' );
+    $values_title = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: #WAQF (Wisdom, Accountability, Quality, Foresight)' );
+    $values_desc  = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya #WAQF yang menjadi komitmen moral, landasan tata kelola, dan etos kerja seluruh insan Bank Syariah Wakalumi dalam melayani umat secara profesional dan amanah.' );
+    $values_tag   = get_option( 'options_about_page_values_tag', 'Pilar Nilai #WAQF' );
 
     $culture_img_show   = get_option( 'options_about_page_culture_img_show', '1' );
     $culture_img_light  = get_option( 'options_about_page_culture_img_light', '' );
     $culture_img_dark   = get_option( 'options_about_page_culture_img_dark', '' );
-    $culture_caption    = get_option( 'options_about_page_culture_caption', 'Visualisasi Lambang & Budaya Perusahaan' );
-    $culture_subcaption = get_option( 'options_about_page_culture_subcaption', 'Identitas visual resmi perwujudan nilai SAPA (Skill, Action, Pray, Attitude) Bank Syariah Wakalumi' );
+    $culture_caption    = get_option( 'options_about_page_culture_caption', 'Visualisasi Lambang Budaya #WAQF' );
+    $culture_subcaption = get_option( 'options_about_page_culture_subcaption', 'Identitas visual resmi #WAQF (Wisdom, Accountability, Quality, Foresight) Bank Syariah Wakalumi' );
 
     $values = get_option( 'options_about_page_values', [] );
-    if ( empty( $values ) ) {
+    if ( empty( $values ) || ( isset( $values[0]['acronym'] ) && strtoupper( $values[0]['acronym'] ) === 'S' && isset( $values[0]['title'] ) && strtolower( $values[0]['title'] ) === 'skill' ) ) {
         $values = [
-            [ 'acronym' => 'S', 'title' => 'Skill', 'desc' => 'Selalu mengasah kompetensi agar dapat menciptakan peluang' ],
-            [ 'acronym' => 'A', 'title' => 'Action', 'desc' => 'Melakukan tindakan profesional yang penuh tanggungjawab' ],
-            [ 'acronym' => 'P', 'title' => 'Pray', 'desc' => 'Menghadirkan Allah dalam setiap aktifitas kerja, ibadah dan doa yang penuh nilai kebaikan' ],
-            [ 'acronym' => 'A', 'title' => 'Attitude', 'desc' => 'Memiliki sikap dan prilaku positif yang memberi warna kebaikan' ],
+            [ 'acronym' => 'W', 'title' => 'Wisdom', 'desc' => 'Kebijaksanaan dan kematangan dalam setiap pertimbangan keputusan serta solusi finansial syariah yang maslahat.' ],
+            [ 'acronym' => 'A', 'title' => 'Accountability', 'desc' => 'Menjunjung tinggi transparansi, amanah, dan integritas tata kelola perusahaan yang profesional (GCG).' ],
+            [ 'acronym' => 'Q', 'title' => 'Quality', 'desc' => 'Menghadirkan keunggulan mutu layanan perbankan prima, presisi operasional, dan kepuasan nasabah.' ],
+            [ 'acronym' => 'F', 'title' => 'Foresight', 'desc' => 'Pandangan visioner, inovatif, dan adaptif membaca masa depan demi pertumbuhan ekonomi umat yang berkelanjutan.' ],
         ];
+    }
+
+    if ( stripos( $values_badge, 'SAPA' ) !== false ) {
+        $values_badge = 'Budaya Kerja #WAQF';
+    }
+    if ( stripos( $values_title, 'SAPA' ) !== false ) {
+        $values_title = 'Budaya Kerja Perusahaan: #WAQF (Wisdom, Accountability, Quality, Foresight)';
+    }
+    if ( stripos( $values_desc, 'SAPA' ) !== false ) {
+        $values_desc = 'Nilai-nilai budaya #WAQF yang menjadi komitmen moral, landasan tata kelola, dan etos kerja seluruh insan Bank Syariah Wakalumi dalam melayani umat secara profesional dan amanah.';
+    }
+    if ( stripos( $values_tag, 'SAPA' ) !== false ) {
+        $values_tag = 'Pilar Nilai #WAQF';
+    }
+    if ( stripos( $culture_caption, 'SAPA' ) !== false ) {
+        $culture_caption = 'Visualisasi Lambang Budaya #WAQF';
+    }
+    if ( stripos( $culture_subcaption, 'SAPA' ) !== false ) {
+        $culture_subcaption = 'Identitas visual resmi #WAQF (Wisdom, Accountability, Quality, Foresight) Bank Syariah Wakalumi';
+    }
+
+    if ( stripos( $culture_subcaption, 'perwujudan nilai' ) !== false ) {
+        $culture_subcaption = str_ireplace( 'perwujudan nilai ', '', $culture_subcaption );
+        $culture_subcaption = str_ireplace( 'perwujudan nilai', '', $culture_subcaption );
+        $culture_subcaption = preg_replace( '/\s+/', ' ', trim( $culture_subcaption ) );
     }
 
     $logo_sec_badge     = get_option( 'options_about_page_logo_sec_badge', 'Identitas & Filosofi Brand' );
@@ -720,10 +745,10 @@ function wakalumi_render_about_admin_page() {
                 </div>
             </div>
 
-            <!-- ── SECTION 4: NILAI BUDAYA PERUSAHAAN (SAPA) ── -->
+            <!-- ── SECTION 4: NILAI BUDAYA PERUSAHAAN (#WAQF) ── -->
             <div style="background: #fff; border: 1px solid #ccd0d4; border-radius: 8px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px;">
                 <h2 style="font-size: 16px; margin: 0 0 15px 0; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-heart"></span> 4. Budaya Kerja Perusahaan: <?php echo esc_html( ! empty( $values_title ) ? $values_title : 'SAPA (Skill, Action, Pray, Attitude)' ); ?>
+                    <span class="dashicons dashicons-heart"></span> 4. Budaya Kerja Perusahaan: <?php echo esc_html( ! empty( $values_title ) ? $values_title : '#WAQF (Wisdom, Accountability, Quality, Foresight)' ); ?>
                 </h2>
                 <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">
                     Kelola badge, judul, narasi filosofi budaya kerja, dan butir-butir nilai karakter perusahaan yang tampil di halaman profil Tentang Kami.
@@ -733,28 +758,28 @@ function wakalumi_render_about_admin_page() {
                     <tr>
                         <th scope="row"><label for="options_about_page_values_badge">Badge Seksi</label></th>
                         <td>
-                            <input type="text" id="options_about_page_values_badge" name="options_about_page_values_badge" value="<?php echo esc_attr( $values_badge ); ?>" class="regular-text" placeholder="Contoh: Budaya Kerja 'SAPA'">
+                            <input type="text" id="options_about_page_values_badge" name="options_about_page_values_badge" value="<?php echo esc_attr( $values_badge ); ?>" class="regular-text" placeholder="Contoh: Budaya Kerja #WAQF">
                             <p class="description">Badge kecil di atas judul utama seksi budaya kerja.</p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="options_about_page_values_title">Judul Budaya Kerja</label></th>
                         <td>
-                            <input type="text" id="options_about_page_values_title" name="options_about_page_values_title" value="<?php echo esc_attr( $values_title ); ?>" class="large-text" placeholder="Contoh: Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)">
+                            <input type="text" id="options_about_page_values_title" name="options_about_page_values_title" value="<?php echo esc_attr( $values_title ); ?>" class="large-text" placeholder="Contoh: Budaya Kerja Perusahaan: #WAQF (Wisdom, Accountability, Quality, Foresight)">
                             <p class="description">Judul utama seksi budaya kerja perusahaan.</p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="options_about_page_values_desc">Uraian / Narasi Budaya Kerja</label></th>
                         <td>
-                            <textarea id="options_about_page_values_desc" name="options_about_page_values_desc" rows="3" class="large-text" placeholder="Nilai-nilai budaya SAPA yang menghadirkan kebersamaan..."><?php echo esc_textarea( $values_desc ); ?></textarea>
+                            <textarea id="options_about_page_values_desc" name="options_about_page_values_desc" rows="3" class="large-text" placeholder="Nilai-nilai budaya #WAQF yang menjadi komitmen moral..."><?php echo esc_textarea( $values_desc ); ?></textarea>
                             <p class="description">Uraian narasi budaya kerja perusahaan. Mendukung pemformatan teks atau tag HTML seperti &lt;strong&gt;.</p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="options_about_page_values_tag">Label Tag Bawah Kartu</label></th>
                         <td>
-                            <input type="text" id="options_about_page_values_tag" name="options_about_page_values_tag" value="<?php echo esc_attr( $values_tag ); ?>" class="regular-text" placeholder="Contoh: Pilar Budaya SAPA">
+                            <input type="text" id="options_about_page_values_tag" name="options_about_page_values_tag" value="<?php echo esc_attr( $values_tag ); ?>" class="regular-text" placeholder="Contoh: Pilar Nilai #WAQF">
                             <p class="description">Label teks di bagian bawah setiap kartu nilai budaya (di samping tanda centang).</p>
                         </td>
                     </tr>
@@ -807,7 +832,7 @@ function wakalumi_render_about_admin_page() {
                         </label>
                     </div>
                     <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">
-                        Unggah gambar lambang / visual logo Corporate Culture yang akan tampil <strong>polos rata tengah di bawah kartu SAPA</strong> (tanpa bingkai card/hover, seperti watermark rapi). Tersedia opsi unggah terpisah untuk tampilan <strong>Mode Terang (Light Mode)</strong> dan <strong>Mode Gelap (Dark Mode)</strong>.
+                        Unggah gambar lambang / visual logo Corporate Culture yang akan tampil <strong>polos rata tengah dengan efek 3D timbul di bawah kartu #WAQF</strong> (tanpa bingkai kotak, bersih dan berkarakter). Tersedia opsi unggah terpisah untuk tampilan <strong>Mode Terang (Light Mode)</strong> dan <strong>Mode Gelap (Dark Mode)</strong>.
                     </p>
 
                     <table class="form-table" role="presentation" style="margin-top: 0;">

@@ -36,6 +36,10 @@ function wakalumi_theme_setup() {
         'script',
     ] );
 
+    // Enable Gutenberg block editor wide & full alignments and responsive embeds
+    add_theme_support( 'align-wide' );
+    add_theme_support( 'responsive-embeds' );
+
     // Disable default block patterns
     remove_theme_support( 'core-block-patterns' );
 
@@ -454,6 +458,12 @@ function wakalumi_enforce_template_routing( $template ) {
     // 18. Kontak & Saluran Komunikasi
     if ( in_array( $slug, [ 'kontak', 'contact', 'hubungi-kami', 'kontak-kami' ], true ) || strpos( $req_uri, '/kontak' ) !== false || strpos( $req_uri, '/contact' ) !== false ) {
         $res = $serve_clean_template( 'page-kontak.php' );
+        if ( $res ) return $res;
+    }
+
+    // 19. Baitul Maal BSW (ZISWAF & Sosial Syariah)
+    if ( in_array( $slug, [ 'baitul-maal', 'baitul-maal-bsw', 'ziswaf' ], true ) || strpos( $req_uri, '/baitul-maal' ) !== false || strpos( $req_uri, '/ziswaf' ) !== false ) {
+        $res = $serve_clean_template( 'page-baitul-maal.php' );
         if ( $res ) return $res;
     }
 
@@ -1029,6 +1039,32 @@ function wakalumi_ensure_layanan_page() {
 add_action( 'init', 'wakalumi_ensure_layanan_page' );
 
 /**
+ * Otomatis pastikan halaman 'Baitul Maal BSW' terdaftar di database
+ * agar URL /baitul-maal/ langsung aktif dengan page-baitul-maal.php
+ */
+function wakalumi_ensure_baitul_maal_page() {
+    $page = get_page_by_path( 'baitul-maal' ) ?: get_page_by_path( 'baitul-maal-bsw' );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( [
+            'post_title'   => 'Baitul Maal BSW',
+            'post_name'    => 'baitul-maal',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ] );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-baitul-maal.php' );
+        }
+    } else {
+        $curr_tmpl = get_post_meta( $page->ID, '_wp_page_template', true );
+        if ( $curr_tmpl !== 'page-baitul-maal.php' ) {
+            update_post_meta( $page->ID, '_wp_page_template', 'page-baitul-maal.php' );
+        }
+    }
+}
+add_action( 'init', 'wakalumi_ensure_baitul_maal_page' );
+
+/**
  * Sembunyikan editor Gutenberg kosong 'Type / to choose a block' pada Halaman Beranda
  * dan tampilkan Panduan Visual Pengelolaan Beranda yang ramah pengguna.
  */
@@ -1254,6 +1290,13 @@ function wakalumi_admin_bar_quick_links( $wp_admin_bar ) {
     ] );
 
     $wp_admin_bar->add_node( [
+        'id'     => 'wakalumi_quick_baitul_maal',
+        'parent' => 'wakalumi_quick_edit',
+        'title'  => '🕌 Baitul Maal BSW (ZISWAF)',
+        'href'   => admin_url( 'admin.php?page=wakalumi-baitul-maal' ),
+    ] );
+
+    $wp_admin_bar->add_node( [
         'id'     => 'wakalumi_quick_footer',
         'parent' => 'wakalumi_quick_edit',
         'title'  => '🏢 Footer & Jam Kerja',
@@ -1339,6 +1382,50 @@ function wakalumi_get_brand_identity(): array {
         'tagline'       => $tagline,
         'display_mode'  => in_array( $display_mode, [ 'both', 'logo_only', 'text_only' ], true ) ? $display_mode : 'both',
         'logo_height'   => max( 24, min( 70, $logo_height ) ),
+    ];
+}
+
+/**
+ * Dapatkan data identitas dan logo perusahaan khusus untuk area Footer.
+ * Terpisah dari Navbar, dengan opsi fallback otomatis ke logo utama jika belum dikustomisasi.
+ *
+ * @return array
+ */
+function wakalumi_get_footer_brand_identity(): array {
+    $main_brand = wakalumi_get_brand_identity();
+
+    $source         = get_option( 'options_footer_logo_source', 'default' ); // 'default' | 'custom'
+    $custom_logo    = get_option( 'options_footer_company_logo', '' );
+    $custom_logo_id = (int) get_option( 'options_footer_company_logo_id', 0 );
+    $custom_height  = (int) get_option( 'options_footer_company_logo_height', 0 );
+    $custom_display = get_option( 'options_footer_brand_display', '' );
+    $custom_name    = get_option( 'options_footer_brand_name', '' );
+    $custom_tagline = get_option( 'options_footer_brand_tagline', '' );
+
+    // Tentukan logo yang tampil di Footer
+    if ( $source === 'custom' && ! empty( $custom_logo ) ) {
+        $logo_url = $custom_logo;
+    } elseif ( ! empty( $custom_logo ) && $source !== 'default' ) {
+        $logo_url = $custom_logo;
+    } else {
+        // Fallback ke logo dark mode navbar (karena latar footer gelap slate-900) atau logo utama
+        $logo_url = ! empty( $main_brand['logo_dark_url'] ) ? $main_brand['logo_dark_url'] : $main_brand['logo_url'];
+    }
+
+    $height       = ( $custom_height > 0 ) ? max( 20, min( 100, $custom_height ) ) : (int) $main_brand['logo_height'];
+    $display_mode = ! empty( $custom_display ) ? $custom_display : $main_brand['display_mode'];
+    $name         = ! empty( $custom_name ) ? $custom_name : $main_brand['name'];
+    $tagline      = ( $custom_tagline !== '' ) ? $custom_tagline : $main_brand['tagline'];
+
+    return [
+        'source'         => $source,
+        'logo_url'       => $logo_url,
+        'custom_logo'    => $custom_logo,
+        'custom_logo_id' => $custom_logo_id,
+        'logo_height'    => $height,
+        'display_mode'   => in_array( $display_mode, [ 'both', 'logo_only', 'text_only' ], true ) ? $display_mode : 'both',
+        'name'           => $name,
+        'tagline'        => $tagline,
     ];
 }
 

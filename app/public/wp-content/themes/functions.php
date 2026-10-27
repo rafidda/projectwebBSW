@@ -42,6 +42,7 @@ require_once WAKALUMI_DIR . '/inc/admin-tim-kami.php';
 require_once WAKALUMI_DIR . '/inc/admin-karir.php';
 require_once WAKALUMI_DIR . '/inc/admin-literasi.php';
 require_once WAKALUMI_DIR . '/inc/admin-layanan.php';
+require_once WAKALUMI_DIR . '/inc/admin-baitul-maal.php';
 require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 
 // ────────────────────────────────────────────────

@@ -37,7 +37,7 @@ $categories = [
     'keamanan'   => 'Keamanan Finansial',
 ];
 
-// Dual-Tone Thematic Palettes for 3 Inklusi Pillars
+// Dual-Tone Thematic Palettes for Inklusi Program Cards
 $pillar_palettes = [
     0 => [
         'border'        => 'border-emerald-200/90 dark:border-dark-border hover:border-emerald-400 dark:hover:border-emerald-500',
@@ -48,7 +48,6 @@ $pillar_palettes = [
         'tag'           => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/80 dark:text-emerald-200 border-emerald-300/60 dark:border-emerald-700/60',
         'sub'           => 'text-emerald-700 dark:text-emerald-300',
         'title_hover'   => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
-        'num_tag'       => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/80 dark:text-emerald-200 border border-emerald-300/60 dark:border-emerald-700/60',
     ],
     1 => [
         'border'        => 'border-blue-200/90 dark:border-dark-border hover:border-blue-400 dark:hover:border-blue-500',
@@ -59,7 +58,6 @@ $pillar_palettes = [
         'tag'           => 'bg-blue-100 text-blue-800 dark:bg-blue-900/80 dark:text-blue-200 border-blue-300/60 dark:border-blue-700/60',
         'sub'           => 'text-blue-700 dark:text-blue-300',
         'title_hover'   => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
-        'num_tag'       => 'bg-blue-100 text-blue-800 dark:bg-blue-900/80 dark:text-blue-200 border border-blue-300/60 dark:border-blue-700/60',
     ],
     2 => [
         'border'        => 'border-amber-200/90 dark:border-dark-border hover:border-amber-400 dark:hover:border-amber-500',
@@ -70,7 +68,26 @@ $pillar_palettes = [
         'tag'           => 'bg-amber-100 text-amber-800 dark:bg-amber-900/80 dark:text-amber-200 border border-amber-300/60 dark:border-amber-700/60',
         'sub'           => 'text-amber-700 dark:text-amber-300',
         'title_hover'   => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
-        'num_tag'       => 'bg-amber-100 text-amber-800 dark:bg-amber-900/80 dark:text-amber-200 border border-amber-300/60 dark:border-amber-700/60',
+    ],
+    3 => [
+        'border'        => 'border-purple-200/90 dark:border-dark-border hover:border-purple-400 dark:hover:border-purple-500',
+        'top_line'      => 'from-purple-600 via-fuchsia-500 to-pink-500',
+        'header_bg'     => 'from-purple-50/90 via-fuchsia-50/50 to-white/10 dark:from-purple-950/80 dark:via-fuchsia-950/40 dark:to-dark-surface/90',
+        'header_border' => 'border-purple-100/90 dark:border-purple-900/50',
+        'icon_bg'       => 'bg-purple-600 text-white shadow-lg shadow-purple-600/30',
+        'tag'           => 'bg-purple-100 text-purple-800 dark:bg-purple-900/80 dark:text-purple-200 border border-purple-300/60 dark:border-purple-700/60',
+        'sub'           => 'text-purple-700 dark:text-purple-300',
+        'title_hover'   => 'group-hover:text-purple-600 dark:group-hover:text-purple-400',
+    ],
+    4 => [
+        'border'        => 'border-teal-200/90 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-500',
+        'top_line'      => 'from-teal-600 via-cyan-500 to-emerald-400',
+        'header_bg'     => 'from-teal-50/90 via-cyan-50/50 to-white/10 dark:from-teal-950/80 dark:via-cyan-950/40 dark:to-dark-surface/90',
+        'header_border' => 'border-teal-100/90 dark:border-teal-900/50',
+        'icon_bg'       => 'bg-teal-600 text-white shadow-lg shadow-teal-600/30',
+        'tag'           => 'bg-teal-100 text-teal-800 dark:bg-teal-900/80 dark:text-teal-200 border border-teal-300/60 dark:border-teal-700/60',
+        'sub'           => 'text-teal-700 dark:text-teal-300',
+        'title_hover'   => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
     ],
 ];
 
@@ -226,8 +243,8 @@ $module_category_palettes = [
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25A2.25 2.25 0 018.25 10.5H6A2.25 2.25 0 013.75 8.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Pilar Inklusi</span>
-                                        <span class="block text-xs font-black text-teal-700 dark:text-teal-300 truncate">3 Program</span>
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Program Inklusi</span>
+                                        <span class="block text-xs font-black text-teal-700 dark:text-teal-300 truncate"><?php echo count( $pillars ); ?> Program</span>
                                     </div>
                                 </div>
                                 <div class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 flex items-center gap-2.5">
@@ -272,14 +289,27 @@ $module_category_palettes = [
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            <?php 
+            $pillar_count = count( $pillars );
+            $grid_cols    = 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+            if ( $pillar_count === 1 ) {
+                $grid_cols = 'grid-cols-1 max-w-xl mx-auto';
+            } elseif ( $pillar_count === 2 ) {
+                $grid_cols = 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto';
+            } elseif ( $pillar_count === 4 ) {
+                $grid_cols = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+            } else {
+                $grid_cols = 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+            }
+            ?>
+            <div class="grid <?php echo esc_attr( $grid_cols ); ?> gap-6 sm:gap-8 items-stretch">
                 <?php foreach ( $pillars as $idx => $pil ) : 
-                    $theme = $pillar_palettes[ $idx % 3 ];
+                    $theme = $pillar_palettes[ $idx % count( $pillar_palettes ) ];
                 ?>
-                    <!-- DUAL-TONE PILLAR CARD -->
+                    <!-- DUAL-TONE PROGRAM CARD -->
                     <div class="spotlight-card group relative rounded-3xl bg-white dark:bg-dark-card border <?php echo esc_attr( $theme['border'] ); ?> shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col justify-between"
                          data-aos="fade-up" 
-                         data-aos-delay="<?php echo $idx * 100; ?>">
+                         data-aos-delay="<?php echo min( $idx * 80, 240 ); ?>">
                         
                         <!-- Top Accent Stripe -->
                         <div class="h-1.5 w-full bg-gradient-to-r <?php echo esc_attr( $theme['top_line'] ); ?> relative z-10"></div>
@@ -289,10 +319,18 @@ $module_category_palettes = [
                             <!-- Top Row: Icon Badge + Tag Pill -->
                             <div class="flex items-center justify-between gap-3 mb-3">
                                 <div class="w-12 h-12 rounded-xl <?php echo esc_attr( $theme['icon_bg'] ); ?> flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 flex-shrink-0">
-                                    <?php if ( $pil['icon'] === 'truck' ) : ?>
+                                    <?php if ( ( $pil['icon'] ?? '' ) === 'truck' ) : ?>
                                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V5.25A2.25 2.25 0 0012 3H6a2.25 2.25 0 00-2.25 2.25v9m9.75-6.75h3.75"/></svg>
-                                    <?php elseif ( $pil['icon'] === 'academic-cap' ) : ?>
+                                    <?php elseif ( ( $pil['icon'] ?? '' ) === 'academic-cap' ) : ?>
                                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+                                    <?php elseif ( ( $pil['icon'] ?? '' ) === 'store' ) : ?>
+                                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25a.75.75 0 01-.75-.75V8.25a.75.75 0 01.442-.684l8.25-3.75a.75.75 0 01.616 0l8.25 3.75a.75.75 0 01.442.684V20.25a.75.75 0 01-.75.75H13.5z"/></svg>
+                                    <?php elseif ( ( $pil['icon'] ?? '' ) === 'users' ) : ?>
+                                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+                                    <?php elseif ( ( $pil['icon'] ?? '' ) === 'shield' ) : ?>
+                                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                                    <?php elseif ( ( $pil['icon'] ?? '' ) === 'banknotes' ) : ?>
+                                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v10.5m0-10.5h19.5m0 0v10.5m0-10.5A.75.75 0 0021 5.25v-.75m-19.5 0A2.25 2.25 0 013.75 2.25h16.5A2.25 2.25 0 0122.5 4.5m-19.5 0v.75m19.5 0v.75m-19.5 0H3m19.5 0h-.75m-18.75 9h18.75m-18.75 0H3m19.5 0h-.75M9 12a3 3 0 116 0 3 3 0 01-6 0z"/></svg>
                                     <?php else : ?>
                                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
                                     <?php endif; ?>
@@ -320,11 +358,12 @@ $module_category_palettes = [
 
                             <div class="pt-4 border-t border-slate-100 dark:border-dark-border flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-300">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                     <span>Program Inklusi Aktif</span>
                                 </div>
-                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono <?php echo esc_attr( $theme['num_tag'] ); ?>">
-                                    Pilar #0<?php echo ( $idx + 1 ); ?>
+                                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-teal-600 dark:text-teal-400 group-hover:translate-x-0.5 transition-transform">
+                                    <span>Resmi BSW</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
                                 </span>
                             </div>
                         </div>

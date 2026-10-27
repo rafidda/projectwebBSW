@@ -93,6 +93,30 @@ if ( ! function_exists( 'wakalumi_get_galeri_header' ) ) {
     }
 }
 
+if ( ! function_exists( 'wakalumi_is_valid_galeri_image_url' ) ) {
+    /**
+     * Memastikan URL foto galeri valid dan bukan path placeholder dummy dari seeder (images/seed/).
+     *
+     * @param string $url
+     * @return bool
+     */
+    function wakalumi_is_valid_galeri_image_url( $url ) {
+        $u = trim( (string) $url );
+        if ( empty( $u ) ) {
+            return false;
+        }
+        // Abaikan path placeholder seeder seperti 'images/seed/...' atau 'http://images/seed/...'
+        if (
+            strpos( $u, 'images/seed/' ) !== false ||
+            strpos( $u, 'http://images/' ) === 0 ||
+            strpos( $u, 'https://images/' ) === 0
+        ) {
+            return false;
+        }
+        return ( strpos( $u, 'http://' ) === 0 || strpos( $u, 'https://' ) === 0 || strpos( $u, '/' ) === 0 );
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_galeri_albums' ) ) {
     /**
      * Mengambil seluruh daftar album dokumentasi (disimpan di wp_options).
@@ -111,113 +135,119 @@ if ( ! function_exists( 'wakalumi_get_galeri_albums' ) ) {
                 }
                 if ( ! isset( $item['foto_list'] ) || ! is_array( $item['foto_list'] ) ) {
                     $item['foto_list'] = [];
+                } else {
+                    $item['foto_list'] = array_values( array_unique( array_filter( $item['foto_list'], 'wakalumi_is_valid_galeri_image_url' ) ) );
                 }
+
+                $cover = $item['cover_image'] ?? '';
+                if ( ! wakalumi_is_valid_galeri_image_url( $cover ) ) {
+                    $cover = '';
+                }
+                if ( empty( $cover ) && ! empty( $item['foto_list'] ) ) {
+                    $cover = $item['foto_list'][0];
+                }
+                $item['cover_image'] = $cover;
             }
             unset( $item );
             return $saved;
         }
 
-        // Default Sample Realistic Albums
-        $theme_uri = get_template_directory_uri();
-        $sample_img_1 = $theme_uri . '/assets/img/about-photo.jpg';
-        $sample_img_2 = $theme_uri . '/assets/img/video-thumb.jpg';
-
+        // Default Starter Albums (Resmi BSW sesuai spesifikasi seeder)
         return [
             [
-                'id'          => 'alb_1',
-                'judul'       => 'Program CSR: Penyaluran Paket Sembako & Santunan Anak Yatim',
-                'kategori'    => 'csr',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-20 days' ) ),
-                'lokasi'      => 'Kantor Pusat BSW & Yayasan Yatim Dhuafa Mandiri',
-                'ringkasan'   => 'Penyaluran bingkisan sembako berkah, santunan pendidikan, serta buka puasa bersama anak yatim dalam momentum keberkahan syiar sosial perbankan syariah.',
-                'cover_image' => $sample_img_1,
-                'foto_list'   => [
-                    $sample_img_1,
-                    $sample_img_2,
+                'id'          => 'alb_peresmian_kantor',
+                'slug'        => 'peresmian-kantor-pusat-baru',
+                'judul'       => 'Peresmian Kantor Pusat Baru',
+                'kategori'    => 'corporate',
+                'tanggal'     => '2026-09-25',
+                'lokasi'      => 'Kantor Pusat BSW, Jl. Ir. H. Juanda No. 14, Rempoa',
+                'ringkasan'   => 'Dokumentasi tasyakuran peresmian kantor pusat BSW di Rempoa.',
+                'cover_image' => '',
+                'foto_list'   => [],
+                'foto_captions' => [
+                    'Tasyakuran peresmian kantor pusat BSW',
+                    'Jajaran manajemen dan tamu undangan',
+                    'Doa bersama pada acara peresmian',
                 ],
                 'video_url'   => '',
                 'status'      => 'aktif',
                 'urutan'      => 1,
             ],
             [
-                'id'          => 'alb_2',
-                'judul'       => 'Workshop Literasi Perbankan Syariah & Akselerasi Pembiayaan UMKM',
-                'kategori'    => 'edukasi',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-45 days' ) ),
-                'lokasi'      => 'Auditorium Pusat UMKM Kreatif & Kemitraan',
-                'ringkasan'   => 'Pelatihan manajemen keuangan halal, pembukuan digital kas mikro, dan pembiayaan modal kerja syariah dengan akad Murabahah & Mudharabah bagi 100 pelaku UMKM.',
-                'cover_image' => $sample_img_2,
-                'foto_list'   => [
-                    $sample_img_2,
-                    $sample_img_1,
+                'id'          => 'alb_gedung_baru',
+                'slug'        => 'gedung-kantor-pusat-baru',
+                'judul'       => 'Gedung Kantor Pusat Baru',
+                'kategori'    => 'layanan',
+                'tanggal'     => '2026-10-12',
+                'lokasi'      => 'Jl. Ir. H. Juanda No. 14, Rempoa, Ciputat Timur',
+                'ringkasan'   => 'Tampak luar dan area layanan kantor pusat baru BSW, Jl. Ir. H. Juanda No. 14, Rempoa.',
+                'cover_image' => '',
+                'foto_list'   => [],
+                'foto_captions' => [
+                    'Tampak depan gedung kantor pusat BSW',
+                    'Area layanan nasabah',
+                    'Ruang kerja operasional',
                 ],
                 'video_url'   => '',
                 'status'      => 'aktif',
                 'urutan'      => 2,
             ],
             [
-                'id'          => 'alb_3',
-                'judul'       => 'Rapat Umum Pemegang Saham (RUPS) Tahunan & Paparan Kinerja Positif',
-                'kategori'    => 'corporate',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-80 days' ) ),
-                'lokasi'      => 'Ballroom Utama & Kantor Pusat Bank Syariah Wakalumi',
-                'ringkasan'   => 'Pemaparan laporan pertanggungjawaban direksi, pengesahan laporan keuangan audited dengan predikat Sehat, serta penguatan arah digitalisasi operasional bank.',
-                'cover_image' => $sample_img_1,
-                'foto_list'   => [
-                    $sample_img_1,
-                    $sample_img_2,
+                'id'          => 'alb_bukber_yatim',
+                'slug'        => 'buka-puasa-bersama-anak-yatim',
+                'judul'       => 'Buka Puasa Bersama Anak Yatim',
+                'kategori'    => 'csr',
+                'tanggal'     => '2026-03-10',
+                'lokasi'      => '[SESUAIKAN]',
+                'ringkasan'   => 'Kebersamaan keluarga besar BSW bersama anak-anak yatim di bulan Ramadan.',
+                'cover_image' => '',
+                'foto_list'   => [],
+                'foto_captions' => [
+                    'Buka puasa bersama anak yatim',
+                    'Penyerahan santunan [SESUAIKAN]',
+                    'Foto bersama',
                 ],
                 'video_url'   => '',
                 'status'      => 'aktif',
                 'urutan'      => 3,
             ],
             [
-                'id'          => 'alb_4',
-                'judul'       => 'Supervisi Lapangan & Kunjungan Dewan Pengawas Syariah (DPS)',
-                'kategori'    => 'corporate',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-110 days' ) ),
-                'lokasi'      => 'Jaringan Kantor Operasional & Lokasi Usaha Nasabah',
-                'ringkasan'   => 'Kunjungan rutin dan audit kepatuhan syariah lapangan oleh DPS guna memastikan seluruh akad transaksi pembiayaan berjalan konsisten dengan fatwa DSN-MUI.',
-                'cover_image' => $sample_img_2,
-                'foto_list'   => [
-                    $sample_img_2,
-                    $sample_img_1,
+                'id'          => 'alb_takjil_ramadan',
+                'slug'        => 'pembagian-takjil-ramadan',
+                'judul'       => 'Pembagian Takjil Ramadan',
+                'kategori'    => 'csr',
+                'tanggal'     => '2026-03-05',
+                'lokasi'      => '[SESUAIKAN]',
+                'ringkasan'   => 'Berbagi takjil bersama masyarakat di bulan Ramadan.',
+                'cover_image' => '',
+                'foto_list'   => [],
+                'foto_captions' => [
+                    'Pembagian takjil oleh tim BSW',
+                    'Persiapan paket takjil',
+                    'Antusiasme masyarakat',
                 ],
                 'video_url'   => '',
                 'status'      => 'aktif',
                 'urutan'      => 4,
             ],
             [
-                'id'          => 'alb_5',
-                'judul'       => 'Pelatihan Anti-Fraud, Perlindungan Nasabah & Service Excellence',
-                'kategori'    => 'layanan',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-150 days' ) ),
-                'lokasi'      => 'Pusat Pengembangan Kompetensi SDM BSW',
-                'ringkasan'   => 'Penguatan integritas insan perbankan, teknik pencegahan kejahatan rekayasa sosial (phishing/skimming), serta peningkatan keramahan layanan frontliner.',
-                'cover_image' => $sample_img_1,
-                'foto_list'   => [
-                    $sample_img_1,
-                    $sample_img_2,
+                'id'          => 'alb_identitas_baru',
+                'slug'        => 'identitas-baru-bsw',
+                'judul'       => 'Identitas Baru BSW',
+                'kategori'    => 'corporate',
+                'tanggal'     => '2026-10-12',
+                'lokasi'      => 'Kantor Pusat BSW',
+                'ringkasan'   => 'Logo dan penerapan identitas baru Bank Syariah Wakalumi.',
+                'cover_image' => '',
+                'foto_list'   => [],
+                'foto_captions' => [
+                    'Logo baru BSW',
+                    'Perbandingan logo lama dan baru',
+                    'Penerapan logo pada signage/materi [opsional]',
                 ],
                 'video_url'   => '',
                 'status'      => 'aktif',
                 'urutan'      => 5,
-            ],
-            [
-                'id'          => 'alb_6',
-                'judul'       => 'Penganugerahan Penghargaan Perbankan Syariah Berkinerja Unggul',
-                'kategori'    => 'penghargaan',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-190 days' ) ),
-                'lokasi'      => 'Grand Ballroom Financial Hall Jakarta',
-                'ringkasan'   => 'Apresiasi industri atas konsistensi Bank Syariah Wakalumi dalam menjaga kualitas pembiayaan, rasio NPF rendah, serta pertumbuhan laba yang berkesinambungan.',
-                'cover_image' => $sample_img_2,
-                'foto_list'   => [
-                    $sample_img_2,
-                    $sample_img_1,
-                ],
-                'video_url'   => '',
-                'status'      => 'aktif',
-                'urutan'      => 6,
             ],
         ];
     }
@@ -296,12 +326,14 @@ function wakalumi_render_galeri_page() {
                 $clean_photos = [];
                 foreach ( $lines as $line ) {
                     $u = trim( $line );
-                    if ( ! empty( $u ) ) {
+                    if ( wakalumi_is_valid_galeri_image_url( $u ) ) {
                         $clean_photos[] = esc_url_raw( $u );
                     }
                 }
+                $clean_photos = array_values( array_unique( $clean_photos ) );
 
-                $cover = esc_url_raw( $covers[$i] ?? '' );
+                $raw_cover = trim( $covers[$i] ?? '' );
+                $cover = wakalumi_is_valid_galeri_image_url( $raw_cover ) ? esc_url_raw( $raw_cover ) : '';
                 if ( empty( $cover ) && ! empty( $clean_photos ) ) {
                     $cover = $clean_photos[0]; // Jadikan foto pertama sebagai default cover jika cover kosong
                 }
@@ -793,13 +825,21 @@ function wakalumi_render_galeri_page() {
             updatePhotoPreviewBox($(this));
         });
 
+        function isValidPhotoUrl(u) {
+            if (!u) return false;
+            if (u.indexOf('images/seed/') !== -1 || u.indexOf('http://images/') === 0 || u.indexOf('https://images/') === 0) {
+                return false;
+            }
+            return (u.indexOf('http://') === 0 || u.indexOf('https://') === 0 || u.indexOf('/') === 0);
+        }
+
         function updatePhotoPreviewBox(textarea) {
             var text = textarea.val();
             var lines = text.split('\n');
             var validUrls = [];
             for (var i = 0; i < lines.length; i++) {
                 var u = lines[i].trim();
-                if (u && (u.indexOf('http://') === 0 || u.indexOf('https://') === 0 || u.indexOf('/') === 0)) {
+                if (isValidPhotoUrl(u) && validUrls.indexOf(u) === -1) {
                     validUrls.push(u);
                 }
             }
@@ -809,12 +849,12 @@ function wakalumi_render_galeri_page() {
 
             var previewBox = card.find('.galeri-photos-preview-box');
             previewBox.empty();
-            validUrls.slice(0, 12).forEach(function(url) {
+            validUrls.slice(0, 18).forEach(function(url) {
                 var item = $('<div style="width: 55px; height: 45px; border-radius: 4px; overflow: hidden; border: 1px solid #cbd5e1;"><img src="' + url + '" style="width: 100%; height: 100%; object-fit: cover;"></div>');
                 previewBox.append(item);
             });
-            if (validUrls.length > 12) {
-                previewBox.append('<div style="width: 55px; height: 45px; border-radius: 4px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #475569;">+' + (validUrls.length - 12) + '</div>');
+            if (validUrls.length > 18) {
+                previewBox.append('<div style="width: 55px; height: 45px; border-radius: 4px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #475569;">+' + (validUrls.length - 18) + '</div>');
             }
         }
 
@@ -919,25 +959,24 @@ function wakalumi_render_galeri_page() {
 
             multiUploader.on('select', function() {
                 var selection = multiUploader.state().get('selection');
-                var currentVal = textarea.val().trim();
-                var newUrls = [];
+                var rawLines = textarea.val().split('\n');
+                var cleanCurrent = [];
+                for (var i = 0; i < rawLines.length; i++) {
+                    var u = rawLines[i].trim();
+                    if (isValidPhotoUrl(u) && cleanCurrent.indexOf(u) === -1) {
+                        cleanCurrent.push(u);
+                    }
+                }
 
                 selection.each(function(attachment) {
                     var attJson = attachment.toJSON();
-                    if (attJson.url) {
-                        newUrls.push(attJson.url);
+                    if (attJson.url && cleanCurrent.indexOf(attJson.url) === -1) {
+                        cleanCurrent.push(attJson.url);
                     }
                 });
 
-                if (newUrls.length > 0) {
-                    if (currentVal.length > 0) {
-                        currentVal += '\n' + newUrls.join('\n');
-                    } else {
-                        currentVal = newUrls.join('\n');
-                    }
-                    textarea.val(currentVal);
-                    updatePhotoPreviewBox(textarea);
-                }
+                textarea.val(cleanCurrent.join('\n'));
+                updatePhotoPreviewBox(textarea);
             });
 
             multiUploader.open();

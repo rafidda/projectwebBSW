@@ -23,18 +23,24 @@ get_header();
                 </div>
             </header>
 
-            <!-- Featured Image -->
-            <?php if ( has_post_thumbnail() ) : ?>
-                <div class="mb-10 rounded-2xl overflow-hidden shadow-xl" data-aos="fade-up" data-aos-delay="100">
-                    <?php the_post_thumbnail( 'hero-large', [
-                        'class' => 'w-full aspect-[16/8] object-cover',
-                    ] ); ?>
-                </div>
-            <?php endif; ?>
+            <!-- Solid Editorial Reading Container -->
+            <div class="rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border shadow-xl p-6 sm:p-10 lg:p-12 mb-10 relative overflow-hidden" data-aos="fade-up">
+                <!-- Top Subtle Accent Bar -->
+                <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-500 absolute top-0 left-0 right-0"></div>
 
-            <!-- Content -->
-            <div class="prose prose-lg prose-slate dark:prose-invert mx-auto max-w-none" data-aos="fade-up" data-aos-delay="150">
-                <?php the_content(); ?>
+                <!-- Featured Image -->
+                <?php if ( has_post_thumbnail() ) : ?>
+                    <div class="mb-10 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-md">
+                        <?php the_post_thumbnail( 'hero-large', [
+                            'class' => 'w-full aspect-[16/8] object-cover',
+                        ] ); ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Content -->
+                <div class="prose prose-lg prose-slate dark:prose-invert mx-auto max-w-none">
+                    <?php the_content(); ?>
+                </div>
             </div>
 
             <!-- Post Navigation -->

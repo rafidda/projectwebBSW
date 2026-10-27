@@ -82,25 +82,57 @@ $belief_tag     = get_option( 'options_about_page_belief_tag', 'Nilai Abadi' );
 $belief_title   = get_option( 'options_about_page_belief_title', 'Komitmen ISHLAH Berkelanjutan' );
 $belief_text    = get_option( 'options_about_page_belief', 'BPRS Wakalumi berkomitmen untuk selalu melakukan ISHLAH, yakni kami terus melakukan perbaikan berkelanjutan.' );
 
-$values_badge   = get_option( 'options_about_page_values_badge', "Budaya Kerja 'SAPA'" );
-$values_title   = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: SAPA (Skill, Action, Pray, Attitude)' );
-$values_desc    = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya SAPA yang menghadirkan kebersamaan, kehangatan, dan keakraban untuk hasil optimal dalam aktivitas kerja.' );
-$values_tag     = get_option( 'options_about_page_values_tag', 'Pilar Budaya SAPA' );
+$values_badge   = get_option( 'options_about_page_values_badge', 'Budaya Kerja #WAQF' );
+$values_title   = get_option( 'options_about_page_values_title', 'Budaya Kerja Perusahaan: #WAQF (Wisdom, Accountability, Quality, Foresight)' );
+$values_desc    = get_option( 'options_about_page_values_desc', 'Nilai-nilai budaya #WAQF yang menjadi komitmen moral, landasan tata kelola, dan etos kerja seluruh insan Bank Syariah Wakalumi dalam melayani umat secara profesional dan amanah.' );
+$values_tag     = get_option( 'options_about_page_values_tag', 'Pilar Nilai #WAQF' );
 
 $culture_img_show   = get_option( 'options_about_page_culture_img_show', '1' );
 $culture_img_light  = get_option( 'options_about_page_culture_img_light', '' );
 $culture_img_dark   = get_option( 'options_about_page_culture_img_dark', '' );
-$culture_caption    = get_option( 'options_about_page_culture_caption', 'Visualisasi Lambang & Budaya Perusahaan' );
-$culture_subcaption = get_option( 'options_about_page_culture_subcaption', 'Identitas visual resmi perwujudan nilai SAPA (Skill, Action, Pray, Attitude) Bank Syariah Wakalumi' );
+$culture_caption    = get_option( 'options_about_page_culture_caption', 'Visualisasi Lambang Budaya #WAQF' );
+$culture_subcaption = get_option( 'options_about_page_culture_subcaption', 'Identitas visual resmi #WAQF (Wisdom, Accountability, Quality, Foresight) Bank Syariah Wakalumi' );
 
 $values = get_option( 'options_about_page_values', [] );
-if ( empty( $values ) ) {
+// Otomatis sinkronkan bila data kosong atau masih mengacu pada budaya lama SAPA:
+if ( empty( $values ) || ( isset( $values[0]['acronym'] ) && strtoupper( $values[0]['acronym'] ) === 'S' && isset( $values[0]['title'] ) && strtolower( $values[0]['title'] ) === 'skill' ) ) {
     $values = [
-        [ 'acronym' => 'S', 'title' => 'Skill', 'desc' => 'Selalu mengasah kompetensi agar dapat menciptakan peluang' ],
-        [ 'acronym' => 'A', 'title' => 'Action', 'desc' => 'Melakukan tindakan profesional yang penuh tanggungjawab' ],
-        [ 'acronym' => 'P', 'title' => 'Pray', 'desc' => 'Menghadirkan Allah dalam setiap aktifitas kerja, ibadah dan doa yang penuh nilai kebaikan' ],
-        [ 'acronym' => 'A', 'title' => 'Attitude', 'desc' => 'Memiliki sikap dan prilaku positif yang memberi warna kebaikan' ],
+        [ 'acronym' => 'W', 'title' => 'Wisdom', 'desc' => 'Kebijaksanaan dan kematangan dalam setiap pertimbangan keputusan serta solusi finansial syariah yang maslahat.' ],
+        [ 'acronym' => 'A', 'title' => 'Accountability', 'desc' => 'Menjunjung tinggi transparansi, amanah, dan integritas tata kelola perusahaan yang profesional (GCG).' ],
+        [ 'acronym' => 'Q', 'title' => 'Quality', 'desc' => 'Menghadirkan keunggulan mutu layanan perbankan prima, presisi operasional, dan kepuasan nasabah.' ],
+        [ 'acronym' => 'F', 'title' => 'Foresight', 'desc' => 'Pandangan visioner, inovatif, dan adaptif membaca masa depan demi pertumbuhan ekonomi umat yang berkelanjutan.' ],
     ];
+}
+
+// Normalisasi teks jika masih bernuansa SAPA dari penyimpanan opsi lama:
+if ( stripos( $values_badge, 'SAPA' ) !== false ) {
+    $values_badge = 'Budaya Kerja #WAQF';
+}
+if ( stripos( $values_title, 'SAPA' ) !== false ) {
+    $values_title = 'Budaya Kerja Perusahaan: #WAQF (Wisdom, Accountability, Quality, Foresight)';
+}
+if ( stripos( $values_desc, 'SAPA' ) !== false ) {
+    $values_desc = 'Nilai-nilai budaya #WAQF yang menjadi komitmen moral, landasan tata kelola, dan etos kerja seluruh insan Bank Syariah Wakalumi dalam melayani umat secara profesional dan amanah.';
+}
+if ( stripos( $values_tag, 'SAPA' ) !== false ) {
+    $values_tag = 'Pilar Nilai #WAQF';
+}
+if ( stripos( $culture_caption, 'SAPA' ) !== false ) {
+    $culture_caption = 'Visualisasi Lambang Budaya #WAQF';
+}
+if ( stripos( $culture_subcaption, 'SAPA' ) !== false ) {
+    $culture_subcaption = 'Identitas visual resmi #WAQF (Wisdom, Accountability, Quality, Foresight) Bank Syariah Wakalumi';
+}
+
+// Hilangkan frasa "perwujudan nilai" jika masih tersimpan di database:
+if ( stripos( $culture_subcaption, 'perwujudan nilai' ) !== false ) {
+    $culture_subcaption = str_ireplace( 'perwujudan nilai ', '', $culture_subcaption );
+    $culture_subcaption = str_ireplace( 'perwujudan nilai', '', $culture_subcaption );
+    $culture_subcaption = preg_replace( '/\s+/', ' ', trim( $culture_subcaption ) );
+}
+
+if ( empty( $culture_img_light ) && empty( $culture_img_dark ) ) {
+    $culture_img_light = get_template_directory_uri() . '/assets/img/logo-waqf-light.png';
 }
 
 $logo_sec_badge     = get_option( 'options_about_page_logo_sec_badge', 'Identitas & Filosofi Brand' );
@@ -206,22 +238,22 @@ if ( empty( $cta_btn1_url ) ) {
 
                 <!-- Key Highlights Pills -->
                 <?php if ( ! empty( $hero_pill_1 ) || ! empty( $hero_pill_2 ) || ! empty( $hero_pill_3 ) ) : ?>
-                <div class="flex flex-wrap items-center gap-3 pt-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <div class="flex flex-wrap items-center gap-3 pt-6 text-xs sm:text-sm text-slate-700 dark:text-slate-200">
                     <?php if ( ! empty( $hero_pill_1 ) ) : ?>
-                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
-                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border border-slate-200/90 dark:border-dark-border shadow-xs hover:shadow-md hover:-translate-y-0.5 hover:border-teal-400 dark:hover:border-teal-600 transition-all duration-300 font-semibold cursor-default">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span><?php echo esc_html( $hero_pill_1 ); ?></span>
                     </div>
                     <?php endif; ?>
                     <?php if ( ! empty( $hero_pill_2 ) ) : ?>
-                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
-                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border border-slate-200/90 dark:border-dark-border shadow-xs hover:shadow-md hover:-translate-y-0.5 hover:border-teal-400 dark:hover:border-teal-600 transition-all duration-300 font-semibold cursor-default">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
                         <span><?php echo esc_html( $hero_pill_2 ); ?></span>
                     </div>
                     <?php endif; ?>
                     <?php if ( ! empty( $hero_pill_3 ) ) : ?>
-                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 dark:bg-dark-card/90 backdrop-blur-md border border-slate-200 dark:border-dark-border shadow-xs font-medium">
-                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border border-slate-200/90 dark:border-dark-border shadow-xs hover:shadow-md hover:-translate-y-0.5 hover:border-teal-400 dark:hover:border-teal-600 transition-all duration-300 font-semibold cursor-default">
+                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                         <span><?php echo esc_html( $hero_pill_3 ); ?></span>
                     </div>
                     <?php endif; ?>
@@ -232,7 +264,7 @@ if ( empty( $cta_btn1_url ) ) {
             <!-- Right Column: Corporate Identity & Emblem Badge Card -->
             <?php if ( $hero_card_show === '1' ) : ?>
             <div class="lg:col-span-5 xl:col-span-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-teal-200/80 dark:border-teal-800/60 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 group cursor-default">
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-800/80 shadow-lg hover:shadow-2xl hover:shadow-teal-900/10 dark:hover:shadow-black/60 hover:-translate-y-2 hover:border-teal-400 dark:hover:border-teal-500 transition-all duration-300 group cursor-default">
                     <!-- Top Gradient Accent Bar -->
                     <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500"></div>
 
@@ -257,12 +289,12 @@ if ( empty( $cta_btn1_url ) ) {
 
                     <!-- Lower Card Body -->
                     <div class="p-6 space-y-4 bg-white dark:bg-slate-900/95 relative z-10 text-center">
-                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p class="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                             <?php echo esc_html( $hero_card_desc ); ?>
                         </p>
                         <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-3 text-[11px] font-bold text-slate-600 dark:text-slate-300">
                             <?php if ( ! empty( $hero_card_tag1 ) ) : ?>
-                            <span class="inline-flex items-center gap-1">
+                            <span class="inline-flex items-center gap-1 text-teal-700 dark:text-teal-300 font-bold">
                                 <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                                 <?php echo esc_html( $hero_card_tag1 ); ?>
                             </span>
@@ -271,7 +303,7 @@ if ( empty( $cta_btn1_url ) ) {
                             <span class="text-slate-300 dark:text-slate-600">•</span>
                             <?php endif; ?>
                             <?php if ( ! empty( $hero_card_tag2 ) ) : ?>
-                            <span class="inline-flex items-center gap-1">
+                            <span class="inline-flex items-center gap-1 text-teal-700 dark:text-teal-300 font-bold">
                                 <svg class="w-3.5 h-3.5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                                 <?php echo esc_html( $hero_card_tag2 ); ?>
                             </span>
@@ -362,13 +394,50 @@ if ( empty( $cta_btn1_url ) ) {
 
         </div>
 
-        <!-- 4 Key Stats -->
-        <?php if ( $show_stats ) : ?>
+        <!-- 4 Key Stats (Dual Tone Islamic Banking Cards) -->
+        <?php if ( $show_stats ) : 
+            $stat_meta = [
+                1 => [
+                    'tag'        => '01 / Dedikasi',
+                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-teal-50/70 to-slate-100 dark:from-slate-800 dark:via-teal-950/40 dark:to-slate-850',
+                    'bar_border' => 'border-teal-100/90 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-teal-500/10 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300 border-teal-200/80 dark:border-teal-700/60 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600',
+                    'tag_cls'    => 'text-teal-800 dark:text-teal-300 bg-teal-100/70 dark:bg-teal-950/80 border-teal-200/60 dark:border-teal-800/60',
+                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', // Jam/Tahun Pengalaman
+                ],
+                2 => [
+                    'tag'        => '02 / Amanah',
+                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-emerald-50/70 to-slate-100 dark:from-slate-800 dark:via-emerald-950/40 dark:to-slate-850',
+                    'bar_border' => 'border-emerald-100/90 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-700/60 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600',
+                    'tag_cls'    => 'text-emerald-800 dark:text-emerald-300 bg-emerald-100/70 dark:bg-emerald-950/80 border-emerald-200/60 dark:border-emerald-800/60',
+                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>', // Nasabah Setia
+                ],
+                3 => [
+                    'tag'        => '03 / Syariah',
+                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-cyan-50/70 to-slate-100 dark:from-slate-800 dark:via-cyan-950/40 dark:to-slate-850',
+                    'bar_border' => 'border-cyan-100/90 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-cyan-500/10 text-cyan-700 dark:bg-cyan-400/15 dark:text-cyan-300 border-cyan-200/80 dark:border-cyan-700/60 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600',
+                    'tag_cls'    => 'text-cyan-800 dark:text-cyan-300 bg-cyan-100/70 dark:bg-cyan-950/80 border-cyan-200/60 dark:border-cyan-800/60',
+                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', // Prinsip Murni Syariah
+                ],
+                4 => [
+                    'tag'        => '04 / Regulasi',
+                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-amber-50/70 to-slate-100 dark:from-slate-800 dark:via-amber-950/40 dark:to-slate-850',
+                    'bar_border' => 'border-amber-100/90 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-amber-500/10 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300 border-amber-200/80 dark:border-amber-700/60 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600',
+                    'tag_cls'    => 'text-amber-800 dark:text-amber-300 bg-amber-100/70 dark:bg-amber-950/80 border-amber-200/60 dark:border-amber-800/60',
+                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>', // Dijamin LPS
+                ],
+            ];
+        ?>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-20">
             <?php for ( $s = 1; $s <= 4; $s++ ) : 
                 $val = ${"stat_{$s}_val"};
                 $lbl = ${"stat_{$s}_lbl"};
                 if ( empty( $val ) ) continue;
+
+                $meta = $stat_meta[ $s ] ?? $stat_meta[ 1 ];
 
                 // Parse counter values for interactive animation:
                 $prefix = '';
@@ -388,23 +457,42 @@ if ( empty( $cta_btn1_url ) ) {
                 // Skala ukuran proporsional jika teks panjang (mis. "Rp 2 Miliar") agar seragam dan rapi
                 $font_size = ( $val_len > 7 ) ? 'text-2xl sm:text-3xl xl:text-4xl' : 'text-3xl sm:text-4xl md:text-5xl';
             ?>
-                <div class="spotlight-card relative overflow-hidden rounded-2xl md:rounded-3xl p-6 text-center bg-white dark:bg-dark-surface border border-slate-200/90 dark:border-dark-border hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md hover:border-teal-500/40 dark:hover:border-teal-500/40 group cursor-default before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-teal-600 before:to-emerald-500" data-aos="fade-up" data-aos-delay="<?php echo $s * 80; ?>">
-                    <!-- Decorative Watermark Logo (Tenang di pojok kanan bawah) -->
-                    <div class="absolute -right-3 -bottom-3 w-24 h-24 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_16px_32px_-6px_rgba(15,23,42,0.14),0_6px_12px_-3px_rgba(8,131,149,0.12)] dark:hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.18)] hover:-translate-y-2 hover:border-teal-500/60 dark:hover:border-teal-400/60 transition-all duration-300 ease-out cursor-default flex flex-col justify-between" data-aos="fade-up" data-aos-delay="<?php echo $s * 80; ?>">
+                    <!-- Top Accent Line -->
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
+
+                    <!-- Upper Zone (Header Bar): Dual Tone Distinct Contrast & Mature Character -->
+                    <div class="px-5 py-4 <?php echo esc_attr( $meta['bar_bg'] ); ?> border-b <?php echo esc_attr( $meta['bar_border'] ); ?> flex items-center justify-between transition-colors">
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl <?php echo esc_attr( $meta['icon_wrap'] ); ?> border shadow-xs flex items-center justify-center transition-all duration-300 shrink-0">
+                            <?php echo $meta['icon']; ?>
+                        </div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border shadow-2xs <?php echo esc_attr( $meta['tag_cls'] ); ?>">
+                            <?php echo esc_html( $meta['tag'] ); ?>
+                        </span>
                     </div>
 
-                    <span class="block <?php echo $font_size; ?> font-rubik font-black text-teal-700 dark:text-teal-300 tracking-tight mb-2 counter-number relative z-10"
-                          <?php if ( $is_num ) : ?>
-                              data-counter="<?php echo esc_attr( $num ); ?>"
-                              data-counter-prefix="<?php echo esc_attr( $prefix ); ?>"
-                              data-counter-suffix="<?php echo esc_attr( $suffix ); ?>"
-                          <?php endif; ?>>
-                        <?php echo esc_html( $val ); ?>
-                    </span>
-                    <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors relative z-10">
-                        <?php echo esc_html( $lbl ); ?>
-                    </span>
+                    <!-- Lower Zone (Body / Stat Metric Area): Crisp Solid High-Contrast Foundation -->
+                    <div class="p-5 sm:p-6 bg-white dark:bg-slate-900 flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                        <!-- Decorative Watermark Logo (Tenang di pojok kanan bawah) -->
+                        <div class="absolute -right-3 -bottom-3 w-24 h-24 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                        </div>
+
+                        <!-- Number Counter -->
+                        <span class="block <?php echo $font_size; ?> font-rubik font-black text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors tracking-tight mb-1.5 counter-number relative z-10"
+                              <?php if ( $is_num ) : ?>
+                                  data-counter="<?php echo esc_attr( $num ); ?>"
+                                  data-counter-prefix="<?php echo esc_attr( $prefix ); ?>"
+                                  data-counter-suffix="<?php echo esc_attr( $suffix ); ?>"
+                              <?php endif; ?>>
+                            <?php echo esc_html( $val ); ?>
+                        </span>
+
+                        <!-- Label -->
+                        <span class="text-xs sm:text-[13px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider block group-hover:text-slate-900 dark:group-hover:text-white transition-colors relative z-10 leading-snug">
+                            <?php echo esc_html( $lbl ); ?>
+                        </span>
+                    </div>
                 </div>
             <?php endfor; ?>
         </div>
@@ -439,7 +527,7 @@ if ( empty( $cta_btn1_url ) ) {
         </div>
 
         <!-- Visi Card (Megah Showcase) -->
-        <div class="spotlight-card relative rounded-3xl p-8 sm:p-10 md:p-14 overflow-hidden bg-gradient-to-br from-primary-900 via-primary-950 to-slate-950 text-white shadow-2xl shadow-primary-900/20 border border-primary-500/30 mb-10 md:mb-14" data-aos="zoom-in">
+        <div class="spotlight-card relative rounded-3xl p-8 sm:p-10 md:p-14 overflow-hidden bg-gradient-to-br from-primary-900 via-primary-950 to-slate-950 text-white shadow-2xl shadow-primary-900/30 border border-primary-500/30 mb-10 md:mb-14 hover:-translate-y-1.5 transition-all duration-500 cursor-default" data-aos="zoom-in">
             <!-- Background Decorative Watermark Emblem -->
             <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 w-72 h-72 md:w-96 md:h-96 opacity-[0.06] pointer-events-none">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain">
@@ -449,7 +537,7 @@ if ( empty( $cta_btn1_url ) ) {
             <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative z-10 max-w-3xl">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 mb-6">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-teal-300 mb-6 shadow-2xs">
                     <svg class="w-3.5 h-3.5 text-teal-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                     <?php echo esc_html( $vision_badge ); ?>
                 </div>
@@ -457,7 +545,7 @@ if ( empty( $cta_btn1_url ) ) {
                     "<?php echo esc_html( $vision_title ); ?>"
                 </h3>
                 <?php if ( ! empty( $vision_desc ) ) : ?>
-                    <p class="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-normal">
+                    <p class="text-sm sm:text-base md:text-lg text-slate-200 leading-relaxed font-normal">
                         <?php echo esc_html( $vision_desc ); ?>
                     </p>
                 <?php endif; ?>
@@ -473,14 +561,14 @@ if ( empty( $cta_btn1_url ) ) {
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
                 <?php foreach ( $missions as $idx => $mission_text ) : ?>
-                    <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-500/40 dark:hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 100; ?>">
+                    <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(15,23,42,0.12),0_4px_10px_-2px_rgba(8,131,149,0.12)] dark:hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.75),0_0_18px_rgba(20,184,166,0.15)] hover:border-teal-500/60 dark:hover:border-teal-400/50 hover:-translate-y-1.5 transition-all duration-300 ease-out flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 100; ?>">
                         <!-- Subtle Top Accent Line -->
-                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 opacity-80"></div>
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
 
                         <!-- Solid Elegant Header Bar -->
-                        <div class="px-6 py-3.5 bg-slate-50/90 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                        <div class="px-6 py-4 bg-gradient-to-r from-slate-50/95 via-teal-50/30 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/90 dark:border-teal-800/80 text-teal-700 dark:text-teal-300 font-extrabold text-xs flex items-center justify-center shadow-2xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300">
+                                <div class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-black text-xs flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300">
                                     <?php echo sprintf( '%02d', $idx + 1 ); ?>
                                 </div>
                                 <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Misi Perusahaan</span>
@@ -495,13 +583,18 @@ if ( empty( $cta_btn1_url ) ) {
                                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
 
-                            <p class="text-slate-700 dark:text-slate-200 text-sm sm:text-[15px] leading-relaxed relative z-10 font-normal">
+                            <p class="text-slate-800 dark:text-slate-100 text-sm sm:text-[15px] leading-relaxed relative z-10 font-medium">
                                 <?php echo esc_html( $mission_text ); ?>
                             </p>
 
-                            <div class="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 relative z-10">
-                                <span class="group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Komitmen Syariah</span>
-                                <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <div class="mt-6 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 relative z-10">
+                                <span class="group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                    Pilar Pelayanan
+                                </span>
+                                <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-teal-50 dark:group-hover:bg-teal-950/60 text-slate-400 group-hover:text-teal-600 dark:group-hover:text-teal-400 flex items-center justify-center transition-colors shadow-2xs">
+                                    <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -513,15 +606,15 @@ if ( empty( $cta_btn1_url ) ) {
         <!-- Jati Diri & Keyakinan Inti (Core Beliefs) -->
         <div class="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-6" data-aos="fade-up">
             <!-- Jati Diri -->
-            <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-500/40 dark:hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_18px_36px_-6px_rgba(15,23,42,0.14),0_8px_16px_-4px_rgba(8,131,149,0.14)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.18)] hover:border-teal-500/70 dark:hover:border-teal-400/60 hover:-translate-y-2 transition-all duration-300 ease-out cursor-default">
                 <!-- Subtle Top Accent Line -->
-                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 opacity-80"></div>
+                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
 
                 <!-- Solid Elegant Header Bar -->
-                <div class="px-7 py-4 bg-slate-50/90 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                    <span class="text-xs uppercase tracking-widest font-extrabold text-teal-800 dark:text-teal-300"><?php echo esc_html( $identity_badge ); ?></span>
+                <div class="px-7 py-4 bg-gradient-to-r from-slate-50/95 via-teal-50/30 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                    <span class="text-xs uppercase tracking-widest font-black text-teal-800 dark:text-teal-300"><?php echo esc_html( $identity_badge ); ?></span>
                     <?php if ( ! empty( $identity_tag ) ) : ?>
-                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-teal-100/70 text-teal-900 dark:bg-teal-950/70 dark:text-teal-300 border border-teal-200 dark:border-teal-800 shadow-2xs"><?php echo esc_html( $identity_tag ); ?></span>
+                    <span class="text-[10px] font-extrabold px-3 py-1 rounded-full bg-teal-100/80 text-teal-900 dark:bg-teal-950 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800 shadow-xs"><?php echo esc_html( $identity_tag ); ?></span>
                     <?php endif; ?>
                 </div>
                 <div class="p-7 relative overflow-hidden">
@@ -529,30 +622,37 @@ if ( empty( $cta_btn1_url ) ) {
                     <div class="absolute -right-4 -bottom-4 w-36 h-36 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
                         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                     </div>
-                    <div class="flex items-start gap-4 relative z-10">
-                        <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/90 dark:border-teal-800/80 flex items-center justify-center text-teal-700 dark:text-teal-300 shrink-0 shadow-2xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300">
+                    <div class="flex items-start gap-5 relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/90 dark:border-teal-800/80 flex items-center justify-center text-teal-700 dark:text-teal-300 shrink-0 shadow-xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:shadow-md group-hover:shadow-teal-600/25 transition-all duration-300">
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                         </div>
-                        <div>
-                            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2"><?php echo esc_html( $identity_title ); ?></h3>
-                            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-200 leading-relaxed font-normal">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2 leading-snug"><?php echo esc_html( $identity_title ); ?></h3>
+                            <p class="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
                                 <?php echo esc_html( $identity_text ); ?>
                             </p>
+                            <div class="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+                                <span class="flex items-center gap-1.5 text-teal-700 dark:text-teal-300">
+                                    <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Fokus Pemberdayaan Umat
+                                </span>
+                                <span class="text-[11px] text-slate-400 dark:text-slate-500">Prinsip BSW</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Keyakinan Inti (ISHLAH) -->
-            <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-white dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-500/40 dark:hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_18px_36px_-6px_rgba(15,23,42,0.14),0_8px_16px_-4px_rgba(8,131,149,0.14)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.18)] hover:border-teal-500/70 dark:hover:border-teal-400/60 hover:-translate-y-2 transition-all duration-300 ease-out cursor-default">
                 <!-- Subtle Top Accent Line -->
-                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 opacity-80"></div>
+                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
 
                 <!-- Solid Elegant Header Bar -->
-                <div class="px-7 py-4 bg-slate-50/90 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                    <span class="text-xs uppercase tracking-widest font-extrabold text-teal-800 dark:text-teal-300"><?php echo esc_html( $belief_badge ); ?></span>
+                <div class="px-7 py-4 bg-gradient-to-r from-slate-50/95 via-teal-50/30 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                    <span class="text-xs uppercase tracking-widest font-black text-teal-800 dark:text-teal-300"><?php echo esc_html( $belief_badge ); ?></span>
                     <?php if ( ! empty( $belief_tag ) ) : ?>
-                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-teal-100/70 text-teal-900 dark:bg-teal-950/70 dark:text-teal-300 border border-teal-200 dark:border-teal-800 shadow-2xs"><?php echo esc_html( $belief_tag ); ?></span>
+                    <span class="text-[10px] font-extrabold px-3 py-1 rounded-full bg-teal-100/80 text-teal-900 dark:bg-teal-950 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800 shadow-xs"><?php echo esc_html( $belief_tag ); ?></span>
                     <?php endif; ?>
                 </div>
                 <div class="p-7 relative overflow-hidden">
@@ -560,15 +660,22 @@ if ( empty( $cta_btn1_url ) ) {
                     <div class="absolute -right-4 -bottom-4 w-36 h-36 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
                         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                     </div>
-                    <div class="flex items-start gap-4 relative z-10">
-                        <div class="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/90 dark:border-teal-800/80 flex items-center justify-center text-teal-700 dark:text-teal-300 shrink-0 shadow-2xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300">
+                    <div class="flex items-start gap-5 relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/90 dark:border-teal-800/80 flex items-center justify-center text-teal-700 dark:text-teal-300 shrink-0 shadow-xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:shadow-md group-hover:shadow-teal-600/25 transition-all duration-300">
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         </div>
-                        <div>
-                            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2"><?php echo esc_html( $belief_title ); ?></h3>
-                            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-200 leading-relaxed font-normal">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-black text-slate-900 dark:text-white mb-2 leading-snug"><?php echo esc_html( $belief_title ); ?></h3>
+                            <p class="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
                                 <?php echo esc_html( $belief_text ); ?>
                             </p>
+                            <div class="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+                                <span class="flex items-center gap-1.5 text-teal-700 dark:text-teal-300">
+                                    <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    Perbaikan Berkelanjutan
+                                </span>
+                                <span class="text-[11px] text-slate-400 dark:text-slate-500">Nilai Abadi</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -612,14 +719,14 @@ if ( empty( $cta_btn1_url ) ) {
                 $v_title = $val_item['title'] ?? '';
                 $v_desc  = $val_item['desc'] ?? '';
             ?>
-                <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-500/40 dark:hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $v_idx % 4 ) * 80; ?>">
+                <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_18px_36px_-6px_rgba(8,131,149,0.22),0_8px_16px_-4px_rgba(15,23,42,0.1)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.85),0_0_24px_rgba(20,184,166,0.22)] hover:border-teal-500 dark:hover:border-teal-400 hover:-translate-y-2.5 transition-all duration-300 ease-out flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $v_idx % 4 ) * 80; ?>">
                     <!-- Subtle Top Accent Line -->
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 opacity-80"></div>
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
 
                     <!-- Solid Elegant Header Bar -->
-                    <div class="px-6 py-4 bg-slate-50/90 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                    <div class="px-6 py-4 bg-gradient-to-r from-slate-50/95 via-teal-50/30 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/90 dark:border-teal-800/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-lg flex items-center justify-center shadow-2xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300">
+                            <div class="w-11 h-11 rounded-2xl bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-teal-600 group-hover:to-teal-700 group-hover:text-white group-hover:border-teal-600 group-hover:shadow-lg group-hover:shadow-teal-600/30 transition-all duration-300">
                                 <?php echo esc_html( $acronym ); ?>
                             </div>
                             <div>
@@ -629,7 +736,7 @@ if ( empty( $cta_btn1_url ) ) {
                                 </h3>
                             </div>
                         </div>
-                        <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-teal-500 transition-colors"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-teal-500 group-hover:scale-125 transition-all"></span>
                     </div>
 
                     <!-- Card Body -->
@@ -639,14 +746,27 @@ if ( empty( $cta_btn1_url ) ) {
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
 
-                        <p class="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed relative z-10 font-normal">
-                            <?php echo esc_html( $v_desc ); ?>
-                        </p>
+                        <!-- Solid Statement Box (Eliminates the 'kopong' empty feel) -->
+                        <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700/60 relative z-10 shadow-2xs group-hover:bg-teal-50/60 dark:group-hover:bg-teal-950/40 group-hover:border-teal-200 dark:group-hover:border-teal-800 transition-all duration-300">
+                            <div class="flex items-start gap-2.5">
+                                <svg class="w-4 h-4 text-teal-500 dark:text-teal-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                                </svg>
+                                <p class="text-xs sm:text-sm text-slate-800 dark:text-slate-100 font-semibold leading-relaxed italic flex-1">
+                                    "<?php echo esc_html( $v_desc ); ?>"
+                                </p>
+                            </div>
+                        </div>
 
                         <?php if ( ! empty( $values_tag ) ) : ?>
-                        <div class="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 relative z-10">
-                            <span class="group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors"><?php echo esc_html( $values_tag ); ?></span>
-                            <svg class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <div class="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 relative z-10">
+                            <span class="group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                                <?php echo esc_html( $values_tag ); ?>
+                            </span>
+                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-teal-50 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-800/60 shadow-2xs">
+                                Pilar #WAQF
+                            </span>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -658,19 +778,38 @@ if ( empty( $cta_btn1_url ) ) {
             $img_light_src = ! empty( $culture_img_light ) ? $culture_img_light : $culture_img_dark;
             $img_dark_src  = ! empty( $culture_img_dark ) ? $culture_img_dark : $culture_img_light;
         ?>
-        <!-- Corporate Culture Visual Emblem (Polos, Rata Tengah di Bawah Card, Jarak Proporsional & Efek Glow/Drop-Shadow Halus) -->
-        <div class="relative mt-6 sm:mt-8 flex justify-center items-center text-center select-none" data-aos="fade-up" data-aos-delay="150">
-            <!-- Subtle Ambient Backdrop Aura (Halus, Menghidupkan Logo Tanpa Lebay) -->
-            <div class="absolute w-3/4 max-w-2xl h-32 sm:h-40 bg-gradient-radial from-teal-400/15 via-primary-500/5 to-transparent blur-3xl pointer-events-none opacity-60 dark:opacity-40 -z-0"></div>
+        <!-- Corporate Culture Visual Emblem (Polos Rata Tengah, Efek 3D Mengambang Langsung pada Gambar, Tenang Tanpa Hover) -->
+        <div class="relative mt-12 sm:mt-16 flex flex-col justify-center items-center text-center select-none" data-aos="fade-up" data-aos-delay="150">
+            <!-- Subtle Ambient Backdrop Aura (Halus di Belakang Gambar) -->
+            <div class="absolute w-3/4 max-w-2xl h-36 sm:h-44 bg-gradient-radial from-teal-400/15 via-primary-500/5 to-transparent blur-3xl pointer-events-none opacity-70 dark:opacity-40 -z-0"></div>
 
-            <!-- Light Mode Image with Refined Depth Drop-Shadow -->
-            <img src="<?php echo esc_url( $img_light_src ); ?>" 
-                 alt="<?php echo esc_attr( $culture_caption ); ?>" 
-                 class="relative z-10 w-auto max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-[440px] max-w-full md:max-w-3xl lg:max-w-4xl object-contain drop-shadow-emblem-light dark:hidden">
-            <!-- Dark Mode Image with Tasteful Luminescent Glow -->
-            <img src="<?php echo esc_url( $img_dark_src ); ?>" 
-                 alt="<?php echo esc_attr( $culture_caption ); ?>" 
-                 class="relative z-10 w-auto max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-[440px] max-w-full md:max-w-3xl lg:max-w-4xl object-contain drop-shadow-emblem-dark hidden dark:block">
+            <!-- 3D Logo Element (Polos Tanpa Kotak / Frame, Tenang Tanpa Hover) -->
+            <div class="relative z-10">
+                <!-- Light Mode Image with Realistic 3D Multi-Layer Drop-Shadow (Menghadirkan Efek Timbul Fisik) -->
+                <img src="<?php echo esc_url( $img_light_src ); ?>" 
+                     alt="<?php echo esc_attr( $culture_caption ); ?>" 
+                     class="w-auto max-h-56 sm:max-h-72 md:max-h-80 lg:max-h-96 max-w-full md:max-w-2xl lg:max-w-3xl object-contain drop-shadow-[0_4px_6px_rgba(15,23,42,0.08)] drop-shadow-[0_14px_22px_rgba(15,23,42,0.12)] drop-shadow-[0_24px_36px_rgba(8,131,149,0.16)] dark:hidden">
+                
+                <!-- Dark Mode Image with 3D Depth & Luminescent Aura -->
+                <img src="<?php echo esc_url( $img_dark_src ); ?>" 
+                     alt="<?php echo esc_attr( $culture_caption ); ?>" 
+                     class="w-auto max-h-56 sm:max-h-72 md:max-h-80 lg:max-h-96 max-w-full md:max-w-2xl lg:max-w-3xl object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.7)] drop-shadow-[0_18px_32px_rgba(0,0,0,0.85)] drop-shadow-[0_0_28px_rgba(45,212,191,0.28)] hidden dark:block">
+            </div>
+
+            <!-- Soft 3D Floor Shadow (Memberi Kesan Kedalaman Mengambang Nyata di Atas Background) -->
+            <div class="w-44 sm:w-60 md:w-72 h-3.5 rounded-[100%] bg-slate-900/10 dark:bg-black/35 blur-md mt-1 pointer-events-none"></div>
+
+            <?php if ( ! empty( $culture_caption ) || ! empty( $culture_subcaption ) ) : ?>
+            <!-- Subtle Caption Text (Opsional & Minimalis) -->
+            <div class="mt-4 text-center">
+                <?php if ( ! empty( $culture_caption ) ) : ?>
+                    <h4 class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-slate-700 dark:text-slate-300"><?php echo esc_html( $culture_caption ); ?></h4>
+                <?php endif; ?>
+                <?php if ( ! empty( $culture_subcaption ) ) : ?>
+                    <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-md mx-auto"><?php echo esc_html( $culture_subcaption ); ?></p>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
     </div>
@@ -688,7 +827,7 @@ if ( empty( $cta_btn1_url ) ) {
             
             <!-- Logo Preview on Elegant Surface -->
             <div class="lg:col-span-5" data-aos="fade-right">
-                <div class="spotlight-card tilt-card rounded-3xl p-8 sm:p-10 bg-slate-900 text-white shadow-2xl border border-slate-800 relative overflow-hidden flex flex-col items-center justify-center text-center group cursor-default">
+                <div class="spotlight-card tilt-card rounded-3xl p-8 sm:p-10 bg-slate-900 text-white shadow-2xl border border-slate-800 relative overflow-hidden flex flex-col items-center justify-center text-center group cursor-default hover:-translate-y-1.5 hover:shadow-primary-950/40 transition-all duration-300 ease-out">
                     <!-- Subtle Glow -->
                     <div class="absolute inset-0 bg-gradient-to-tr from-primary-500/20 via-teal-500/10 to-transparent pointer-events-none"></div>
                     
@@ -723,7 +862,7 @@ if ( empty( $cta_btn1_url ) ) {
 
                 <div class="space-y-5">
                     <!-- Pillar 1 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p1_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p1_theme['border_l'] ); ?> border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg <?php echo esc_attr( $p1_theme['border_hover'] ); ?> hover:-translate-y-0.5 transition-all duration-300 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p1_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p1_theme['border_l'] ); ?> border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:shadow-teal-900/5 dark:hover:shadow-black/50 <?php echo esc_attr( $p1_theme['border_hover'] ); ?> hover:-translate-y-1.5 transition-all duration-300 ease-out cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
@@ -745,7 +884,7 @@ if ( empty( $cta_btn1_url ) ) {
                     </div>
 
                     <!-- Pillar 2 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p2_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p2_theme['border_l'] ); ?> border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg <?php echo esc_attr( $p2_theme['border_hover'] ); ?> hover:-translate-y-0.5 transition-all duration-300 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p2_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p2_theme['border_l'] ); ?> border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:shadow-teal-900/5 dark:hover:shadow-black/50 <?php echo esc_attr( $p2_theme['border_hover'] ); ?> hover:-translate-y-1.5 transition-all duration-300 ease-out cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
@@ -767,7 +906,7 @@ if ( empty( $cta_btn1_url ) ) {
                     </div>
 
                     <!-- Pillar 3 -->
-                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p3_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p3_theme['border_l'] ); ?> border border-slate-200/80 dark:border-slate-700/80 shadow-sm hover:shadow-lg <?php echo esc_attr( $p3_theme['border_hover'] ); ?> hover:-translate-y-0.5 transition-all duration-300 cursor-default">
+                    <div class="spotlight-card tilt-card group relative overflow-hidden rounded-2xl p-5 sm:p-6 bg-gradient-to-r <?php echo esc_attr( $p3_theme['bg_gradient'] ); ?> border-l-4 <?php echo esc_attr( $p3_theme['border_l'] ); ?> border border-slate-200/90 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:shadow-teal-900/5 dark:hover:shadow-black/50 <?php echo esc_attr( $p3_theme['border_hover'] ); ?> hover:-translate-y-1.5 transition-all duration-300 ease-out cursor-default">
                         <!-- Decorative Watermark Logo (Interactive Hover: Left to Right Slide) -->
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[25%] w-32 h-32 opacity-[0.05] dark:opacity-[0.035] pointer-events-none transition-all duration-700 ease-out group-hover:left-full group-hover:-translate-x-1/2 group-hover:scale-125 group-hover:opacity-[0.09] dark:group-hover:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
@@ -821,9 +960,9 @@ if ( empty( $cta_btn1_url ) ) {
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
                 
-                <!-- Left Column: 3D Booklet Showcase -->
+                <!-- Left Column: 3D Booklet Showcase (Clickable Download Cover) -->
                 <div class="lg:col-span-5 flex flex-col items-center justify-center" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="relative group cursor-pointer">
+                    <a href="<?php echo $compro_download_url; ?>" <?php echo $compro_download_attr; ?> class="relative group cursor-pointer block" title="Unduh <?php echo esc_attr( $compro_title ); ?>" aria-label="Unduh Dokumen Company Profile">
                         <!-- Ambient Glow behind booklet -->
                         <div class="absolute -inset-2 bg-gradient-to-tr from-teal-500/20 to-primary-500/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-700"></div>
 
@@ -832,6 +971,14 @@ if ( empty( $cta_btn1_url ) ) {
                             
                             <!-- Book Spine Accent (Left Edge) -->
                             <div class="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-teal-700 via-teal-500 to-teal-400 shadow-inner z-20"></div>
+
+                            <!-- Interactive Click-to-Download Floating Badge on Hover -->
+                            <div class="absolute inset-0 z-30 bg-primary-950/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl flex flex-col items-center justify-center p-4 text-center">
+                                <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center shadow-lg shadow-teal-500/50 mb-2 transform group-hover:scale-110 transition-transform duration-300">
+                                    <svg class="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                </div>
+                                <span class="text-xs font-black uppercase tracking-wider text-white drop-shadow">Klik untuk Unduh PDF</span>
+                            </div>
 
                             <?php if ( ! empty( $compro_cover ) ) : ?>
                                 <!-- Custom Uploaded Cover Image -->
@@ -887,7 +1034,7 @@ if ( empty( $cta_btn1_url ) ) {
                                 <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none group-hover:via-white/10 transition-all duration-700"></div>
                             <?php endif; ?>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Booklet Metadata Strip -->
                     <div class="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
@@ -925,11 +1072,11 @@ if ( empty( $cta_btn1_url ) ) {
                         <?php if ( ! empty( $compro_highlights ) ) : ?>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                                 <?php foreach ( $compro_highlights as $hl ) : ?>
-                                    <div class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/60">
+                                    <div class="flex items-start gap-2.5 p-3.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/70 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-teal-400 dark:hover:border-teal-600 transition-all duration-200 cursor-default">
                                         <div class="w-5 h-5 rounded-md bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5">
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                         </div>
-                                        <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+                                        <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
                                             <?php echo esc_html( $hl ); ?>
                                         </span>
                                     </div>

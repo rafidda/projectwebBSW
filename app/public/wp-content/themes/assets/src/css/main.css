@@ -1220,3 +1220,124 @@ img:not([loading="lazy"]) {
 }
 
 
+
+/* ─────────────────────────────────────────────────────────────
+   MITRA KAMI - SEAMLESS CONTINUOUS MARQUEE & ADAPTIVE CONTRAST
+   ───────────────────────────────────────────────────────────── */
+@keyframes mitraMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes mitraMarqueeReverse {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.mitra-ticker-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  display: flex;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+}
+
+.mitra-track-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 1.5rem;
+  padding-right: 1.5rem;
+  will-change: transform;
+  animation: mitraMarquee 26s linear infinite;
+}
+
+.mitra-track-group.reverse {
+  animation-name: mitraMarqueeReverse;
+}
+
+@media (max-width: 640px) {
+  .mitra-ticker-container {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+  }
+  .mitra-track-group {
+    gap: 1rem;
+    padding-right: 1rem;
+    animation-duration: 18s;
+  }
+}
+
+/* Glassmorphism Capsule Tile */
+.mitra-glass-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 11rem;
+  height: 5.5rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+  transition: none;
+}
+
+html.dark .mitra-glass-tile {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 640px) {
+  .mitra-glass-tile {
+    width: 13rem;
+    height: 6rem;
+    padding: 1rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .mitra-glass-tile {
+    width: 14.5rem;
+    height: 6.25rem;
+  }
+}
+
+/* Adaptive Contrast Filter for Partner Logos */
+.mitra-adaptive-logo {
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.18));
+  transition: none;
+  max-height: 2.75rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (min-width: 640px) {
+  .mitra-adaptive-logo {
+    max-height: 3.25rem;
+  }
+}
+
+/* Dark Mode: Glow & Outline terang halus di sekeliling logo */
+html.dark .mitra-adaptive-logo {
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.9))
+          drop-shadow(0 0 3px rgba(255, 255, 255, 0.5))
+          drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}

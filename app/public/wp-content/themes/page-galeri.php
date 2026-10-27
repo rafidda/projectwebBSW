@@ -13,10 +13,22 @@ $header      = wakalumi_get_galeri_header();
 $categories  = wakalumi_get_galeri_categories();
 $all_albums  = wakalumi_get_galeri_albums();
 
-// Filter active albums only
+// Filter active albums only & pastikan cover_image juga masuk dalam daftar foto lightbox jika belum ada
 $galeri_list = array_values( array_filter( $all_albums, function( $item ) {
     return ( $item['status'] ?? 'aktif' ) === 'aktif';
 }) );
+
+foreach ( $galeri_list as &$alb_ref ) {
+    $c_img = trim( $alb_ref['cover_image'] ?? '' );
+    $f_arr = isset( $alb_ref['foto_list'] ) && is_array( $alb_ref['foto_list'] ) ? $alb_ref['foto_list'] : [];
+    if ( ! empty( $c_img ) && ! in_array( $c_img, $f_arr, true ) ) {
+        array_unshift( $f_arr, $c_img );
+    } elseif ( empty( $c_img ) && ! empty( $f_arr ) ) {
+        $alb_ref['cover_image'] = $f_arr[0];
+    }
+    $alb_ref['foto_list'] = array_values( array_unique( $f_arr ) );
+}
+unset( $alb_ref );
 
 // Count stats
 $count_all_albums = count( $galeri_list );
@@ -277,8 +289,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                         <?php if ( ! empty( $cover_img ) ) : ?>
                             <img src="<?php echo $cover_img; ?>" 
                                  alt="<?php echo $judul; ?>" 
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                 loading="lazy">
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out loaded">
                         <?php else : ?>
                             <!-- Fallback Elegant Pattern with Bank Watermark -->
                             <div class="w-full h-full bg-gradient-to-br from-teal-900 via-slate-900 to-teal-950 flex items-center justify-center relative overflow-hidden">
@@ -581,11 +592,20 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
      SECTION 6: CLIENT-SIDE JAVASCRIPT CONTROLLER (PAGINATION, FILTER, LIGHTBOX)
      ======================================================================== -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
+    function initGaleriPage() {
+        var allCards = Array.from(document.querySelectorAll('.galeri-card'));
+        if (allCards.length === 0 && !document.getElementById('galeri-search-input')) return;
 
-    // ── 1. FILTER & SEARCH CONTROLLER ───────────────────────────────
-    var allCards          = Array.from(document.querySelectorAll('.galeri-card'));
-    var catFilterPills    = document.querySelectorAll('.galeri-cat-pill');
+        // Clean up any stale teleported lightbox in document.body before re-init
+        var staleLb = document.querySelectorAll('body > #galeri-story-lightbox');
+        var inSwupLb = document.querySelector('#swup #galeri-story-lightbox');
+        if (staleLb.length > 0 && inSwupLb) {
+            staleLb.forEach(function(l) { l.remove(); });
+        }
+
+        // ── 1. FILTER & SEARCH CONTROLLER ───────────────────────────────
+        var catFilterPills    = document.querySelectorAll('.galeri-cat-pill');
     var yearSelect        = document.getElementById('galeri-year-select');
     var searchInput       = document.getElementById('galeri-search-input');
     var clearSearchBtn    = document.getElementById('galeri-clear-search');
@@ -848,13 +868,17 @@ document.addEventListener('DOMContentLoaded', function() {
         currentPhotos  = [];
         photoNodes.forEach(function(node) {
             var u = node.textContent.trim();
-            if (u) currentPhotos.push(u);
+            if (u && u.indexOf('images/seed/') === -1 && u.indexOf('http://images/') !== 0 && currentPhotos.indexOf(u) === -1) {
+                currentPhotos.push(u);
+            }
         });
 
         // Fallback if no photos but cover exists
         if (currentPhotos.length === 0) {
             var cover = card.querySelector('img') ? card.querySelector('img').getAttribute('src') : '';
-            if (cover) currentPhotos.push(cover);
+            if (cover && cover.indexOf('images/seed/') === -1 && cover.indexOf('http://images/') !== 0) {
+                currentPhotos.push(cover);
+            }
         }
 
         currentPhotoIdx = 0;
@@ -960,7 +984,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? 'lb-thumb-btn flex-shrink-0 w-14 h-10 sm:w-16 sm:h-11 rounded-lg overflow-hidden border-2 border-teal-400 ring-2 ring-teal-400/50 shadow-md transform scale-105 transition-all'
                 : 'lb-thumb-btn flex-shrink-0 w-14 h-10 sm:w-16 sm:h-11 rounded-lg overflow-hidden border border-white/20 opacity-50 hover:opacity-100 transition-all cursor-pointer';
 
-            btn.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover" loading="lazy">';
+            btn.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover loaded">';
             btn.addEventListener('click', function() {
                 if (isVideoMode) toggleVideoMode(false);
                 showPhoto(i);
@@ -1102,7 +1126,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-});
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initGaleriPage);
+    } else {
+        initGaleriPage();
+    }
+})();
 </script>
 
 <?php get_footer(); ?>

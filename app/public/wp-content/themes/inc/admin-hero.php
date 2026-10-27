@@ -495,7 +495,7 @@ function wakalumi_render_hero_admin_page() {
                                             </div>
                                             <div>
                                                 <label style="font-size: 11px; color: #64748b;">Link Tujuan:</label>
-                                                <input type="text" name="slide_<?php echo esc_attr( $key ); ?>_cta_url" value="<?php echo esc_attr( $slide['cta_url'] ); ?>" class="regular-text" placeholder="Kosongkan untuk otomatis link WhatsApp CS" style="width: 100%; font-size: 12px;">
+                                                <input type="text" name="slide_<?php echo esc_attr( $key ); ?>_cta_url" value="<?php echo esc_attr( $slide['cta_url'] ); ?>" class="regular-text" placeholder="Kosongkan jika slide/banner tidak ada link" style="width: 100%; font-size: 12px;">
                                             </div>
                                         </div>
                                     </div>
@@ -862,7 +862,7 @@ function wakalumi_render_hero_admin_page() {
                             '<strong style="font-size: 12px; color: #0f172a; display: block; margin-bottom: 6px;">🔘 Tombol Aksi 1 (Utama)</strong>' +
                             '<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px;">' +
                                 '<div><label style="font-size: 11px; color: #64748b;">Teks:</label><input type="text" name="slide_' + key + '_cta_text" value="Hubungi Kami" class="regular-text" style="width: 100%; font-size: 12px;"></div>' +
-                                '<div><label style="font-size: 11px; color: #64748b;">Link:</label><input type="text" name="slide_' + key + '_cta_url" value="" class="regular-text" placeholder="Kosongkan untuk otomatis link WA" style="width: 100%; font-size: 12px;"></div>' +
+                                '<div><label style="font-size: 11px; color: #64748b;">Link:</label><input type="text" name="slide_' + key + '_cta_url" value="" class="regular-text" placeholder="Kosongkan jika slide/banner tidak ada link" style="width: 100%; font-size: 12px;"></div>' +
                             '</div>' +
                         '</div>' +
                         '<div style="border-left: 3px solid #64748b; padding-left: 12px;">' +

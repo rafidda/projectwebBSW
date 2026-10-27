@@ -153,6 +153,12 @@ if ( ! function_exists( 'wakalumi_get_pengumuman_list' ) ) {
     function wakalumi_get_pengumuman_list() {
         $list = get_option( 'options_pengumuman_list', [] );
         if ( ! empty( $list ) && is_array( $list ) ) {
+            foreach ( $list as &$p_item ) {
+                if ( ! empty( $p_item['file_pdf'] ) && stripos( (string) $p_item['file_pdf'], 'images/seed/' ) !== false ) {
+                    $p_item['file_pdf'] = '';
+                }
+            }
+            unset( $p_item );
             // Sort by urutan ASC
             usort( $list, function( $a, $b ) {
                 return (int)( $a['urutan'] ?? 0 ) <=> (int)( $b['urutan'] ?? 0 );
@@ -160,54 +166,57 @@ if ( ! function_exists( 'wakalumi_get_pengumuman_list' ) ) {
             return $list;
         }
 
-        // Default Starter Announcements (Pre-populated)
+        // Default Starter Announcements (Pre-populated Resmi BSW)
         return [
             [
-                'id'          => 'ann_1',
-                'judul'       => 'Penyesuaian Jadwal Layanan Kantor Operasional Hari Raya Idul Fitri 1447 H',
+                'id'          => 'ann_perpindahan_kantor',
+                'slug'        => 'perpindahan-kantor-pusat-operasional-bank-syariah-wakalumi',
+                'judul'       => 'Perpindahan Kantor Pusat Operasional Bank Syariah Wakalumi',
+                'nomor_surat' => '001/BSW/DIR/X/2026 [SESUAIKAN]',
+                'tanggal'     => '2026-10-05',
                 'kategori'    => 'operasional',
                 'urgensi'     => 'penting',
-                'tanggal'     => date( 'Y-m-d' ),
-                'nomor_surat' => 'No. 028/DIR-WKL/SE/IV/2026',
-                'ringkasan'   => 'Sehubungan dengan Hari Raya Idul Fitri dan cuti bersama yang ditetapkan Pemerintah, kantor operasional BPRS Wakalumi tutup sementara dan layanan tatap muka kembali normal sesuai jadwal yang terlampir.',
-                'isi_lengkap' => "Yth. Seluruh Nasabah dan Mitra BPRS Wakalumi,\n\nMenindaklanjuti Keputusan Bersama Pemerintah Republik Indonesia mengenai Hari Libur Nasional dan Cuti Bersama Hari Raya Idul Fitri 1447 H, dengan ini kami sampaikan penyesuaian jadwal operasional kantor:\n\n1. Layanan Tatap Muka Kantor Operasional TUTUP sementara mulai tanggal cuti bersama.\n2. Seluruh jaringan kantor kas dan kantor cabang akan BUKA KEMBALI melayani nasabah secara normal pada hari kerja berikutnya pukul 08.00 WIB.\n3. Layanan transaksi perbankan tetap dapat diakses melalui saluran mitra dan komunikasi WhatsApp resmi bank kami.\n\nDemikian pengumuman ini kami sampaikan. Segenap Direksi, Dewan Pengawas Syariah, dan Karyawan BPRS Wakalumi mengucapkan Selamat Hari Raya Idul Fitri, Mohon Maaf Lahir dan Batin.",
-                'file_pdf'    => '',
+                'ringkasan'   => 'Mulai Senin, 12 Oktober 2026, kantor pusat operasional Bank Syariah Wakalumi (BSW) berpindah ke Jl. Ir. H. Juanda No. 14, Rempoa, Ciputat Timur, Tangerang Selatan.',
+                'isi_lengkap' => "<p><strong>PENGUMUMAN</strong><br>Nomor: 001/BSW/DIR/X/2026 [SESUAIKAN]</p><p><strong>Perihal: Perpindahan Kantor Pusat Operasional</strong></p><p>Yth. Nasabah, Mitra, dan Masyarakat,</p><p>Assalamu'alaikum warahmatullahi wabarakatuh.</p><p>Dalam rangka meningkatkan kualitas dan kenyamanan layanan, serta memperkuat kapabilitas operasional perusahaan, dengan ini kami sampaikan bahwa <strong>Bank Syariah Wakalumi (BSW)</strong> memindahkan kantor pusat operasional dengan rincian sebagai berikut:</p><ul><li><strong>Alamat lama:</strong> Komplek Ciputat Mutiara Center Blok B1, Jl. Dewi Sartika, Ciputat, Kota Tangerang Selatan, Banten 15411</li><li><strong>Alamat baru:</strong> Jl. Ir. H. Juanda No. 14, Rempoa, Kec. Ciputat Timur, Kota Tangerang Selatan, Banten 15412</li><li><strong>Berlaku efektif:</strong> Senin, 12 Oktober 2026</li></ul><p>Seluruh layanan operasional BSW mulai tanggal tersebut dilaksanakan dari alamat baru. Kami mohon agar korespondensi, pengiriman dokumen, dan kunjungan layanan ditujukan ke alamat baru tersebut.</p><p>Kami mengucapkan terima kasih atas kepercayaan dan dukungan Bapak/Ibu selama ini, dan memohon maaf atas ketidaknyamanan yang mungkin timbul selama masa transisi. Informasi lebih lanjut dapat diperoleh melalui kanal resmi BSW.</p><p>Wassalamu'alaikum warahmatullahi wabarakatuh.<br><br><strong>Direksi Bank Syariah Wakalumi (BSW)</strong></p>",
+                'file_pdf'    => 'images/seed/pengumuman-perpindahan-kantor.pdf',
                 'file_size'   => 'PDF Resmi • 1.2 MB',
-                'gambar'      => '',
+                'gambar'      => 'images/seed/pengumuman-perpindahan-kantor.jpg',
                 'is_toast'    => '1',
                 'is_popup'    => '1',
                 'status'      => 'aktif',
                 'urutan'      => 1,
             ],
             [
-                'id'          => 'ann_2',
-                'judul'       => 'Himbauan Keamanan: Waspada Modus Penipuan Mengatasnamakan BPRS Wakalumi',
-                'kategori'    => 'keamanan',
-                'urgensi'     => 'penting',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-5 days' ) ),
-                'nomor_surat' => 'No. 015/DIR-WKL/HMB/II/2026',
-                'ringkasan'   => 'Waspada terhadap modus penipuan berkedok hadiah, undian, atau permintaan data pribadi (OTP, PIN, Password). BPRS Wakalumi tidak pernah meminta biaya transfer ke rekening pribadi perorangan.',
-                'isi_lengkap' => "Yth. Nasabah Setia Bank Syariah Wakalumi,\n\nKami menghimbau kepada seluruh nasabah dan masyarakat agar selalu meningkatkan kewaspadaan terhadap maraknya penipuan daring yang mengatasnamakan PT BPRS Wakalumi.\n\nMohon perhatikan hal-hal krusial berikut:\n1. BPRS Wakalumi TIDAK PERNAH meminta kode OTP, PIN, Password, maupun data rahasia lainnya kepada nasabah melalui media apapun.\n2. Seluruh transaksi pembiayaan dan pembukaan rekening hanya diproses melalui rekening resmi perseroan (PT BPRS Wakalumi), BUKAN atas nama perorangan atau staf pribadi.\n3. Kanal informasi dan layanan resmi kami hanya dapat diakses melalui nomor WhatsApp resmi Customer Service yang tertera di website ini.\n\nBila Anda menerima pesan mencurigakan, segera konfirmasi dan laporkan ke layanan pengaduan konsumen kami.",
-                'file_pdf'    => '',
-                'file_size'   => 'PDF Resmi • 850 KB',
-                'gambar'      => '',
+                'id'          => 'ann_branding_baru',
+                'slug'        => 'branding-baru-bank-syariah-wakalumi-bsw',
+                'judul'       => 'Wajah Baru Kami: Bank Syariah Wakalumi (BSW) Hadir dengan Identitas dan Logo Baru',
+                'nomor_surat' => '002/BSW/DIR/X/2026 [SESUAIKAN]',
+                'tanggal'     => '2026-10-12',
+                'kategori'    => 'regulasi',
+                'urgensi'     => 'biasa',
+                'ringkasan'   => 'WAKALUMI (BPRS Wakalumi) kini bertransformasi menjadi BSW (Bank Syariah Wakalumi) dengan logo baru yang lebih ringkas, berkarakter, dan mudah diingat.',
+                'isi_lengkap' => "<p><strong>PENGUMUMAN</strong><br>Nomor: 002/BSW/DIR/X/2026 [SESUAIKAN]</p><p><strong>Perihal: Perubahan Branding dan Logo Perusahaan</strong></p><p>Yth. Nasabah, Mitra, dan Masyarakat,</p><p>Assalamu'alaikum warahmatullahi wabarakatuh.</p><p>Seiring perjalanan kami melayani masyarakat sejak 1989, dengan ini kami umumkan perubahan identitas perusahaan sebagai berikut:</p><table style=\"width:100%; border-collapse:collapse; margin-bottom:15px;\"><tr><th style=\"border:1px solid #cbd5e1; padding:8px;\"></th><th style=\"border:1px solid #cbd5e1; padding:8px;\">Sebelumnya</th><th style=\"border:1px solid #cbd5e1; padding:8px;\">Sekarang</th></tr><tr><td style=\"border:1px solid #cbd5e1; padding:8px;\"><strong>Nama brand</strong></td><td style=\"border:1px solid #cbd5e1; padding:8px;\">WAKALUMI (BPRS Wakalumi)</td><td style=\"border:1px solid #cbd5e1; padding:8px;\"><strong>BSW (Bank Syariah Wakalumi)</strong></td></tr><tr><td style=\"border:1px solid #cbd5e1; padding:8px;\"><strong>Logo</strong></td><td style=\"border:1px solid #cbd5e1; padding:8px;\">Logo lama</td><td style=\"border:1px solid #cbd5e1; padding:8px;\"><strong>Logo baru</strong></td></tr></table><h3>Filosofi Logo Baru</h3><p><strong>01 — Bentuk Tetesan Air:</strong> Air adalah sumber kehidupan bagi seluruh makhluk, sebagaimana firman Allah dalam QS. Al-Anbiya' [21]:30, <em>\"…Dan Kami jadikan dari air segala sesuatu yang hidup…\"</em></p><p><strong>02 — Huruf Wau (و):</strong> Huruf wau memiliki kedudukan kebahasaan dan spiritual yang istimewa dalam Al-Qur'an sebagai pengikat dan penyambung kemaslahatan.</p><p><strong>03 — Aksen Hijau Tosca Kebiruan:</strong> Melambangkan amanah, transparansi, dan komitmen berkelanjutan dalam menghadirkan layanan yang membawa keberkahan dan memberi manfaat nyata bagi umat.</p><h3>Yang Tidak Berubah</h3><p>Komitmen kami tetap sama: menjalankan layanan perbankan sesuai prinsip syariah dengan berlandaskan nilai <strong>#WAQF</strong> — <em>Wisdom, Accountability, Quality, Foresight</em>. Layanan, produk, dan akad yang sedang berjalan tidak terpengaruh oleh perubahan branding ini. [SESUAIKAN: pastikan pernyataan ini sesuai kebijakan resmi]</p><p>Terima kasih atas kepercayaan Bapak/Ibu. Mari bertumbuh bersama BSW.</p><p>Wassalamu'alaikum warahmatullahi wabarakatuh.<br><br><strong>Direksi Bank Syariah Wakalumi (BSW)</strong></p>",
+                'file_pdf'    => 'images/seed/pengumuman-branding-bsw.pdf',
+                'file_size'   => 'PDF Panduan Brand • 2.4 MB',
+                'gambar'      => 'images/seed/pengumuman-branding-logo-baru.png',
                 'is_toast'    => '1',
                 'is_popup'    => '0',
                 'status'      => 'aktif',
                 'urutan'      => 2,
             ],
             [
-                'id'          => 'ann_3',
-                'judul'       => 'Pengumuman Pelaksanaan Lelang Eksekusi Hak Tanggungan Agunan Pembiayaan',
-                'kategori'    => 'lelang',
-                'urgensi'     => 'normal',
-                'tanggal'     => date( 'Y-m-d', strtotime( '-14 days' ) ),
-                'nomor_surat' => 'No. 008/LELANG-WKL/I/2026',
-                'ringkasan'   => 'Pengumuman pelaksanaan lelang eksekusi hak tanggungan atas agunan pembiayaan bekerjasama dengan Kantor Pelayanan Kekayaan Negara dan Lelang (KPKNL) secara terbuka melalui portal resmi lelang.',
-                'isi_lengkap' => "Berdasarkan Pasal 6 Undang-Undang Hak Tanggungan No. 4 Tahun 1996, PT BPRS Wakalumi dengan perantaraan Kantor Pelayanan Kekayaan Negara dan Lelang (KPKNL) akan melaksanakan Lelang Eksekusi Hak Tanggungan atas objek jaminan yang telah memenuhi syarat lelang perbankan.\n\nSyarat dan Ketentuan Lelang:\n1. Penawaran lelang dilakukan secara tertulis tanpa kehadiran peserta lelang melalui aplikasi resmi Lelang Indonesia (portal KPKNL).\n2. Peserta lelang wajib menyetorkan uang jaminan lelang sesuai nominal pengumuman sebelum batas waktu penutupan.\n3. Objek lelang dijual dalam kondisi apa adanya (as is) dengan segala kekurangan dan konsekuensi hukumnya.\n\nInformasi lengkap mengenai rincian batas tanah, sertifikat hak milik, dan nilai limit lelang dapat dilihat pada lampiran surat edaran resmi.",
-                'file_pdf'    => '',
-                'file_size'   => 'PDF Resmi • 2.1 MB',
-                'gambar'      => '',
+                'id'          => 'ann_layanan_va',
+                'slug'        => 'peluncuran-fasilitas-pembayaran-angsuran-virtual-account-va',
+                'judul'       => 'Pemberitahuan Resmi: Pembayaran Angsuran Pembiayaan Kini Lebih Mudah Melalui Virtual Account (VA) 24/7',
+                'nomor_surat' => '003/BSW/DIR/X/2026 [SESUAIKAN]',
+                'tanggal'     => '2026-10-15',
+                'kategori'    => 'operasional',
+                'urgensi'     => 'penting',
+                'ringkasan'   => 'Bank Syariah Wakalumi (BSW) bekerjasama dengan Bank Permata Syariah menghadirkan fasilitas Virtual Account (VA) untuk pembayaran angsuran pembiayaan 24/7 dari seluruh ATM & M-Banking perbankan di Indonesia.',
+                'isi_lengkap' => "<p><strong>PENGUMUMAN</strong><br>Nomor: 003/BSW/DIR/X/2026 [SESUAIKAN]</p><p><strong>Perihal: Peluncuran Fasilitas Pembayaran Angsuran via Virtual Account (VA)</strong></p><p>Yth. Nasabah Debitur dan Mitra Bank Syariah Wakalumi (BSW),</p><p>Assalamu'alaikum warahmatullahi wabarakatuh.</p><p>Dalam rangka meningkatkan kemudahan, kecepatan, dan fleksibilitas bertransaksi, dengan ini kami sampaikan bahwa <strong>Bank Syariah Wakalumi (BSW)</strong> bekerjasama dengan <strong>Bank Permata Syariah</strong> resmi meluncurkan fasilitas pembayaran angsuran pembiayaan melalui jaringan <strong>Virtual Account (VA)</strong> yang dapat diakses 24 jam sehari, 7 hari seminggu.</p><p>Kini Anda dapat menunaikan kewajiban angsuran pembiayaan tepat waktu dari mana saja tanpa harus datang ke kantor cabang, cukup melalui aplikasi Mobile Banking atau ATM bank pilihan Anda.</p><h3>Ketentuan & Petunjuk Transaksi Virtual Account:</h3><ol><li><strong>Bank Mitra Tujuan:</strong> Pilih <strong>Bank Permata Syariah / Permata UUS</strong> (Kode Bank: <strong>013</strong>) pada menu transfer antar-bank Anda.</li><li><strong>Format Nomor VA:</strong> Masukkan kode prefix <strong>728262</strong> dilanjutkan dengan nomor rekening debitur Anda di BSW (Contoh format: <code>7282621080199999</code>).</li><li><strong>Skema Open Payment (Input Nominal Mandiri):</strong> Harap diperhatikan bahwa nominal tagihan <em>TIDAK MUNCUL OTOMATIS</em> di layar ATM/M-Banking. Nasabah wajib mengetik jumlah nominal transfer angsuran secara manual.</li><li><strong>Biaya Administrasi Jaringan Switching (Rp 3.500):</strong> Nasabah wajib menambahkan biaya admin sebesar <strong>Rp 3.500</strong> ke dalam jumlah saldo yang ditransfer agar dana pokok dan bagi hasil angsuran masuk secara utuh (Contoh: jika angsuran adalah Rp 1.000.000, maka saldo yang diketik adalah <strong>Rp 1.003.500</strong>).</li><li><strong>Verifikasi Nama Debitur:</strong> Layar konfirmasi perbankan akan secara otomatis memverifikasi dan menampilkan Nama Nasabah/Debitur terdaftar di Bank Syariah Wakalumi. Pastikan nama yang tampil telah sesuai sebelum menyelesaikan otorisasi PIN.</li></ol><p>Panduan lengkap langkah-demi-langkah serta kotak simulasi transfer dapat diakses melalui menu <a href=\"" . home_url('/layanan/') . "\">Layanan Kami</a> di website resmi BSW.</p><p>Wassalamu'alaikum warahmatullahi wabarakatuh.<br><br><strong>Direksi Bank Syariah Wakalumi (BSW)</strong></p>",
+                'file_pdf'    => 'images/seed/panduan-pembayaran-va-bsw.pdf',
+                'file_size'   => 'PDF Panduan VA • 850 KB',
+                'gambar'      => 'images/seed/pengumuman-layanan-va.jpg',
                 'is_toast'    => '1',
                 'is_popup'    => '0',
                 'status'      => 'aktif',
@@ -349,7 +358,7 @@ function wakalumi_render_pengumuman_page() {
                 'tanggal'     => sanitize_text_field( $tanggals[$i] ?? date( 'Y-m-d' ) ),
                 'nomor_surat' => sanitize_text_field( $nomor_surats[$i] ?? '' ),
                 'ringkasan'   => sanitize_textarea_field( $ringkasans[$i] ?? '' ),
-                'isi_lengkap' => sanitize_textarea_field( $isi_lengkaps[$i] ?? '' ),
+                'isi_lengkap' => wp_kses_post( wp_unslash( $isi_lengkaps[$i] ?? '' ) ),
                 'gambar'      => esc_url_raw( $gambars[$i] ?? '' ),
                 'file_pdf'    => esc_url_raw( $file_pdfs[$i] ?? '' ),
                 'file_size'   => sanitize_text_field( $file_sizes[$i] ?? 'PDF Resmi' ),

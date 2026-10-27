@@ -559,87 +559,198 @@ if ( ! function_exists( 'wakalumi_get_social_media_list' ) ) {
 if ( ! function_exists( 'wakalumi_get_social_platform_config' ) ) {
     /**
      * Konfigurasi styling visual, warna border, ikon SVG, dan badge per platform media sosial.
+     * Mendukung penyesuaian kustom warna (auto, emerald, teal, blue, indigo, rose, amber, dark).
      *
      * @param string $platform
+     * @param string $color_theme
      * @return array
      */
-    function wakalumi_get_social_platform_config( $platform = 'custom' ) {
+    function wakalumi_get_social_platform_config( $platform = 'custom', $color_theme = 'auto' ) {
         $configs = [
             'instagram' => [
                 'name'         => 'Instagram',
-                'icon_bg'      => 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888]',
+                'icon_box'     => 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white shadow-md shadow-pink-500/25 border-0',
                 'border_grad'  => 'from-pink-500/30 via-rose-500/20 to-amber-500/30 hover:from-pink-500 hover:to-amber-500 hover:shadow-pink-500/15',
-                'badge_class'  => 'bg-pink-50 dark:bg-pink-950/70 text-pink-700 dark:text-pink-300 border-pink-200/80',
-                'link_class'   => 'text-pink-700 dark:text-pink-400 hover:text-pink-800 dark:hover:text-pink-300',
+                'badge_class'  => 'bg-pink-50 dark:bg-pink-950/70 text-pink-700 dark:text-pink-300 border-pink-200/80 dark:border-pink-800',
+                'hover_border' => 'hover:border-pink-500/50 dark:hover:border-pink-500/50',
+                'title_hover'  => 'group-hover:text-pink-600 dark:group-hover:text-pink-400',
+                'dot_color'    => 'bg-gradient-to-r from-[#f09433] to-[#bc1888]',
+                'btn_class'    => 'text-pink-700 dark:text-pink-300 hover:text-pink-800 dark:hover:text-pink-200 hover:bg-pink-50/70 dark:hover:bg-pink-950/40',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
             ],
             'facebook' => [
                 'name'         => 'Facebook',
-                'icon_bg'      => 'bg-[#1877F2] text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-[#1877F2] to-sky-400',
+                'icon_box'     => 'bg-[#1877F2] text-white shadow-md shadow-blue-500/25 border-0',
                 'border_grad'  => 'from-blue-500/30 via-blue-600/20 to-sky-500/30 hover:from-blue-600 hover:to-sky-500 hover:shadow-blue-500/15',
-                'badge_class'  => 'bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border-blue-200/80',
-                'link_class'   => 'text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300',
+                'badge_class'  => 'bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border-blue-200/80 dark:border-blue-800',
+                'hover_border' => 'hover:border-blue-500/50 dark:hover:border-blue-500/50',
+                'title_hover'  => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+                'dot_color'    => 'bg-[#1877F2]',
+                'btn_class'    => 'text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:bg-blue-50/70 dark:hover:bg-blue-950/40',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
             ],
             'linkedin' => [
                 'name'         => 'LinkedIn',
-                'icon_bg'      => 'bg-[#0A66C2] text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-[#0A66C2] to-sky-400',
+                'icon_box'     => 'bg-[#0A66C2] text-white shadow-md shadow-sky-600/25 border-0',
                 'border_grad'  => 'from-sky-600/30 via-blue-700/20 to-teal-500/30 hover:from-sky-600 hover:to-teal-500 hover:shadow-sky-600/15',
-                'badge_class'  => 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200/80',
-                'link_class'   => 'text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300',
+                'badge_class'  => 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200/80 dark:border-sky-800',
+                'hover_border' => 'hover:border-sky-500/50 dark:hover:border-sky-500/50',
+                'title_hover'  => 'group-hover:text-[#0A66C2] dark:group-hover:text-sky-400',
+                'dot_color'    => 'bg-[#0A66C2]',
+                'btn_class'    => 'text-[#0A66C2] dark:text-sky-300 hover:text-sky-800 dark:hover:text-sky-200 hover:bg-sky-50/70 dark:hover:bg-sky-950/40',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>',
             ],
             'youtube' => [
                 'name'         => 'YouTube',
-                'icon_bg'      => 'bg-[#FF0000] text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-[#FF0000] to-rose-400',
+                'icon_box'     => 'bg-[#FF0000] text-white shadow-md shadow-red-500/25 border-0',
                 'border_grad'  => 'from-red-500/30 via-rose-600/20 to-amber-500/30 hover:from-red-600 hover:to-amber-500 hover:shadow-red-500/15',
-                'badge_class'  => 'bg-red-50 dark:bg-red-950/70 text-red-700 dark:text-red-300 border-red-200/80',
-                'link_class'   => 'text-red-700 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300',
+                'badge_class'  => 'bg-red-50 dark:bg-red-950/70 text-red-700 dark:text-red-300 border-red-200/80 dark:border-red-800',
+                'hover_border' => 'hover:border-red-500/50 dark:hover:border-red-500/50',
+                'title_hover'  => 'group-hover:text-[#FF0000] dark:group-hover:text-red-400',
+                'dot_color'    => 'bg-[#FF0000]',
+                'btn_class'    => 'text-[#FF0000] dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50/70 dark:hover:bg-red-950/40',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
             ],
             'tiktok' => [
                 'name'         => 'TikTok',
-                'icon_bg'      => 'bg-slate-950 text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-cyan-400 via-rose-500 to-slate-900',
+                'icon_box'     => 'bg-slate-950 text-white shadow-md shadow-slate-900/30 border border-slate-700',
                 'border_grad'  => 'from-slate-800/40 via-rose-500/20 to-cyan-400/30 hover:from-cyan-500 hover:to-rose-500 hover:shadow-cyan-500/15',
                 'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700',
-                'link_class'   => 'text-slate-800 dark:text-cyan-400 hover:text-black dark:hover:text-cyan-300',
+                'hover_border' => 'hover:border-cyan-500/50 dark:hover:border-cyan-500/50',
+                'title_hover'  => 'group-hover:text-cyan-600 dark:group-hover:text-cyan-400',
+                'dot_color'    => 'bg-cyan-500',
+                'btn_class'    => 'text-slate-800 dark:text-cyan-300 hover:text-black dark:hover:text-cyan-200 hover:bg-slate-100 dark:hover:bg-slate-800',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-1.01-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>',
             ],
             'x' => [
                 'name'         => 'X (Twitter)',
-                'icon_bg'      => 'bg-black text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-slate-900 to-slate-700',
+                'icon_box'     => 'bg-black text-white shadow-md border border-slate-700',
                 'border_grad'  => 'from-slate-700/40 via-slate-600/30 to-slate-800/40 hover:from-slate-700 hover:to-slate-900 hover:shadow-slate-500/15',
                 'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700',
-                'link_class'   => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white',
+                'hover_border' => 'hover:border-slate-500/50 dark:hover:border-slate-500/50',
+                'title_hover'  => 'group-hover:text-slate-900 dark:group-hover:text-white',
+                'dot_color'    => 'bg-slate-700',
+                'btn_class'    => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800',
                 'svg'          => '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
             ],
             'threads' => [
                 'name'         => 'Threads',
-                'icon_bg'      => 'bg-slate-900 text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-slate-900 to-zinc-600',
+                'icon_box'     => 'bg-slate-900 text-white shadow-md border border-slate-700',
                 'border_grad'  => 'from-slate-800/40 via-zinc-600/30 to-slate-900/40 hover:from-zinc-700 hover:to-slate-900 hover:shadow-zinc-500/15',
                 'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700',
-                'link_class'   => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white',
+                'hover_border' => 'hover:border-zinc-500/50 dark:hover:border-zinc-500/50',
+                'title_hover'  => 'group-hover:text-slate-900 dark:group-hover:text-white',
+                'dot_color'    => 'bg-zinc-600',
+                'btn_class'    => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.212-8.184-3.534C2.277 18.252 1.5 15.347 1.5 11.968 1.5 8.59 2.277 5.684 3.995 3.39 5.845 1.069 8.598-.119 12.179-.095c3.604.024 6.376 1.229 8.24 3.582 1.704 2.152 2.471 5.039 2.471 8.58 0 .414-.336.75-.75.75s-.75-.336-.75-.75c0-3.238-.688-5.834-2.17-7.705-1.637-2.067-4.103-3.136-7.332-3.157-3.197-.021-5.632.997-7.237 3.027-1.526 1.93-2.227 4.542-2.227 7.766 0 3.224.701 5.836 2.227 7.766 1.605 2.03 4.04 3.048 7.237 3.027 2.378-.016 4.318-.621 5.766-1.799 1.488-1.211 2.327-2.935 2.427-4.985H12.19c-2.482 0-4.636-1.554-5.361-3.866-.827-2.639.299-5.409 2.678-6.589 1.309-.649 2.8-.829 4.2-.507 1.334.307 2.471 1.085 3.203 2.19.467.705.787 1.521.954 2.417.378-.073.743-.167 1.092-.284.453-.153.882-.338 1.282-.553-.393-2.05-1.341-3.791-2.748-5.042-1.921-1.708-4.524-2.585-7.739-2.607-4.047-.027-7.147 1.353-9.215 4.101C-1.02 13.911-1.02 17.519.539 20.301c1.947 3.475 5.373 5.309 9.907 5.309.414 0 .75-.336.75-.75s-.336-.75-.75-.75z"/></svg>',
             ],
             'telegram' => [
                 'name'         => 'Telegram',
-                'icon_bg'      => 'bg-[#229ED9] text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-[#229ED9] to-sky-400',
+                'icon_box'     => 'bg-[#229ED9] text-white shadow-md shadow-sky-500/25 border-0',
                 'border_grad'  => 'from-sky-500/30 via-cyan-500/20 to-blue-500/30 hover:from-sky-500 hover:to-cyan-500 hover:shadow-sky-500/15',
-                'badge_class'  => 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200/80',
-                'link_class'   => 'text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300',
+                'badge_class'  => 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200/80 dark:border-sky-800',
+                'hover_border' => 'hover:border-sky-500/50 dark:hover:border-sky-500/50',
+                'title_hover'  => 'group-hover:text-sky-600 dark:group-hover:text-sky-400',
+                'dot_color'    => 'bg-[#229ED9]',
+                'btn_class'    => 'text-[#229ED9] dark:text-sky-300 hover:text-sky-800 dark:hover:text-sky-200 hover:bg-sky-50/70 dark:hover:bg-sky-950/40',
                 'svg'          => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.943z"/></svg>',
             ],
             'custom' => [
                 'name'         => 'Lainnya / Website',
-                'icon_bg'      => 'bg-teal-600 text-white',
+                'accent_bar'   => 'bg-gradient-to-r from-teal-500 to-emerald-400',
+                'icon_box'     => 'bg-teal-600 text-white shadow-md shadow-teal-500/25 border-0',
                 'border_grad'  => 'from-teal-500/30 via-emerald-500/20 to-cyan-500/30 hover:from-teal-500 hover:to-cyan-500 hover:shadow-teal-500/15',
-                'badge_class'  => 'bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border-teal-200/80',
-                'link_class'   => 'text-teal-700 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300',
+                'badge_class'  => 'bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border-teal-200/80 dark:border-teal-800',
+                'hover_border' => 'hover:border-teal-500/50 dark:hover:border-teal-500/50',
+                'title_hover'  => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                'dot_color'    => 'bg-teal-500',
+                'btn_class'    => 'text-teal-700 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-200 hover:bg-teal-50/70 dark:hover:bg-teal-950/40',
                 'svg'          => '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>',
             ],
         ];
 
-        return $configs[ $platform ] ?? $configs['custom'];
+        $res = $configs[ $platform ] ?? $configs['custom'];
+
+        // Preset tema warna kustom jika dipilih oleh admin
+        $theme_overrides = [
+            'emerald' => [
+                'accent_bar'   => 'bg-gradient-to-r from-emerald-500 to-teal-400',
+                'icon_box'     => 'bg-emerald-600 text-white shadow-md shadow-emerald-500/25 border-0',
+                'badge_class'  => 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800',
+                'hover_border' => 'hover:border-emerald-500/50 dark:hover:border-emerald-500/50',
+                'title_hover'  => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+                'dot_color'    => 'bg-emerald-500',
+                'btn_class'    => 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800 dark:hover:text-emerald-200 hover:bg-emerald-50/70 dark:hover:bg-emerald-950/40',
+            ],
+            'teal' => [
+                'accent_bar'   => 'bg-gradient-to-r from-teal-500 to-emerald-400',
+                'icon_box'     => 'bg-teal-600 text-white shadow-md shadow-teal-500/25 border-0',
+                'badge_class'  => 'bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border-teal-200/80 dark:border-teal-800',
+                'hover_border' => 'hover:border-teal-500/50 dark:hover:border-teal-500/50',
+                'title_hover'  => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                'dot_color'    => 'bg-teal-500',
+                'btn_class'    => 'text-teal-700 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-200 hover:bg-teal-50/70 dark:hover:bg-teal-950/40',
+            ],
+            'blue' => [
+                'accent_bar'   => 'bg-gradient-to-r from-blue-500 to-sky-400',
+                'icon_box'     => 'bg-blue-600 text-white shadow-md shadow-blue-500/25 border-0',
+                'badge_class'  => 'bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border-blue-200/80 dark:border-blue-800',
+                'hover_border' => 'hover:border-blue-500/50 dark:hover:border-blue-500/50',
+                'title_hover'  => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+                'dot_color'    => 'bg-blue-500',
+                'btn_class'    => 'text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:bg-blue-50/70 dark:hover:bg-blue-950/40',
+            ],
+            'indigo' => [
+                'accent_bar'   => 'bg-gradient-to-r from-indigo-500 to-purple-400',
+                'icon_box'     => 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25 border-0',
+                'badge_class'  => 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border-indigo-200/80 dark:border-indigo-800',
+                'hover_border' => 'hover:border-indigo-500/50 dark:hover:border-indigo-500/50',
+                'title_hover'  => 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400',
+                'dot_color'    => 'bg-indigo-500',
+                'btn_class'    => 'text-indigo-700 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-200 hover:bg-indigo-50/70 dark:hover:bg-indigo-950/40',
+            ],
+            'rose' => [
+                'accent_bar'   => 'bg-gradient-to-r from-rose-500 to-pink-400',
+                'icon_box'     => 'bg-rose-600 text-white shadow-md shadow-rose-500/25 border-0',
+                'badge_class'  => 'bg-rose-50 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300 border-rose-200/80 dark:border-rose-800',
+                'hover_border' => 'hover:border-rose-500/50 dark:hover:border-rose-500/50',
+                'title_hover'  => 'group-hover:text-rose-600 dark:group-hover:text-rose-400',
+                'dot_color'    => 'bg-rose-500',
+                'btn_class'    => 'text-rose-700 dark:text-rose-300 hover:text-rose-800 dark:hover:text-rose-200 hover:bg-rose-50/70 dark:hover:bg-rose-950/40',
+            ],
+            'amber' => [
+                'accent_bar'   => 'bg-gradient-to-r from-amber-500 to-yellow-400',
+                'icon_box'     => 'bg-amber-600 text-white shadow-md shadow-amber-500/25 border-0',
+                'badge_class'  => 'bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800',
+                'hover_border' => 'hover:border-amber-500/50 dark:hover:border-amber-500/50',
+                'title_hover'  => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+                'dot_color'    => 'bg-amber-500',
+                'btn_class'    => 'text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 hover:bg-amber-50/70 dark:hover:bg-amber-950/40',
+            ],
+            'dark' => [
+                'accent_bar'   => 'bg-gradient-to-r from-slate-900 to-slate-700',
+                'icon_box'     => 'bg-slate-900 text-white shadow-md border border-slate-700',
+                'badge_class'  => 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700',
+                'hover_border' => 'hover:border-slate-500/50 dark:hover:border-slate-500/50',
+                'title_hover'  => 'group-hover:text-slate-900 dark:group-hover:text-white',
+                'dot_color'    => 'bg-slate-700',
+                'btn_class'    => 'text-slate-800 dark:text-slate-200 hover:text-black dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800',
+            ],
+        ];
+
+        if ( ! empty( $color_theme ) && $color_theme !== 'auto' && isset( $theme_overrides[ $color_theme ] ) ) {
+            $res = array_merge( $res, $theme_overrides[ $color_theme ] );
+        }
+
+        return $res;
     }
 }
 
@@ -704,16 +815,17 @@ function wakalumi_render_contact_page() {
         update_option( 'options_contact_social_desc', sanitize_textarea_field( $_POST['options_contact_social_desc'] ?? '' ) );
 
         // 5. Media Sosial Repeater (Full CRUD)
-        $soc_ids       = $_POST['soc_id'] ?? [];
-        $soc_platforms = $_POST['soc_platform'] ?? [];
-        $soc_titles    = $_POST['soc_title'] ?? [];
-        $soc_namas     = $_POST['soc_nama_akun'] ?? [];
-        $soc_subtitles = $_POST['soc_subtitle'] ?? [];
-        $soc_descs     = $_POST['soc_desc'] ?? [];
-        $soc_urls      = $_POST['soc_url'] ?? [];
-        $soc_btn_texts = $_POST['soc_btn_text'] ?? [];
-        $soc_urutans   = $_POST['soc_urutan'] ?? [];
-        $soc_statuses  = $_POST['soc_status'] ?? [];
+        $soc_ids          = $_POST['soc_id'] ?? [];
+        $soc_platforms    = $_POST['soc_platform'] ?? [];
+        $soc_titles       = $_POST['soc_title'] ?? [];
+        $soc_namas        = $_POST['soc_nama_akun'] ?? [];
+        $soc_subtitles    = $_POST['soc_subtitle'] ?? [];
+        $soc_descs        = $_POST['soc_desc'] ?? [];
+        $soc_urls         = $_POST['soc_url'] ?? [];
+        $soc_btn_texts    = $_POST['soc_btn_text'] ?? [];
+        $soc_color_themes = $_POST['soc_color_theme'] ?? [];
+        $soc_urutans      = $_POST['soc_urutan'] ?? [];
+        $soc_statuses     = $_POST['soc_status'] ?? [];
 
         $new_social_list = [];
         for ( $s = 0; $s < count( $soc_platforms ); $s++ ) {
@@ -726,16 +838,17 @@ function wakalumi_render_contact_page() {
             }
 
             $new_social_list[] = [
-                'id'        => sanitize_key( $soc_ids[$s] ?? ( 'soc_' . uniqid() ) ),
-                'platform'  => $platform,
-                'title'     => $title,
-                'nama_akun' => sanitize_text_field( $soc_namas[$s] ?? '' ),
-                'subtitle'  => sanitize_text_field( $soc_subtitles[$s] ?? '' ),
-                'desc'      => sanitize_textarea_field( $soc_descs[$s] ?? '' ),
-                'url'       => $url,
-                'btn_text'  => sanitize_text_field( $soc_btn_texts[$s] ?? '' ),
-                'urutan'    => intval( $soc_urutans[$s] ?? ( $s + 1 ) ),
-                'status'    => ( isset( $soc_statuses[$s] ) && $soc_statuses[$s] === 'nonaktif' ) ? 'nonaktif' : 'aktif',
+                'id'          => sanitize_key( $soc_ids[$s] ?? ( 'soc_' . uniqid() ) ),
+                'platform'    => $platform,
+                'title'       => $title,
+                'nama_akun'   => sanitize_text_field( $soc_namas[$s] ?? '' ),
+                'subtitle'    => sanitize_text_field( $soc_subtitles[$s] ?? '' ),
+                'desc'        => sanitize_textarea_field( $soc_descs[$s] ?? '' ),
+                'url'         => $url,
+                'btn_text'    => sanitize_text_field( $soc_btn_texts[$s] ?? '' ),
+                'color_theme' => sanitize_key( $soc_color_themes[$s] ?? 'auto' ),
+                'urutan'      => intval( $soc_urutans[$s] ?? ( $s + 1 ) ),
+                'status'      => ( isset( $soc_statuses[$s] ) && $soc_statuses[$s] === 'nonaktif' ) ? 'nonaktif' : 'aktif',
             ];
         }
 
@@ -838,11 +951,11 @@ function wakalumi_render_contact_page() {
     $wa_desc     = get_option( 'options_contact_wa_desc', 'Layanan interaktif langsung bersama staf CS kami untuk konsultasi produk tabungan, deposito, simulasi pembiayaan, atau informasi persyaratan akad syariah.' );
     $wa_btn      = get_option( 'options_contact_wa_btn_text', 'Chat WhatsApp Sekarang' );
 
-    $phone       = get_option( 'options_contact_phone', '(021) 7401667 - 7490874' );
+    $phone       = get_option( 'options_contact_phone', '(021) 5966 2196' );
     $phone_title = get_option( 'options_contact_phone_title', 'Telepon Kantor Operasional' );
     $phone_badge = get_option( 'options_contact_phone_badge', 'Panggilan Suara' );
-    $phone_sub   = get_option( 'options_contact_phone_subinfo', 'Senin - Jumat: 08:00 - 15:00 WIB' );
-    $phone_desc  = get_option( 'options_contact_phone_desc', 'Sambungan telepon langsung ke kantor pusat operasional untuk konfirmasi rekening, urusan administrasi, serta koordinasi layanan perbankan resmi.' );
+    $phone_sub   = get_option( 'options_contact_phone_subinfo', 'Kantor Kas Cikupa (Senin - Jumat: 08:00 - 15:00 WIB)' );
+    $phone_desc  = get_option( 'options_contact_phone_desc', 'Sambungan telepon resmi layanan perbankan syariah (Kantor Kas Cikupa) untuk informasi rekening, konfirmasi transaksi, serta koordinasi layanan nasabah.' );
     $phone_btn   = get_option( 'options_contact_phone_btn_text', 'Hubungi Telepon Kantor' );
 
     $email       = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
@@ -897,7 +1010,7 @@ function wakalumi_render_contact_page() {
     $page_desc   = get_option( 'options_contact_page_desc', 'Kami siap mendengarkan, melayani, dan memberikan solusi perbankan syariah terbaik untuk Anda. Silakan hubungi kami melalui berbagai saluran resmi yang aman, terpercaya, dan profesional.' );
 
     $wa          = get_option( 'options_contact_wa', '6281517380388' );
-    $phone       = get_option( 'options_contact_phone', '(021) 7401667 - 7490874' );
+    $phone       = get_option( 'options_contact_phone', '(021) 5966 2196' );
     $email       = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
     $address     = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3\nJl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
 
@@ -916,6 +1029,17 @@ function wakalumi_render_contact_page() {
         'threads'   => 'Threads',
         'telegram'  => 'Telegram',
         'custom'    => 'Lainnya / Website',
+    ];
+
+    $theme_options = [
+        'auto'    => 'Otomatis (Sesuai Platform)',
+        'emerald' => 'Emerald (Hijau Syariah)',
+        'teal'    => 'Teal (Toska Wakalumi)',
+        'blue'    => 'Blue (Biru Korporat)',
+        'indigo'  => 'Indigo (Ungu Formal)',
+        'rose'    => 'Rose (Merah Elegan)',
+        'amber'   => 'Amber (Kuning Keemasan)',
+        'dark'    => 'Dark (Hitam Elegan)',
     ];
     ?>
     <div class="wrap" style="max-width: 960px; margin-top: 20px;">
@@ -1196,6 +1320,7 @@ function wakalumi_render_contact_page() {
                             $s_btn      = esc_attr( $s_item['btn_text'] ?? '' );
                             $s_urutan   = intval( $s_item['urutan'] ?? ( $s_idx + 1 ) );
                             $s_status   = esc_attr( $s_item['status'] ?? 'aktif' );
+                            $s_theme    = esc_attr( $s_item['color_theme'] ?? 'auto' );
                             $is_active  = ( $s_status === 'aktif' );
                         ?>
                             <div class="social-card-item" data-index="<?php echo $s_idx; ?>" style="background: <?php echo $is_active ? '#f8fafc' : '#f1f5f9'; ?>; border: 1px solid #cbd5e1; border-left: 4px solid <?php echo $is_active ? '#088395' : '#94a3b8'; ?>; border-radius: 8px; padding: 16px;">
@@ -1246,7 +1371,7 @@ function wakalumi_render_contact_page() {
                                     </div>
                                 </div>
 
-                                <div style="display: grid; grid-template-columns: 2fr 1fr 70px; gap: 12px; margin-bottom: 10px;">
+                                <div style="display: grid; grid-template-columns: 2fr 1fr 140px 70px; gap: 12px; margin-bottom: 10px;">
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">URL Akun / Kanal:</label>
                                         <input type="url" name="soc_url[]" value="<?php echo $s_url; ?>" placeholder="https://..." style="width: 100%; font-size: 12px;" required>
@@ -1254,6 +1379,14 @@ function wakalumi_render_contact_page() {
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Teks Tombol Tautan:</label>
                                         <input type="text" name="soc_btn_text[]" value="<?php echo $s_btn; ?>" placeholder="Contoh: Ikuti Akun" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Aksen Warna:</label>
+                                        <select name="soc_color_theme[]" style="width: 100%; font-size: 12px;">
+                                            <?php foreach ( $theme_options as $t_val => $t_lbl ) : ?>
+                                                <option value="<?php echo esc_attr( $t_val ); ?>" <?php selected( $s_theme, $t_val ); ?>><?php echo esc_html( $t_lbl ); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Urutan:</label>
@@ -1553,7 +1686,7 @@ function wakalumi_render_contact_page() {
                             <input type="text" name="soc_subtitle[]" value="" placeholder="Contoh: Warta Visual & Edukasi" style="width: 100%; font-size: 12px;">
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 70px; gap: 12px; margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 140px 70px; gap: 12px; margin-bottom: 10px;">
                         <div>
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">URL Akun / Kanal:</label>
                             <input type="url" name="soc_url[]" value="" placeholder="https://..." style="width: 100%; font-size: 12px;" required>
@@ -1561,6 +1694,19 @@ function wakalumi_render_contact_page() {
                         <div>
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Teks Tombol Tautan:</label>
                             <input type="text" name="soc_btn_text[]" value="" placeholder="Contoh: Ikuti Akun" style="width: 100%; font-size: 12px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Aksen Warna:</label>
+                            <select name="soc_color_theme[]" style="width: 100%; font-size: 12px;">
+                                <option value="auto" selected>Otomatis (Sesuai Platform)</option>
+                                <option value="emerald">Emerald (Hijau Syariah)</option>
+                                <option value="teal">Teal (Toska Wakalumi)</option>
+                                <option value="blue">Blue (Biru Korporat)</option>
+                                <option value="indigo">Indigo (Ungu Formal)</option>
+                                <option value="rose">Rose (Merah Elegan)</option>
+                                <option value="amber">Amber (Kuning Keemasan)</option>
+                                <option value="dark">Dark (Hitam Elegan)</option>
+                            </select>
                         </div>
                         <div>
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Urutan:</label>
@@ -1669,6 +1815,33 @@ function wakalumi_render_media_page() {
         update_option( 'options_berita_sec_badge', sanitize_text_field( $_POST['options_berita_sec_badge'] ?? 'Berita Terbaru' ) );
         update_option( 'options_berita_sec_title', sanitize_text_field( $_POST['options_berita_sec_title'] ?? 'Berita dari *BSW*' ) );
 
+        // Mitra Kami (Section di Bawah Berita)
+        update_option( 'options_mitra_active', isset( $_POST['options_mitra_active'] ) ? '1' : '0' );
+        update_option( 'options_mitra_badge', sanitize_text_field( $_POST['options_mitra_badge'] ?? 'Sinergi & Kerjasama' ) );
+        update_option( 'options_mitra_title', sanitize_text_field( $_POST['options_mitra_title'] ?? 'Mitra Kerjasama *BSW*' ) );
+        update_option( 'options_mitra_subtitle', sanitize_text_field( $_POST['options_mitra_subtitle'] ?? 'Bersinergi bersama institusi terpercaya dalam memajukan inklusi ekonomi syariah.' ) );
+
+        $mitra_names = $_POST['options_mitra_name'] ?? [];
+        $mitra_logos = $_POST['options_mitra_logo'] ?? [];
+        $mitra_urls  = $_POST['options_mitra_url'] ?? [];
+        $clean_mitra = [];
+
+        if ( is_array( $mitra_names ) ) {
+            for ( $m = 0; $m < count( $mitra_names ); $m++ ) {
+                $m_name = sanitize_text_field( $mitra_names[$m] ?? '' );
+                $m_logo = esc_url_raw( trim( $mitra_logos[$m] ?? '' ) );
+                $m_url  = esc_url_raw( trim( $mitra_urls[$m] ?? '' ) );
+                if ( ! empty( $m_logo ) || ! empty( $m_name ) ) {
+                    $clean_mitra[] = [
+                        'name' => $m_name,
+                        'logo' => $m_logo,
+                        'url'  => $m_url,
+                    ];
+                }
+            }
+        }
+        update_option( 'options_mitra_items', $clean_mitra );
+
         echo '<div class="notice notice-success is-dismissible"><p><strong>Layanan Cepat & Media Beranda berhasil disimpan!</strong></p></div>';
     }
 
@@ -1752,6 +1925,21 @@ function wakalumi_render_media_page() {
             'https://www.instagram.com/p/DSW6wx4gWl5/',
             'https://www.instagram.com/p/DcLJupqTRoo/',
             'https://www.instagram.com/p/DSW6_3WgUo-/',
+        ];
+    }
+
+    // Mitra defaults
+    $mitra_active   = get_option( 'options_mitra_active', '1' );
+    $mitra_badge    = get_option( 'options_mitra_badge', 'Sinergi & Kerjasama' );
+    $mitra_title    = get_option( 'options_mitra_title', 'Mitra Kerjasama *BSW*' );
+    $mitra_subtitle = get_option( 'options_mitra_subtitle', 'Bersinergi bersama institusi terpercaya dalam memajukan inklusi ekonomi syariah.' );
+    $mitra_items    = get_option( 'options_mitra_items', [] );
+    if ( empty( $mitra_items ) ) {
+        $mitra_items = [
+            [ 'name' => 'Bank Permata Syariah', 'logo' => '', 'url' => 'https://www.permatabank.com/id/syariah' ],
+            [ 'name' => 'ASBISINDO (Asosiasi Bank Syariah)', 'logo' => '', 'url' => '' ],
+            [ 'name' => 'Kompartemen BPRS ASBISINDO', 'logo' => '', 'url' => '' ],
+            [ 'name' => 'BAZNAS', 'logo' => '', 'url' => '' ],
         ];
     }
     ?>
@@ -2204,6 +2392,93 @@ function wakalumi_render_media_page() {
                     </tr>
                 </table>
 
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🤝 Bagian "Mitra Kami" (Section Mitra di Bawah Berita)
+                </h2>
+                <p style="color: #64748b; font-size: 13px;">
+                    Menampilkan logo-logo mitra dalam bentuk sliding berputar terus-menerus (continuous ticker) dengan ukuran seragam dan tampilan profesional. Bagian ini dapat diaktifkan atau dinonaktifkan sewaktu-waktu.
+                </p>
+                <table class="form-table" style="margin-bottom: 15px;">
+                    <tr>
+                        <th scope="row">Status Section Mitra:</th>
+                        <td>
+                            <label style="font-weight: bold; color: #0f172a; display: inline-flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <input type="checkbox" name="options_mitra_active" value="1" <?php checked( $mitra_active, '1' ); ?>>
+                                Aktifkan Section "Mitra Kami" di Halaman Beranda
+                            </label>
+                            <p class="description" style="margin-top: 4px;">
+                                💡 <em>Jika Anda sedang mengumpulkan logo mitra dan jumlahnya masih sedikit, hilangkan centang ini untuk menyembunyikan section dari beranda sementara waktu.</em>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_mitra_badge">Label Kecil Atas:</label></th>
+                        <td><input type="text" id="options_mitra_badge" name="options_mitra_badge" value="<?php echo esc_attr( $mitra_badge ); ?>" class="regular-text"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_mitra_title">Judul Bagian:</label></th>
+                        <td>
+                            <input type="text" id="options_mitra_title" name="options_mitra_title" value="<?php echo esc_attr( $mitra_title ); ?>" class="regular-text">
+                            <p class="description">💡 <strong>Dual-Tone:</strong> Gunakan tanda bintang <code>*kata*</code> untuk memberi warna aksen (Contoh: <code>Mitra Kerjasama *BSW*</code>).</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_mitra_subtitle">Subjudul / Deskripsi Singkat:</label></th>
+                        <td><input type="text" id="options_mitra_subtitle" name="options_mitra_subtitle" value="<?php echo esc_attr( $mitra_subtitle ); ?>" class="large-text"></td>
+                    </tr>
+                </table>
+
+                <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 20px 0 6px 0;">
+                    Daftar Logo Mitra:
+                </h3>
+                <p class="description" style="margin-bottom: 12px; color: #64748b; font-size: 12px;">
+                    💡 <strong>Catatan:</strong> Bagian ini <em>murni hanya menampilkan logo grafis mitra</em>. Kolom <strong>Label / Nama</strong> di bawah ini tidak dicetak sebagai teks di beranda, melainkan berfungsi sebagai pengingat internal admin di tabel ini dan teks <code>alt</code> untuk ramah SEO Google.
+                </p>
+                <table id="mitra-table" class="widefat striped" style="border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; margin-bottom: 15px;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="width: 45px; text-align: center; font-weight: 600;">#</th>
+                            <th style="width: 150px; text-align: center; font-weight: 600;">Logo Mitra</th>
+                            <th style="font-weight: 600;">Label / Nama Mitra <span style="font-weight: normal; font-size: 11px; color: #64748b;">(Pengingat Admin &amp; Alt)</span></th>
+                            <th style="font-weight: 600;">Link Website Mitra <span style="font-weight: normal; font-size: 11px; color: #64748b;">(Opsional)</span></th>
+                            <th style="width: 60px; text-align: center; font-weight: 600;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ( $mitra_items as $idx => $m_item ) : 
+                            $uid_m = 'mitra_' . $idx . '_' . time();
+                        ?>
+                            <tr style="background: #fff; border-bottom: 1px solid #e2e8f0;">
+                                <td style="text-align: center; font-weight: bold; color: #64748b;" class="mitra-row-num"><?php echo $idx + 1; ?></td>
+                                <td style="text-align: center;">
+                                    <div class="wkl-upload-wrap">
+                                        <img id="prev_<?php echo $uid_m; ?>" src="<?php echo esc_url( $m_item['logo'] ); ?>" style="max-width: 90px; max-height: 45px; border-radius: 4px; margin: 0 auto 4px auto; display: <?php echo ! empty( $m_item['logo'] ) ? 'block' : 'none'; ?>;" />
+                                        <span class="wkl-placeholder" style="display: <?php echo empty( $m_item['logo'] ) ? 'block' : 'none'; ?>; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">Belum ada</span>
+                                        <button type="button" class="button button-small wkl-upload-btn" data-target="inp_<?php echo $uid_m; ?>" data-preview="prev_<?php echo $uid_m; ?>" style="font-size: 11px;">Pilih Logo</button>
+                                        <button type="button" class="button-link wkl-remove-btn" data-target="inp_<?php echo $uid_m; ?>" data-preview="prev_<?php echo $uid_m; ?>" style="display: <?php echo empty( $m_item['logo'] ) ? 'none' : 'inline-block'; ?>; color: #ef4444; font-size: 11px; margin-left: 4px;">Hapus</button>
+                                        <input type="hidden" name="options_mitra_logo[]" id="inp_<?php echo $uid_m; ?>" value="<?php echo esc_attr( $m_item['logo'] ); ?>" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" name="options_mitra_name[]" value="<?php echo esc_attr( $m_item['name'] ); ?>" placeholder="Label mitra (contoh: Bank Permata Syariah)" class="regular-text" style="width: 100%; border-radius: 6px;">
+                                </td>
+                                <td>
+                                    <input type="url" name="options_mitra_url[]" value="<?php echo esc_attr( $m_item['url'] ?? '' ); ?>" placeholder="https://..." class="regular-text" style="width: 100%; border-radius: 6px;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <button type="button" class="button button-link-delete remove-mitra-row" style="color: #ef4444; font-weight: bold; font-size: 16px;" title="Hapus baris ini">&times;</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <div style="margin-bottom: 25px;">
+                    <button type="button" id="add-mitra-row" class="button" style="display: inline-flex; align-items: center; gap: 5px;">
+                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> Tambah Mitra Baru
+                    </button>
+                </div>
+
                 <p class="submit" style="margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
                     <button type="submit" name="wakalumi_save_media" class="button button-primary button-large" style="background: #088395; border-color: #066e7d; font-weight: bold; padding: 0 25px;">
                         Simpan Layanan & Media
@@ -2245,6 +2520,62 @@ function wakalumi_render_media_page() {
                         renumber();
                     } else {
                         alert('Minimal harus ada 1 postingan Instagram.');
+                    }
+                }
+            });
+        }
+
+        // Mitra Kami Table Scripts
+        const mitraBody = document.querySelector('#mitra-table tbody');
+        const addMitraBtn = document.getElementById('add-mitra-row');
+
+        function renumberMitra() {
+            if (!mitraBody) return;
+            const rows = mitraBody.querySelectorAll('tr');
+            rows.forEach((row, i) => {
+                const numCell = row.querySelector('.mitra-row-num');
+                if (numCell) numCell.textContent = i + 1;
+            });
+        }
+
+        if (addMitraBtn && mitraBody) {
+            addMitraBtn.addEventListener('click', function() {
+                const uid = 'mitra_' + Date.now();
+                const tr = document.createElement('tr');
+                tr.style.background = '#fff';
+                tr.style.borderBottom = '1px solid #e2e8f0';
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: bold; color: #64748b;" class="mitra-row-num"></td>
+                    <td style="text-align: center;">
+                        <div class="wkl-upload-wrap">
+                            <img id="prev_${uid}" src="" style="max-width: 90px; max-height: 45px; border-radius: 4px; margin: 0 auto 4px auto; display: none;" />
+                            <span class="wkl-placeholder" style="display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">Belum ada</span>
+                            <button type="button" class="button button-small wkl-upload-btn" data-target="inp_${uid}" data-preview="prev_${uid}" style="font-size: 11px;">Pilih Logo</button>
+                            <button type="button" class="button-link wkl-remove-btn" data-target="inp_${uid}" data-preview="prev_${uid}" style="display: none; color: #ef4444; font-size: 11px; margin-left: 4px;">Hapus</button>
+                            <input type="hidden" name="options_mitra_logo[]" id="inp_${uid}" value="" />
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" name="options_mitra_name[]" value="" placeholder="Label mitra (contoh: Bank Permata Syariah)" class="regular-text" style="width: 100%; border-radius: 6px;">
+                    </td>
+                    <td>
+                        <input type="url" name="options_mitra_url[]" value="" placeholder="https://..." class="regular-text" style="width: 100%; border-radius: 6px;">
+                    </td>
+                    <td style="text-align: center;">
+                        <button type="button" class="button button-link-delete remove-mitra-row" style="color: #ef4444; font-weight: bold; font-size: 16px;" title="Hapus baris ini">&times;</button>
+                    </td>
+                `;
+                mitraBody.appendChild(tr);
+                renumberMitra();
+            });
+
+            mitraBody.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-mitra-row')) {
+                    if (mitraBody.querySelectorAll('tr').length > 1) {
+                        e.target.closest('tr').remove();
+                        renumberMitra();
+                    } else {
+                        alert('Minimal harus ada 1 baris logo mitra.');
                     }
                 }
             });

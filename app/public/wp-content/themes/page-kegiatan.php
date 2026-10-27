@@ -240,8 +240,8 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 <button type="button" id="kegiatan-reset-filter" class="text-teal-600 dark:text-teal-400 hover:underline font-bold">Reset Filter</button>
             </div>
 
-            <!-- GRACEFUL EMPTY STATE: KHUSUS JIKA TAB AGENDA MENDATANG KOSONG -->
-            <div id="kegiatan-upcoming-empty" class="<?php echo ( $count_upcoming === 0 ) ? '' : 'hidden'; ?> text-center py-12 px-6 sm:px-8 max-w-2xl mx-auto bg-white/90 dark:bg-dark-card/90 backdrop-blur-xl rounded-3xl border border-teal-200/80 dark:border-dark-border shadow-xl">
+            <!-- GRACEFUL EMPTY STATE: KHUSUS JIKA TAB AGENDA MENDATANG KOSONG (Default Hidden, dikontrol oleh JS Filter) -->
+            <div id="kegiatan-upcoming-empty" class="hidden text-center py-12 px-6 sm:px-8 max-w-2xl mx-auto bg-white/90 dark:bg-dark-card/90 backdrop-blur-xl rounded-3xl border border-teal-200/80 dark:border-dark-border shadow-xl">
                 <div class="w-16 h-16 rounded-2xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-4 shadow-sm border border-teal-200/50 dark:border-teal-800/50">
                     <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -473,7 +473,14 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                             <span class="data-reg-url"><?php echo esc_url( $link_daftar ); ?></span>
                             <span class="data-reg-text"><?php echo esc_html( $link_text ); ?></span>
                             <span class="data-image"><?php echo esc_url( $gambar ); ?></span>
-                            <div class="data-content"><?php echo nl2br( esc_html( $isi_lengkap ? $isi_lengkap : $ringkasan ) ); ?></div>
+                            <div class="data-content"><?php 
+                                $c_body = ! empty( $isi_lengkap ) ? $isi_lengkap : $ringkasan;
+                                if ( strip_tags( $c_body ) === $c_body ) {
+                                    echo nl2br( esc_html( $c_body ) );
+                                } else {
+                                    echo wp_kses_post( $c_body );
+                                }
+                            ?></div>
                         </div>
 
                     </article>
@@ -561,7 +568,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                 </div>
 
                 <!-- Main Body Content / Rundown -->
-                <div id="modal-keg-body" class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed space-y-4"></div>
+                <div id="modal-keg-body" class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed space-y-3 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3 [&_li]:mb-1 [&_strong]:font-bold [&_h3]:text-base sm:[&_h3]:text-lg [&_h3]:font-black [&_h3]:mt-4 [&_h3]:mb-2 [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-slate-300 [&_th]:dark:border-dark-border [&_th]:p-2.5 [&_th]:bg-slate-50 [&_th]:dark:bg-dark-surface [&_td]:border [&_td]:border-slate-300 [&_td]:dark:border-dark-border [&_td]:p-2.5 [&_code]:bg-slate-100 [&_code]:dark:bg-dark-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:font-mono [&_code]:text-xs [&_a]:text-teal-600 [&_a]:dark:text-teal-400 [&_a]:font-bold [&_a]:underline"></div>
 
                 <!-- Registration / Action Link Box -->
                 <div id="modal-keg-action-box" class="hidden rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 border border-emerald-200/80 dark:border-emerald-800/60 flex items-center justify-between gap-4 flex-wrap">
@@ -637,8 +644,17 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
      CLIENT-SIDE FILTER, SEARCH & LIGHTBOX CONTROLLER
      ======================================================================== -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var cards = Array.from(document.querySelectorAll('.kegiatan-card'));
+(function() {
+    function initKegiatanPage() {
+        var cards = Array.from(document.querySelectorAll('.kegiatan-card'));
+        if (cards.length === 0 && !document.getElementById('kegiatan-search-input')) return;
+
+        // Clean up any old teleported modal from prior visits before creating/teleporting
+        var staleModals = document.querySelectorAll('body > #kegiatan-detail-modal');
+        var inSwupModal = document.querySelector('#swup #kegiatan-detail-modal');
+        if (staleModals.length > 0 && inSwupModal) {
+            staleModals.forEach(function(m) { m.remove(); });
+        }
     var searchInput = document.getElementById('kegiatan-search-input');
     var yearFilter = document.getElementById('kegiatan-year-filter');
     var timeFilterBtns = document.querySelectorAll('.keg-status-btn');
@@ -1064,7 +1080,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }
     }
-});
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initKegiatanPage);
+    } else {
+        initKegiatanPage();
+    }
+})();
 </script>
 
 <?php get_footer(); ?>

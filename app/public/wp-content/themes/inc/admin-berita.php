@@ -295,6 +295,22 @@ function wakalumi_render_berita_admin_page() {
                 // Update Meta & ACF fields
                 update_post_meta( $saved_id, 'berita_ringkasan', $ringkasan );
                 update_post_meta( $saved_id, 'berita_penulis', $penulis );
+
+                if ( $is_headline === '1' ) {
+                    // Reset post berita lain agar hanya 1 berita yang aktif sebagai sorotan utama
+                    $prev_headlines = get_posts( [
+                        'post_type'      => 'berita',
+                        'post_status'    => 'any',
+                        'numberposts'    => -1,
+                        'exclude'        => [ $saved_id ],
+                        'meta_key'       => 'berita_is_headline',
+                        'meta_value'     => '1',
+                        'fields'         => 'ids',
+                    ] );
+                    foreach ( $prev_headlines as $ph_id ) {
+                        update_post_meta( $ph_id, 'berita_is_headline', '0' );
+                    }
+                }
                 update_post_meta( $saved_id, 'berita_is_headline', $is_headline );
                 update_post_meta( $saved_id, 'berita_foto_caption', $foto_caption );
 
@@ -447,8 +463,8 @@ function wakalumi_render_berita_admin_page() {
                                 $item_id       = get_the_ID();
                                 $item_cats     = get_the_terms( $item_id, 'kategori_berita' );
                                 $cat_name      = ( $item_cats && ! is_wp_error( $item_cats ) ) ? $item_cats[0]->name : 'Umum';
-                                $item_penulis  = get_field( 'berita_penulis', $item_id ) ?: 'Redaksi Wakalumi';
-                                $item_headline = get_field( 'berita_is_headline', $item_id );
+                                $item_penulis  = get_post_meta( $item_id, 'berita_penulis', true ) ?: ( function_exists( 'get_field' ) ? get_field( 'berita_penulis', $item_id ) : '' ) ?: 'Redaksi Wakalumi';
+                                $item_headline = get_post_meta( $item_id, 'berita_is_headline', true );
                                 $item_status   = get_post_status( $item_id );
                                 $thumb_url     = get_the_post_thumbnail_url( $item_id, 'thumbnail' ) ?: get_post_meta( $item_id, '_custom_thumbnail_url', true );
                                 $delete_nonce  = wp_create_nonce( 'wakalumi_delete_berita_' . $item_id );
@@ -564,9 +580,9 @@ function wakalumi_render_berita_admin_page() {
             $form_id        = $edit_post ? $edit_post->ID : 0;
             $form_title     = $edit_post ? $edit_post->post_title : '';
             $form_content   = $edit_post ? $edit_post->post_content : '';
-            $form_excerpt   = $edit_post ? ( get_field( 'berita_ringkasan', $edit_post->ID ) ?: $edit_post->post_excerpt ) : '';
-            $form_penulis   = $edit_post ? ( get_field( 'berita_penulis', $edit_post->ID ) ?: 'Redaksi BPRS Wakalumi' ) : 'Redaksi BPRS Wakalumi';
-            $form_headline  = $edit_post ? ( get_field( 'berita_is_headline', $edit_post->ID ) === '1' ) : false;
+            $form_excerpt   = $edit_post ? ( get_post_meta( $edit_post->ID, 'berita_ringkasan', true ) ?: ( function_exists( 'get_field' ) ? get_field( 'berita_ringkasan', $edit_post->ID ) : '' ) ?: $edit_post->post_excerpt ) : '';
+            $form_penulis   = $edit_post ? ( get_post_meta( $edit_post->ID, 'berita_penulis', true ) ?: ( function_exists( 'get_field' ) ? get_field( 'berita_penulis', $edit_post->ID ) : '' ) ?: 'Redaksi BPRS Wakalumi' ) : 'Redaksi BPRS Wakalumi';
+            $form_headline  = $edit_post ? ( get_post_meta( $edit_post->ID, 'berita_is_headline', true ) === '1' ) : false;
             $form_status    = $edit_post ? $edit_post->post_status : 'publish';
             $form_date      = $edit_post ? get_the_date( 'Y-m-d', $edit_post->ID ) : date( 'Y-m-d' );
             $form_thumb_id  = $edit_post ? get_post_thumbnail_id( $edit_post->ID ) : 0;
