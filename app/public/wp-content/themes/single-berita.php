@@ -37,6 +37,30 @@ $tw_share_url = 'https://twitter.com/intent/tweet?text=' . rawurlencode( $post_t
 
 $cta          = function_exists( 'wakalumi_get_berita_cta' ) ? wakalumi_get_berita_cta() : [];
 $display_author = ( $is_external && ! empty( $external_source ) ) ? $external_source : $penulis;
+
+// Resolusi Thumbnail & Keterangan Gambar Sampul
+$has_thumb        = has_post_thumbnail();
+$custom_thumb_url = get_post_meta( get_the_ID(), '_custom_thumbnail_url', true );
+$thumb_url        = '';
+
+if ( $has_thumb ) {
+    $thumb_url = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: get_the_post_thumbnail_url( get_the_ID(), 'large' );
+} elseif ( ! empty( $custom_thumb_url ) ) {
+    $thumb_url = $custom_thumb_url;
+}
+
+// Cek Keterangan Gambar Sampul (berita_foto_caption > caption attachment > alt text)
+$img_caption = get_post_meta( get_the_ID(), 'berita_foto_caption', true );
+if ( empty( $img_caption ) && $has_thumb ) {
+    $img_caption = get_the_post_thumbnail_caption();
+}
+if ( empty( $img_caption ) && $has_thumb ) {
+    $thumb_id = get_post_thumbnail_id();
+    $alt_text = get_post_meta( $thumb_id, '_wp_attachment_image_alt', true );
+    if ( ! empty( $alt_text ) ) {
+        $img_caption = $alt_text;
+    }
+}
 ?>
 
 <div class="min-h-screen bg-slate-50/60 dark:bg-dark/50 text-slate-800 dark:text-slate-200 pb-24">
@@ -209,25 +233,30 @@ $display_author = ( $is_external && ! empty( $external_source ) ) ? $external_so
                         <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-new-1.png' ); ?>" alt="" class="w-full h-full object-contain grayscale">
                     </div>
 
-                    <!-- Featured Image Showcase -->
-                    <?php if ( has_post_thumbnail() ) : ?>
+                    <!-- Featured Image Showcase (Besar di Awal) -->
+                    <?php if ( ! empty( $thumb_url ) ) : ?>
                         <div class="mb-10 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-md relative z-10">
-                            <?php the_post_thumbnail( 'hero-large', [
-                                'class' => 'w-full aspect-[16/9] object-cover',
-                            ] ); ?>
-                            <?php if ( get_the_post_thumbnail_caption() ) : ?>
-                                <div class="p-3 text-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-dark-surface border-t border-slate-200/50 dark:border-dark-border font-medium">
-                                    📷 <?php echo esc_html( get_the_post_thumbnail_caption() ); ?>
-                                </div>
+                            <div class="aspect-[16/9] w-full overflow-hidden relative">
+                                <img src="<?php echo esc_url( $thumb_url ); ?>"
+                                     alt="<?php echo esc_attr( $post_title ); ?>"
+                                     class="w-full h-full object-cover"
+                                     loading="eager">
+                            </div>
+                            <?php if ( ! empty( $img_caption ) ) : ?>
+                                <figcaption class="p-3 sm:px-4 sm:py-2.5 bg-slate-50 dark:bg-dark-surface border-t border-slate-200/50 dark:border-dark-border flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                                    <span class="font-bold text-teal-600 dark:text-teal-400 shrink-0">📷 Keterangan:</span>
+                                    <span><?php echo esc_html( $img_caption ); ?></span>
+                                </figcaption>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
 
-                    <!-- Rich Prose Body -->
+                    <!-- Rich Prose Body (Standar & Normal) -->
                     <div class="prose prose-lg lg:prose-xl prose-slate dark:prose-invert max-w-none leading-relaxed relative z-10
                                 prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-white
                                 prose-a:text-teal-600 dark:prose-a:text-teal-400 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
-                                prose-blockquote:border-l-teal-500 prose-blockquote:bg-teal-50/50 dark:prose-blockquote:bg-teal-950/20 prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-2xl">
+                                prose-blockquote:border-l-teal-500 prose-blockquote:bg-teal-50/50 dark:prose-blockquote:bg-teal-950/20 prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-2xl
+                                prose-img:rounded-2xl prose-img:shadow-md prose-img:mx-auto">
                         <?php the_content(); ?>
                     </div>
 

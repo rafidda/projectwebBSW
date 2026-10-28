@@ -399,35 +399,35 @@ if ( empty( $cta_btn1_url ) ) {
             $stat_meta = [
                 1 => [
                     'tag'        => '01 / Dedikasi',
-                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-teal-50/70 to-slate-100 dark:from-slate-800 dark:via-teal-950/40 dark:to-slate-850',
-                    'bar_border' => 'border-teal-100/90 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-teal-500/10 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300 border-teal-200/80 dark:border-teal-700/60 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600',
-                    'tag_cls'    => 'text-teal-800 dark:text-teal-300 bg-teal-100/70 dark:bg-teal-950/80 border-teal-200/60 dark:border-teal-800/60',
-                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', // Jam/Tahun Pengalaman
+                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
+                    'bar_border' => 'border-slate-100 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-teal-500/10 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300 border-teal-200/50 dark:border-teal-700/40 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600',
+                    'tag_cls'    => 'text-teal-700 dark:text-teal-300 bg-teal-50/80 dark:bg-teal-950/60 border-teal-200/50 dark:border-teal-800/40',
+                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', // Jam/Tahun Pengalaman
                 ],
                 2 => [
                     'tag'        => '02 / Amanah',
-                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-emerald-50/70 to-slate-100 dark:from-slate-800 dark:via-emerald-950/40 dark:to-slate-850',
-                    'bar_border' => 'border-emerald-100/90 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-700/60 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600',
-                    'tag_cls'    => 'text-emerald-800 dark:text-emerald-300 bg-emerald-100/70 dark:bg-emerald-950/80 border-emerald-200/60 dark:border-emerald-800/60',
-                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>', // Nasabah Setia
+                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
+                    'bar_border' => 'border-slate-100 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300 border-emerald-200/50 dark:border-emerald-700/40 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600',
+                    'tag_cls'    => 'text-emerald-700 dark:text-emerald-300 bg-emerald-50/80 dark:bg-emerald-950/60 border-emerald-200/50 dark:border-emerald-800/40',
+                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>', // Nasabah Setia
                 ],
                 3 => [
                     'tag'        => '03 / Syariah',
-                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-cyan-50/70 to-slate-100 dark:from-slate-800 dark:via-cyan-950/40 dark:to-slate-850',
-                    'bar_border' => 'border-cyan-100/90 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-cyan-500/10 text-cyan-700 dark:bg-cyan-400/15 dark:text-cyan-300 border-cyan-200/80 dark:border-cyan-700/60 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600',
-                    'tag_cls'    => 'text-cyan-800 dark:text-cyan-300 bg-cyan-100/70 dark:bg-cyan-950/80 border-cyan-200/60 dark:border-cyan-800/60',
-                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', // Prinsip Murni Syariah
+                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
+                    'bar_border' => 'border-slate-100 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-cyan-500/10 text-cyan-700 dark:bg-cyan-400/15 dark:text-cyan-300 border-cyan-200/50 dark:border-cyan-700/40 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600',
+                    'tag_cls'    => 'text-cyan-700 dark:text-cyan-300 bg-cyan-50/80 dark:bg-cyan-950/60 border-cyan-200/50 dark:border-cyan-800/40',
+                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', // Prinsip Murni Syariah
                 ],
                 4 => [
                     'tag'        => '04 / Regulasi',
-                    'bar_bg'     => 'bg-gradient-to-r from-slate-100 via-amber-50/70 to-slate-100 dark:from-slate-800 dark:via-amber-950/40 dark:to-slate-850',
-                    'bar_border' => 'border-amber-100/90 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-amber-500/10 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300 border-amber-200/80 dark:border-amber-700/60 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600',
-                    'tag_cls'    => 'text-amber-800 dark:text-amber-300 bg-amber-100/70 dark:bg-amber-950/80 border-amber-200/60 dark:border-amber-800/60',
-                    'icon'       => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>', // Dijamin LPS
+                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
+                    'bar_border' => 'border-slate-100 dark:border-slate-800',
+                    'icon_wrap'  => 'bg-amber-500/10 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300 border-amber-200/50 dark:border-amber-700/40 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600',
+                    'tag_cls'    => 'text-amber-700 dark:text-amber-300 bg-amber-50/80 dark:bg-amber-950/60 border-amber-200/50 dark:border-amber-800/50',
+                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>', // Dijamin LPS
                 ],
             ];
         ?>
@@ -459,16 +459,13 @@ if ( empty( $cta_btn1_url ) ) {
             ?>
                 <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_16px_32px_-6px_rgba(15,23,42,0.14),0_6px_12px_-3px_rgba(8,131,149,0.12)] dark:hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.18)] hover:-translate-y-2 hover:border-teal-500/60 dark:hover:border-teal-400/60 transition-all duration-300 ease-out cursor-default flex flex-col justify-between" data-aos="fade-up" data-aos-delay="<?php echo $s * 80; ?>">
                     <!-- Top Accent Line -->
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
+                    <div class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
 
-                    <!-- Upper Zone (Header Bar): Dual Tone Distinct Contrast & Mature Character -->
-                    <div class="px-5 py-4 <?php echo esc_attr( $meta['bar_bg'] ); ?> border-b <?php echo esc_attr( $meta['bar_border'] ); ?> flex items-center justify-between transition-colors">
-                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl <?php echo esc_attr( $meta['icon_wrap'] ); ?> border shadow-xs flex items-center justify-center transition-all duration-300 shrink-0">
+                    <!-- Upper Zone (Header Bar): Dual Tone Sleek Minimalist Strip with Centered Icon -->
+                    <div class="px-4 py-2 sm:py-2.5 <?php echo esc_attr( $meta['bar_bg'] ); ?> border-b <?php echo esc_attr( $meta['bar_border'] ); ?> flex items-center justify-center transition-colors">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg <?php echo esc_attr( $meta['icon_wrap'] ); ?> border flex items-center justify-center transition-all duration-300 shrink-0">
                             <?php echo $meta['icon']; ?>
                         </div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border shadow-2xs <?php echo esc_attr( $meta['tag_cls'] ); ?>">
-                            <?php echo esc_html( $meta['tag'] ); ?>
-                        </span>
                     </div>
 
                     <!-- Lower Zone (Body / Stat Metric Area): Crisp Solid High-Contrast Foundation -->

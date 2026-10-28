@@ -17,6 +17,12 @@ $categories   = wakalumi_get_lelang_categories();
 $statuses     = wakalumi_get_lelang_statuses();
 $all_list     = wakalumi_get_lelang_list();
 
+// Portfolio availability checks
+$total_assets_count  = count( $all_list );
+$active_assets_count = count( array_filter( $all_list, fn( $x ) => ( $x['status'] ?? '' ) !== 'terjual' ) );
+$is_completely_empty = ( $total_assets_count === 0 );
+$is_all_sold         = ( ! $is_completely_empty && $active_assets_count === 0 );
+
 // Extract unique cities/locations for filter
 $cities = [];
 foreach ( $all_list as $item ) {
@@ -34,6 +40,25 @@ if ( strpos( $pic_wa, '0' ) === 0 ) {
     $pic_wa = '62' . substr( $pic_wa, 1 );
 }
 $wa_url = 'https://wa.me/' . $pic_wa;
+
+if ( ! function_exists( 'wakalumi_resolve_lelang_img_url' ) ) {
+    /**
+     * Pastikan path gambar relatif (/wp-content/...) diubah menjadi URL absolut valid
+     */
+    function wakalumi_resolve_lelang_img_url( $url ) {
+        $url = trim( (string) $url );
+        if ( empty( $url ) ) {
+            return '';
+        }
+        if ( strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 ) {
+            return $url;
+        }
+        if ( strpos( $url, '/' ) === 0 ) {
+            return home_url( $url );
+        }
+        return $url;
+    }
+}
 ?>
 
 <div class="min-h-screen bg-transparent text-slate-800 dark:text-slate-200 pb-20">
@@ -166,8 +191,8 @@ $wa_url = 'https://wa.me/' . $pic_wa;
                                 <?php endif; ?>
 
                                 <div class="pt-1">
-                                    <a href="#lelang-grid" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-amber-50/80 dark:bg-slate-800/80 dark:hover:bg-amber-950/50 border border-slate-200/80 hover:border-amber-300 dark:border-slate-700/80 dark:hover:border-amber-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-300 transition-all duration-300 group/lelangbtn">
-                                        <span>Lihat Agunan Lelang</span>
+                                    <a href="#lelang-assets-section" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-amber-50/80 dark:bg-slate-800/80 dark:hover:bg-amber-950/50 border border-slate-200/80 hover:border-amber-300 dark:border-slate-700/80 dark:hover:border-amber-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-300 transition-all duration-300 group/lelangbtn">
+                                        <span><?php echo $is_completely_empty ? 'Status Portofolio Agunan' : 'Lihat Agunan Lelang'; ?></span>
                                         <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lelangbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                                     </a>
                                 </div>
@@ -305,6 +330,7 @@ $wa_url = 'https://wa.me/' . $pic_wa;
     <?php endif; ?>
 
 
+    <?php if ( ! $is_completely_empty ) : ?>
     <!-- ========================================================================
          SECTION 3: FILTER PILLS, SEARCH, STATUS & SORT CONTROLS
          ======================================================================== -->
@@ -374,98 +400,222 @@ $wa_url = 'https://wa.me/' . $pic_wa;
 
         </div>
     </section>
+    <?php endif; ?>
 
 
     <!-- ========================================================================
-         SECTION 4: ASSET CARDS GRID (PRODUK-STANDARD CARDS)
+         SECTION 4: ASSET CARDS GRID & EMPTY STATE (PRODUK-STANDARD CARDS)
          ======================================================================== -->
-    <section class="py-10 bg-transparent relative z-10">
+    <section class="py-10 bg-transparent relative z-10" id="lelang-assets-section">
         <div class="container-wide">
             
-            <!-- Result Counter Bar -->
-            <div class="flex items-center justify-between mb-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                <span id="lelang-result-count">Menampilkan seluruh aset lelang agunan (<?php echo count( $all_list ); ?> aset)</span>
-                <span class="inline-flex items-center gap-1.5 font-semibold text-teal-600 dark:text-teal-400">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Update Real-Time
-                </span>
-            </div>
+            <?php if ( $is_completely_empty ) : ?>
+                <!-- ============================================================
+                     DEDICATED EMPTY STATE: TIDAK ADA ASET DALAM PORTOFOLIO
+                     ============================================================ -->
+                <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border shadow-xl p-8 sm:p-12 md:p-16 text-center max-w-4xl mx-auto my-6 group" data-aos="fade-up">
+                    <div class="wkl-glass-shine"></div>
 
-            <!-- Empty State Notice -->
-            <div id="lelang-no-results" class="hidden text-center py-16 px-4 bg-white/80 dark:bg-dark-card/80 backdrop-blur-md rounded-3xl border border-slate-200 dark:border-dark-border max-w-xl mx-auto my-8">
-                <div class="w-16 h-16 rounded-full bg-amber-50 dark:bg-amber-950 text-amber-500 flex items-center justify-center mx-auto mb-4 text-2xl">
-                    🔍
+                    <!-- Top Accent Gradient Line -->
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-500 via-amber-400 to-emerald-500"></div>
+
+                    <!-- Background Emblem Watermark -->
+                    <div class="absolute -right-8 -bottom-8 w-64 h-64 opacity-[0.04] dark:opacity-[0.03] pointer-events-none select-none overflow-hidden transition-transform duration-700 ease-out group-hover:scale-110 grayscale mix-blend-multiply dark:mix-blend-screen">
+                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                    </div>
+
+                    <!-- Ambient Subtle Glow -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="relative z-10 max-w-2xl mx-auto">
+                        <!-- Elegant Shield Icon Badge -->
+                        <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-teal-50 to-emerald-100 dark:from-teal-950/70 dark:to-emerald-950/50 border border-teal-200/80 dark:border-teal-700/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:scale-105 transition-transform duration-500">
+                            <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+
+                        <!-- Pill Status -->
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/60 border border-teal-200/80 dark:border-teal-700/60 text-teal-800 dark:text-teal-300 text-xs font-bold uppercase tracking-wider mb-4 shadow-2xs">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Informasi Portofolio Agunan
+                        </div>
+
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-4">
+                            Saat Ini Sedang Tidak Ada Aset yang Dijual
+                        </h2>
+
+                        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-8">
+                            Alhamdulillah, saat ini PT BPRS Wakalumi tidak memiliki daftar aset lelang atau Agunan Yang Diambil Alih (AYDA) yang sedang aktif dipasarkan. Komitmen kami senantiasa mengedepankan prinsip musyawarah, restrukturisasi, dan penyelesaian pembiayaan yang berkeadilan bersama nasabah.
+                        </p>
+
+                        <!-- 3 Feature Points -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left mb-8">
+                            <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-dark-surface/80 border border-slate-200/80 dark:border-dark-border">
+                                <div class="w-7 h-7 rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center text-xs mb-2.5 font-bold">01</div>
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white mb-1">Prinsip Ta'awun</h4>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">Mengutamakan restrukturisasi &amp; penyelesaian damai kekeluargaan.</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-dark-surface/80 border border-slate-200/80 dark:border-dark-border">
+                                <div class="w-7 h-7 rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center text-xs mb-2.5 font-bold">02</div>
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white mb-1">Publikasi Transparan</h4>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">Lelang resmi berikutnya akan diumumkan di portal KPKNL lelang.go.id.</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-dark-surface/80 border border-slate-200/80 dark:border-dark-border">
+                                <div class="w-7 h-7 rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center text-xs mb-2.5 font-bold">03</div>
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white mb-1">Daftar Minat / Waiting List</h4>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">Daftarkan kriteria aset impian Anda untuk prioritas info unit baru.</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Hotline CTA -->
+                        <div class="flex flex-wrap items-center justify-center gap-3">
+                            <a href="<?php echo esc_url( 'https://wa.me/' . $pic_wa . '?text=' . rawurlencode( "Assalamu'alaikum BPRS Wakalumi, saya ingin menanyakan informasi jadwal atau ketersediaan aset lelang agunan (AYDA) periode mendatang. Terima kasih." ) ); ?>"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn-whatsapp text-xs sm:text-sm px-6 py-3 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                <span>Tanya Jadwal Lelang via WhatsApp</span>
+                            </a>
+                            <a href="<?php echo esc_url( home_url( '/pembiayaan' ) ); ?>"
+                               class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-surface dark:hover:bg-dark-surface-alt text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-dark-border transition-all">
+                                <span>Jelajahi Pembiayaan Syariah</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Aset Lelang Tidak Ditemukan</h3>
-                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                    Tidak ditemukan aset yang cocok dengan filter atau kata kunci Anda. Silakan reset filter pencarian atau hubungi tim remedial kami.
-                </p>
-                <button type="button" id="btn-reset-filters" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-md transition-all">
-                    Reset Seluruh Filter
-                </button>
-            </div>
 
-            <!-- Cards Grid (3 Columns) -->
-            <div id="lelang-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                <?php 
-                $card_idx = 0;
-                foreach ( $all_list as $asset ) :
-                    $card_idx++;
-                    $row_id        = esc_attr( $asset['id'] ?? ( 'lelang_' . $card_idx ) );
-                    $kode          = esc_attr( $asset['kode'] ?? ( 'AYDA-' . $card_idx ) );
-                    $judul         = esc_attr( $asset['judul'] ?? '' );
-                    $kategori      = esc_attr( $asset['kategori'] ?? 'rumah' );
-                    $status        = esc_attr( $asset['status'] ?? 'tersedia' );
-                    $harga_limit   = esc_attr( $asset['harga_limit'] ?? '' );
-                    $nilai_pasar   = esc_attr( $asset['nilai_pasar'] ?? '' );
-                    $uang_jaminan  = esc_attr( $asset['uang_jaminan'] ?? '' );
-                    $legalitas     = esc_attr( $asset['legalitas'] ?? '' );
-                    $luas_tanah    = esc_attr( $asset['luas_tanah'] ?? '' );
-                    $luas_bangunan = esc_attr( $asset['luas_bangunan'] ?? '' );
-                    $lokasi        = esc_attr( $asset['lokasi'] ?? '' );
-                    $kota          = esc_attr( $asset['kota'] ?? 'Tangerang Selatan' );
-                    $tgl_lelang    = esc_attr( $asset['tanggal_lelang'] ?? '' );
-                    $tempat_lelang = esc_attr( $asset['tempat_lelang'] ?? '' );
-                    $foto_utama    = esc_url( $asset['foto_utama'] ?? '' );
-                    $galeri_raw    = trim( $asset['galeri_foto'] ?? '' );
-                    $deskripsi     = esc_textarea( $asset['deskripsi'] ?? '' );
-                    $tata_cara     = esc_textarea( $asset['tata_cara'] ?? '' );
-                    $wa_pic        = ! empty( $asset['wa_contact'] ) ? preg_replace( '/[^0-9]/', '', $asset['wa_contact'] ) : $pic_wa;
-                    
-                    // Parse gallery lines into array
-                    $galeri_list = [];
-                    if ( ! empty( $foto_utama ) ) {
-                        $galeri_list[] = $foto_utama;
-                    }
-                    if ( ! empty( $galeri_raw ) ) {
-                        $lines = explode( "\n", $galeri_raw );
-                        foreach ( $lines as $line ) {
-                            $u = esc_url_raw( trim( $line ) );
-                            if ( ! empty( $u ) && ! in_array( $u, $galeri_list, true ) ) {
-                                $galeri_list[] = $u;
+            <?php else : ?>
+
+                <?php if ( $is_all_sold ) : ?>
+                    <!-- Notice Banner: Seluruh Aset Terjual (Sedang Tidak Ada Aset Aktif yang Dijual) -->
+                    <div class="mb-8 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-500/10 via-teal-500/10 to-amber-500/10 border border-amber-300/80 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" data-aos="fade-up">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0 text-xl font-bold">
+                                ✓
+                            </div>
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 text-[10px] font-bold uppercase tracking-wider mb-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    Portofolio Terkini
+                                </div>
+                                <h4 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                                    Sedang Tidak Ada Aset Aktif yang Dijual (Seluruh Aset Telah Terjual)
+                                </h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5 max-w-2xl leading-relaxed">
+                                    Seluruh agunan lelang yang terdaftar saat ini telah laku terjual. Daftar di bawah ini ditampilkan sebagai arsip transparansi publikasi. Hubungi Tim Remedial kami untuk mendapatkan info prioritas saat lelang periode berikutnya dibuka.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="<?php echo esc_url( 'https://wa.me/' . $pic_wa . '?text=' . rawurlencode( "Assalamu'alaikum BPRS Wakalumi, saya ingin menanyakan jadwal aset lelang agunan (AYDA) berikutnya. Terima kasih." ) ); ?>"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-sm transition-all whitespace-nowrap shrink-0">
+                            <span>Daftar Waiting List Info</span>
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Result Counter Bar -->
+                <div class="flex items-center justify-between mb-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                    <span id="lelang-result-count">Menampilkan seluruh aset lelang agunan (<?php echo count( $all_list ); ?> aset)</span>
+                    <span class="inline-flex items-center gap-1.5 font-semibold text-teal-600 dark:text-teal-400">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Update Real-Time
+                    </span>
+                </div>
+
+                <!-- Empty State Notice (Filter/Search No Result) -->
+                <div id="lelang-no-results" class="hidden text-center py-16 px-6 bg-white/90 dark:bg-dark-card/90 backdrop-blur-md rounded-3xl border border-slate-200 dark:border-dark-border max-w-xl mx-auto my-8 shadow-sm">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-950/60 dark:to-orange-950/40 border border-amber-200/80 dark:border-amber-700/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4 shadow-2xs">
+                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mb-2">Aset Lelang Tidak Ditemukan</h3>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed max-w-md mx-auto">
+                        Tidak ditemukan aset yang cocok dengan filter atau kata kunci Anda. Silakan reset filter pencarian atau konsultasikan kebutuhan aset Anda dengan Tim Remedial kami.
+                    </p>
+                    <div class="flex items-center justify-center gap-3 flex-wrap">
+                        <button type="button" id="btn-reset-filters" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            Reset Seluruh Filter
+                        </button>
+                        <a href="<?php echo esc_url( 'https://wa.me/' . $pic_wa . '?text=' . rawurlencode( "Assalamu'alaikum BPRS Wakalumi, saya sedang mencari informasi aset agunan tertentu. Bisakah dibantu konsultasi? Terima kasih." ) ); ?>"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 hover:bg-slate-200 dark:bg-dark-surface dark:hover:bg-dark-surface-alt text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-dark-border transition-all">
+                            <span>Tanya Tim Remedial</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cards Grid (3 Columns) -->
+                <div id="lelang-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <?php 
+                    $card_idx = 0;
+                    foreach ( $all_list as $asset ) :
+                        $card_idx++;
+                        $row_id        = esc_attr( $asset['id'] ?? ( 'lelang_' . $card_idx ) );
+                        $kode          = esc_attr( $asset['kode'] ?? ( 'AYDA-' . $card_idx ) );
+                        $judul         = esc_attr( $asset['judul'] ?? '' );
+                        $kategori      = esc_attr( $asset['kategori'] ?? 'rumah' );
+                        $status        = esc_attr( $asset['status'] ?? 'tersedia' );
+                        $harga_limit   = esc_attr( $asset['harga_limit'] ?? '' );
+                        $nilai_pasar   = esc_attr( $asset['nilai_pasar'] ?? '' );
+                        $uang_jaminan  = esc_attr( $asset['uang_jaminan'] ?? '' );
+                        $legalitas     = esc_attr( $asset['legalitas'] ?? '' );
+                        $luas_tanah    = esc_attr( $asset['luas_tanah'] ?? '' );
+                        $luas_bangunan = esc_attr( $asset['luas_bangunan'] ?? '' );
+                        $lokasi        = esc_attr( $asset['lokasi'] ?? '' );
+                        $kota          = esc_attr( $asset['kota'] ?? 'Tangerang Selatan' );
+                        $tgl_lelang    = esc_attr( $asset['tanggal_lelang'] ?? '' );
+                        $tempat_lelang = esc_attr( $asset['tempat_lelang'] ?? '' );
+                        $foto_utama_raw = $asset['foto_utama'] ?? '';
+                        $foto_utama    = esc_url( wakalumi_resolve_lelang_img_url( $foto_utama_raw ) );
+                        $galeri_raw    = trim( $asset['galeri_foto'] ?? '' );
+                        $deskripsi     = esc_textarea( $asset['deskripsi'] ?? '' );
+                        $tata_cara     = esc_textarea( $asset['tata_cara'] ?? '' );
+                        $wa_pic        = ! empty( $asset['wa_contact'] ) ? preg_replace( '/[^0-9]/', '', $asset['wa_contact'] ) : $pic_wa;
+                        
+                        // Parse gallery lines into array
+                        $galeri_list = [];
+                        if ( ! empty( $foto_utama ) ) {
+                            $galeri_list[] = $foto_utama;
+                        }
+                        if ( ! empty( $galeri_raw ) ) {
+                            $lines = explode( "\n", $galeri_raw );
+                            foreach ( $lines as $line ) {
+                                $u = esc_url_raw( wakalumi_resolve_lelang_img_url( trim( $line ) ) );
+                                if ( ! empty( $u ) && ! in_array( $u, $galeri_list, true ) ) {
+                                    $galeri_list[] = $u;
+                                }
                             }
                         }
-                    }
 
-                    // Numeric price for sorting
-                    $numeric_price = (float) preg_replace( '/[^0-9]/', '', $harga_limit );
+                        // Numeric price for sorting
+                        $numeric_price = (float) preg_replace( '/[^0-9]/', '', $harga_limit );
 
-                    $cat_info    = $categories[ $kategori ] ?? $categories['rumah'];
-                    $status_info = $statuses[ $status ] ?? $statuses['tersedia'];
+                        $cat_info    = $categories[ $kategori ] ?? $categories['rumah'];
+                        $status_info = $statuses[ $status ] ?? $statuses['tersedia'];
 
-                    // Determine Prosedur Title and Desc (Custom override or Status Default)
-                    $item_prosedur_title = ! empty( $status_info['prosedur_title'] ) ? $status_info['prosedur_title'] : 'Prosedur Keikutsertaan Lelang & Survei Fisik';
-                    $item_prosedur_desc  = ! empty( $tata_cara ) ? $tata_cara : ( $status_info['prosedur_desc'] ?? '' );
+                        // Determine Prosedur Title and Desc (Custom override or Status Default)
+                        $item_prosedur_title = ! empty( $status_info['prosedur_title'] ) ? $status_info['prosedur_title'] : 'Prosedur Keikutsertaan Lelang & Survei Fisik';
+                        $item_prosedur_desc  = ! empty( $tata_cara ) ? $tata_cara : ( $status_info['prosedur_desc'] ?? '' );
 
-                    // Determine Kepatuhan Title and Desc (Custom override or Status Default)
-                    $item_kepatuhan_title = ! empty( $status_info['kepatuhan_title'] ) ? $status_info['kepatuhan_title'] : 'Kepatuhan Hukum & Fatwa DSN-MUI:';
-                    $custom_kepatuhan     = esc_textarea( $asset['kepatuhan_custom'] ?? '' );
-                    $item_kepatuhan_desc  = ! empty( $custom_kepatuhan ) ? $custom_kepatuhan : ( $status_info['kepatuhan_desc'] ?? '' );
+                        // Determine Kepatuhan Title and Desc (Custom override or Status Default)
+                        $item_kepatuhan_title = ! empty( $status_info['kepatuhan_title'] ) ? $status_info['kepatuhan_title'] : 'Kepatuhan Hukum & Fatwa DSN-MUI:';
+                        $custom_kepatuhan     = esc_textarea( $asset['kepatuhan_custom'] ?? '' );
+                        $item_kepatuhan_desc  = ! empty( $custom_kepatuhan ) ? $custom_kepatuhan : ( $status_info['kepatuhan_desc'] ?? '' );
 
-                    // Pre-filled WhatsApp Inquiry
-                    $wa_inquiry_text = rawurlencode( "Assalamu'alaikum BPRS Wakalumi, saya tertarik ingin menanyakan informasi lebih lanjut mengenai Aset Lelang:\n\n• Nama: {$judul}\n• Kode: {$kode}\n• Harga Limit: {$harga_limit}\n• Lokasi: {$kota}\n\nMohon informasi survei fisik & tata cara lelangnya. Terima kasih." );
-                    $wa_card_url     = 'https://wa.me/' . $wa_pic . '?text=' . $wa_inquiry_text;
-                ?>
+                        // Pre-filled WhatsApp Inquiry
+                        $wa_inquiry_text = rawurlencode( "Assalamu'alaikum BPRS Wakalumi, saya tertarik ingin menanyakan informasi lebih lanjut mengenai Aset Lelang:\n\n• Nama: {$judul}\n• Kode: {$kode}\n• Harga Limit: {$harga_limit}\n• Lokasi: {$kota}\n\nMohon informasi survei fisik & tata cara lelangnya. Terima kasih." );
+                        $wa_card_url     = 'https://wa.me/' . $wa_pic . '?text=' . $wa_inquiry_text;
+                    ?>
                     <article class="lelang-card-item spotlight-card group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border shadow-md hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 overflow-hidden"
                              data-id="<?php echo $row_id; ?>"
                              data-kode="<?php echo esc_attr( strtolower( $kode ) ); ?>"
@@ -675,6 +825,8 @@ $wa_url = 'https://wa.me/' . $pic_wa;
                 </nav>
             </div>
 
+            <?php endif; // End check $is_completely_empty ?>
+
         </div>
     </section>
 
@@ -880,13 +1032,6 @@ $wa_url = 'https://wa.me/' . $pic_wa;
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                             </a>
                         <?php endif; ?>
-                    </div>
-
-                    <!-- Trust Footer Text -->
-                    <div class="pt-4 flex items-center justify-center gap-3 text-xs text-slate-400">
-                        <span>PT BPRS Wakalumi terdaftar &amp; diawasi oleh OJK</span>
-                        <span>•</span>
-                        <span>Peserta Penjaminan LPS</span>
                     </div>
                 </div>
             </div>

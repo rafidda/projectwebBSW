@@ -25,6 +25,24 @@ $items = ! empty( $cfg['items'] ) && is_array( $cfg['items'] ) ? $cfg['items'] :
 
 $clean_wa = preg_replace( '/[^0-9]/', '', $cfg['cs_wa'] ?? '6281517380388' );
 $wa_url   = 'https://wa.me/' . $clean_wa . '?text=' . rawurlencode( 'Halo Tim Layanan Nasabah Bank Syariah Wakalumi, saya ingin menanyakan panduan fasilitas layanan perbankan.' );
+
+if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
+    function wakalumi_render_layanan_icon( $icon_type, $class = 'w-5 h-5', $idx = 0 ) {
+        if ( 'truck' === $icon_type ) {
+            return '<svg class="' . esc_attr( $class ) . '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v9.375c0 .621.504 1.125 1.125 1.125h1.5"/></svg>';
+        } elseif ( 'smartphone' === $icon_type ) {
+            return '<svg class="' . esc_attr( $class ) . '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>';
+        } elseif ( 'building' === $icon_type ) {
+            return '<svg class="' . esc_attr( $class ) . '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"/></svg>';
+        } elseif ( 'shield-check' === $icon_type ) {
+            return '<svg class="' . esc_attr( $class ) . '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>';
+        } elseif ( 'none' === $icon_type ) {
+            return '<span class="font-black text-xs">' . sprintf( '%02d', $idx + 1 ) . '</span>';
+        } else {
+            return '<svg class="' . esc_attr( $class ) . '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>';
+        }
+    }
+}
 ?>
 
 <main id="primary" class="site-main overflow-hidden bg-slate-50/50 dark:bg-dark-surface/20 min-h-screen">
@@ -213,24 +231,49 @@ $wa_url   = 'https://wa.me/' . $clean_wa . '?text=' . rawurlencode( 'Halo Tim La
     <section class="py-8 md:py-14 relative z-10">
         <div class="container-wide">
 
-            <!-- MOBILE HORIZONTAL CHIP TABS (Thumb-Friendly) -->
-            <div class="lg:hidden mb-6 -mx-4 px-4 overflow-x-auto no-scrollbar py-1">
-                <div class="inline-flex items-center gap-2 min-w-full" id="wkl-mobile-tabs-bar">
-                    <?php foreach ( $items as $idx => $m_item ) : 
-                        $m_is_active = ( 0 === $idx );
-                    ?>
-                        <button type="button" 
-                                onclick="wklSwitchLayananTab('<?php echo esc_js( $m_item['id'] ); ?>')"
-                                class="wkl-mobile-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all duration-300 border shadow-2xs <?php echo $m_is_active ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-teal-500 shadow-md shadow-teal-600/20' : 'bg-white dark:bg-dark-card text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-dark-border hover:bg-slate-50'; ?>"
-                                data-tab-target="<?php echo esc_attr( $m_item['id'] ); ?>">
-                            <span><?php echo esc_html( $m_item['short_title'] ?? $m_item['title'] ); ?></span>
-                            <?php if ( ! empty( $m_item['badge'] ) ) : ?>
-                                <span class="text-[9px] px-1.5 py-0.5 rounded-full <?php echo $m_is_active ? 'bg-white/20 text-white' : 'bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200/50 dark:border-teal-800/50'; ?>">
-                                    <?php echo esc_html( $m_item['badge'] ); ?>
+            <!-- ============================================================
+                 MOBILE STICKY TRIGGER BAR (Opens Bottom Sheet Drawer)
+                 ============================================================ -->
+            <div class="lg:hidden sticky top-16 z-30 mb-6 -mx-4 px-4 transition-all" id="wkl-layanan-sticky-wrapper">
+                <div class="bg-white/95 dark:bg-dark-card/95 backdrop-blur-md rounded-2xl border border-teal-500/35 dark:border-teal-500/25 shadow-lg shadow-teal-500/10 overflow-hidden transition-all">
+                    
+                    <!-- Trigger Button -->
+                    <button type="button" 
+                            id="wkl-layanan-drawer-trigger" 
+                            onclick="wklOpenLayananDrawer()" 
+                            class="w-full flex items-center justify-between p-2.5 sm:p-3 text-left active:scale-[0.99] transition-all group">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <!-- Active Icon Box -->
+                            <div id="wkl-layanan-active-icon-box" class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                                <span id="wkl-layanan-active-icon">
+                                    <?php echo wakalumi_render_layanan_icon( $items[0]['icon'] ?? 'credit-card', 'w-5 h-5', 0 ); ?>
                                 </span>
-                            <?php endif; ?>
-                        </button>
-                    <?php endforeach; ?>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">Pilihan Fasilitas</span>
+                                    <span id="wkl-layanan-active-badge" class="text-[9px] px-1.5 py-0.2 rounded-full font-bold <?php echo ! empty( $items[0]['badge'] ) ? 'bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300' : 'hidden'; ?>">
+                                        <?php echo esc_html( $items[0]['badge'] ?? '' ); ?>
+                                    </span>
+                                </div>
+                                <h4 id="wkl-layanan-active-title" class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                                    <?php echo esc_html( $items[0]['short_title'] ?? $items[0]['title'] ?? 'Pilih Layanan' ); ?>
+                                </h4>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 shrink-0 pl-2">
+                            <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500" id="wkl-layanan-active-counter">
+                                1 / <?php echo count( $items ); ?>
+                            </span>
+                            <div class="px-2.5 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/60 dark:border-teal-800/60 text-teal-700 dark:text-teal-300 text-xs font-bold flex items-center gap-1.5 group-hover:bg-teal-100 dark:group-hover:bg-teal-900/50 transition-all">
+                                <span>Pilih</span>
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
 
@@ -761,9 +804,213 @@ $wa_url   = 'https://wa.me/' . $clean_wa . '?text=' . rawurlencode( 'Halo Tim La
 </main>
 
 <!-- ========================================================================
-     CLIENT-SIDE INTERACTIVE JS LOGIC (Tabs, Sub-tabs, Copy, FAQ, Lightbox)
+     MOBILE BOTTOM SHEET DRAWER (TELEPORTED TO BODY FOR ACCURATE VIEWPORT ATTACHMENT)
+     ======================================================================== -->
+<div id="wkl-layanan-drawer-backdrop" 
+     onclick="wklCloseLayananDrawer()" 
+     class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[9999] opacity-0 pointer-events-none invisible transition-opacity duration-300 lg:hidden"
+     aria-hidden="true"></div>
+
+<div id="wkl-layanan-drawer" 
+     class="fixed inset-x-0 bottom-0 z-[10000] w-full max-w-lg mx-auto bg-white dark:bg-dark-card rounded-t-3xl shadow-2xl border-t border-slate-200/80 dark:border-dark-border transform translate-y-full pointer-events-none invisible transition-all duration-300 ease-out flex flex-col max-h-[82vh] lg:hidden"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="wkl-layanan-drawer-title">
+    
+    <!-- Drag Handle / Grab Bar -->
+    <div class="pt-3 pb-1 flex justify-center cursor-pointer shrink-0" onclick="wklCloseLayananDrawer()">
+        <div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+    </div>
+
+    <!-- Drawer Header -->
+    <div class="px-5 py-3 border-b border-slate-100 dark:border-dark-border flex items-center justify-between shrink-0">
+        <div>
+            <div class="flex items-center gap-2 mb-0.5">
+                <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">Pilihan Fasilitas</span>
+            </div>
+            <h3 id="wkl-layanan-drawer-title" class="text-base font-extrabold text-slate-900 dark:text-white">
+                Fasilitas & Layanan Kami
+            </h3>
+        </div>
+        <button type="button" 
+                onclick="wklCloseLayananDrawer()" 
+                class="w-8 h-8 rounded-full bg-slate-100 dark:bg-dark-surface hover:bg-slate-200 dark:hover:bg-dark-border text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition-colors"
+                aria-label="Tutup Menu">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Drawer Items List (Scrollable) -->
+    <div class="overflow-y-auto p-4 space-y-2.5 flex-1 overscroll-contain">
+        <?php foreach ( $items as $idx => $s_item ) : 
+            $is_active = ( 0 === $idx );
+            $icon_type = $s_item['icon'] ?? 'credit-card';
+            $item_badge = $s_item['badge'] ?? '';
+        ?>
+            <button type="button" 
+                    onclick="wklSelectLayananFromDrawer('<?php echo esc_js( $s_item['id'] ); ?>')"
+                    data-drawer-target="<?php echo esc_attr( $s_item['id'] ); ?>"
+                    data-item-index="<?php echo $idx + 1; ?>"
+                    data-item-title="<?php echo esc_attr( $s_item['short_title'] ?? $s_item['title'] ); ?>"
+                    data-item-badge="<?php echo esc_attr( $item_badge ); ?>"
+                    class="wkl-layanan-drawer-item w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border <?php echo $is_active ? 'active bg-teal-50/70 dark:bg-teal-950/40 border-teal-500 shadow-sm' : 'bg-slate-50/70 dark:bg-dark-surface/50 border-slate-200/70 dark:border-dark-border/80 hover:bg-slate-100 dark:hover:bg-dark-surface'; ?>">
+                
+                <div class="wkl-drawer-icon-box w-10 h-10 rounded-xl flex items-center justify-center shrink-0 <?php echo $is_active ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xs' : 'bg-white dark:bg-dark-card text-teal-600 dark:text-teal-400 border border-slate-200/80 dark:border-dark-border'; ?>">
+                    <span class="wkl-drawer-icon-svg">
+                        <?php echo wakalumi_render_layanan_icon( $icon_type, 'w-5 h-5', $idx ); ?>
+                    </span>
+                </div>
+
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-xs sm:text-sm font-bold truncate <?php echo $is_active ? 'text-teal-900 dark:text-teal-100 font-extrabold' : 'text-slate-900 dark:text-white'; ?>">
+                            <?php echo esc_html( $s_item['short_title'] ?? $s_item['title'] ); ?>
+                        </h4>
+                        <?php if ( ! empty( $item_badge ) ) : ?>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded-full font-bold bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300 shrink-0">
+                                <?php echo esc_html( $item_badge ); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ( ! empty( $s_item['summary'] ) ) : ?>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                            <?php echo esc_html( $s_item['summary'] ); ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+
+                <div class="wkl-drawer-check shrink-0 <?php echo $is_active ? 'block' : 'hidden'; ?>">
+                    <div class="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center shadow-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Drawer Footer / Dismiss Button -->
+    <div class="p-3.5 border-t border-slate-100 dark:border-dark-border bg-slate-50/60 dark:bg-dark-surface/40 shrink-0">
+        <button type="button" 
+                onclick="wklCloseLayananDrawer()" 
+                class="w-full py-2.5 rounded-xl bg-slate-200/80 dark:bg-dark-surface hover:bg-slate-300 dark:hover:bg-dark-border text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors">
+            Tutup
+        </button>
+    </div>
+</div>
+
+<!-- ========================================================================
+     CLIENT-SIDE INTERACTIVE JS LOGIC (Tabs, Drawer, Sub-tabs, Copy, FAQ, Lightbox)
      ======================================================================== -->
 <script>
+// Teleport drawer and backdrop to document.body on load so they are never trapped in containing blocks
+function wklInitLayananDrawer() {
+    var drawer = document.getElementById('wkl-layanan-drawer');
+    var backdrop = document.getElementById('wkl-layanan-drawer-backdrop');
+    if (!drawer) return;
+
+    // Clean up any stale orphaned drawer/backdrop from previous Swup navigation
+    var allDrawers = document.querySelectorAll('#wkl-layanan-drawer');
+    if (allDrawers.length > 1) {
+        allDrawers.forEach(function(el) {
+            if (el !== drawer && el.parentElement === document.body) {
+                el.remove();
+            }
+        });
+    }
+    var allBackdrops = document.querySelectorAll('#wkl-layanan-drawer-backdrop');
+    if (allBackdrops.length > 1) {
+        allBackdrops.forEach(function(el) {
+            if (el !== backdrop && el.parentElement === document.body) {
+                el.remove();
+            }
+        });
+    }
+
+    if (drawer.parentElement !== document.body) {
+        document.body.appendChild(drawer);
+    }
+    if (backdrop && backdrop.parentElement !== document.body) {
+        document.body.appendChild(backdrop);
+    }
+
+    // Register Swup cleanup hook when leaving this page
+    if (window.swup && window.swup.hooks && !window._wklLayananSwupCleanBound) {
+        window._wklLayananSwupCleanBound = true;
+        window.swup.hooks.once('visit:start', function() {
+            window._wklLayananSwupCleanBound = false;
+            var d = document.getElementById('wkl-layanan-drawer');
+            var b = document.getElementById('wkl-layanan-drawer-backdrop');
+            if (d && d.parentElement === document.body) d.remove();
+            if (b && b.parentElement === document.body) b.remove();
+            document.body.style.overflow = '';
+        });
+    }
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wklInitLayananDrawer);
+} else {
+    wklInitLayananDrawer();
+}
+
+function wklOpenLayananDrawer() {
+    wklInitLayananDrawer();
+    var drawer = document.getElementById('wkl-layanan-drawer');
+    var backdrop = document.getElementById('wkl-layanan-drawer-backdrop');
+    if (!drawer || !backdrop) return;
+
+    backdrop.classList.remove('opacity-0', 'pointer-events-none', 'invisible');
+    backdrop.classList.add('opacity-100', 'pointer-events-auto');
+
+    drawer.classList.remove('translate-y-full', 'pointer-events-none', 'invisible');
+    drawer.classList.add('translate-y-0');
+
+    document.body.style.overflow = 'hidden';
+}
+
+function wklCloseLayananDrawer() {
+    var drawer = document.getElementById('wkl-layanan-drawer');
+    var backdrop = document.getElementById('wkl-layanan-drawer-backdrop');
+    if (!drawer || !backdrop) return;
+
+    drawer.classList.remove('translate-y-0');
+    drawer.classList.add('translate-y-full', 'pointer-events-none');
+
+    backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+    backdrop.classList.add('opacity-0', 'pointer-events-none');
+
+    setTimeout(function() {
+        if (drawer && drawer.classList.contains('translate-y-full')) {
+            drawer.classList.add('invisible');
+            if (backdrop) backdrop.classList.add('invisible');
+        }
+    }, 300);
+
+    document.body.style.overflow = '';
+}
+
+function wklSelectLayananFromDrawer(tabId) {
+    wklSwitchLayananTab(tabId);
+    wklCloseLayananDrawer();
+
+    // Smooth scroll ke awal pane dengan offset tepat di bawah sticky bar
+    var targetPane = document.getElementById('pane-' + tabId);
+    if (targetPane) {
+        var stickyBar = document.getElementById('wkl-layanan-sticky-wrapper');
+        var offset = (stickyBar ? stickyBar.offsetHeight : 55) + 80;
+        var elementPosition = targetPane.getBoundingClientRect().top;
+        var offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
+}
+
 function wklSwitchLayananTab(tabId) {
     // 1. Sembunyikan semua pane layanan & tampilkan target
     var panes = document.querySelectorAll('.wkl-layanan-pane');
@@ -799,17 +1046,72 @@ function wklSwitchLayananTab(tabId) {
         }
     });
 
-    // 3. Update status tombol chip horizontal mobile
-    var mBtns = document.querySelectorAll('.wkl-mobile-tab-btn');
-    mBtns.forEach(function(mBtn) {
-        var isThis = (mBtn.getAttribute('data-tab-target') === tabId);
+    // 3. Update status drawer items & sinkronisasi ke Mobile Sticky Bar
+    var drawerItems = document.querySelectorAll('.wkl-layanan-drawer-item');
+    drawerItems.forEach(function(item) {
+        var isThis = (item.getAttribute('data-drawer-target') === tabId);
+        var checkEl = item.querySelector('.wkl-drawer-check');
+        var iconBox = item.querySelector('.wkl-drawer-icon-box');
+        var titleEl = item.querySelector('h4');
+        var iconSvg = item.querySelector('.wkl-drawer-icon-svg');
+
         if (isThis) {
-            mBtn.className = 'wkl-mobile-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all duration-300 border shadow-md shadow-teal-600/20 bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-teal-500';
+            item.className = 'wkl-layanan-drawer-item active w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border bg-teal-50/70 dark:bg-teal-950/40 border-teal-500 shadow-sm';
+            if (iconBox) iconBox.className = 'wkl-drawer-icon-box w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xs';
+            if (titleEl) titleEl.className = 'text-xs sm:text-sm font-bold truncate text-teal-900 dark:text-teal-100 font-extrabold';
+            if (checkEl) checkEl.className = 'wkl-drawer-check shrink-0 block';
+
+            // Sinkronisasi data ke Mobile Sticky Bar
+            var stickyTitle = document.getElementById('wkl-layanan-active-title');
+            var stickyCounter = document.getElementById('wkl-layanan-active-counter');
+            var stickyBadge = document.getElementById('wkl-layanan-active-badge');
+            var stickyIcon = document.getElementById('wkl-layanan-active-icon');
+
+            if (stickyTitle) stickyTitle.textContent = item.getAttribute('data-item-title') || '';
+            if (stickyCounter) {
+                var idx = item.getAttribute('data-item-index') || '1';
+                var total = drawerItems.length;
+                stickyCounter.textContent = idx + ' / ' + total;
+            }
+            if (stickyBadge) {
+                var badgeText = item.getAttribute('data-item-badge') || '';
+                if (badgeText) {
+                    stickyBadge.textContent = badgeText;
+                    stickyBadge.classList.remove('hidden');
+                } else {
+                    stickyBadge.classList.add('hidden');
+                }
+            }
+            if (stickyIcon && iconSvg) {
+                stickyIcon.innerHTML = iconSvg.innerHTML;
+            }
         } else {
-            mBtn.className = 'wkl-mobile-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all duration-300 border shadow-2xs bg-white dark:bg-dark-card text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-dark-border hover:bg-slate-50';
+            item.className = 'wkl-layanan-drawer-item w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border bg-slate-50/70 dark:bg-dark-surface/50 border-slate-200/70 dark:border-dark-border/80 hover:bg-slate-100 dark:hover:bg-dark-surface';
+            if (iconBox) iconBox.className = 'wkl-drawer-icon-box w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-white dark:bg-dark-card text-teal-600 dark:text-teal-400 border border-slate-200/80 dark:border-dark-border';
+            if (titleEl) titleEl.className = 'text-xs sm:text-sm font-bold truncate text-slate-900 dark:text-white';
+            if (checkEl) checkEl.className = 'wkl-drawer-check shrink-0 hidden';
         }
     });
 }
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        wklCloseLayananDrawer();
+        closeZoomModal();
+    }
+});
+
+// Attach all functions to window for global access across Swup page views
+window.wklInitLayananDrawer = wklInitLayananDrawer;
+window.wklOpenLayananDrawer = wklOpenLayananDrawer;
+window.wklCloseLayananDrawer = wklCloseLayananDrawer;
+window.wklSelectLayananFromDrawer = wklSelectLayananFromDrawer;
+window.wklSwitchLayananTab = wklSwitchLayananTab;
+window.wklSwitchChannel = wklSwitchChannel;
+window.wklCopyToClipboard = wklCopyToClipboard;
+window.wklToggleFaq = wklToggleFaq;
+window.openZoomModal = openZoomModal;
+window.closeZoomModal = closeZoomModal;
 
 function wklSwitchChannel(itemId, channelIndex) {
     var paneParent = document.getElementById('pane-' + itemId);

@@ -28,17 +28,23 @@ get_header();
                 <!-- Top Subtle Accent Bar -->
                 <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-emerald-500 to-cyan-500 absolute top-0 left-0 right-0"></div>
 
-                <!-- Featured Image -->
+                <!-- Featured Image (Besar di Awal) -->
                 <?php if ( has_post_thumbnail() ) : ?>
                     <div class="mb-10 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-md">
                         <?php the_post_thumbnail( 'hero-large', [
                             'class' => 'w-full aspect-[16/8] object-cover',
                         ] ); ?>
+                        <?php if ( get_the_post_thumbnail_caption() ) : ?>
+                            <div class="p-3 text-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-dark-surface border-t border-slate-200/50 dark:border-dark-border font-medium flex items-center justify-center gap-1.5">
+                                <span>📷</span>
+                                <span><?php echo esc_html( get_the_post_thumbnail_caption() ); ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
-                <!-- Content -->
-                <div class="prose prose-lg prose-slate dark:prose-invert mx-auto max-w-none">
+                <!-- Content (Standar & Normal) -->
+                <div class="prose prose-lg prose-slate dark:prose-invert mx-auto max-w-none leading-relaxed">
                     <?php the_content(); ?>
                 </div>
             </div>

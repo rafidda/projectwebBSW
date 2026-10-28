@@ -522,9 +522,9 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                         </div>
 
                         <div class="space-y-1.5">
-                            <!-- 1. Layanan Kami -->
+                            <!-- 1. Layanan Kami (Biru Tegas) -->
                             <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/layanan' ) === 0 || is_page( 'layanan-kami' ) ) ? 'active' : ''; ?>">
-                                <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
                                     </svg>
@@ -535,7 +535,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                                 </div>
                             </a>
 
-                            <!-- 2. Baitul Maal BSW -->
+                            <!-- 2. Baitul Maal BSW (Hijau Islami Hangat) -->
                             <a href="<?php echo esc_url( home_url( '/baitul-maal/' ) ); ?>" class="mega-link group/item <?php echo ( strpos( $req_uri, '/baitul-maal' ) === 0 || is_page( 'baitul-maal' ) ) ? 'active' : ''; ?>">
                                 <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover/item:scale-105 transition-transform">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -773,7 +773,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                         aria-label="Toggle dark mode">
                     
                     <span class="z-10 flex items-center justify-center w-5 h-5 text-amber-500 transition-transform duration-300">
-                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 4.22a1 1 0 011.415 0l.708.708a1 1 0 01-1.414 1.414l-.708-.708a1 1 0 010-1.414zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM14.929 15.636a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22-1.414a1 1 0 01-1.415 0l-.708-.708a1 1 0 011.414-1.414l.708.708a1 1 0 010 1.414zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm1.414-4.95l.707.707a1 1 0 11-1.414 1.414L2.05 4.95a1 1 0 111.414-1.414zM10 5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"/></svg>
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 2zM10 15a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 15zM10 7a3 3 0 100 6 3 3 0 000-6zM15.657 5.404a.75.75 0 10-1.06-1.06l-1.061 1.06a.75.75 0 001.06 1.06l1.06-1.06zM6.464 14.596a.75.75 0 10-1.06-1.06l-1.06 1.06a.75.75 0 001.06 1.06l1.06-1.06zM18 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0118 10zM5 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 015 10zM14.596 15.657a.75.75 0 001.06-1.06l-1.06-1.061a.75.75 0 10-1.06 1.06l1.06 1.06zM5.404 6.464a.75.75 0 001.06-1.06l-1.06-1.06a.75.75 0 10-1.06 1.06l1.06 1.06z"/></svg>
                     </span>
                     
                     <span class="z-10 flex items-center justify-center w-5 h-5 text-slate-300 transition-transform duration-300">
@@ -1090,7 +1090,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                 </button>
                 <div class="<?php echo $is_page_layanan ? '' : 'hidden'; ?> pl-2 mt-1 space-y-1 mobile-dropdown-content">
                     <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors <?php echo ( strpos( $req_uri, '/layanan' ) === 0 || is_page( 'layanan-kami' ) ) ? 'bg-primary-50 text-primary-700 font-bold dark:bg-primary-950/50 dark:text-teal-300' : 'text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400'; ?>">
-                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                        <span class="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" /></svg>
                         </span>
                         <span class="text-xs font-semibold">Layanan Kami (VA 24/7 &amp; Jemput Setoran)</span>

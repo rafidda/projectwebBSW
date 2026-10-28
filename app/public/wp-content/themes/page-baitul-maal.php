@@ -347,32 +347,55 @@ if ( ! function_exists( 'wakalumi_render_bm_icon' ) ) {
     <section class="py-8 md:py-14 relative z-10">
         <div class="container-wide">
 
-            <!-- MOBILE HORIZONTAL CHIP TABS -->
-            <div class="lg:hidden mb-6 -mx-4 px-4 overflow-x-auto no-scrollbar py-1">
-                <div class="inline-flex items-center gap-2 min-w-full" id="wkl-bm-mobile-tabs-bar">
-                    <?php
-                    $sidebar_accents = [ 'teal', 'blue', 'amber', 'purple', 'emerald', 'indigo', 'sky', 'cyan' ];
-                    foreach ( $items as $idx => $m_item ) : 
-                        $m_is_active = ( 0 === $idx );
-                        $m_icon      = $m_item['icon'] ?? 'heart';
-                        $m_color     = ! empty( $m_item['color'] ) ? $m_item['color'] : $sidebar_accents[ $idx % count( $sidebar_accents ) ];
-                        $m_pal       = wakalumi_get_bm_color_palette( $m_color );
-                    ?>
-                        <button type="button" 
-                                onclick="wklSwitchBmTab('<?php echo esc_js( $m_item['id'] ); ?>')"
-                                data-bm-mobile-active-class="<?php echo esc_attr( $m_pal['tab_active_mobile'] ); ?>"
-                                data-bm-mobile-badge-idle-class="<?php echo esc_attr( $m_pal['sub_badge'] ); ?>"
-                                class="wkl-bm-mobile-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all duration-300 border shadow-2xs <?php echo $m_is_active ? esc_attr( $m_pal['tab_active_mobile'] ) : 'bg-white dark:bg-dark-card text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-dark-border hover:bg-slate-50'; ?>"
-                                data-bm-tab-target="<?php echo esc_attr( $m_item['id'] ); ?>">
-                            <?php echo wakalumi_render_bm_icon( $m_icon, 'w-4 h-4 shrink-0' ); ?>
-                            <span><?php echo esc_html( $m_item['short_title'] ?? $m_item['title'] ); ?></span>
-                            <?php if ( ! empty( $m_item['badge'] ) ) : ?>
-                                <span class="wkl-bm-mobile-badge text-[9px] px-1.5 py-0.5 rounded-full border <?php echo $m_is_active ? 'bg-white/20 text-white border-white/30' : esc_attr( $m_pal['sub_badge'] ); ?>">
-                                    <?php echo esc_html( $m_item['badge'] ); ?>
+            <!-- ============================================================
+                 MOBILE STICKY TRIGGER BAR (Opens Bottom Sheet Drawer)
+                 ============================================================ -->
+            <div class="lg:hidden sticky top-16 z-30 mb-6 -mx-4 px-4 transition-all" id="wkl-bm-sticky-wrapper">
+                <?php
+                $first_item  = $items[0] ?? [];
+                $first_color = ! empty( $first_item['color'] ) ? $first_item['color'] : 'teal';
+                $first_pal   = wakalumi_get_bm_color_palette( $first_color );
+                $first_icon  = $first_item['icon'] ?? 'heart';
+                ?>
+                <div class="bg-white/95 dark:bg-dark-card/95 backdrop-blur-md rounded-2xl border border-teal-500/35 dark:border-teal-500/25 shadow-lg shadow-teal-500/10 overflow-hidden transition-all">
+                    
+                    <!-- Trigger Button -->
+                    <button type="button" 
+                            id="wkl-bm-drawer-trigger" 
+                            onclick="wklOpenBmDrawer()" 
+                            class="w-full flex items-center justify-between p-2.5 sm:p-3 text-left active:scale-[0.99] transition-all group">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <!-- Active Icon Box -->
+                            <div id="wkl-bm-active-icon-box" class="w-10 h-10 rounded-xl <?php echo esc_attr( $first_pal['tab_active_mobile'] ); ?> flex items-center justify-center shrink-0 shadow-xs">
+                                <span id="wkl-bm-active-icon">
+                                    <?php echo wakalumi_render_bm_icon( $first_icon, 'w-5 h-5 text-white' ); ?>
                                 </span>
-                            <?php endif; ?>
-                        </button>
-                    <?php endforeach; ?>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">Program Aktif</span>
+                                    <span id="wkl-bm-active-badge" class="text-[9px] px-1.5 py-0.2 rounded-full font-bold <?php echo ! empty( $first_item['badge'] ) ? esc_attr( $first_pal['sub_badge'] ) : 'hidden'; ?>">
+                                        <?php echo esc_html( $first_item['badge'] ?? '' ); ?>
+                                    </span>
+                                </div>
+                                <h4 id="wkl-bm-active-title" class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                                    <?php echo esc_html( $first_item['short_title'] ?? $first_item['title'] ?? 'Pilih Program' ); ?>
+                                </h4>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 shrink-0 pl-2">
+                            <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500" id="wkl-bm-active-counter">
+                                1 / <?php echo count( $items ); ?>
+                            </span>
+                            <div class="px-2.5 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/60 dark:border-teal-800/60 text-teal-700 dark:text-teal-300 text-xs font-bold flex items-center gap-1.5 group-hover:bg-teal-100 dark:group-hover:bg-teal-900/50 transition-all">
+                                <span>Pilih</span>
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
 
@@ -1200,9 +1223,224 @@ if ( ! function_exists( 'wakalumi_render_bm_icon' ) ) {
         </div>
     </div>
 
+</main>
+
+<!-- ========================================================================
+     MOBILE BOTTOM SHEET DRAWER (TELEPORTED TO BODY FOR ACCURATE VIEWPORT ATTACHMENT)
+     ======================================================================== -->
+<div id="wkl-bm-drawer-backdrop" 
+     onclick="wklCloseBmDrawer()" 
+     class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[9999] opacity-0 pointer-events-none invisible transition-opacity duration-300 lg:hidden"
+     aria-hidden="true"></div>
+
+<div id="wkl-bm-drawer" 
+     class="fixed inset-x-0 bottom-0 z-[10000] w-full max-w-lg mx-auto bg-white dark:bg-dark-card rounded-t-3xl shadow-2xl border-t border-slate-200/80 dark:border-dark-border transform translate-y-full pointer-events-none invisible transition-all duration-300 ease-out flex flex-col max-h-[82vh] lg:hidden"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="wkl-bm-drawer-title">
+    
+    <!-- Drag Handle / Grab Bar -->
+    <div class="pt-3 pb-1 flex justify-center cursor-pointer shrink-0" onclick="wklCloseBmDrawer()">
+        <div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+    </div>
+
+    <!-- Drawer Header -->
+    <div class="px-5 py-3 border-b border-slate-100 dark:border-dark-border flex items-center justify-between shrink-0">
+        <div>
+            <div class="flex items-center gap-2 mb-0.5">
+                <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">Pilihan Menu Mobile</span>
+            </div>
+            <h3 id="wkl-bm-drawer-title" class="text-base font-extrabold text-slate-900 dark:text-white">
+                Program Baitul Maal BSW
+            </h3>
+        </div>
+        <button type="button" 
+                onclick="wklCloseBmDrawer()" 
+                class="w-8 h-8 rounded-full bg-slate-100 dark:bg-dark-surface hover:bg-slate-200 dark:hover:bg-dark-border text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition-colors"
+                aria-label="Tutup Menu">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Drawer Items List (Scrollable) -->
+    <div class="overflow-y-auto p-4 space-y-2.5 flex-1 overscroll-contain">
+        <?php 
+        foreach ( $items as $idx => $s_item ) : 
+            $is_active   = ( 0 === $idx );
+            $icon_type   = $s_item['icon'] ?? 'heart';
+            $s_color     = ! empty( $s_item['color'] ) ? $s_item['color'] : $sidebar_accents[ $idx % count( $sidebar_accents ) ];
+            $s_pal       = wakalumi_get_bm_color_palette( $s_color );
+            $item_badge  = $s_item['badge'] ?? '';
+        ?>
+            <button type="button" 
+                    onclick="wklSelectBmFromDrawer('<?php echo esc_js( $s_item['id'] ); ?>')"
+                    data-drawer-target="<?php echo esc_attr( $s_item['id'] ); ?>"
+                    data-item-index="<?php echo $idx + 1; ?>"
+                    data-item-title="<?php echo esc_attr( $s_item['short_title'] ?? $s_item['title'] ); ?>"
+                    data-item-badge="<?php echo esc_attr( $item_badge ); ?>"
+                    data-item-active-color="<?php echo esc_attr( $s_pal['tab_active_mobile'] ); ?>"
+                    data-item-idle-icon="border shadow-2xs <?php echo esc_attr( $s_pal['icon_box'] ); ?>"
+                    data-item-badge-class="<?php echo esc_attr( $s_pal['sub_badge'] ); ?>"
+                    class="wkl-bm-drawer-item w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border <?php echo $is_active ? 'active bg-teal-50/70 dark:bg-teal-950/40 border-teal-500 shadow-sm' : 'bg-slate-50/70 dark:bg-dark-surface/50 border-slate-200/70 dark:border-dark-border/80 hover:bg-slate-100 dark:hover:bg-dark-surface'; ?>">
+                
+                <div class="wkl-bm-drawer-icon-box w-10 h-10 rounded-xl flex items-center justify-center shrink-0 <?php echo $is_active ? esc_attr( $s_pal['tab_active_mobile'] ) . ' text-white shadow-xs' : 'border shadow-2xs ' . esc_attr( $s_pal['icon_box'] ); ?>">
+                    <span class="wkl-bm-drawer-icon-svg">
+                        <?php echo wakalumi_render_bm_icon( $icon_type, 'w-5 h-5 ' . ( $is_active ? 'text-white' : '' ) ); ?>
+                    </span>
+                </div>
+
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-xs sm:text-sm font-bold truncate <?php echo $is_active ? 'text-teal-900 dark:text-teal-100 font-extrabold' : 'text-slate-900 dark:text-white'; ?>">
+                            <?php echo esc_html( $s_item['short_title'] ?? $s_item['title'] ); ?>
+                        </h4>
+                        <?php if ( ! empty( $item_badge ) ) : ?>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded-full font-bold border <?php echo esc_attr( $s_pal['sub_badge'] ); ?> shrink-0">
+                                <?php echo esc_html( $item_badge ); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ( ! empty( $s_item['summary'] ) ) : ?>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                            <?php echo esc_html( $s_item['summary'] ); ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+
+                <div class="wkl-bm-drawer-check shrink-0 <?php echo $is_active ? 'block' : 'hidden'; ?>">
+                    <div class="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center shadow-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Drawer Footer / Dismiss Button -->
+    <div class="p-3.5 border-t border-slate-100 dark:border-dark-border bg-slate-50/60 dark:bg-dark-surface/40 shrink-0">
+        <button type="button" 
+                onclick="wklCloseBmDrawer()" 
+                class="w-full py-2.5 rounded-xl bg-slate-200/80 dark:bg-dark-surface hover:bg-slate-300 dark:hover:bg-dark-border text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors">
+            Tutup
+        </button>
+    </div>
+</div>
+
+    <!-- ========================================================================
+         CLIENT-SIDE INTERACTIVE JS LOGIC (Tabs, Drawer, FAQ, Lightbox)
+         ======================================================================== -->
     <script>
+    // Teleport drawer and backdrop to document.body on load so they are never trapped in containing blocks
+    function wklInitBmDrawer() {
+        var drawer = document.getElementById('wkl-bm-drawer');
+        var backdrop = document.getElementById('wkl-bm-drawer-backdrop');
+        if (!drawer) return;
+
+        // Clean up any stale orphaned drawer/backdrop from previous Swup navigation
+        var allDrawers = document.querySelectorAll('#wkl-bm-drawer');
+        if (allDrawers.length > 1) {
+            allDrawers.forEach(function(el) {
+                if (el !== drawer && el.parentElement === document.body) {
+                    el.remove();
+                }
+            });
+        }
+        var allBackdrops = document.querySelectorAll('#wkl-bm-drawer-backdrop');
+        if (allBackdrops.length > 1) {
+            allBackdrops.forEach(function(el) {
+                if (el !== backdrop && el.parentElement === document.body) {
+                    el.remove();
+                }
+            });
+        }
+
+        if (drawer.parentElement !== document.body) {
+            document.body.appendChild(drawer);
+        }
+        if (backdrop && backdrop.parentElement !== document.body) {
+            document.body.appendChild(backdrop);
+        }
+
+        // Register Swup cleanup hook when leaving this page
+        if (window.swup && window.swup.hooks && !window._wklBmSwupCleanBound) {
+            window._wklBmSwupCleanBound = true;
+            window.swup.hooks.once('visit:start', function() {
+                window._wklBmSwupCleanBound = false;
+                var d = document.getElementById('wkl-bm-drawer');
+                var b = document.getElementById('wkl-bm-drawer-backdrop');
+                if (d && d.parentElement === document.body) d.remove();
+                if (b && b.parentElement === document.body) b.remove();
+                document.body.style.overflow = '';
+            });
+        }
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wklInitBmDrawer);
+    } else {
+        wklInitBmDrawer();
+    }
+
+    function wklOpenBmDrawer() {
+        wklInitBmDrawer();
+        var drawer = document.getElementById('wkl-bm-drawer');
+        var backdrop = document.getElementById('wkl-bm-drawer-backdrop');
+        if (!drawer || !backdrop) return;
+
+        backdrop.classList.remove('opacity-0', 'pointer-events-none', 'invisible');
+        backdrop.classList.add('opacity-100', 'pointer-events-auto');
+
+        drawer.classList.remove('translate-y-full', 'pointer-events-none', 'invisible');
+        drawer.classList.add('translate-y-0');
+
+        document.body.style.overflow = 'hidden';
+    }
+
+    function wklCloseBmDrawer() {
+        var drawer = document.getElementById('wkl-bm-drawer');
+        var backdrop = document.getElementById('wkl-bm-drawer-backdrop');
+        if (!drawer || !backdrop) return;
+
+        drawer.classList.remove('translate-y-0');
+        drawer.classList.add('translate-y-full', 'pointer-events-none');
+
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+
+        setTimeout(function() {
+            if (drawer && drawer.classList.contains('translate-y-full')) {
+                drawer.classList.add('invisible');
+                if (backdrop) backdrop.classList.add('invisible');
+            }
+        }, 300);
+
+        document.body.style.overflow = '';
+    }
+
+    function wklSelectBmFromDrawer(tabId) {
+        wklSwitchBmTab(tabId);
+        wklCloseBmDrawer();
+
+        // Smooth scroll ke awal pane dengan offset tepat di bawah sticky bar
+        var targetPane = document.getElementById('bm-pane-' + tabId);
+        if (targetPane) {
+            var stickyBar = document.getElementById('wkl-bm-sticky-wrapper');
+            var offset = (stickyBar ? stickyBar.offsetHeight : 55) + 80;
+            var elementPosition = targetPane.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - offset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
     function wklSwitchBmTab(tabId) {
-        // Hide all panes, show selected
+        // 1. Sembunyikan semua pane, tampilkan target
         document.querySelectorAll('.wkl-bm-pane').forEach(function(pane) {
             if (pane.id === 'bm-pane-' + tabId) {
                 pane.classList.remove('hidden');
@@ -1213,7 +1451,7 @@ if ( ! function_exists( 'wakalumi_render_bm_icon' ) ) {
             }
         });
 
-        // Update desktop sidebar buttons (warna aktif menyesuaikan pilihan warna masing-masing menu)
+        // 2. Update status tombol sidebar desktop
         document.querySelectorAll('.wkl-bm-tab-btn').forEach(function(btn) {
             const isTarget = btn.getAttribute('data-bm-tab-target') === tabId;
             const iconBox = btn.querySelector('.wkl-bm-tab-icon');
@@ -1239,21 +1477,66 @@ if ( ! function_exists( 'wakalumi_render_bm_icon' ) ) {
             }
         });
 
-        // Update mobile buttons (warna aktif menyesuaikan pilihan warna masing-masing menu)
-        document.querySelectorAll('.wkl-bm-mobile-tab-btn').forEach(function(btn) {
-            const isTarget = btn.getAttribute('data-bm-tab-target') === tabId;
-            const activeMobClass = btn.getAttribute('data-bm-mobile-active-class') || 'bg-gradient-to-r from-teal-600 to-emerald-700 text-white border-teal-500 shadow-md shadow-teal-600/20';
-            const badgeEl = btn.querySelector('.wkl-bm-mobile-badge');
-            const badgeIdleClass = btn.getAttribute('data-bm-mobile-badge-idle-class') || 'bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border-teal-200/70 dark:border-teal-800/60';
-            if (isTarget) {
-                btn.className = 'wkl-bm-mobile-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all duration-300 border shadow-2xs ' + activeMobClass;
-                if (badgeEl) badgeEl.className = 'wkl-bm-mobile-badge text-[9px] px-1.5 py-0.5 rounded-full border bg-white/20 text-white border-white/30';
+        // 3. Update drawer items & sinkronisasi ke Mobile Sticky Bar
+        var drawerItems = document.querySelectorAll('.wkl-bm-drawer-item');
+        drawerItems.forEach(function(item) {
+            var isThis = (item.getAttribute('data-drawer-target') === tabId);
+            var checkEl = item.querySelector('.wkl-bm-drawer-check');
+            var iconBox = item.querySelector('.wkl-bm-drawer-icon-box');
+            var iconSvg = item.querySelector('.wkl-bm-drawer-icon-svg');
+            var titleEl = item.querySelector('h4');
+            var activeColorClass = item.getAttribute('data-item-active-color') || '';
+            var idleIconClass = item.getAttribute('data-item-idle-icon') || '';
+
+            if (isThis) {
+                item.className = 'wkl-bm-drawer-item active w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border bg-teal-50/70 dark:bg-teal-950/40 border-teal-500 shadow-sm';
+                if (iconBox) iconBox.className = 'wkl-bm-drawer-icon-box w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-white shadow-xs ' + activeColorClass;
+                if (titleEl) titleEl.className = 'text-xs sm:text-sm font-bold truncate text-teal-900 dark:text-teal-100 font-extrabold';
+                if (checkEl) checkEl.className = 'wkl-bm-drawer-check shrink-0 block';
+
+                // Sinkronisasi data ke Mobile Sticky Bar
+                var stickyTitle = document.getElementById('wkl-bm-active-title');
+                var stickyCounter = document.getElementById('wkl-bm-active-counter');
+                var stickyBadge = document.getElementById('wkl-bm-active-badge');
+                var stickyIcon = document.getElementById('wkl-bm-active-icon');
+                var stickyIconBox = document.getElementById('wkl-bm-active-icon-box');
+
+                if (stickyTitle) stickyTitle.textContent = item.getAttribute('data-item-title') || '';
+                if (stickyCounter) {
+                    var idx = item.getAttribute('data-item-index') || '1';
+                    var total = drawerItems.length;
+                    stickyCounter.textContent = idx + ' / ' + total;
+                }
+                if (stickyBadge) {
+                    var badgeText = item.getAttribute('data-item-badge') || '';
+                    if (badgeText) {
+                        stickyBadge.textContent = badgeText;
+                        stickyBadge.classList.remove('hidden');
+                    } else {
+                        stickyBadge.classList.add('hidden');
+                    }
+                }
+                if (stickyIconBox && activeColorClass) {
+                    stickyIconBox.className = 'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs ' + activeColorClass;
+                }
+                if (stickyIcon && iconSvg) {
+                    stickyIcon.innerHTML = iconSvg.innerHTML;
+                }
             } else {
-                btn.className = 'wkl-bm-mobile-tab-btn flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all duration-300 border shadow-2xs bg-white dark:bg-dark-card text-slate-700 dark:text-slate-200 border-slate-200/80 dark:border-dark-border hover:bg-slate-50';
-                if (badgeEl) badgeEl.className = 'wkl-bm-mobile-badge text-[9px] px-1.5 py-0.5 rounded-full border ' + badgeIdleClass;
+                item.className = 'wkl-bm-drawer-item w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border bg-slate-50/70 dark:bg-dark-surface/50 border-slate-200/70 dark:border-dark-border/80 hover:bg-slate-100 dark:hover:bg-dark-surface';
+                if (iconBox) iconBox.className = 'wkl-bm-drawer-icon-box w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ' + idleIconClass;
+                if (titleEl) titleEl.className = 'text-xs sm:text-sm font-bold truncate text-slate-900 dark:text-white';
+                if (checkEl) checkEl.className = 'wkl-bm-drawer-check shrink-0 hidden';
             }
         });
     }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            wklCloseBmDrawer();
+            wklCloseBmLightbox();
+        }
+    });
 
     function wklToggleBmFaq(btn) {
         const content = btn.nextElementSibling;
@@ -1286,8 +1569,16 @@ if ( ! function_exists( 'wakalumi_render_bm_icon' ) ) {
         modal.classList.remove('flex');
         modal.classList.add('hidden');
     }
-    </script>
 
-</main>
+    // Attach all functions to window for global access across Swup page views
+    window.wklInitBmDrawer = wklInitBmDrawer;
+    window.wklOpenBmDrawer = wklOpenBmDrawer;
+    window.wklCloseBmDrawer = wklCloseBmDrawer;
+    window.wklSelectBmFromDrawer = wklSelectBmFromDrawer;
+    window.wklSwitchBmTab = wklSwitchBmTab;
+    window.wklToggleBmFaq = wklToggleBmFaq;
+    window.wklOpenBmLightbox = wklOpenBmLightbox;
+    window.wklCloseBmLightbox = wklCloseBmLightbox;
+    </script>
 
 <?php get_footer(); ?>
