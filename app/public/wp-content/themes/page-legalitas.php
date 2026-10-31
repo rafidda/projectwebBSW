@@ -12,7 +12,7 @@ get_header();
 // Seksi 1: Hero
 $page_badge    = get_option( 'options_legal_page_badge', 'Transparansi & Kepatuhan Regulasi' );
 $page_title    = get_option( 'options_legal_page_title', 'Legalitas & Landasan Hukum Resmi' );
-$page_subtitle = get_option( 'options_legal_page_subtitle', 'Bukti legalitas pendirian, perizinan operasional perbankan syariah, registrasi perpajakan, dan kepatuhan regulasi PT Bank Perekonomian Rakyat Syariah Wakalumi.' );
+$page_subtitle = get_option( 'options_legal_page_subtitle', 'Bukti legalitas pendirian, perizinan operasional perbankan syariah, dan kepatuhan regulasi PT Bank Perekonomian Rakyat Syariah Wakalumi.' );
 $hero_pill_1   = get_option( 'options_legal_hero_pill_1', 'SK Kemenkumham RI' );
 $hero_pill_2   = get_option( 'options_legal_hero_pill_2', 'Berizin & Diawasi OJK' );
 $hero_pill_3   = get_option( 'options_legal_hero_pill_3', 'Peserta Penjaminan LPS' );
@@ -23,7 +23,8 @@ $hero_card_desc  = get_option( 'options_legal_hero_card_desc', 'Seluruh kegiatan
 $hero_card_tag1  = get_option( 'options_legal_hero_card_tag1', 'Izin Resmi OJK' );
 $hero_card_tag2  = get_option( 'options_legal_hero_card_tag2', 'Fatwa DSN-MUI' );
 
-// Seksi 2: Registrasi Fiskal
+// Seksi 2: Registrasi Fiskal (Dapat dinonaktifkan demi privasi data)
+$show_reg_section = get_option( 'options_legal_show_reg_section', '0' );
 $sec1_badge    = get_option( 'options_legal_sec1_badge', 'Nomor Registrasi Resmi' );
 $sec1_title    = get_option( 'options_legal_sec1_title', 'Identitas Registrasi & Fiskal Perusahaan' );
 $sec1_subtitle = get_option( 'options_legal_sec1_subtitle', 'Legalitas kepatuhan terhadap perizinan berusaha nasional, perpajakan negara, dan pengelolaan zakat syariah.' );
@@ -113,6 +114,48 @@ if ( empty( $regulators ) ) {
     ];
 }
 
+// Seksi Sejarah Perusahaan (Linimasa Kronologi Sejarah)
+$show_sejarah_section = get_option( 'options_legal_show_sejarah', '1' );
+$sejarah_badge        = get_option( 'options_legal_sejarah_badge', 'Sejarah Perusahaan' );
+$sejarah_title        = get_option( 'options_legal_sejarah_title', 'Tonggak Sejarah Perjalanan Bank Syariah Wakalumi' );
+$sejarah_subtitle     = get_option( 'options_legal_sejarah_subtitle', 'Rekam jejak dedikasi dari inisiasi pendirian, transformasi berlandaskan syariah Islam, hingga penguatan permodalan berkelanjutan.' );
+
+$sejarah_items = get_option( 'options_legal_sejarah_items', [] );
+if ( empty( $sejarah_items ) ) {
+    $sejarah_items = [
+        [
+            'year'  => '1989',
+            'title' => 'Inisiasi Pendirian',
+            'desc'  => 'BPRS Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan Alumni Muslim Citibank).',
+            'tag'   => 'Inisiasi Awal',
+        ],
+        [
+            'year'  => '1989',
+            'title' => 'Surat Pengesahan',
+            'desc'  => 'PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) berdasarkan Surat Menteri Keuangan Republik Indonesia Nomor S-637/MK.13/1989 tanggal 18 Mei 1989 tentang Persetujuan Prinsip Pendirian Bank Perkreditan Rakyat.',
+            'tag'   => 'Izin Prinsip Menkeu',
+        ],
+        [
+            'year'  => '1995',
+            'title' => 'Transisi ke Syariah',
+            'desc'  => 'BPRS Wakalumi ini semula beroperasi secara konvensional, namun pada tahun 1995 di konversi menjadi BPR yang beroperasi berlandaskan Syariah Islam. Hal ini terkait dengan lahirnya UU Nomor 7 Tahun 1992 dimana Bank baik Bank Umum maupun BPR dapat beroperasi berdasarkan Syariah Islam.',
+            'tag'   => 'Konversi Syariah',
+        ],
+        [
+            'year'  => '1994 - 2008',
+            'title' => 'Kepemilikan Saham',
+            'desc'  => 'Tahun 1994 Bank Muamalat Indonesia memberikan bantuan tehnis dan manajemen kepada BPRS Wakalumi setelah Bank Muamalat Indonesia menguasai 49% saham. Sejak tahun 2008 Bank Muamalat Indonesia tidak menjadi Pemegang Saham BPRS Wakalumi karena Bank Muamalat Indonesia menjadi perusahaan penanaman modal asing.',
+            'tag'   => 'Kemitraan BMI',
+        ],
+        [
+            'year'  => '2016 - Sekarang',
+            'title' => 'Penguatan Modal & Kepemilikan',
+            'desc'  => 'Terjadi Penguatan modal Bank dengan Masuknya Bapak <strong class="whitespace-nowrap">Ir.&nbsp;H.&nbsp;Saat&nbsp;Suharto</strong>, dan hingga kini beliau menjadi Pemegang Saham Pengendali (PSP) sekaligus Pemegang saham Mayoritas.',
+            'tag'   => 'Pemegang Saham Pengendali',
+        ],
+    ];
+}
+
 // Seksi 4: Akta Notaris & Kantor
 $sec3_badge    = get_option( 'options_legal_sec3_badge', 'Kronologi Yuridis' );
 $sec3_title    = get_option( 'options_legal_sec3_title', 'Rekam Jejak Akta Notaris & Perubahan Anggaran Dasar' );
@@ -173,18 +216,18 @@ $head_office       = get_option( 'options_legal_head_office', 'Komp. Ciputat Mut
 $office_btn_text   = get_option( 'options_legal_office_btn_text', 'Peta & Kontak Kantor' );
 $office_btn_url    = get_option( 'options_legal_office_btn_url', home_url( '/kontak' ) );
 
-// Seksi 5: CTA Bawah
-$cta_badge     = get_option( 'options_legal_cta_badge', 'Transparansi & Kemitraan' );
-$cta_title     = get_option( 'options_legal_cta_title', 'Perlu Verifikasi Legalitas atau Salinan Dokumen Resmi?' );
-$cta_desc      = get_option( 'options_legal_cta_desc', 'Tim kepatuhan dan sekretariat korporasi BPRS Wakalumi siap melayani kebutuhan verifikasi hukum, kemitraan institusi, dan kepatuhan syariah Anda.' );
-$cta_btn1_text = get_option( 'options_legal_cta_btn1_text', 'Hubungi Sekretariat via WhatsApp' );
-$cta_btn1_url  = get_option( 'options_legal_cta_btn1_url', '' );
-$cta_btn2_text = get_option( 'options_legal_cta_btn2_text', 'Lihat Susunan Pengurus' );
-$cta_btn2_url  = get_option( 'options_legal_cta_btn2_url', home_url( '/profil/susunan-pengurus' ) );
+// Seksi CTA Bawah: Pengenalan Susunan Pengurus & Kontak BSW
+$cta_badge     = get_option( 'options_legal_cta_badge', 'Struktur Kepemimpinan BSW' );
+$cta_title     = get_option( 'options_legal_cta_title', 'Mengenal Lebih Dekat Susunan Pengurus BSW' );
+$cta_desc      = get_option( 'options_legal_cta_desc', 'Tata kelola operasional dan kepatuhan syariah di BSW dijalankan secara profesional, amanah, dan transparan oleh jajaran Dewan Komisaris, Direksi, serta Dewan Pengawas Syariah.' );
+$cta_btn1_text = get_option( 'options_legal_cta_btn1_text', 'Lihat Susunan Pengurus' );
+$cta_btn1_url  = get_option( 'options_legal_cta_btn1_url', home_url( '/profil/susunan-pengurus/' ) );
+$cta_btn2_text = get_option( 'options_legal_cta_btn2_text', 'Hubungi BSW via WhatsApp' );
+$cta_btn2_url  = get_option( 'options_legal_cta_btn2_url', '' );
 
 $wa_number     = get_option( 'options_contact_wa', '6281517380388' );
-if ( empty( $cta_btn1_url ) ) {
-    $cta_btn1_url = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
+if ( empty( $cta_btn2_url ) ) {
+    $cta_btn2_url = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
 }
 ?>
 
@@ -311,8 +354,9 @@ if ( empty( $cta_btn1_url ) ) {
 
 <!-- ========================================
      SEKSI 1: KARTU IDENTITAS & REGISTRASI FISKAL (REPEATER CARDS)
+     Catatan: Seksi ini dinonaktifkan secara default untuk menjaga kerahasiaan nomor registrasi internal bank
      ======================================== -->
-<?php if ( ! empty( $reg_cards ) ) : ?>
+<?php if ( ! empty( $show_reg_section ) && $show_reg_section === '1' && ! empty( $reg_cards ) ) : ?>
 <section class="relative z-10 py-12 md:py-16 bg-white dark:bg-dark border-b border-slate-100 dark:border-slate-800/60">
     <div class="container-wide">
         <div class="text-center max-w-3xl mx-auto mb-10 md:mb-14" data-aos="fade-up">
@@ -530,6 +574,144 @@ if ( empty( $cta_btn1_url ) ) {
 
 
 <!-- ========================================
+     SEKSI SEJARAH: LINIMASA SEJARAH PERUSAHAAN
+     ======================================== -->
+<?php if ( ! empty( $show_sejarah_section ) && $show_sejarah_section === '1' && ! empty( $sejarah_items ) ) : ?>
+<section id="sejarah-perusahaan" class="relative z-10 py-16 md:py-24 bg-slate-50/70 dark:bg-dark-surface/40 border-b border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
+    <!-- Ambient Glow Dekoratif -->
+    <div class="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none"></div>
+
+    <div class="container-wide relative z-10">
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16 md:mb-20" data-aos="fade-up">
+            <?php if ( ! empty( $sejarah_badge ) ) : ?>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20 mb-3.5">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                    <span><?php echo esc_html( $sejarah_badge ); ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if ( ! empty( $sejarah_title ) ) : ?>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black font-rubik text-slate-900 dark:text-white tracking-tight leading-tight">
+                    <?php echo esc_html( $sejarah_title ); ?>
+                </h2>
+            <?php endif; ?>
+            <?php if ( ! empty( $sejarah_subtitle ) ) : ?>
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base md:text-lg mt-4 leading-relaxed font-body">
+                    <?php echo esc_html( $sejarah_subtitle ); ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Timeline Tree Container -->
+        <div class="relative max-w-5xl mx-auto">
+            <!-- Garis Timeline Klasik: Pucuk Finial Intan Atas -->
+            <div class="absolute left-6 md:left-1/2 top-1 -translate-x-1/2 w-2 h-2 rotate-45 bg-teal-600 dark:bg-teal-400 z-10 shadow-xs"></div>
+            <!-- Garis Spine Vertikal -->
+            <div class="absolute left-6 md:left-1/2 top-3 bottom-3 w-1 -translate-x-1/2 bg-gradient-to-b from-teal-400/40 via-teal-600 to-teal-400/40 dark:from-teal-500/30 dark:via-teal-400 dark:to-teal-500/30 rounded-full shadow-xs"></div>
+            <!-- Garis Timeline Klasik: Pucuk Finial Intan Bawah -->
+            <div class="absolute left-6 md:left-1/2 bottom-1 -translate-x-1/2 w-2 h-2 rotate-45 bg-teal-600 dark:bg-teal-400 z-10 shadow-xs"></div>
+
+            <div class="space-y-10 md:space-y-14">
+                <?php foreach ( $sejarah_items as $s_idx => $s_item ) : 
+                    $is_even = ( $s_idx % 2 === 0 ); // true = Kiri di desktop, false = Kanan di desktop
+                    $delay   = min( 300, ( $s_idx % 4 ) * 80 );
+                ?>
+                    <div class="relative flex flex-col md:flex-row items-center <?php echo $is_even ? 'md:flex-row-reverse' : ''; ?>" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
+                        
+                        <!-- Sisi Kosong Spacer (Desktop 50%) -->
+                        <div class="hidden md:block md:w-1/2"></div>
+
+                        <!-- Central Timeline Node: Medali Klasik Double Lingkaran Nyata & Pattern Bunga 30% -->
+                        <div class="absolute left-6 md:left-1/2 top-7 md:top-8 -translate-x-1/2 z-20 flex items-center justify-center">
+                            <!-- Lingkaran 1 (Outer Bezel Ring) -->
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white dark:bg-slate-900 border-2 border-teal-600 dark:border-teal-400 shadow-md shadow-teal-900/15 dark:shadow-black/60 flex items-center justify-center p-[2px] transition-all duration-300 group-hover:scale-110">
+                                <!-- Lingkaran 2 (Concentric Double Ring) -->
+                                <div class="w-full h-full rounded-full border border-teal-500/60 dark:border-teal-400/50 p-[1.5px] flex items-center justify-center bg-teal-50/40 dark:bg-teal-950/40">
+                                    <!-- Lingkaran 3 (Inner Ring Core Chamber) -->
+                                    <div class="w-full h-full rounded-full border border-teal-600/40 dark:border-teal-400/30 bg-gradient-to-br from-teal-50 via-white to-teal-100/50 dark:from-slate-800 dark:via-teal-950 dark:to-slate-900 flex items-center justify-center shadow-inner">
+                                        <!-- Elemen Pattern Bunga Ukuran 30% (~11-14px) -->
+                                        <div class="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex items-center justify-center">
+                                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/pattern-bsw-light.png' ); ?>" 
+                                                 alt="Motif BSW" 
+                                                 class="w-full h-full object-contain filter drop-shadow-xs dark:hidden group-hover:scale-115 transition-transform duration-500">
+                                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/pattern-bsw-dark.png' ); ?>" 
+                                                 alt="Motif BSW" 
+                                                 class="w-full h-full object-contain filter drop-shadow-xs hidden dark:block group-hover:scale-115 transition-transform duration-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Content Block (50% on Desktop, Full on Mobile dengan pl-14) -->
+                        <div class="w-full md:w-1/2 pl-14 md:pl-0 <?php echo $is_even ? 'md:pr-10 lg:pr-12' : 'md:pl-10 lg:pl-12'; ?>">
+                            <div class="group relative rounded-2xl md:rounded-3xl border border-teal-600/20 dark:border-teal-500/20 bg-white dark:bg-dark-card overflow-hidden shadow-sm hover:shadow-xl hover:shadow-teal-950/10 dark:hover:shadow-black/50 hover:border-teal-500/50 dark:hover:border-teal-400/50 hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                                
+                                <!-- Subtle Top Jewelry Accent Line -->
+                                <div class="h-1 w-full bg-gradient-to-r from-teal-600 via-teal-500 to-emerald-400 dark:from-teal-500 dark:via-teal-400 dark:to-emerald-400"></div>
+
+                                <!-- Connector Line ke Titik Node (Desktop Only, sejajar dengan header) -->
+                                <?php if ( $is_even ) : ?>
+                                    <div class="hidden md:block absolute right-0 top-8 translate-x-full w-10 lg:w-12 h-[2px] bg-gradient-to-r from-teal-500/70 to-teal-400/40 dark:from-teal-400/70 dark:to-teal-500/30"></div>
+                                <?php else : ?>
+                                    <div class="hidden md:block absolute left-0 top-8 -translate-x-full w-10 lg:w-12 h-[2px] bg-gradient-to-l from-teal-500/70 to-teal-400/40 dark:from-teal-400/70 dark:to-teal-500/30"></div>
+                                <?php endif; ?>
+
+                                <!-- Tone 1: Header Chamber (Judul & Tahun Saja) -->
+                                <div class="px-6 py-4 sm:px-7 sm:py-4.5 bg-gradient-to-r from-slate-50 via-teal-50/50 to-emerald-50/30 dark:from-slate-800/90 dark:via-teal-950/40 dark:to-slate-800/80 border-b border-teal-500/15 dark:border-teal-500/20 flex items-center justify-between gap-3.5 flex-wrap sm:flex-nowrap">
+                                    <!-- Judul Peristiwa (Modern-Klasik dengan Della Respira) -->
+                                    <h3 class="text-lg sm:text-xl font-normal font-della text-slate-900 dark:text-white uppercase tracking-wider leading-snug group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
+                                        <?php echo esc_html( $s_item['title'] ?? '' ); ?>
+                                    </h3>
+                                    <!-- Badge Tahun -->
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-[13px] font-bold font-quattrocento tracking-wide bg-white dark:bg-slate-900 text-teal-800 dark:text-teal-300 border border-teal-500/30 dark:border-teal-400/40 shadow-xs shrink-0 self-start sm:self-center">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-teal-600 dark:bg-teal-400 animate-pulse"></span>
+                                        <span><?php echo esc_html( $s_item['year'] ?? '' ); ?></span>
+                                    </span>
+                                </div>
+
+                                <!-- Tone 2: Content Body Chamber (Isi / Uraian Saja) -->
+                                <div class="p-6 sm:p-7 bg-white dark:bg-dark-card relative overflow-hidden flex-1 flex flex-col justify-between">
+                                    <!-- Watermark Motif Khas BSW samar di pojok kanan bawah -->
+                                    <div class="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 w-32 h-32 opacity-[0.035] dark:opacity-[0.03] pointer-events-none select-none transition-transform duration-700 group-hover:scale-110">
+                                        <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                                    </div>
+
+                                    <!-- Uraian Sejarah Lengkap (Font Quattrocento) -->
+                                    <div class="relative z-10 text-sm sm:text-[14.5px] font-quattrocento text-slate-600 dark:text-slate-300 leading-relaxed font-normal [&_strong]:font-bold [&_strong]:text-slate-900 dark:[&_strong]:text-white">
+                                        <?php 
+                                        $desc_text = $s_item['desc'] ?? '';
+                                        // Pastikan nama & gelar Ir. H. Saat Suharto selalu sebaris utuh (non-breaking & whitespace-nowrap)
+                                        $name_replacement = '<strong class="inline-block whitespace-nowrap font-bold text-slate-900 dark:text-white">Ir.&nbsp;H.&nbsp;Saat&nbsp;Suharto</strong>';
+                                        $desc_text = preg_replace(
+                                            '/(?:<strong[^>]*>)?\s*Ir\.?\s*H\.?\s*Saat\s*Suharto\s*(?:<\/strong>)?/iu',
+                                            $name_replacement,
+                                            $desc_text
+                                        );
+                                        // Juga cegah pemisahan kata 'Bapak' dari nama beliau jika berdekatan
+                                        $desc_text = preg_replace(
+                                            '/(Bapak)\s+(' . preg_quote( $name_replacement, '/' ) . ')/iu',
+                                            '$1&nbsp;$2',
+                                            $desc_text
+                                        );
+                                        echo wp_kses_post( nl2br( $desc_text ) );
+                                        ?>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+    </div>
+</section>
+<?php endif; ?>
+
+
+<!-- ========================================
      SEKSI 3: LINIMASA REKAM JEJAK AKTA NOTARIS
      ======================================== -->
 <section class="relative z-10 py-16 md:py-24 bg-white dark:bg-dark">
@@ -690,19 +872,39 @@ if ( empty( $cta_btn1_url ) ) {
                 <?php endif; ?>
 
                 <div class="flex flex-wrap items-center justify-center gap-4">
-                    <a href="<?php echo esc_url( $cta_btn1_url ); ?>" 
-                       target="_blank" rel="noopener noreferrer"
-                       class="btn-primary text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-primary-500/25 inline-flex items-center gap-2.5 font-bold hover:scale-105 transition-transform">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        <span><?php echo esc_html( $cta_btn1_text ); ?></span>
-                    </a>
-                    <a href="<?php echo esc_url( $cta_btn2_url ); ?>" 
-                       class="btn-secondary text-sm sm:text-base px-8 py-4 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white inline-flex items-center gap-2 font-bold backdrop-blur-sm transition-all hover:scale-105">
+                    <?php if ( ! empty( $cta_btn1_text ) && ! empty( $cta_btn1_url ) ) : 
+                        $is_wa_btn1 = ( stripos( $cta_btn1_url, 'wa.me' ) !== false || stripos( $cta_btn1_url, 'whatsapp' ) !== false );
+                    ?>
+                        <a href="<?php echo esc_url( $cta_btn1_url ); ?>" 
+                           <?php echo $is_wa_btn1 ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                           class="btn-primary text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-primary-500/25 inline-flex items-center gap-2.5 font-bold hover:scale-105 transition-transform">
+                            <span><?php echo esc_html( $cta_btn1_text ); ?></span>
+                            <?php if ( $is_wa_btn1 ) : ?>
+                                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                            <?php else : ?>
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            <?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ( ! empty( $cta_btn2_text ) && ! empty( $cta_btn2_url ) ) : 
+                        $is_wa_btn2 = ( stripos( $cta_btn2_url, 'wa.me' ) !== false || stripos( $cta_btn2_url, 'whatsapp' ) !== false );
+                    ?>
+                        <a href="<?php echo esc_url( $cta_btn2_url ); ?>" 
+                           <?php echo $is_wa_btn2 ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
+                           class="btn-secondary text-sm sm:text-base px-8 py-4 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 text-white inline-flex items-center gap-2.5 font-bold backdrop-blur-sm transition-all hover:scale-105">
+                            <?php if ( $is_wa_btn2 ) : ?>
+                                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                        <?php else : ?>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        <?php endif; ?>
                         <span><?php echo esc_html( $cta_btn2_text ); ?></span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
+                <?php endif; ?>
                 </div>
             </div>
         </div>

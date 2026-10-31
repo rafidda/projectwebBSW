@@ -72,12 +72,18 @@ function wakalumi_get_default_layanan_items() {
                 ],
             ],
             // Kotak Simulasi Perhitungan
-            'show_simulation' => true,
-            'sim_installment' => 'Rp 1.000.000',
-            'sim_fee'         => 'Rp 3.500',
-            'sim_total'       => 'Rp 1.003.500',
-            'sim_note'        => '*Keterangan: Biaya Rp 3.500 dipotong langsung oleh jaringan switching perbankan. Jika Anda hanya mengirimkan Rp 1.000.000, maka dana bersih yang masuk ke rekening pembiayaan Anda menjadi Rp 996.500 (tercatat kurang bayar).',
-            'channels'       => [
+            'show_simulation'      => true,
+            'sim_installment'      => 'Rp 1.000.000',
+            'sim_fee'              => 'Rp 3.500',
+            'sim_total'            => 'Rp 1.003.500',
+            'sim_note'             => '*Keterangan: Biaya Rp 3.500 dipotong langsung oleh jaringan switching perbankan. Jika Anda hanya mengirimkan Rp 1.000.000, maka dana bersih yang masuk ke rekening pembiayaan Anda menjadi Rp 996.500 (tercatat kurang bayar).',
+            'channel_heading'      => 'Pilih Kanal Pembayaran / Panduan:',
+            'channel_desc'         => 'Tersedia 4 metode pembayaran resmi Bank Syariah Wakalumi',
+            'channel_btn_kicker'   => 'Pilih Metode Pembayaran',
+            'channel_btn_title'    => 'Ketuk Untuk Memilih Kanal',
+            'channel_btn_subtitle' => 'PermataMobile X, M-Banking Lain, ATM, dll',
+            'channel_drawer_title' => 'Metode Pembayaran VA',
+            'channels'             => [
                 [
                     'name'     => 'PermataMobile X (Sesama Bank Permata)',
                     'badge'    => 'Sesama Bank',
@@ -201,12 +207,18 @@ function wakalumi_get_default_layanan_items() {
                     'copy_text' => '',
                 ],
             ],
-            'show_simulation' => false,
-            'sim_installment' => '',
-            'sim_fee'         => '',
-            'sim_total'       => '',
-            'sim_note'        => '',
-            'channels'       => [
+            'show_simulation'      => false,
+            'sim_installment'      => '',
+            'sim_fee'              => '',
+            'sim_total'            => '',
+            'sim_note'             => '',
+            'channel_heading'      => 'Alur & Mekanisme Penjemputan Setoran:',
+            'channel_desc'         => 'Panduan resmi alur operasional layanan penjemputan setoran ke lokasi Anda',
+            'channel_btn_kicker'   => 'Mekanisme Layanan',
+            'channel_btn_title'    => 'Alur & Mekanisme Penjemputan',
+            'channel_btn_subtitle' => 'Petugas resmi BSW langsung ke lokasi Anda',
+            'channel_drawer_title' => 'Alur & Mekanisme Layanan',
+            'channels'             => [
                 [
                     'name'     => 'Alur & Mekanisme Penjemputan',
                     'badge'    => 'Prosedur',
@@ -355,6 +367,8 @@ function wakalumi_get_layanan_settings() {
         }
     }
 
+    $settings['show_baitul_maal'] = ( '1' === (string) get_option( 'options_show_baitul_maal', '0' ) );
+
     return $settings;
 }
 
@@ -444,6 +458,11 @@ function wakalumi_handle_layanan_save() {
     update_option( 'options_layanan_cs_hours', sanitize_text_field( wp_unslash( $_POST['cs_hours'] ?? '' ) ) );
     update_option( 'options_layanan_help_card_title', sanitize_text_field( wp_unslash( $_POST['help_card_title'] ?? '' ) ) );
     update_option( 'options_layanan_help_card_desc', sanitize_textarea_field( wp_unslash( $_POST['help_card_desc'] ?? '' ) ) );
+
+    // Sinkronisasi Saklar Baitul Maal di Navbar jika form dikirim
+    if ( isset( $_POST['options_show_baitul_maal_sync'] ) ) {
+        update_option( 'options_show_baitul_maal', isset( $_POST['options_show_baitul_maal'] ) ? '1' : '0' );
+    }
 
     // Proses Data Tab Layanan (Dynamic JSON Array)
     if ( isset( $_POST['layanan_items_json'] ) ) {
@@ -536,8 +555,14 @@ function wakalumi_handle_layanan_save() {
                     'va_code_prefix'  => sanitize_text_field( $it['va_code_prefix'] ?? '' ),
                     'va_format'       => sanitize_text_field( $it['va_format'] ?? '' ),
                     'va_example'      => sanitize_text_field( $it['va_example'] ?? '' ),
-                    'fee_info'        => sanitize_textarea_field( $it['fee_info'] ?? '' ),
-                    'param_cards'     => $param_cards,
+                    'fee_info'             => sanitize_textarea_field( $it['fee_info'] ?? '' ),
+                    'channel_heading'      => sanitize_text_field( $it['channel_heading'] ?? '' ),
+                    'channel_desc'         => sanitize_textarea_field( $it['channel_desc'] ?? '' ),
+                    'channel_btn_kicker'   => sanitize_text_field( $it['channel_btn_kicker'] ?? '' ),
+                    'channel_btn_title'    => sanitize_text_field( $it['channel_btn_title'] ?? '' ),
+                    'channel_btn_subtitle' => sanitize_text_field( $it['channel_btn_subtitle'] ?? '' ),
+                    'channel_drawer_title' => sanitize_text_field( $it['channel_drawer_title'] ?? '' ),
+                    'param_cards'          => $param_cards,
                     'show_simulation' => ! empty( $it['show_simulation'] ),
                     'sim_installment' => sanitize_text_field( $it['sim_installment'] ?? 'Rp 1.000.000' ),
                     'sim_fee'         => sanitize_text_field( $it['sim_fee'] ?? 'Rp 3.500' ),
@@ -600,6 +625,34 @@ function wakalumi_render_layanan_admin_page() {
         <form method="post" action="" id="wakalumi-layanan-form" onsubmit="syncHiddenInput()">
             <?php wp_nonce_field( 'wakalumi_save_layanan_action', 'wakalumi_layanan_nonce' ); ?>
             <input type="hidden" name="layanan_items_json" id="layanan_items_json" value="<?php echo esc_attr( wp_json_encode( $cfg['items'] ) ); ?>" />
+
+            <!-- KARTU STATUS NAVBAR & REGULASI BAITUL MAAL -->
+            <?php
+            $is_bm_active = ! empty( $cfg['show_baitul_maal'] );
+            ?>
+            <input type="hidden" name="options_show_baitul_maal_sync" value="1" />
+            <div style="background: <?php echo $is_bm_active ? '#f0fdf4' : '#f8fafc'; ?>; border: 1px solid <?php echo $is_bm_active ? '#bbf7d0' : '#e2e8f0'; ?>; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 280px; flex: 1;">
+                    <span style="font-size: 20px;">ℹ️</span>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 700; color: #0f172a;">
+                            Status Menu Navbar: <?php echo $is_bm_active ? '<span style="color: #059669;">"Layanan dan Baitul Maal" (Dropdown Aktif)</span>' : '<span style="color: #64748b;">"Layanan" (Direct Link ke Halaman Ini)</span>'; ?>
+                        </div>
+                        <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">
+                            Sesuai regulasi perbankan syariah, menu Baitul Maal saat ini <?php echo $is_bm_active ? '<strong>sedang aktif</strong>' : '<strong>sedang disembunyikan</strong>'; ?> dari navbar publik.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12.5px; font-weight: 600; color: #334155;">
+                        <input type="checkbox" name="options_show_baitul_maal" value="1" <?php checked( $is_bm_active ); ?> style="width: 16px; height: 16px; accent-color: #0d9488; cursor: pointer;" />
+                        <span>Tampilkan Baitul Maal di Navbar</span>
+                    </label>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-baitul-maal' ) ); ?>" class="button button-secondary" style="font-size: 11.5px; font-weight: 600; border-radius: 6px;">
+                        Kelola Baitul Maal &rarr;
+                    </a>
+                </div>
+            </div>
 
             <!-- TAB NAVIGASI ADMIN -->
             <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 2px;">
@@ -1103,15 +1156,44 @@ function wakalumi_render_layanan_admin_page() {
             html += '</div>';
 
             // ─────────────────────────────────────────────────────────────
-            // SUB-SECTION: KANAL PEMBAYARAN & STEP-BY-STEP
+            // SUB-SECTION: KANAL / MEKANISME & STEP-BY-STEP
             // ─────────────────────────────────────────────────────────────
             html += '<div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px;">';
             html += '  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">';
             html += '    <div>';
-            html += '      <strong style="font-size:13px; color:#0f766e;">📱 Kanal Pembayaran &amp; Panduan Langkah Transaksi</strong>';
-            html += '      <p style="margin:2px 0 0 0; font-size:11px; color:#64748b;">Setiap kanal memiliki tombol pill tersendiri di halaman frontend.</p>';
+            html += '      <strong style="font-size:13px; color:#0f766e;">📱 Sub-Kanal / Mekanisme &amp; Panduan Langkah Layanan</strong>';
+            html += '      <p style="margin:2px 0 0 0; font-size:11px; color:#64748b;">Konfigurasikan judul seksi, label tombol selector mobile, dan daftar opsi alur operasional / kanal pembayaran.</p>';
             html += '    </div>';
-            html += '    <button type="button" class="button button-small" onclick="addChannel(' + idx + ')" style="background:#0f766e; color:#fff; border-color:#0f766e; font-weight:700;">+ Tambah Kanal</button>';
+            html += '    <button type="button" class="button button-small" onclick="addChannel(' + idx + ')" style="background:#0f766e; color:#fff; border-color:#0f766e; font-weight:700;">+ Tambah Kanal / Opsi</button>';
+            html += '  </div>';
+
+            // Box Pengaturan Konteks Seksi & Mobile
+            html += '  <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; padding:12px; margin-bottom:14px;">';
+            html += '    <div style="font-size:11px; font-weight:700; color:#0f766e; margin-bottom:8px; display:flex; align-items:center; gap:6px;">⚙️ Konfigurasi Teks Seksi &amp; Tampilan Mobile Layanan Ini:</div>';
+            html += '    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:8px;">';
+            html += '      <div>';
+            html += '        <label style="display:block; font-size:10px; font-weight:700; color:#475569;">Judul Seksi Panduan:</label>';
+            html += '        <input type="text" value="' + escapeHtml(item.channel_heading || '') + '" onchange="updateItemField(' + idx + ', \'channel_heading\', this.value)" placeholder="Contoh: Pilih Kanal Pembayaran / Panduan: ATAU Alur &amp; Mekanisme Layanan:" style="width:100%; font-size:11px;" />';
+            html += '      </div>';
+            html += '      <div>';
+            html += '        <label style="display:block; font-size:10px; font-weight:700; color:#475569;">Keterangan Seksi (Deskripsi Singkat):</label>';
+            html += '        <input type="text" value="' + escapeHtml(item.channel_desc || '') + '" onchange="updateItemField(' + idx + ', \'channel_desc\', this.value)" placeholder="Contoh: Tersedia 4 metode pembayaran resmi... ATAU Panduan alur operasional ke lokasi Anda" style="width:100%; font-size:11px;" />';
+            html += '      </div>';
+            html += '    </div>';
+            html += '    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">';
+            html += '      <div>';
+            html += '        <label style="display:block; font-size:10px; font-weight:700; color:#475569;">Kicker Tombol Mobile:</label>';
+            html += '        <input type="text" value="' + escapeHtml(item.channel_btn_kicker || '') + '" onchange="updateItemField(' + idx + ', \'channel_btn_kicker\', this.value)" placeholder="Contoh: Pilih Metode Pembayaran ATAU Mekanisme Layanan" style="width:100%; font-size:11px;" />';
+            html += '      </div>';
+            html += '      <div>';
+            html += '        <label style="display:block; font-size:10px; font-weight:700; color:#475569;">Ringkasan Opsi Mobile (Subtitle):</label>';
+            html += '        <input type="text" value="' + escapeHtml(item.channel_btn_subtitle || '') + '" onchange="updateItemField(' + idx + ', \'channel_btn_subtitle\', this.value)" placeholder="Contoh: PermataMobile X, ATM / Petugas ke lokasi" style="width:100%; font-size:11px;" />';
+            html += '      </div>';
+            html += '      <div>';
+            html += '        <label style="display:block; font-size:10px; font-weight:700; color:#475569;">Judul Drawer Opsi Mobile:</label>';
+            html += '        <input type="text" value="' + escapeHtml(item.channel_drawer_title || '') + '" onchange="updateItemField(' + idx + ', \'channel_drawer_title\', this.value)" placeholder="Contoh: Metode Pembayaran VA ATAU Alur &amp; Mekanisme Layanan" style="width:100%; font-size:11px;" />';
+            html += '      </div>';
+            html += '    </div>';
             html += '  </div>';
 
             if (!item.channels || item.channels.length === 0) {
@@ -1217,6 +1299,12 @@ function wakalumi_render_layanan_admin_page() {
             sim_fee: '',
             sim_total: '',
             sim_note: '',
+            channel_heading: 'Alur & Mekanisme Panduan Layanan:',
+            channel_desc: 'Panduan tata cara dan mekanisme pelaksanaan layanan',
+            channel_btn_kicker: 'Mekanisme Layanan',
+            channel_btn_title: '',
+            channel_btn_subtitle: 'Panduan & langkah-langkah pelaksanaan layanan',
+            channel_drawer_title: 'Pilihan Panduan Layanan',
             media_gallery: [],
             channels: [
                 {

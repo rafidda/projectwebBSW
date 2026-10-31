@@ -43,6 +43,124 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
         }
     }
 }
+
+if ( ! function_exists( 'wakalumi_get_va_channel_meta' ) ) {
+    function wakalumi_get_va_channel_meta( $name, $index = 0, $badge = '' ) {
+        $n = strtolower( (string) $name . ' ' . (string) $badge );
+        
+        // 1. Mesin ATM (Warm Amber / Emas) - Prioritas tertinggi agar jaringan ATM tidak tertukar dengan M-Banking Permata
+        if ( str_contains( $n, 'atm' ) || str_contains( $n, 'mesin' ) ) {
+            return [
+                'key'             => 'atm',
+                'title'           => 'Mesin ATM',
+                'subtitle'        => 'ATM Permata, Bersama, Prima & Alto',
+                'badge'           => ! empty( $badge ) ? $badge : 'Mesin ATM',
+                'color'           => 'amber',
+                'border_active'   => 'border-amber-500 ring-2 ring-amber-500/25 bg-amber-50/70 dark:bg-amber-950/35 text-amber-950 dark:text-amber-100',
+                'border_idle'     => 'border-slate-200/90 dark:border-dark-border bg-white dark:bg-dark-surface text-slate-800 dark:text-slate-100 hover:border-amber-300 dark:hover:border-amber-700/60',
+                'icon_box_active' => 'bg-amber-500 text-white shadow-md shadow-amber-500/30',
+                'icon_box_idle'   => 'bg-amber-100/90 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60',
+                'badge_active'    => 'bg-amber-500 text-white',
+                'badge_idle'      => 'bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/50',
+                'text_accent'     => 'text-amber-600 dark:text-amber-400',
+                'svg'             => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-6 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>',
+            ];
+        }
+
+        // 2. Internet Banking (Royal Indigo)
+        if ( str_contains( $n, 'internet' ) || str_contains( $n, 'web' ) || str_contains( $n, 'portal' ) || str_contains( $n, 'klikbca' ) ) {
+            return [
+                'key'             => 'internet-banking',
+                'title'           => 'Internet Banking',
+                'subtitle'        => 'Web Browser / Portal KlikBCA, Livin, dll',
+                'badge'           => ! empty( $badge ) ? $badge : 'Web Portal',
+                'color'           => 'indigo',
+                'border_active'   => 'border-indigo-500 ring-2 ring-indigo-500/25 bg-indigo-50/70 dark:bg-indigo-950/35 text-indigo-950 dark:text-indigo-100',
+                'border_idle'     => 'border-slate-200/90 dark:border-dark-border bg-white dark:bg-dark-surface text-slate-800 dark:text-slate-100 hover:border-indigo-300 dark:hover:border-indigo-700/60',
+                'icon_box_active' => 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30',
+                'icon_box_idle'   => 'bg-indigo-100/90 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/60',
+                'badge_active'    => 'bg-indigo-600 text-white',
+                'badge_idle'      => 'bg-indigo-100 dark:bg-indigo-950/70 text-indigo-800 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/50',
+                'text_accent'     => 'text-indigo-600 dark:text-indigo-400',
+                'svg'             => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/></svg>',
+            ];
+        }
+
+        // 3. Mobile Banking Bank Lain (Cobalt Blue)
+        if ( str_contains( $n, 'mobile banking' ) || str_contains( $n, 'm-banking' ) || str_contains( $n, 'bank lain' ) || str_contains( $n, 'antar bank' ) ) {
+            return [
+                'key'             => 'mbanking-lain',
+                'title'           => 'M-Banking Bank Lain',
+                'subtitle'        => 'BCA, Mandiri, BRI, BNI, BSI & Lainnya',
+                'badge'           => ! empty( $badge ) ? $badge : 'Antar Bank',
+                'color'           => 'blue',
+                'border_active'   => 'border-blue-500 ring-2 ring-blue-500/25 bg-blue-50/70 dark:bg-blue-950/35 text-blue-950 dark:text-blue-100',
+                'border_idle'     => 'border-slate-200/90 dark:border-dark-border bg-white dark:bg-dark-surface text-slate-800 dark:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700/60',
+                'icon_box_active' => 'bg-blue-600 text-white shadow-md shadow-blue-600/30',
+                'icon_box_idle'   => 'bg-blue-100/90 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60',
+                'badge_active'    => 'bg-blue-600 text-white',
+                'badge_idle'      => 'bg-blue-100 dark:bg-blue-950/70 text-blue-800 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/50',
+                'text_accent'     => 'text-blue-600 dark:text-blue-400',
+                'svg'             => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>',
+            ];
+        }
+
+        // 4. PermataMobile X / Sesama Bank (Emerald Syariah) - Khusus aplikasi mobile sesama Permata
+        if ( str_contains( $n, 'permatamobile' ) || str_contains( $n, 'sesama bank' ) || ( str_contains( $n, 'permata' ) && ! str_contains( $n, 'atm' ) && ! str_contains( $n, 'mesin' ) ) ) {
+            return [
+                'key'             => 'permata',
+                'title'           => 'PermataMobile X',
+                'subtitle'        => 'Sesama Bank Permata Syariah (013)',
+                'badge'           => ! empty( $badge ) ? $badge : 'Sesama Bank',
+                'color'           => 'emerald',
+                'border_active'   => 'border-emerald-500 ring-2 ring-emerald-500/25 bg-emerald-50/70 dark:bg-emerald-950/35 text-emerald-950 dark:text-emerald-100',
+                'border_idle'     => 'border-slate-200/90 dark:border-dark-border bg-white dark:bg-dark-surface text-slate-800 dark:text-slate-100 hover:border-emerald-300 dark:hover:border-emerald-700/60',
+                'icon_box_active' => 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30',
+                'icon_box_idle'   => 'bg-emerald-100/90 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60',
+                'badge_active'    => 'bg-emerald-600 text-white',
+                'badge_idle'      => 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/50',
+                'text_accent'     => 'text-emerald-600 dark:text-emerald-400',
+                'svg'             => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>',
+            ];
+        }
+
+        // 4b. Layanan Jemput Setoran / Pick-Up Service / Petugas Lapangan
+        if ( str_contains( $n, 'jemput' ) || str_contains( $n, 'antar' ) || str_contains( $n, 'pick-up' ) || str_contains( $n, 'lapangan' ) ) {
+            return [
+                'key'             => 'jemput-setoran',
+                'title'           => ! empty( $name ) ? $name : 'Alur & Mekanisme Penjemputan',
+                'subtitle'        => 'Prosedur Operasional Petugas Lapangan BSW',
+                'badge'           => ! empty( $badge ) ? $badge : 'Prosedur',
+                'color'           => 'teal',
+                'border_active'   => 'border-teal-500 ring-2 ring-teal-500/25 bg-teal-50/70 dark:bg-teal-950/35 text-teal-950 dark:text-teal-100',
+                'border_idle'     => 'border-slate-200/90 dark:border-dark-border bg-white dark:bg-dark-surface text-slate-800 dark:text-slate-100 hover:border-teal-300 dark:hover:border-teal-700/60',
+                'icon_box_active' => 'bg-teal-600 text-white shadow-md shadow-teal-600/30',
+                'icon_box_idle'   => 'bg-teal-100/90 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/60',
+                'badge_active'    => 'bg-teal-600 text-white',
+                'badge_idle'      => 'bg-teal-100 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border border-teal-200/60 dark:border-teal-800/50',
+                'text_accent'     => 'text-teal-600 dark:text-teal-400',
+                'svg'             => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v9.375c0 .621.504 1.125 1.125 1.125h1.5"/></svg>',
+            ];
+        }
+        
+        // 5. Fallback Default (Teal)
+        return [
+            'key'             => 'channel-' . $index,
+            'title'           => $name,
+            'subtitle'        => 'Panduan Transaksi Resmi',
+            'badge'           => ! empty( $badge ) ? $badge : 'Panduan',
+            'color'           => 'teal',
+            'border_active'   => 'border-teal-500 ring-2 ring-teal-500/25 bg-teal-50/70 dark:bg-teal-950/35 text-teal-950 dark:text-teal-100',
+            'border_idle'     => 'border-slate-200/90 dark:border-dark-border bg-white dark:bg-dark-surface text-slate-800 dark:text-slate-100 hover:border-teal-300',
+            'icon_box_active' => 'bg-teal-600 text-white shadow-md shadow-teal-600/30',
+            'icon_box_idle'   => 'bg-teal-100/90 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200/80',
+            'badge_active'    => 'bg-teal-600 text-white',
+            'badge_idle'      => 'bg-teal-100 text-teal-800 border border-teal-200/60',
+            'text_accent'     => 'text-teal-600 dark:text-teal-400',
+            'svg'             => '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"/></svg>',
+        ];
+    }
+}
 ?>
 
 <main id="primary" class="site-main overflow-hidden bg-slate-50/50 dark:bg-dark-surface/20 min-h-screen">
@@ -246,25 +364,27 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
                             <!-- Active Icon Box -->
                             <div id="wkl-layanan-active-icon-box" class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs">
                                 <span id="wkl-layanan-active-icon">
-                                    <?php echo wakalumi_render_layanan_icon( $items[0]['icon'] ?? 'credit-card', 'w-5 h-5', 0 ); ?>
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                    </svg>
                                 </span>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-1.5 mb-0.5">
                                     <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">Pilihan Fasilitas</span>
-                                    <span id="wkl-layanan-active-badge" class="text-[9px] px-1.5 py-0.2 rounded-full font-bold <?php echo ! empty( $items[0]['badge'] ) ? 'bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300' : 'hidden'; ?>">
-                                        <?php echo esc_html( $items[0]['badge'] ?? '' ); ?>
+                                    <span id="wkl-layanan-active-badge" class="text-[9px] px-1.5 py-0.2 rounded-full font-bold bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-300">
+                                        <?php echo count( $items ); ?> Layanan
                                     </span>
                                 </div>
                                 <h4 id="wkl-layanan-active-title" class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
-                                    <?php echo esc_html( $items[0]['short_title'] ?? $items[0]['title'] ?? 'Pilih Layanan' ); ?>
+                                    Pilih Fasilitas Layanan
                                 </h4>
                             </div>
                         </div>
                         
                         <div class="flex items-center gap-2 shrink-0 pl-2">
                             <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500" id="wkl-layanan-active-counter">
-                                1 / <?php echo count( $items ); ?>
+                                - / <?php echo count( $items ); ?>
                             </span>
                             <div class="px-2.5 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/70 border border-teal-200/60 dark:border-teal-800/60 text-teal-700 dark:text-teal-300 text-xs font-bold flex items-center gap-1.5 group-hover:bg-teal-100 dark:group-hover:bg-teal-900/50 transition-all">
                                 <span>Pilih</span>
@@ -391,6 +511,75 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
                      RIGHT COLUMN: DYNAMIC CONTENT PANE (Active Service Details)
                      ============================================================ -->
                 <div class="lg:col-span-8 xl:col-span-8 min-w-0" data-aos="fade-left">
+
+                    <!-- ============================================================
+                         MOBILE INITIAL STATE: HUB PILIHAN FASILITAS LAYANAN
+                         (Tampil di Mobile saat pengguna belum memilih layanan)
+                         ============================================================ -->
+                    <div id="wkl-layanan-mobile-empty-state" class="block lg:hidden space-y-4 mb-6">
+                        <div class="rounded-3xl bg-white dark:bg-dark-card border-2 border-teal-500/40 dark:border-teal-500/30 p-5 sm:p-6 shadow-md shadow-teal-500/5 relative overflow-hidden">
+                            <!-- Accent top stripe -->
+                            <div class="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 absolute top-0 left-0 right-0"></div>
+                            
+                            <div class="flex items-center gap-2 mb-2 pt-1">
+                                <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                                <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                                    Fasilitas Transaksi
+                                </span>
+                                <span class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-teal-50 dark:bg-teal-950/70 border border-teal-200/60 dark:border-teal-800/60 text-teal-700 dark:text-teal-300">
+                                    <?php echo count( $items ); ?> Pilihan
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+                                Pilih Fasilitas Layanan Yang Anda Butuhkan
+                            </h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-1.5 mb-4">
+                                Bank Syariah Wakalumi menyediakan fasilitas pembayaran angsuran mandiri dan layanan jemput setoran langsung ke lokasi Anda. Ketuk salah satu layanan di bawah untuk membuka panduan lengkap:
+                            </p>
+
+                            <!-- Quick Select Cards List -->
+                            <div class="space-y-3">
+                                <?php foreach ( $items as $q_idx => $q_item ) : 
+                                    $q_icon_type = $q_item['icon'] ?? 'credit-card';
+                                ?>
+                                    <button type="button" 
+                                            onclick="wklSwitchLayananTab('<?php echo esc_js( $q_item['id'] ); ?>', true)"
+                                            class="w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200/90 dark:border-dark-border bg-slate-50/80 dark:bg-dark-surface/60 hover:bg-white dark:hover:bg-dark-card hover:border-teal-500/80 active:scale-[0.99] transition-all group shadow-2xs">
+                                        <div class="flex items-start gap-3.5">
+                                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                                                <?php echo wakalumi_render_layanan_icon( $q_icon_type, 'w-5 h-5', $q_idx ); ?>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <div class="flex items-center gap-1.5 mb-0.5">
+                                                    <?php if ( ! empty( $q_item['badge'] ) ) : ?>
+                                                        <span class="text-[9px] px-1.5 py-0.2 rounded-full font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 uppercase tracking-wider">
+                                                            <?php echo esc_html( $q_item['badge'] ); ?>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                    <span class="text-[10px] font-bold text-slate-400">Fasilitas #<?php echo $q_idx + 1; ?></span>
+                                                </div>
+                                                <h4 class="text-sm font-black text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-snug">
+                                                    <?php echo esc_html( $q_item['title'] ); ?>
+                                                </h4>
+                                                <?php if ( ! empty( $q_item['summary'] ) ) : ?>
+                                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                                                        <?php echo esc_html( $q_item['summary'] ); ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                                
+                                                <div class="mt-2.5 pt-2 border-t border-slate-200/60 dark:border-dark-border/60 flex items-center justify-between text-xs font-bold text-teal-600 dark:text-teal-400">
+                                                    <span>Buka Panduan &amp; Rincian</span>
+                                                    <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <?php foreach ( $items as $idx => $item ) : 
                         $is_active   = ( 0 === $idx );
                         $gallery     = ! empty( $item['media_gallery'] ) && is_array( $item['media_gallery'] ) ? $item['media_gallery'] : [];
@@ -401,7 +590,7 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
                         $show_sim    = ! empty( $item['show_simulation'] );
                     ?>
                         <article id="pane-<?php echo esc_attr( $item['id'] ); ?>" 
-                                 class="wkl-layanan-pane <?php echo $is_active ? 'block' : 'hidden'; ?> transition-all duration-300">
+                                 class="wkl-layanan-pane <?php echo $is_active ? 'desktop-active lg:block hidden' : 'hidden'; ?> transition-all duration-300">
                             
                             <!-- Main Service Card -->
                             <div class="spotlight-card group/card relative rounded-3xl bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border shadow-md overflow-hidden p-6 sm:p-8 space-y-7">
@@ -662,48 +851,215 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
                                 <?php endif; ?>
 
                                 <!-- 5. SUB-KANAL PANDUAN STEP-BY-STEP (TERSTRUKTUR & JELAS) -->
-                                <?php if ( ! empty( $channels ) ) : ?>
-                                    <div class="relative z-10 pt-2">
-                                        <div class="flex items-center justify-between mb-3">
-                                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                                                <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-                                                Pilih Kanal Pembayaran / Panduan:
-                                            </h3>
+                                <?php if ( ! empty( $channels ) ) : 
+                                    $is_va = ( 'pembayaran-va' === $item['id'] || ! empty( $item['va_code_prefix'] ) );
+
+                                    // 1. Heading
+                                    $ch_heading = ! empty( $item['channel_heading'] ) 
+                                        ? $item['channel_heading'] 
+                                        : ( $is_va ? 'Pilih Kanal Pembayaran / Panduan:' : 'Alur & Mekanisme Penjemputan Setoran:' );
+
+                                    // 2. Deskripsi Seksi
+                                    $ch_desc = ! empty( $item['channel_desc'] ) 
+                                        ? $item['channel_desc'] 
+                                        : ( $is_va 
+                                            ? sprintf( 'Tersedia %d metode pembayaran resmi Bank Syariah Wakalumi', count( $channels ) ) 
+                                            : 'Panduan resmi alur operasional layanan penjemputan setoran ke lokasi Anda' );
+
+                                    // 3. Kicker Tombol Mobile
+                                    $ch_btn_kicker = ! empty( $item['channel_btn_kicker'] ) 
+                                        ? $item['channel_btn_kicker'] 
+                                        : ( $is_va ? 'Pilih Metode Pembayaran' : 'Mekanisme Layanan' );
+
+                                    // 4. Judul Tombol Mobile
+                                    $ch_btn_title = ! empty( $item['channel_btn_title'] ) 
+                                        ? $item['channel_btn_title'] 
+                                        : ( count( $channels ) === 1 
+                                            ? ( $channels[0]['name'] ?? 'Alur & Mekanisme Penjemputan' ) 
+                                            : ( $is_va ? 'Ketuk Untuk Memilih Kanal' : 'Ketuk Untuk Memilih Opsi' ) );
+
+                                    // 5. Subtitle Tombol Mobile
+                                    $first_ch_names = array_map( function( $c ) { return $c['name'] ?? ''; }, array_slice( $channels, 0, 3 ) );
+                                    $ch_btn_sub = ! empty( $item['channel_btn_subtitle'] ) 
+                                        ? $item['channel_btn_subtitle'] 
+                                        : ( $is_va 
+                                            ? 'PermataMobile X, M-Banking Lain, ATM, dll' 
+                                            : ( count( $channels ) === 1 
+                                                ? 'Petugas resmi BSW langsung ke lokasi Anda' 
+                                                : implode( ', ', array_filter( $first_ch_names ) ) ) );
+
+                                    // 6. Mobile Empty State Notice
+                                    $ch_empty_text = $is_va 
+                                        ? 'Belum ada metode pembayaran yang dipilih.<br>Silakan ketuk tombol <span class="font-bold text-teal-600 dark:text-teal-400">Pilih</span> di atas untuk membuka panduan langkah.' 
+                                        : 'Silakan ketuk tombol <span class="font-bold text-teal-600 dark:text-teal-400">Pilih</span> di atas untuk melihat rincian langkah operasional.';
+                                ?>
+                                    <div class="relative z-10 pt-2" id="va-channels-section-<?php echo esc_attr( $item['id'] ); ?>">
+                                        
+                                        <!-- Header Section -->
+                                        <div class="flex items-center justify-between mb-3.5">
+                                            <div>
+                                                <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse"></span>
+                                                    <span><?php echo esc_html( $ch_heading ); ?></span>
+                                                </h3>
+                                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                                    <?php echo esc_html( $ch_desc ); ?>
+                                                </p>
+                                            </div>
+                                            <span class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-teal-50 dark:bg-teal-950/60 border border-teal-200/70 dark:border-teal-800/60 text-teal-700 dark:text-teal-300 text-[11px] font-bold">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                <span><?php echo count( $channels ); ?> Opsi Tersedia</span>
+                                            </span>
                                         </div>
 
-                                        <!-- Sub-Channel Pill Tabs -->
-                                        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-6" id="subtabs-bar-<?php echo esc_attr( $item['id'] ); ?>">
+                                        <!-- ─────────────────────────────────────────────────────────────
+                                             A. DESKTOP ONLY: 4-COLUMN INTERACTIVE GRID CHANNEL CARDS
+                                             ───────────────────────────────────────────────────────────── -->
+                                        <div class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6" id="va-grid-desktop-<?php echo esc_attr( $item['id'] ); ?>">
                                             <?php foreach ( $channels as $c_idx => $ch ) : 
+                                                $ch_meta   = wakalumi_get_va_channel_meta( $ch['name'] ?? '', $c_idx, $ch['badge'] ?? '' );
                                                 $ch_active = ( 0 === $c_idx );
+                                                $steps_cnt = ! empty( $ch['steps'] ) ? count( $ch['steps'] ) : 0;
                                             ?>
                                                 <button type="button"
-                                                        onclick="wklSwitchChannel('<?php echo esc_js( $item['id'] ); ?>', <?php echo $c_idx; ?>)"
-                                                        id="subtab-btn-<?php echo esc_attr( $item['id'] . '-' . $c_idx ); ?>"
-                                                        class="wkl-subtab-btn px-4 py-2.5 rounded-2xl text-xs font-bold transition-all duration-200 border whitespace-nowrap shadow-2xs flex items-center gap-2 <?php echo $ch_active ? 'active bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm' : 'bg-slate-100 dark:bg-dark-surface text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-dark-border hover:bg-slate-200/80'; ?>">
-                                                    <span><?php echo esc_html( $ch['name'] ); ?></span>
-                                                    <?php if ( ! empty( $ch['badge'] ) ) : ?>
-                                                        <span class="text-[9px] px-1.5 py-0.2 rounded-full font-extrabold uppercase <?php echo $ch_active ? 'bg-white/20 text-white dark:bg-slate-900/20 dark:text-slate-900' : 'bg-white dark:bg-dark-card text-teal-700 dark:text-teal-300'; ?>">
-                                                            <?php echo esc_html( $ch['badge'] ); ?>
-                                                        </span>
-                                                    <?php endif; ?>
+                                                        onclick="wklSelectChannel('<?php echo esc_js( $item['id'] ); ?>', <?php echo $c_idx; ?>)"
+                                                        id="va-desktop-card-<?php echo esc_attr( $item['id'] . '-' . $c_idx ); ?>"
+                                                        class="wkl-va-ch-card text-left p-3.5 rounded-2xl transition-all duration-200 border cursor-pointer relative overflow-hidden group flex flex-col justify-between <?php echo $ch_active ? $ch_meta['border_active'] . ' shadow-md' : $ch_meta['border_idle'] . ' shadow-2xs'; ?>"
+                                                        data-channel-index="<?php echo $c_idx; ?>"
+                                                        data-active-border="<?php echo esc_attr( $ch_meta['border_active'] ); ?>"
+                                                        data-idle-border="<?php echo esc_attr( $ch_meta['border_idle'] ); ?>"
+                                                        data-active-icon="<?php echo esc_attr( $ch_meta['icon_box_active'] ); ?>"
+                                                        data-idle-icon="<?php echo esc_attr( $ch_meta['icon_box_idle'] ); ?>"
+                                                        data-active-badge="<?php echo esc_attr( $ch_meta['badge_active'] ); ?>"
+                                                        data-idle-badge="<?php echo esc_attr( $ch_meta['badge_idle'] ); ?>">
+                                                    
+                                                    <!-- Top Row: Icon + Badge + Check -->
+                                                    <div class="flex items-start justify-between gap-2 mb-2.5">
+                                                        <div class="va-card-icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 <?php echo $ch_active ? $ch_meta['icon_box_active'] : $ch_meta['icon_box_idle']; ?>">
+                                                            <?php echo $ch_meta['svg']; ?>
+                                                        </div>
+                                                        <div class="flex items-center gap-1.5 shrink-0">
+                                                            <span class="va-card-badge-el text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase <?php echo $ch_active ? $ch_meta['badge_active'] : $ch_meta['badge_idle']; ?>">
+                                                                <?php echo esc_html( $ch_meta['badge'] ); ?>
+                                                            </span>
+                                                            <span class="w-4 h-4 rounded-full bg-teal-500 text-white flex items-center justify-center text-[10px] font-black <?php echo $ch_active ? 'inline-flex' : 'hidden'; ?> va-card-check">
+                                                                ✓
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Bottom Row: Title + Subtitle -->
+                                                    <div>
+                                                        <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-snug">
+                                                            <?php echo esc_html( $ch_meta['title'] ); ?>
+                                                        </h4>
+                                                        <p class="text-[10.5px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
+                                                            <?php echo esc_html( $ch_meta['subtitle'] ); ?>
+                                                        </p>
+                                                        <div class="mt-2 pt-2 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                                                            <span><?php echo $steps_cnt; ?> Langkah</span>
+                                                            <span class="group-hover:translate-x-0.5 transition-transform text-teal-600 dark:text-teal-400">Buka &rarr;</span>
+                                                        </div>
+                                                    </div>
                                                 </button>
                                             <?php endforeach; ?>
                                         </div>
 
-                                        <!-- Channel Step Panels -->
+                                        <!-- ─────────────────────────────────────────────────────────────
+                                             B. MOBILE ONLY: NOTICED TRIGGER BAR
+                                             (Arsitektur Tim Kami: Bersih, Estetik & 100% Sesuai Kebutuhan)
+                                             ───────────────────────────────────────────────────────────── -->
+                                        <div class="block sm:hidden mb-4" id="va-mobile-control-<?php echo esc_attr( $item['id'] ); ?>">
+                                             
+                                            <!-- Eye-Catching Noticeable Trigger Box -->
+                                            <div class="rounded-2xl p-3 sm:p-3.5 bg-gradient-to-r from-teal-500/10 via-emerald-500/10 to-teal-500/5 dark:from-teal-950/40 dark:via-dark-card dark:to-dark-card border-2 border-teal-500/70 dark:border-teal-400/60 shadow-md shadow-teal-500/10 transition-all">
+                                                <button type="button"
+                                                        id="va-mobile-trigger-btn-<?php echo esc_attr( $item['id'] ); ?>"
+                                                        onclick="wklOpenVaChannelDrawer('<?php echo esc_js( $item['id'] ); ?>')"
+                                                        class="w-full flex items-center justify-between text-left group cursor-pointer active:scale-[0.99] transition-all">
+                                                    
+                                                    <div class="flex items-center gap-3 min-w-0">
+                                                        <!-- Dynamic Icon Box -->
+                                                        <div id="va-mobile-trigger-icon-box-<?php echo esc_attr( $item['id'] ); ?>"
+                                                             class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm animate-pulse">
+                                                            <span id="va-mobile-trigger-icon-svg-<?php echo esc_attr( $item['id'] ); ?>">
+                                                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" />
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+
+                                                        <!-- Dynamic Text Info -->
+                                                        <div class="min-w-0 flex-1">
+                                                            <div class="flex items-center gap-1.5 mb-0.5">
+                                                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-ping" id="va-mobile-trigger-dot-<?php echo esc_attr( $item['id'] ); ?>"></span>
+                                                                <span id="va-mobile-trigger-kicker-<?php echo esc_attr( $item['id'] ); ?>" 
+                                                                      data-kicker-idle="<?php echo esc_attr( $ch_btn_kicker ); ?>"
+                                                                      data-kicker-selected="<?php echo $is_va ? 'Kanal Dipilih' : 'Mekanisme Dipilih'; ?>"
+                                                                      class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                                                                    <?php echo esc_html( $ch_btn_kicker ); ?>
+                                                                </span>
+                                                                <span id="va-mobile-trigger-badge-<?php echo esc_attr( $item['id'] ); ?>" class="text-[9px] px-1.5 py-0.2 rounded-full font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300">
+                                                                    <?php echo count( $channels ); ?> <?php echo $is_va ? 'Pilihan' : 'Opsi'; ?>
+                                                                </span>
+                                                            </div>
+                                                            <h4 id="va-mobile-trigger-title-<?php echo esc_attr( $item['id'] ); ?>" class="text-sm font-black text-slate-900 dark:text-white truncate">
+                                                                <?php echo esc_html( $ch_btn_title ); ?>
+                                                            </h4>
+                                                            <p id="va-mobile-trigger-subtitle-<?php echo esc_attr( $item['id'] ); ?>" class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                                                                <?php echo esc_html( $ch_btn_sub ); ?>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Call To Action Button Right -->
+                                                    <div class="shrink-0 pl-2">
+                                                        <div class="px-3 py-1.5 sm:py-2 rounded-xl bg-teal-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm group-hover:bg-teal-500 transition-colors">
+                                                            <span>Pilih</span>
+                                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- ─────────────────────────────────────────────────────────────
+                                             C. MOBILE EMPTY STATE (DEFAULT KOSONG & MINIMALIS)
+                                             ───────────────────────────────────────────────────────────── -->
+                                        <div id="va-mobile-empty-state-<?php echo esc_attr( $item['id'] ); ?>"
+                                             class="block sm:hidden py-6 px-4 text-center transition-all">
+                                            <p class="text-xs text-slate-400 dark:text-slate-500 font-medium leading-relaxed">
+                                                <?php echo wp_kses_post( $ch_empty_text ); ?>
+                                            </p>
+                                        </div>
+
+                                        <!-- ─────────────────────────────────────────────────────────────
+                                             D. CHANNEL STEP PANELS (LANGKAH-LANGKAH TRANSAKSI)
+                                             ───────────────────────────────────────────────────────────── -->
                                         <div class="space-y-4" id="channel-panels-<?php echo esc_attr( $item['id'] ); ?>">
                                             <?php foreach ( $channels as $c_idx => $ch ) : 
+                                                $ch_meta   = wakalumi_get_va_channel_meta( $ch['name'] ?? '', $c_idx, $ch['badge'] ?? '' );
                                                 $ch_active = ( 0 === $c_idx );
                                                 $steps     = ! empty( $ch['steps'] ) ? $ch['steps'] : [];
                                             ?>
                                                 <div id="channel-pane-<?php echo esc_attr( $item['id'] . '-' . $c_idx ); ?>" 
-                                                     class="wkl-channel-pane <?php echo $ch_active ? 'block' : 'hidden'; ?> space-y-4">
+                                                     class="wkl-channel-pane <?php echo $ch_active ? 'desktop-active sm:block' : 'hidden'; ?> hidden space-y-4"
+                                                     data-channel-index="<?php echo $c_idx; ?>"
+                                                     data-channel-name="<?php echo esc_attr( $ch_meta['title'] ); ?>"
+                                                     data-channel-sub="<?php echo esc_attr( $ch_meta['subtitle'] ); ?>"
+                                                     data-channel-badge="<?php echo esc_attr( $ch_meta['badge'] ); ?>"
+                                                     data-channel-color="<?php echo esc_attr( $ch_meta['color'] ); ?>">
                                                     
-                                                    <div class="p-5 sm:p-6 rounded-2xl bg-slate-50/80 dark:bg-dark-surface/40 border border-slate-200/80 dark:border-dark-border">
+                                                    <div class="p-5 sm:p-6 rounded-2xl bg-slate-50/80 dark:bg-dark-surface/40 border-2 <?php echo $ch_meta['border_idle']; ?> transition-all">
                                                         <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200/70 dark:border-dark-border">
                                                             <h4 class="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                                                                <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                                <span>Panduan Transaksi: <?php echo esc_html( $ch['name'] ); ?></span>
+                                                                <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 <?php echo $ch_meta['icon_box_idle']; ?>">
+                                                                    <?php echo $ch_meta['svg']; ?>
+                                                                </span>
+                                                                <span>Panduan: <?php echo esc_html( $ch_meta['title'] ); ?></span>
                                                             </h4>
                                                             <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500">
                                                                 <?php echo count( $steps ); ?> Langkah
@@ -713,7 +1069,7 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
                                                         <div class="space-y-4 relative before:absolute before:left-[19px] before:top-4 before:bottom-4 before:w-0.5 before:bg-slate-200 dark:before:bg-dark-border">
                                                             <?php foreach ( $steps as $s_idx => $st ) : ?>
                                                                 <div class="flex items-start gap-4 relative z-10">
-                                                                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black text-xs flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
+                                                                    <div class="w-9 h-9 rounded-xl <?php echo $ch_meta['icon_box_active']; ?> font-black text-xs flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                                                                         <?php echo $s_idx + 1; ?>
                                                                     </div>
                                                                     <div class="flex-1 pt-1 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
@@ -846,7 +1202,7 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
     <!-- Drawer Items List (Scrollable) -->
     <div class="overflow-y-auto p-4 space-y-2.5 flex-1 overscroll-contain">
         <?php foreach ( $items as $idx => $s_item ) : 
-            $is_active = ( 0 === $idx );
+            $is_active = false;
             $icon_type = $s_item['icon'] ?? 'credit-card';
             $item_badge = $s_item['badge'] ?? '';
         ?>
@@ -902,6 +1258,113 @@ if ( ! function_exists( 'wakalumi_render_layanan_icon' ) ) {
         </button>
     </div>
 </div>
+
+<!-- ========================================================================
+     MOBILE BOTTOM SHEET DRAWER: PILIH KANAL PEMBAYARAN VA / MEKANISME (Teleported to Body)
+     ======================================================================== -->
+<?php foreach ( $items as $it ) : 
+    $item_channels = ! empty( $it['channels'] ) && is_array( $it['channels'] ) ? $it['channels'] : [];
+    if ( empty( $item_channels ) ) continue;
+    $ch_item_id = $it['id'];
+    $is_it_va = ( 'pembayaran-va' === $it['id'] || ! empty( $it['va_code_prefix'] ) );
+    $it_drawer_kicker = ! empty( $it['channel_btn_kicker'] ) ? $it['channel_btn_kicker'] : ( $is_it_va ? 'Pilihan Kanal Pembayaran' : 'Pilihan Mekanisme Layanan' );
+    $it_drawer_title  = ! empty( $it['channel_drawer_title'] ) ? $it['channel_drawer_title'] : ( $is_it_va ? 'Metode & Kanal Transaksi' : 'Alur & Mekanisme Layanan' );
+?>
+<div id="wkl-va-ch-backdrop-<?php echo esc_attr( $ch_item_id ); ?>" 
+     onclick="wklCloseVaChannelDrawer('<?php echo esc_js( $ch_item_id ); ?>')" 
+     class="wkl-va-drawer-backdrop fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-[9999] opacity-0 pointer-events-none invisible transition-opacity duration-300 sm:hidden"
+     aria-hidden="true"></div>
+
+<div id="wkl-va-ch-drawer-<?php echo esc_attr( $ch_item_id ); ?>" 
+     class="wkl-va-drawer-panel fixed inset-x-0 bottom-0 z-[10000] w-full max-w-lg mx-auto bg-white dark:bg-dark-card rounded-t-3xl shadow-2xl border-t border-slate-200/80 dark:border-dark-border transform translate-y-full pointer-events-none invisible transition-all duration-300 ease-out flex flex-col max-h-[85vh] sm:hidden"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="wkl-va-ch-drawer-title-<?php echo esc_attr( $ch_item_id ); ?>">
+    
+    <!-- Drag Handle / Grab Bar -->
+    <div class="pt-3 pb-1 flex justify-center cursor-pointer shrink-0" onclick="wklCloseVaChannelDrawer('<?php echo esc_js( $ch_item_id ); ?>')">
+        <div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+    </div>
+
+    <!-- Drawer Header -->
+    <div class="px-5 py-3.5 border-b border-slate-100 dark:border-dark-border flex items-center justify-between shrink-0">
+        <div>
+            <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                <span class="text-[10px] font-black uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                    <?php echo esc_html( $it_drawer_kicker ); ?>
+                </span>
+            </div>
+            <h3 id="wkl-va-ch-drawer-title-<?php echo esc_attr( $ch_item_id ); ?>" class="text-base font-extrabold text-slate-900 dark:text-white">
+                <?php echo esc_html( $it_drawer_title ); ?>
+            </h3>
+        </div>
+        <button type="button" 
+                onclick="wklCloseVaChannelDrawer('<?php echo esc_js( $ch_item_id ); ?>')" 
+                class="w-8 h-8 rounded-full bg-slate-100 dark:bg-dark-surface hover:bg-slate-200 dark:hover:bg-dark-border text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition-colors"
+                aria-label="Tutup Menu">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Drawer Items List (Scrollable) -->
+    <div class="overflow-y-auto p-4 space-y-2.5 flex-1 overscroll-contain">
+        <?php foreach ( $item_channels as $c_idx => $ch ) : 
+            $ch_meta   = wakalumi_get_va_channel_meta( $ch['name'] ?? '', $c_idx, $ch['badge'] ?? '' );
+            $steps_cnt = ! empty( $ch['steps'] ) ? count( $ch['steps'] ) : 0;
+        ?>
+            <button type="button" 
+                    onclick="wklSelectChannel('<?php echo esc_js( $ch_item_id ); ?>', <?php echo $c_idx; ?>)"
+                    id="va-drawer-item-<?php echo esc_attr( $ch_item_id . '-' . $c_idx ); ?>"
+                    class="wkl-va-drawer-item w-full text-left p-3.5 rounded-2xl transition-all duration-200 flex items-center gap-3.5 border border-slate-200/80 dark:border-dark-border/80 bg-slate-50/70 dark:bg-dark-surface/50 hover:bg-slate-100 dark:hover:bg-dark-surface cursor-pointer"
+                    data-channel-index="<?php echo $c_idx; ?>">
+                
+                <!-- Icon Box with Unique Channel Color -->
+                <div class="va-drawer-icon-box w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border shadow-2xs <?php echo $ch_meta['icon_box_idle']; ?>">
+                    <?php echo $ch_meta['svg']; ?>
+                </div>
+
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 mb-0.5">
+                        <span class="text-[9px] px-1.5 py-0.2 rounded-full font-bold uppercase <?php echo $ch_meta['badge_idle']; ?>">
+                            <?php echo esc_html( $ch_meta['badge'] ); ?>
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                            <?php echo $steps_cnt; ?> Langkah
+                        </span>
+                    </div>
+                    <h4 class="text-xs sm:text-sm font-black truncate text-slate-900 dark:text-white">
+                        <?php echo esc_html( $ch_meta['title'] ); ?>
+                    </h4>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                        <?php echo esc_html( $ch_meta['subtitle'] ); ?>
+                    </p>
+                </div>
+
+                <!-- Check Icon -->
+                <div class="va-drawer-check shrink-0 hidden">
+                    <div class="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center shadow-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Drawer Footer / Dismiss Button -->
+    <div class="p-3.5 border-t border-slate-100 dark:border-dark-border bg-slate-50/60 dark:bg-dark-surface/40 shrink-0">
+        <button type="button" 
+                onclick="wklCloseVaChannelDrawer('<?php echo esc_js( $ch_item_id ); ?>')" 
+                class="w-full py-2.5 rounded-xl bg-slate-200/80 dark:bg-dark-surface hover:bg-slate-300 dark:hover:bg-dark-border text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors cursor-pointer">
+            Tutup
+        </button>
+    </div>
+</div>
+<?php endforeach; ?>
 
 <!-- ========================================================================
      CLIENT-SIDE INTERACTIVE JS LOGIC (Tabs, Drawer, Sub-tabs, Copy, FAQ, Lightbox)
@@ -994,27 +1457,21 @@ function wklCloseLayananDrawer() {
 }
 
 function wklSelectLayananFromDrawer(tabId) {
-    wklSwitchLayananTab(tabId);
+    wklSwitchLayananTab(tabId, true);
     wklCloseLayananDrawer();
-
-    // Smooth scroll ke awal pane dengan offset tepat di bawah sticky bar
-    var targetPane = document.getElementById('pane-' + tabId);
-    if (targetPane) {
-        var stickyBar = document.getElementById('wkl-layanan-sticky-wrapper');
-        var offset = (stickyBar ? stickyBar.offsetHeight : 55) + 80;
-        var elementPosition = targetPane.getBoundingClientRect().top;
-        var offsetPosition = elementPosition + window.pageYOffset - offset;
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
-    }
 }
 
-function wklSwitchLayananTab(tabId) {
+function wklSwitchLayananTab(tabId, shouldScroll) {
+    // 0. Sembunyikan Mobile Initial Empty State
+    var mobileEmpty = document.getElementById('wkl-layanan-mobile-empty-state');
+    if (mobileEmpty) {
+        mobileEmpty.classList.add('hidden');
+        mobileEmpty.classList.remove('block');
+    }
+
     // 1. Sembunyikan semua pane layanan & tampilkan target
     var panes = document.querySelectorAll('.wkl-layanan-pane');
-    panes.forEach(function(p) { p.classList.add('hidden'); p.classList.remove('block'); });
+    panes.forEach(function(p) { p.classList.add('hidden'); p.classList.remove('block', 'desktop-active', 'lg:block'); });
 
     var targetPane = document.getElementById('pane-' + tabId);
     if (targetPane) {
@@ -1092,51 +1549,259 @@ function wklSwitchLayananTab(tabId) {
             if (checkEl) checkEl.className = 'wkl-drawer-check shrink-0 hidden';
         }
     });
+
+    // 4. Smooth scroll jika dipicu dari aksi pengguna di mobile (Quick Card / Drawer)
+    if (shouldScroll && targetPane && window.innerWidth < 1024) {
+        setTimeout(function() {
+            var stickyBar = document.getElementById('wkl-layanan-sticky-wrapper');
+            var offset = (stickyBar ? stickyBar.offsetHeight : 55) + 30;
+            var elementPosition = targetPane.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - offset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }, 100);
+    }
 }
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        wklCloseLayananDrawer();
-        closeZoomModal();
+// ── VA CHANNEL DRAWER & SELECTION MANAGEMENT ──
+function wklInitVaChannelDrawer(itemId) {
+    var drawers = itemId ? [document.getElementById('wkl-va-ch-drawer-' + itemId)] : document.querySelectorAll('.wkl-va-drawer-panel');
+    var backdrops = itemId ? [document.getElementById('wkl-va-ch-backdrop-' + itemId)] : document.querySelectorAll('.wkl-va-drawer-backdrop');
+
+    drawers.forEach(function(drawer) {
+        if (!drawer) return;
+        if (drawer.parentElement !== document.body) {
+            document.body.appendChild(drawer);
+        }
+    });
+
+    backdrops.forEach(function(backdrop) {
+        if (!backdrop) return;
+        if (backdrop.parentElement !== document.body) {
+            document.body.appendChild(backdrop);
+        }
+    });
+}
+
+function wklOpenVaChannelDrawer(itemId) {
+    wklInitVaChannelDrawer(itemId);
+    var drawer = document.getElementById('wkl-va-ch-drawer-' + itemId);
+    var backdrop = document.getElementById('wkl-va-ch-backdrop-' + itemId);
+    if (!drawer || !backdrop) return;
+
+    backdrop.classList.remove('opacity-0', 'pointer-events-none', 'invisible');
+    backdrop.classList.add('opacity-100', 'pointer-events-auto');
+
+    drawer.classList.remove('translate-y-full', 'pointer-events-none', 'invisible');
+    drawer.classList.add('translate-y-0');
+
+    document.body.style.overflow = 'hidden';
+}
+
+function wklCloseVaChannelDrawer(itemId) {
+    var drawers = itemId ? [document.getElementById('wkl-va-ch-drawer-' + itemId)] : document.querySelectorAll('.wkl-va-drawer-panel');
+    var backdrops = itemId ? [document.getElementById('wkl-va-ch-backdrop-' + itemId)] : document.querySelectorAll('.wkl-va-drawer-backdrop');
+
+    drawers.forEach(function(drawer) {
+        if (!drawer) return;
+        drawer.classList.remove('translate-y-0');
+        drawer.classList.add('translate-y-full', 'pointer-events-none');
+        setTimeout(function() {
+            if (drawer && drawer.classList.contains('translate-y-full')) {
+                drawer.classList.add('invisible');
+            }
+        }, 300);
+    });
+
+    backdrops.forEach(function(backdrop) {
+        if (!backdrop) return;
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(function() {
+            if (backdrop) backdrop.classList.add('invisible');
+        }, 300);
+    });
+
+    var anyOpen = document.querySelector('#wkl-layanan-drawer.translate-y-0, .wkl-va-drawer-panel.translate-y-0');
+    if (!anyOpen) {
+        document.body.style.overflow = '';
     }
-});
+}
 
-// Attach all functions to window for global access across Swup page views
-window.wklInitLayananDrawer = wklInitLayananDrawer;
-window.wklOpenLayananDrawer = wklOpenLayananDrawer;
-window.wklCloseLayananDrawer = wklCloseLayananDrawer;
-window.wklSelectLayananFromDrawer = wklSelectLayananFromDrawer;
-window.wklSwitchLayananTab = wklSwitchLayananTab;
-window.wklSwitchChannel = wklSwitchChannel;
-window.wklCopyToClipboard = wklCopyToClipboard;
-window.wklToggleFaq = wklToggleFaq;
-window.openZoomModal = openZoomModal;
-window.closeZoomModal = closeZoomModal;
-
-function wklSwitchChannel(itemId, channelIndex) {
+function wklSelectChannel(itemId, channelIndex) {
     var paneParent = document.getElementById('pane-' + itemId);
     if (!paneParent) return;
 
-    // Sembunyikan seluruh channel panel di item ini
-    var cPanes = paneParent.querySelectorAll('.wkl-channel-pane');
-    cPanes.forEach(function(cp) { cp.classList.add('hidden'); cp.classList.remove('block'); });
+    // 1. Sembunyikan Mobile Empty State Callout
+    var emptyState = document.getElementById('va-mobile-empty-state-' + itemId);
+    if (emptyState) {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('block');
+    }
 
-    // Tampilkan panel target
+    // 2. Sembunyikan seluruh channel panel di item ini, tampilkan yang ditarget
+    var cPanes = paneParent.querySelectorAll('.wkl-channel-pane');
+    cPanes.forEach(function(cp) {
+        cp.classList.add('hidden');
+        cp.classList.remove('block', 'desktop-active', 'sm:block');
+        cp.style.display = 'none';
+    });
+
     var targetCPane = document.getElementById('channel-pane-' + itemId + '-' + channelIndex);
     if (targetCPane) {
         targetCPane.classList.remove('hidden');
         targetCPane.classList.add('block');
+        targetCPane.style.display = 'block';
+        targetCPane.style.opacity = '1';
     }
 
-    // Update active button state
-    var subBtns = paneParent.querySelectorAll('.wkl-subtab-btn');
-    subBtns.forEach(function(sb, idx) {
+    // 3. Update Desktop Cards
+    var dCards = paneParent.querySelectorAll('.wkl-va-ch-card');
+    dCards.forEach(function(dc, idx) {
+        var checkEl = dc.querySelector('.va-card-check');
+        var iconBox = dc.querySelector('.va-card-icon-box');
+        var badgeEl = dc.querySelector('.va-card-badge-el');
+        var activeBorder = dc.getAttribute('data-active-border') || '';
+        var idleBorder = dc.getAttribute('data-idle-border') || '';
+        var activeIcon = dc.getAttribute('data-active-icon') || '';
+        var idleIcon = dc.getAttribute('data-idle-icon') || '';
+        var activeBadge = dc.getAttribute('data-active-badge') || '';
+        var idleBadge = dc.getAttribute('data-idle-badge') || '';
+
         if (idx === channelIndex) {
-            sb.className = 'wkl-subtab-btn active px-4 py-2.5 rounded-2xl text-xs font-bold transition-all duration-200 border whitespace-nowrap shadow-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white flex items-center gap-2';
+            dc.className = 'wkl-va-ch-card text-left p-3.5 rounded-2xl transition-all duration-200 border cursor-pointer relative overflow-hidden group flex flex-col justify-between shadow-md ' + activeBorder;
+            if (iconBox) iconBox.className = 'va-card-icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ' + activeIcon;
+            if (badgeEl) badgeEl.className = 'va-card-badge-el text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase ' + activeBadge;
+            if (checkEl) { checkEl.classList.remove('hidden'); checkEl.classList.add('inline-flex'); }
         } else {
-            sb.className = 'wkl-subtab-btn px-4 py-2.5 rounded-2xl text-xs font-bold transition-all duration-200 border whitespace-nowrap shadow-2xs bg-slate-100 dark:bg-dark-surface text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-dark-border hover:bg-slate-200/80 flex items-center gap-2';
+            dc.className = 'wkl-va-ch-card text-left p-3.5 rounded-2xl transition-all duration-200 border cursor-pointer relative overflow-hidden group flex flex-col justify-between shadow-2xs ' + idleBorder;
+            if (iconBox) iconBox.className = 'va-card-icon-box w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ' + idleIcon;
+            if (badgeEl) badgeEl.className = 'va-card-badge-el text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase ' + idleBadge;
+            if (checkEl) { checkEl.classList.remove('inline-flex'); checkEl.classList.add('hidden'); }
         }
     });
+
+    // 4. Update Drawer Items
+    var drawer = document.getElementById('wkl-va-ch-drawer-' + itemId);
+    if (drawer) {
+        var drItems = drawer.querySelectorAll('.wkl-va-drawer-item');
+        drItems.forEach(function(di, idx) {
+            var checkEl = di.querySelector('.va-drawer-check');
+            if (idx === channelIndex) {
+                di.classList.add('border-teal-500', 'bg-teal-50/80', 'dark:bg-teal-950/40', 'shadow-sm');
+                if (checkEl) { checkEl.classList.remove('hidden'); checkEl.classList.add('block'); }
+            } else {
+                di.classList.remove('border-teal-500', 'bg-teal-50/80', 'dark:bg-teal-950/40', 'shadow-sm');
+                if (checkEl) { checkEl.classList.remove('block'); checkEl.classList.add('hidden'); }
+            }
+        });
+    }
+
+    // 5. Update Mobile Trigger Box
+    if (targetCPane) {
+        var chName = targetCPane.getAttribute('data-channel-name') || '';
+        var chSub = targetCPane.getAttribute('data-channel-sub') || '';
+        var chBadge = targetCPane.getAttribute('data-channel-badge') || '';
+        var chColor = targetCPane.getAttribute('data-channel-color') || 'teal';
+        
+        var titleEl = document.getElementById('va-mobile-trigger-title-' + itemId);
+        var subEl = document.getElementById('va-mobile-trigger-subtitle-' + itemId);
+        var kickerEl = document.getElementById('va-mobile-trigger-kicker-' + itemId);
+        var badgeEl = document.getElementById('va-mobile-trigger-badge-' + itemId);
+        var dotEl = document.getElementById('va-mobile-trigger-dot-' + itemId);
+        var iconSvgEl = document.getElementById('va-mobile-trigger-icon-svg-' + itemId);
+        var iconBoxEl = document.getElementById('va-mobile-trigger-icon-box-' + itemId);
+
+        if (titleEl && chName) titleEl.innerText = chName;
+        if (subEl && chSub) subEl.innerText = chSub;
+        if (kickerEl) {
+            var selectedKicker = kickerEl.getAttribute('data-kicker-selected') || 'Kanal Dipilih';
+            kickerEl.innerText = selectedKicker;
+        }
+        if (badgeEl && chBadge) {
+            badgeEl.innerText = chBadge;
+            var badgeColorMap = {
+                'emerald': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300',
+                'blue': 'bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300',
+                'amber': 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300',
+                'indigo': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300',
+                'teal': 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-300'
+            };
+            badgeEl.className = 'text-[9px] px-1.5 py-0.2 rounded-full font-bold ' + (badgeColorMap[chColor] || badgeColorMap['teal']);
+        }
+        if (dotEl) {
+            dotEl.classList.remove('animate-ping');
+        }
+        if (iconBoxEl) {
+            iconBoxEl.classList.remove('animate-pulse');
+            var iconBoxColorMap = {
+                'emerald': 'bg-emerald-600 text-white shadow-sm',
+                'blue': 'bg-blue-600 text-white shadow-sm',
+                'amber': 'bg-amber-500 text-white shadow-sm',
+                'indigo': 'bg-indigo-600 text-white shadow-sm',
+                'teal': 'bg-teal-600 text-white shadow-sm'
+            };
+            iconBoxEl.className = 'w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ' + (iconBoxColorMap[chColor] || iconBoxColorMap['teal']);
+        }
+        
+        var targetIconSvg = targetCPane.querySelector('h4 svg');
+        if (iconSvgEl && targetIconSvg) {
+            iconSvgEl.innerHTML = targetIconSvg.outerHTML;
+        }
+    }
+
+    // 6. Tutup drawer jika sedang terbuka
+    wklCloseVaChannelDrawer(itemId);
+
+    // 7. Smooth Scroll Ke Judul Langkah Panduan (Fix: Anti-error / tidak tenggelam di bawah)
+    if (window.innerWidth < 640 && targetCPane) {
+        setTimeout(function() {
+            var stickyBar = document.getElementById('wkl-layanan-sticky-wrapper');
+            var navOffset = (stickyBar ? stickyBar.offsetHeight : 55) + 30;
+            var elemTop = targetCPane.getBoundingClientRect().top;
+            var scrollPos = elemTop + window.pageYOffset - navOffset;
+            window.scrollTo({
+                top: scrollPos,
+                behavior: 'smooth'
+            });
+        }, 120);
+    }
+}
+
+function wklSwitchChannel(itemId, channelIndex) {
+    wklSelectChannel(itemId, channelIndex);
+}
+
+// Inisialisasi awal kanal: Desktop auto-select index 0, Mobile default KOSONG
+function wklInitChannelState() {
+    var isDesktop = window.innerWidth >= 640;
+    var channelsSections = document.querySelectorAll('[id^="va-channels-section-"]');
+    channelsSections.forEach(function(sec) {
+        var itemId = sec.id.replace('va-channels-section-', '');
+        if (isDesktop) {
+            wklSelectChannel(itemId, 0);
+        } else {
+            var emptyState = document.getElementById('va-mobile-empty-state-' + itemId);
+            if (emptyState) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('block');
+            }
+            var cPanes = sec.querySelectorAll('.wkl-channel-pane');
+            cPanes.forEach(function(cp) {
+                cp.classList.add('hidden');
+                cp.classList.remove('block', 'desktop-active', 'sm:block');
+                cp.style.display = 'none';
+            });
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wklInitChannelState);
+} else {
+    wklInitChannelState();
 }
 
 function wklCopyToClipboard(text, btnElement) {
@@ -1177,7 +1842,7 @@ function wklToggleFaq(btn) {
 }
 
 function openZoomModal(imgUrl, title, caption) {
-    var modal = document.getElementById('wkl-lightbox-modal');;
+    var modal = document.getElementById('wkl-lightbox-modal');
     var mImg  = document.getElementById('wkl-lightbox-img');
     var mTit  = document.getElementById('wkl-lightbox-title');
     var mCap  = document.getElementById('wkl-lightbox-caption');
@@ -1203,9 +1868,28 @@ function closeZoomModal(event) {
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
+        wklCloseLayananDrawer();
+        wklCloseVaChannelDrawer();
         closeZoomModal();
     }
 });
+
+// Attach all functions to window for global access across Swup page views
+window.wklInitLayananDrawer = wklInitLayananDrawer;
+window.wklOpenLayananDrawer = wklOpenLayananDrawer;
+window.wklCloseLayananDrawer = wklCloseLayananDrawer;
+window.wklSelectLayananFromDrawer = wklSelectLayananFromDrawer;
+window.wklSwitchLayananTab = wklSwitchLayananTab;
+window.wklInitVaChannelDrawer = wklInitVaChannelDrawer;
+window.wklOpenVaChannelDrawer = wklOpenVaChannelDrawer;
+window.wklCloseVaChannelDrawer = wklCloseVaChannelDrawer;
+window.wklSelectChannel = wklSelectChannel;
+window.wklSwitchChannel = wklSwitchChannel;
+window.wklInitChannelState = wklInitChannelState;
+window.wklCopyToClipboard = wklCopyToClipboard;
+window.wklToggleFaq = wklToggleFaq;
+window.openZoomModal = openZoomModal;
+window.closeZoomModal = closeZoomModal;
 </script>
 
 <?php

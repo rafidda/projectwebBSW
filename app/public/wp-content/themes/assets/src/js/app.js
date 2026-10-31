@@ -1408,18 +1408,36 @@ const ExecutiveParallax = {
 
       if (pend) {
         const pLines = (m.pendidikan || '').split(/\r?\n|│/).map(s => s.trim().replace(/^[•\-\s]+/, '')).filter(Boolean);
-        if (pLines.length > 1) {
+        if (pLines.length > 0) {
           pend.innerHTML = pLines.map(line => `
-            <div class="flex items-start gap-1.5 leading-snug">
-              <span class="w-1 h-1 rounded-full bg-teal-500 mt-1.5 shrink-0"></span>
+            <div class="flex items-start gap-1.5 leading-snug mb-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary-500 dark:bg-teal-400 mt-1.5 shrink-0"></span>
               <span class="flex-1">${line}</span>
             </div>
           `).join('');
         } else {
-          pend.textContent = m.pendidikan || '—';
+          pend.textContent = '—';
         }
       }
-      if (sertif) sertif.textContent = m.sertifikasi || '—';
+      if (sertif) {
+        let cLines = [];
+        const certRaw = (m.sertifikasi || '').trim();
+        if (/[\r\n│]/.test(certRaw) || (certRaw.match(/•/g) || []).length > 1) {
+          cLines = certRaw.split(/[\r\n│]+/).map(s => s.trim().replace(/^[•\-\s]+/, '')).filter(Boolean);
+        } else if (certRaw) {
+          cLines = certRaw.split(/,(?![^\(\)]*\))/).map(s => s.trim().replace(/^[•\-\s]+|[.]+$/g, '')).filter(Boolean);
+        }
+        if (cLines.length > 0) {
+          sertif.innerHTML = cLines.map(line => `
+            <div class="flex items-start gap-1.5 leading-snug mb-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+              <span class="flex-1">${line}</span>
+            </div>
+          `).join('');
+        } else {
+          sertif.textContent = '—';
+        }
+      }
 
       if (quote && quoteWrap) {
         if (m.kutipan && m.kutipan.trim() !== '') {
@@ -2473,7 +2491,17 @@ const DepositoPage = {
       const counters = nisbahTableWrap.querySelectorAll('.wkl-counter');
       counters.forEach((el) => {
         const target = parseFloat(el.getAttribute('data-target')) || 0;
-        const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+        const decimalsAttr = el.getAttribute('data-decimals');
+        let decimals = 0;
+        if (decimalsAttr !== null && decimalsAttr !== '') {
+          decimals = parseInt(decimalsAttr, 10) || 0;
+        } else {
+          // Auto-detect decimals from data-target string, e.g. "42.5" -> 1 decimal
+          const targetStr = (el.getAttribute('data-target') || '').trim();
+          if (targetStr.includes('.')) {
+            decimals = targetStr.split('.')[1].length;
+          }
+        }
         const suffix = el.getAttribute('data-suffix') || '';
         const duration = 1200;
         let startTime = null;
@@ -4530,7 +4558,7 @@ function initSwup() {
 
     // Central cleanup: remove any teleported modals or overlays in document.body
     const staleModals = document.querySelectorAll(
-      '#ann-detail-modal, #kegiatan-detail-modal, #galeri-story-lightbox, #lelang-bid-modal, #tim-kami-detail-modal, #karir-apply-modal, #brosur-pdf-modal, #laporan-pdf-modal, #wkl-lightbox-modal, #wkl-bm-lightbox-modal, #video-modal, #mob-drawer, #mob-drawer-backdrop'
+      '#ann-detail-modal, #kegiatan-detail-modal, #galeri-story-lightbox, #lelang-bid-modal, #tim-kami-detail-modal, #karir-apply-modal, #brosur-pdf-modal, #laporan-pdf-modal, #wkl-lightbox-modal, #wkl-bm-lightbox-modal, #video-modal, #mob-drawer, #mob-drawer-backdrop, #wkl-mission-modal, #wkl-award-modal'
     );
     staleModals.forEach(m => {
       if (m && m.parentElement === document.body) {

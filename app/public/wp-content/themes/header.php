@@ -123,10 +123,11 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
             if ( empty( $req_uri ) ) {
                 $req_uri = '/';
             }
+            $show_baitul_maal  = ( '1' === (string) get_option( 'options_show_baitul_maal', '0' ) );
             $is_page_home      = ( is_front_page() || is_home() || $req_uri === '/' );
             $is_page_profil    = ( ! $is_page_home && ( strpos( $req_uri, '/profil' ) === 0 || is_page( [ 'tentang-kami', 'legalitas', 'susunan-pengurus', 'jaringan-kantor' ] ) ) );
             $is_page_produk    = ( ! $is_page_home && ( strpos( $req_uri, '/produk' ) === 0 || strpos( $req_uri, '/brosur' ) === 0 || is_page( 'brosur' ) || is_post_type_archive( 'produk' ) || is_singular( 'produk' ) ) );
-            $is_page_layanan   = ( ! $is_page_home && ( strpos( $req_uri, '/layanan' ) === 0 || strpos( $req_uri, '/baitul-maal' ) === 0 || is_page( [ 'layanan-kami', 'layanan', 'baitul-maal', 'baitul-maal-bsw' ] ) ) );
+            $is_page_layanan   = ( ! $is_page_home && ( strpos( $req_uri, '/layanan' ) === 0 || ( $show_baitul_maal && strpos( $req_uri, '/baitul-maal' ) === 0 ) || is_page( [ 'layanan-kami', 'layanan' ] ) || ( $show_baitul_maal && is_page( [ 'baitul-maal', 'baitul-maal-bsw' ] ) ) ) );
             $is_page_informasi = ( ! $is_page_home && ( strpos( $req_uri, '/informasi' ) === 0 || strpos( $req_uri, '/pengumuman' ) === 0 || strpos( $req_uri, '/lelang' ) === 0 || strpos( $req_uri, '/tim-kami' ) === 0 || is_page( [ 'pengumuman', 'lelang', 'tim-kami' ] ) || strpos( $req_uri, '/berita' ) === 0 || is_singular( 'berita' ) || is_post_type_archive( 'berita' ) || is_category() ) );
             $is_page_kontak    = ( ! $is_page_home && ( strpos( $req_uri, '/kontak' ) === 0 || is_page( 'kontak' ) ) );
 
@@ -504,6 +505,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     </div>
                 </div>
 
+                <?php if ( $show_baitul_maal ) : ?>
                 <!-- LAYANAN & BAITUL MAAL DROPDOWN -->
                 <div class="dropdown relative">
                     <button class="dropdown-trigger nav-link font-bold whitespace-nowrap <?php echo $is_page_layanan ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center gap-1.5 group">
@@ -559,6 +561,12 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                         </div>
                     </div>
                 </div>
+                <?php else : ?>
+                <!-- LAYANAN SINGLE NAV LINK -->
+                <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="nav-link font-bold whitespace-nowrap <?php echo $is_page_layanan ? 'active' : ''; ?> px-4 py-2 rounded-full inline-flex items-center">
+                    Layanan
+                </a>
+                <?php endif; ?>
 
                 <!-- INFORMASI: 3-COLUMN BANKING MEGA-MENU -->
                 <div class="dropdown relative">
@@ -1034,17 +1042,43 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     <div class="px-3 pt-3 pb-1 text-[10px] font-extrabold text-primary-700 dark:text-teal-300 uppercase tracking-widest flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Penyaluran Dana (Lending)
                     </div>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#pedagang' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
-                        <span class="w-6 h-6 rounded-md bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-                        </span>
-                        <span class="text-xs font-semibold">1000 Pedagang &amp; 1000 Guru</span>
-                    </a>
-                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#akad-syariah' ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
-                        <span class="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z" /></svg>
-                        </span>
-                        <span class="text-xs font-semibold">Akad Murabahah, Bagi Hasil, Ijarah</span>
+                    <?php 
+                    $mobile_pembiayaan_list = function_exists( 'wakalumi_get_pembiayaan_list' ) ? wakalumi_get_pembiayaan_list() : [];
+                    $mobile_pem_preview = array_slice( $mobile_pembiayaan_list, 0, 4 );
+                    foreach ( $mobile_pem_preview as $m_pem ) :
+                        $m_slug     = ! empty( $m_pem['slug'] ) ? sanitize_title( $m_pem['slug'] ) : sanitize_title( $m_pem['nama'] );
+                        $m_color    = $m_pem['color'] ?? 'teal';
+                        $m_bg_class = 'bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400';
+                        if ( in_array( $m_color, [ 'orange', 'amber' ], true ) ) {
+                            $m_bg_class = 'bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400';
+                        } elseif ( in_array( $m_color, [ 'indigo', 'blue' ], true ) ) {
+                            $m_bg_class = 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400';
+                        } elseif ( in_array( $m_color, [ 'emerald' ], true ) ) {
+                            $m_bg_class = 'bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400';
+                        } elseif ( in_array( $m_color, [ 'purple', 'violet' ], true ) ) {
+                            $m_bg_class = 'bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400';
+                        }
+                    ?>
+                        <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/#' . $m_slug ) ); ?>" class="mobile-nav-sublink flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors text-slate-600 hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-400">
+                            <span class="w-6 h-6 rounded-md <?php echo esc_attr( $m_bg_class ); ?> flex items-center justify-center flex-shrink-0">
+                                <?php 
+                                if ( function_exists( 'wakalumi_render_pembiayaan_icon' ) ) {
+                                    echo str_replace( 'w-6 h-6', 'w-3.5 h-3.5', wakalumi_render_pembiayaan_icon( $m_pem['icon'] ?? 'coins' ) );
+                                } else {
+                                    echo '<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+                                }
+                                ?>
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <span class="text-xs font-semibold block truncate"><?php echo esc_html( $m_pem['nama'] ); ?></span>
+                                <?php if ( ! empty( $m_pem['tagline'] ) ) : ?>
+                                    <span class="text-[10px] text-slate-400 truncate block"><?php echo esc_html( $m_pem['tagline'] ); ?></span>
+                                <?php endif; ?>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                    <a href="<?php echo esc_url( home_url( '/produk/pembiayaan/' ) ); ?>" class="mobile-nav-sublink flex items-center justify-between px-3 py-1.5 text-[11px] font-bold text-primary-700 dark:text-teal-400 hover:underline">
+                        <span>Semua Produk Pembiayaan &rarr;</span>
                     </a>
 
                     <!-- Katalog Brosur Mobile -->
@@ -1080,6 +1114,7 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                 </div>
             </div>
 
+            <?php if ( $show_baitul_maal ) : ?>
             <!-- Layanan & Baitul Maal (Mobile Dropdown) -->
             <div class="mobile-nav-group">
                 <button class="mobile-dropdown-trigger w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_layanan ? 'bg-primary-50/70 text-primary-700 font-extrabold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
@@ -1103,6 +1138,15 @@ $brand     = function_exists( 'wakalumi_get_brand_identity' ) ? wakalumi_get_bra
                     </a>
                 </div>
             </div>
+            <?php else : ?>
+            <!-- Layanan (Mobile Direct Link) -->
+            <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors <?php echo $is_page_layanan ? 'bg-primary-50/70 text-primary-700 font-extrabold dark:bg-primary-400/15 dark:text-primary-300' : 'text-slate-800 hover:bg-primary-50 hover:text-primary-700 dark:text-slate-100 dark:hover:bg-primary-400/10 dark:hover:text-primary-400'; ?>">
+                <span>Layanan</span>
+                <svg class="w-4 h-4 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5-7.5" />
+                </svg>
+            </a>
+            <?php endif; ?>
 
             <!-- Informasi -->
             <div class="mobile-nav-group">

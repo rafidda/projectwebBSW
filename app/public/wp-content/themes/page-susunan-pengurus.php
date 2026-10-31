@@ -101,6 +101,75 @@ usort( $pengurus_list, function( $a, $b ) {
     return ( $a['urutan'] ?? 0 ) <=> ( $b['urutan'] ?? 0 );
 });
 
+/**
+ * Helper: Parse string pendidikan menjadi array butir yang rapi & terstruktur
+ */
+if ( ! function_exists( 'wakalumi_parse_education' ) ) {
+    function wakalumi_parse_education( $text ) {
+        $text = trim( (string) $text );
+        if ( empty( $text ) ) return [];
+
+        $raw = preg_split( '/[\r\n│]+/', $text );
+        $clean = [];
+        foreach ( $raw as $r ) {
+            $r = trim( $r );
+            if ( ! empty( $r ) ) {
+                if ( strpos( $r, '•' ) !== false ) {
+                    $parts = explode( '•', $r );
+                    foreach ( $parts as $p ) {
+                        $p = trim( $p, " \t\n\r\0\x0B-•" );
+                        if ( ! empty( $p ) ) $clean[] = $p;
+                    }
+                } else {
+                    $p = trim( $r, " \t\n\r\0\x0B-•" );
+                    if ( ! empty( $p ) ) $clean[] = $p;
+                }
+            }
+        }
+        return $clean;
+    }
+}
+
+/**
+ * Helper: Parse string sertifikasi menjadi array butir yang rapi & terstruktur
+ */
+if ( ! function_exists( 'wakalumi_parse_certifications' ) ) {
+    function wakalumi_parse_certifications( $text ) {
+        $text = trim( (string) $text );
+        if ( empty( $text ) ) return [];
+
+        // Jika memiliki baris baru atau lebih dari 1 bullet symbol
+        if ( preg_match( '/[\r\n│]/', $text ) || substr_count( $text, '•' ) > 1 ) {
+            $raw = preg_split( '/[\r\n│]+/', $text );
+            $clean = [];
+            foreach ( $raw as $r ) {
+                $r = trim( $r );
+                if ( ! empty( $r ) ) {
+                    if ( strpos( $r, '•' ) !== false ) {
+                        $parts = explode( '•', $r );
+                        foreach ( $parts as $p ) {
+                            $p = trim( $p, " \t\n\r\0\x0B-•" );
+                            if ( ! empty( $p ) ) $clean[] = $p;
+                        }
+                    } else {
+                        $clean[] = trim( $r, " \t\n\r\0\x0B-•" );
+                    }
+                }
+            }
+            return $clean;
+        }
+
+        // Jika satu baris: pisahkan berdasarkan koma di luar tanda kurung
+        $parts = preg_split( '/,(?![^\(\)]*\))/', $text );
+        $clean = [];
+        foreach ( $parts as $p ) {
+            $p = trim( $p, " \t\n\r\0\x0B-•." );
+            if ( ! empty( $p ) ) $clean[] = $p;
+        }
+        return $clean;
+    }
+}
+
 // Group counts for stats
 $count_dps = 0;
 $count_kom = 0;
@@ -647,8 +716,8 @@ $total_members = count( $pengurus_list );
                                     </h2>
                                 </div>
 
-                                <!-- Dossier Scrollable Body (Guaranteed Safe from Collision) -->
-                                <div class="flex-1 min-h-0 overflow-y-auto no-scrollbar space-y-3 pt-2.5 pr-1">
+                                <!-- Dossier Scrollable Body (Guaranteed Safe from Collision with Custom Smooth Scrollbar) -->
+                                <div class="flex-1 min-h-0 overflow-y-auto custom-scroll space-y-3.5 pt-2.5 pr-1.5">
                                     <!-- Bagian Riwayat & Rekam Jejak -->
                                     <div>
                                         <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-teal-400 mb-1.5">
@@ -692,26 +761,66 @@ $total_members = count( $pengurus_list );
                                         <?php endif; ?>
                                     </div>
 
-                                    <!-- Bagian Pendidikan & Sertifikasi (2 Kolom Berdampingan) -->
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 shrink-0">
-                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2.5 border border-slate-100 dark:border-slate-700/60 shadow-xs">
-                                            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
-                                                <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
-                                                <span>Pendidikan</span>
+                                    <!-- Bagian Pendidikan & Sertifikasi (2 Kolom Berdampingan Tanpa Truncate) -->
+                                    <?php 
+                                    $edu_items  = wakalumi_parse_education( $item['pendidikan'] ?? '' );
+                                    $cert_items = wakalumi_parse_certifications( $item['sertifikasi'] ?? '' );
+                                    ?>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 shrink-0">
+                                        <!-- Card Pendidikan Lengkap -->
+                                        <div class="rounded-2xl bg-slate-50/90 dark:bg-slate-800/80 p-3 border border-slate-100 dark:border-slate-700/60 shadow-xs flex flex-col justify-start">
+                                            <div class="flex items-center justify-between pb-1.5 border-b border-slate-200/60 dark:border-slate-700/40 mb-2">
+                                                <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
+                                                    <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+                                                    <span>Pendidikan</span>
+                                                </div>
+                                                <?php if ( count( $edu_items ) > 1 ) : ?>
+                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-300 border border-teal-200/50 dark:border-teal-800/40">
+                                                        <?php echo count( $edu_items ); ?> Jenjang
+                                                    </span>
+                                                <?php endif; ?>
                                             </div>
-                                            <p class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2 mt-0.5 leading-snug">
-                                                <?php echo nl2br( esc_html( $item['pendidikan'] ?? '—' ) ); ?>
-                                            </p>
+                                            
+                                            <?php if ( ! empty( $edu_items ) ) : ?>
+                                                <div class="space-y-1.5">
+                                                    <?php foreach ( $edu_items as $edu_line ) : ?>
+                                                        <div class="flex items-start gap-2 text-xs font-semibold text-slate-800 dark:text-slate-100 leading-snug">
+                                                            <span class="w-1.5 h-1.5 rounded-full bg-primary-500 dark:bg-teal-400 mt-1.5 shrink-0"></span>
+                                                            <span class="flex-1"><?php echo esc_html( $edu_line ); ?></span>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php else : ?>
+                                                <p class="text-xs text-slate-400 dark:text-slate-500 italic">—</p>
+                                            <?php endif; ?>
                                         </div>
 
-                                        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2.5 border border-slate-100 dark:border-slate-700/60 shadow-xs">
-                                            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
-                                                <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
-                                                <span>Sertifikasi & Lisensi</span>
+                                        <!-- Card Sertifikasi Lengkap -->
+                                        <div class="rounded-2xl bg-slate-50/90 dark:bg-slate-800/80 p-3 border border-slate-100 dark:border-slate-700/60 shadow-xs flex flex-col justify-start">
+                                            <div class="flex items-center justify-between pb-1.5 border-b border-slate-200/60 dark:border-slate-700/40 mb-2">
+                                                <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-teal-300">
+                                                    <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                                                    <span>Sertifikasi & Lisensi</span>
+                                                </div>
+                                                <?php if ( count( $cert_items ) > 1 ) : ?>
+                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/40">
+                                                        <?php echo count( $cert_items ); ?> Lisensi
+                                                    </span>
+                                                <?php endif; ?>
                                             </div>
-                                            <p class="text-xs font-semibold text-slate-900 dark:text-white line-clamp-2 mt-0.5 leading-snug">
-                                                <?php echo esc_html( $item['sertifikasi'] ?? '—' ); ?>
-                                            </p>
+
+                                            <?php if ( ! empty( $cert_items ) ) : ?>
+                                                <div class="space-y-1.5">
+                                                    <?php foreach ( $cert_items as $cert_line ) : ?>
+                                                        <div class="flex items-start gap-2 text-xs font-semibold text-slate-800 dark:text-slate-100 leading-snug">
+                                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                                                            <span class="flex-1"><?php echo esc_html( $cert_line ); ?></span>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php else : ?>
+                                                <p class="text-xs text-slate-400 dark:text-slate-500 italic">—</p>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -975,9 +1084,9 @@ $total_members = count( $pengurus_list );
                         <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
                         <span>Pendidikan</span>
                     </div>
-                    <p id="mob-drawer-pendidikan" class="text-xs font-semibold text-slate-900 dark:text-white mt-1 leading-snug">
+                    <div id="mob-drawer-pendidikan" class="text-xs font-semibold text-slate-900 dark:text-white mt-1.5 leading-snug">
                         <!-- Populated via JS -->
-                    </p>
+                    </div>
                 </div>
 
                 <div class="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-3 border border-slate-100 dark:border-slate-700/60 shadow-2xs">
@@ -985,9 +1094,9 @@ $total_members = count( $pengurus_list );
                         <svg class="w-3.5 h-3.5 text-primary-500 dark:text-teal-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
                         <span>Sertifikasi & Lisensi</span>
                     </div>
-                    <p id="mob-drawer-sertifikasi" class="text-xs font-semibold text-slate-900 dark:text-white mt-1 leading-snug">
+                    <div id="mob-drawer-sertifikasi" class="text-xs font-semibold text-slate-900 dark:text-white mt-1.5 leading-snug">
                         <!-- Populated via JS -->
-                    </p>
+                    </div>
                 </div>
             </div>
 

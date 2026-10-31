@@ -15,6 +15,122 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // ── 1. DATA HELPERS ─────────────────────────────────────────────────
 
+if ( ! function_exists( 'wakalumi_get_division_color_options' ) ) {
+    /**
+     * Opsi aksen warna divisi perbankan resmi yang kaya, variatif, dan berkarakter.
+     *
+     * @return array
+     */
+    function wakalumi_get_division_color_options() {
+        return [
+            'emerald' => [
+                'name'  => 'Emerald (Hijau Syariah)',
+                'class' => 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/70',
+                'dot'   => '#059669',
+            ],
+            'indigo' => [
+                'name'  => 'Indigo (Ungu Wibawa)',
+                'class' => 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800/70',
+                'dot'   => '#4f46e5',
+            ],
+            'amber' => [
+                'name'  => 'Amber (Emas Eksekutif)',
+                'class' => 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/70',
+                'dot'   => '#d97706',
+            ],
+            'purple' => [
+                'name'  => 'Purple (Ungu Spesialis)',
+                'class' => 'bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800/70',
+                'dot'   => '#9333ea',
+            ],
+            'rose' => [
+                'name'  => 'Rose (Merah Muda Elegan)',
+                'class' => 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800/70',
+                'dot'   => '#e11d48',
+            ],
+            'teal' => [
+                'name'  => 'Teal (Toska Wakalumi)',
+                'class' => 'bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800/70',
+                'dot'   => '#0d9488',
+            ],
+            'blue' => [
+                'name'  => 'Blue (Biru Korporat)',
+                'class' => 'bg-blue-50 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/70',
+                'dot'   => '#2563eb',
+            ],
+            'orange' => [
+                'name'  => 'Orange (Jingga Dinamis)',
+                'class' => 'bg-orange-50 dark:bg-orange-950/70 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800/70',
+                'dot'   => '#ea580c',
+            ],
+            'cyan' => [
+                'name'  => 'Cyan (Biru Digital)',
+                'class' => 'bg-cyan-50 dark:bg-cyan-950/70 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800/70',
+                'dot'   => '#0891b2',
+            ],
+            'fuchsia' => [
+                'name'  => 'Fuchsia (Pink Human Capital)',
+                'class' => 'bg-fuchsia-50 dark:bg-fuchsia-950/70 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-200 dark:border-fuchsia-800/70',
+                'dot'   => '#c026d3',
+            ],
+            'slate' => [
+                'name'  => 'Slate (Abu Metalik)',
+                'class' => 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700/70',
+                'dot'   => '#475569',
+            ],
+            'lime' => [
+                'name'  => 'Lime (Hijau Daun Segar)',
+                'class' => 'bg-lime-50 dark:bg-lime-950/70 text-lime-700 dark:text-lime-300 border-lime-200 dark:border-lime-800/70',
+                'dot'   => '#65a30d',
+            ],
+        ];
+    }
+}
+
+if ( ! function_exists( 'wakalumi_get_division_badge_class' ) ) {
+    /**
+     * Mengambil class CSS styling badge ikon divisi berdasarkan slug atau konfigurasi admin.
+     *
+     * @param string $slug
+     * @param array $div_info
+     * @return string
+     */
+    function wakalumi_get_division_badge_class( $slug = '', $div_info = [] ) {
+        $colors = wakalumi_get_division_color_options();
+        $color_key = $div_info['color'] ?? '';
+        if ( ! empty( $color_key ) && isset( $colors[ $color_key ] ) ) {
+            return $colors[ $color_key ]['class'];
+        }
+
+        // Jika badge_class tersimpan dan bukan fallback teal seragam lama
+        $saved_badge = $div_info['badge_class'] ?? '';
+        if ( ! empty( $saved_badge ) && strpos( $saved_badge, 'bg-teal-100' ) === false ) {
+            return $saved_badge;
+        }
+
+        // Pemetaan palet warna baku per-divisi (14 warna variatif dan berkarakter)
+        $default_map = [
+            'dps'          => 'emerald',
+            'komisaris'    => 'indigo',
+            'manajemen'    => 'amber',
+            'senior_staff' => 'purple',
+            'sekretaris'   => 'rose',
+            'skai'         => 'teal',
+            'legal'        => 'blue',
+            'bisnis'       => 'orange',
+            'it'           => 'cyan',
+            'operasional'  => 'teal',
+            'personalia'   => 'fuchsia',
+            'umum'         => 'slate',
+            'keamanan'     => 'amber',
+            'pramubakti'   => 'lime',
+        ];
+
+        $assigned = $default_map[ $slug ] ?? 'teal';
+        return $colors[ $assigned ]['class'] ?? 'bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800/70';
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_default_tim_divisions' ) ) {
     /**
      * Daftar divisi perbankan syariah resmi BSW (Default) - Terurut Hierarki Tertinggi ke Operasional.
@@ -26,98 +142,112 @@ if ( ! function_exists( 'wakalumi_get_default_tim_divisions' ) ) {
             'dps' => [
                 'slug'        => 'dps',
                 'name'        => 'Dewan Pengawas Syariah (DPS)',
-                'badge_class' => 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300/60 dark:border-emerald-800/60',
+                'color'       => 'emerald',
+                'badge_class' => 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/70',
                 'icon'        => 'academic-cap',
                 'urutan'      => 1,
             ],
             'komisaris' => [
                 'slug'        => 'komisaris',
                 'name'        => 'Dewan Komisaris',
-                'badge_class' => 'bg-purple-100 dark:bg-purple-950/70 text-purple-800 dark:text-purple-300 border-purple-300/60 dark:border-purple-800/60',
+                'color'       => 'indigo',
+                'badge_class' => 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800/70',
                 'icon'        => 'building',
                 'urutan'      => 2,
             ],
             'manajemen' => [
                 'slug'        => 'manajemen',
                 'name'        => 'Direksi & Manajemen Eksekutif',
-                'badge_class' => 'bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-300/60 dark:border-amber-800/60',
+                'color'       => 'amber',
+                'badge_class' => 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/70',
                 'icon'        => 'briefcase',
                 'urutan'      => 3,
-            ],
-            'sekretaris' => [
-                'slug'        => 'sekretaris',
-                'name'        => 'Sekretariat Perusahaan & Direksi',
-                'badge_class' => 'bg-teal-100 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border-teal-300/60 dark:border-teal-800/60',
-                'icon'        => 'document-text',
-                'urutan'      => 4,
-            ],
-            'skai' => [
-                'slug'        => 'skai',
-                'name'        => 'SKAI (Satuan Kerja Audit Internal)',
-                'badge_class' => 'bg-indigo-100 dark:bg-indigo-950/70 text-indigo-800 dark:text-indigo-300 border-indigo-300/60 dark:border-indigo-800/60',
-                'icon'        => 'shield-check',
-                'urutan'      => 5,
-            ],
-            'legal' => [
-                'slug'        => 'legal',
-                'name'        => 'Legal & Kepatuhan Hukum',
-                'badge_class' => 'bg-blue-100 dark:bg-blue-950/70 text-blue-800 dark:text-blue-300 border-blue-300/60 dark:border-blue-800/60',
-                'icon'        => 'scale',
-                'urutan'      => 6,
             ],
             'senior_staff' => [
                 'slug'        => 'senior_staff',
                 'name'        => 'Senior Staff & Spesialis Teknis',
-                'badge_class' => 'bg-violet-100 dark:bg-violet-950/70 text-violet-800 dark:text-violet-300 border-violet-300/60 dark:border-violet-800/60',
+                'color'       => 'purple',
+                'badge_class' => 'bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800/70',
                 'icon'        => 'star',
+                'urutan'      => 4,
+            ],
+            'sekretaris' => [
+                'slug'        => 'sekretaris',
+                'name'        => 'Sekretariat Perusahaan & Direksi',
+                'color'       => 'rose',
+                'badge_class' => 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800/70',
+                'icon'        => 'document-text',
+                'urutan'      => 5,
+            ],
+            'skai' => [
+                'slug'        => 'skai',
+                'name'        => 'SKAI (Satuan Kerja Audit Internal)',
+                'color'       => 'teal',
+                'badge_class' => 'bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800/70',
+                'icon'        => 'shield-check',
+                'urutan'      => 6,
+            ],
+            'legal' => [
+                'slug'        => 'legal',
+                'name'        => 'Legal & Kepatuhan Hukum',
+                'color'       => 'blue',
+                'badge_class' => 'bg-blue-50 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/70',
+                'icon'        => 'scale',
                 'urutan'      => 7,
-            ],
-            'personalia' => [
-                'slug'        => 'personalia',
-                'name'        => 'Personalia & Human Capital (HRD)',
-                'badge_class' => 'bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border-rose-300/60 dark:border-rose-800/60',
-                'icon'        => 'identification',
-                'urutan'      => 8,
-            ],
-            'umum' => [
-                'slug'        => 'umum',
-                'name'        => 'Umum & Pengadaan (General Affairs)',
-                'badge_class' => 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-300/60 dark:border-slate-700/60',
-                'icon'        => 'cog',
-                'urutan'      => 9,
             ],
             'bisnis' => [
                 'slug'        => 'bisnis',
                 'name'        => 'Bisnis & Pemasaran (Marketing / AO)',
-                'badge_class' => 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300/60 dark:border-emerald-800/60',
+                'color'       => 'orange',
+                'badge_class' => 'bg-orange-50 dark:bg-orange-950/70 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800/70',
                 'icon'        => 'chart-bar',
-                'urutan'      => 10,
+                'urutan'      => 8,
             ],
             'it' => [
                 'slug'        => 'it',
                 'name'        => 'Teknologi Informasi (IT & Digital Banking)',
-                'badge_class' => 'bg-cyan-100 dark:bg-cyan-950/70 text-cyan-800 dark:text-cyan-300 border-cyan-300/60 dark:border-cyan-800/60',
+                'color'       => 'cyan',
+                'badge_class' => 'bg-cyan-50 dark:bg-cyan-950/70 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800/70',
                 'icon'        => 'cpu-chip',
-                'urutan'      => 11,
+                'urutan'      => 9,
             ],
             'operasional' => [
                 'slug'        => 'operasional',
                 'name'        => 'Operasional (CS, Teller & Pelaporan)',
-                'badge_class' => 'bg-teal-100 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border-teal-300/60 dark:border-teal-800/60',
+                'color'       => 'teal',
+                'badge_class' => 'bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800/70',
                 'icon'        => 'user-group',
+                'urutan'      => 10,
+            ],
+            'personalia' => [
+                'slug'        => 'personalia',
+                'name'        => 'Personalia & Human Capital (HRD)',
+                'color'       => 'fuchsia',
+                'badge_class' => 'bg-fuchsia-50 dark:bg-fuchsia-950/70 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-200 dark:border-fuchsia-800/70',
+                'icon'        => 'identification',
+                'urutan'      => 11,
+            ],
+            'umum' => [
+                'slug'        => 'umum',
+                'name'        => 'Umum & Pengadaan (General Affairs)',
+                'color'       => 'slate',
+                'badge_class' => 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700/70',
+                'icon'        => 'cog',
                 'urutan'      => 12,
             ],
             'keamanan' => [
                 'slug'        => 'keamanan',
                 'name'        => 'Keamanan & Satpam (Security)',
-                'badge_class' => 'bg-orange-100 dark:bg-orange-950/70 text-orange-800 dark:text-orange-300 border-orange-300/60 dark:border-orange-800/60',
+                'color'       => 'amber',
+                'badge_class' => 'bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800/70',
                 'icon'        => 'shield-exclamation',
                 'urutan'      => 13,
             ],
             'pramubakti' => [
                 'slug'        => 'pramubakti',
                 'name'        => 'Pramubakti & Cleaning Service (OB)',
-                'badge_class' => 'bg-lime-100 dark:bg-lime-950/70 text-lime-800 dark:text-lime-300 border-lime-300/60 dark:border-lime-800/60',
+                'color'       => 'lime',
+                'badge_class' => 'bg-lime-50 dark:bg-lime-950/70 text-lime-700 dark:text-lime-300 border-lime-200 dark:border-lime-800/70',
                 'icon'        => 'sparkles',
                 'urutan'      => 14,
             ],
@@ -199,9 +329,15 @@ if ( ! function_exists( 'wakalumi_get_tim_header' ) ) {
         $title = str_replace( 'BPRS Wakalumi', 'Bank Syariah Wakalumi', $title );
         $desc  = get_option( 'options_tim_desc', 'Mengenal seluruh insan perbankan syariah yang amanah, berdedikasi tinggi, dan profesional dalam menghadirkan solusi keuangan berkah bagi nasabah dan masyarakat.' );
 
-        $notice_badge = get_option( 'options_tim_notice_badge', 'Verifikasi Resmi Karyawan Aktif' );
+        $notice_badge = get_option( 'options_tim_notice_badge', 'Verifikasi Resmi Personel' );
+        $notice_badge = str_replace( 'Karyawan Aktif', 'Personel Aktif', $notice_badge );
         $notice_title = get_option( 'options_tim_notice_title', 'Cek Keabsahan & Identitas Resmi Personel BSW' );
-        $notice_desc  = get_option( 'options_tim_notice_desc', 'Seluruh personel yang tercantum pada direktori resmi ini merupakan Karyawan Aktif PT BPRS Wakalumi (Bank Syariah Wakalumi). Apabila ada oknum yang mengatasnamakan bank namun identitasnya TIDAK tercantum pada direktori ini, mohon waspada terhadap potensi penipuan dan segera laporkan ke WhatsApp Hotline resmi kami.' );
+        $notice_desc  = get_option( 'options_tim_notice_desc', 'Seluruh jajaran pengurus, personel manajemen, dan karyawan yang tercantum pada direktori resmi ini merupakan insan perbankan aktif PT Bank Syariah Wakalumi (BSW). Apabila ada oknum yang mengatasnamakan bank namun identitasnya TIDAK tercantum pada direktori ini, mohon waspada terhadap potensi penipuan dan segera laporkan ke WhatsApp Hotline resmi kami.' );
+        if ( str_contains( $notice_desc, 'merupakan Karyawan Aktif' ) ) {
+            $notice_desc = str_replace( 'merupakan Karyawan Aktif PT BPRS Wakalumi (Bank Syariah Wakalumi)', 'merupakan insan perbankan aktif PT Bank Syariah Wakalumi (BSW)', $notice_desc );
+            $notice_desc = str_replace( 'merupakan Karyawan Aktif PT Bank Syariah Wakalumi (BSW)', 'merupakan insan perbankan aktif PT Bank Syariah Wakalumi (BSW)', $notice_desc );
+            $notice_desc = str_replace( 'merupakan Karyawan Aktif', 'merupakan insan perbankan aktif', $notice_desc );
+        }
         $notice_wa    = get_option( 'options_tim_notice_wa', get_option( 'options_contact_wa', '6281517380388' ) );
 
         return [
@@ -886,7 +1022,27 @@ function wakalumi_render_tim_page() {
             // 2. Simpan Manajemen Divisi
             $div_slugs   = $_POST['div_slug'] ?? [];
             $div_names   = $_POST['div_name'] ?? [];
+            $div_colors  = $_POST['div_color'] ?? [];
+            $div_icons   = $_POST['div_icon'] ?? [];
             $div_urutans = $_POST['div_urutan'] ?? [];
+
+            $color_options = function_exists( 'wakalumi_get_division_color_options' ) ? wakalumi_get_division_color_options() : [];
+            $default_color_map = [
+                'dps'          => 'emerald',
+                'komisaris'    => 'indigo',
+                'manajemen'    => 'amber',
+                'senior_staff' => 'purple',
+                'sekretaris'   => 'rose',
+                'skai'         => 'teal',
+                'legal'        => 'blue',
+                'bisnis'       => 'orange',
+                'it'           => 'cyan',
+                'operasional'  => 'teal',
+                'personalia'   => 'fuchsia',
+                'umum'         => 'slate',
+                'keamanan'     => 'amber',
+                'pramubakti'   => 'lime',
+            ];
 
             $new_divisions = [];
             for ( $d = 0; $d < count( $div_slugs ); $d++ ) {
@@ -894,11 +1050,16 @@ function wakalumi_render_tim_page() {
                 $name = sanitize_text_field( $div_names[$d] ?? '' );
                 if ( empty( $slug ) || empty( $name ) ) continue;
 
+                $chosen_color = sanitize_key( $div_colors[$d] ?? ( $default_color_map[$slug] ?? 'teal' ) );
+                $badge_class  = $color_options[$chosen_color]['class'] ?? 'bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-800/70';
+                $chosen_icon  = sanitize_key( $div_icons[$d] ?? 'briefcase' );
+
                 $new_divisions[ $slug ] = [
                     'slug'        => $slug,
                     'name'        => $name,
-                    'badge_class' => 'bg-teal-100 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border-teal-300/60 dark:border-teal-800/60',
-                    'icon'        => 'briefcase',
+                    'color'       => $chosen_color,
+                    'badge_class' => $badge_class,
+                    'icon'        => $chosen_icon,
                     'urutan'      => intval( $div_urutans[$d] ?? ( $d + 1 ) ),
                 ];
             }
@@ -1003,7 +1164,7 @@ function wakalumi_render_tim_page() {
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #e2e8f0;">
             <div>
                 <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 28px;">🪪</span> Tim Kami &amp; Direktori ID Card Karyawan
+                    <span class="dashicons dashicons-id-alt" style="font-size: 28px; width: 28px; height: 28px; color: #0f766e;"></span> Tim Kami &amp; Direktori ID Card Karyawan
                 </h1>
                 <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">
                     Hierarki teratas: <strong>Dewan Pengawas Syariah (DPS) &rarr; Dewan Komisaris &rarr; Direksi</strong> dilanjutkan Kepala Divisi &amp; Staf operasional Bank Syariah Wakalumi.
@@ -1013,8 +1174,8 @@ function wakalumi_render_tim_page() {
                 <a href="<?php echo esc_url( home_url( '/informasi/tim-kami/' ) ); ?>" target="_blank" class="button button-secondary" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; padding: 4px 14px; border-radius: 6px;">
                     <span class="dashicons dashicons-external" style="font-size: 16px; width: 16px; height: 16px;"></span> Lihat Halaman Tim Kami
                 </a>
-                <a href="<?php echo esc_url( $reset_url ); ?>" onclick="return confirm('Apakah Anda yakin ingin memuat ulang 32 data karyawan asli BSW beserta struktur divisinya? Perubahan kustom Anda saat ini akan diselaraskan dengan data baku resmi.');" class="button" style="color: #0f766e; border-color: #0f766e; font-weight: 600; padding: 4px 12px; border-radius: 6px;">
-                    🔄 Reset 32 Karyawan Resmi
+                <a href="<?php echo esc_url( $reset_url ); ?>" onclick="return confirm('Apakah Anda yakin ingin memuat ulang 32 data karyawan asli BSW beserta struktur divisinya? Perubahan kustom Anda saat ini akan diselaraskan dengan data baku resmi.');" class="button" style="color: #0f766e; border-color: #0f766e; font-weight: 600; padding: 4px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                    <span class="dashicons dashicons-image-rotate" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;"></span> Reset 32 Karyawan Resmi
                 </a>
             </div>
         </div>
@@ -1028,19 +1189,19 @@ function wakalumi_render_tim_page() {
                 <div style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 2px;"><?php echo $total_emp; ?> <span style="font-size: 12px; font-weight: 600; color: #64748b;">Orang</span></div>
             </div>
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); border-left: 4px solid #06b6d4;">
-                <div style="font-size: 11px; font-weight: 700; color: #0891b2; text-transform: uppercase;">👑 Pengurus (DPS/Kom/Dir)</div>
+                <div style="font-size: 11px; font-weight: 700; color: #0891b2; text-transform: uppercase;">Pengurus (DPS/Kom/Dir)</div>
                 <div style="font-size: 22px; font-weight: 800; color: #0891b2; margin-top: 2px;"><?php echo $eksekutif_count; ?> <span style="font-size: 12px; font-weight: 600; color: #64748b;">Eksekutif</span></div>
             </div>
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); border-left: 4px solid #0f766e;">
-                <div style="font-size: 11px; font-weight: 700; color: #0f766e; text-transform: uppercase;">💼 Pejabat Eksekutif (PE)</div>
+                <div style="font-size: 11px; font-weight: 700; color: #0f766e; text-transform: uppercase;">Pejabat Eksekutif (PE)</div>
                 <div style="font-size: 22px; font-weight: 800; color: #0f766e; margin-top: 2px;"><?php echo $pe_count; ?> <span style="font-size: 12px; font-weight: 600; color: #64748b;">Kadiv</span></div>
             </div>
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); border-left: 4px solid #64748b;">
-                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">👤 Staf Pelaksana</div>
+                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Staf Pelaksana</div>
                 <div style="font-size: 22px; font-weight: 800; color: #475569; margin-top: 2px;"><?php echo $staff_count; ?> <span style="font-size: 12px; font-weight: 600; color: #64748b;">Personel</span></div>
             </div>
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); border-left: 4px solid #10b981;">
-                <div style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase;">🟢 Karyawan Aktif</div>
+                <div style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase;">Karyawan Aktif</div>
                 <div style="font-size: 22px; font-weight: 800; color: #10b981; margin-top: 2px;"><?php echo $active_emp; ?> <span style="font-size: 12px; font-weight: 600; color: #64748b;">Bertugas</span></div>
             </div>
         </div>
@@ -1055,10 +1216,10 @@ function wakalumi_render_tim_page() {
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;">
                     <div>
                         <h2 style="font-size: 15px; font-weight: 700; color: #0f766e; margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <span>🏛️</span> Manajemen Divisi Bank (Hierarki Urutan Tampil di Halaman Depan)
+                            <span>Struktur Divisi</span> Manajemen Divisi Bank (Urutan Tampil &amp; Aksen Warna)
                         </h2>
                         <p style="margin: 3px 0 0 0; color: #64748b; font-size: 12px;">
-                            Daftar divisi di bawah ini secara otomatis menjadi opsi dropdown pada setiap kartu karyawan dan tombol filter tab di halaman depan.
+                            Daftar divisi di bawah ini secara otomatis menjadi opsi dropdown pada setiap kartu karyawan, tombol filter tab desktop, dan drawer mobile. Anda dapat menyesuaikan nama, slug, urutan, serta aksen warnanya.
                         </p>
                     </div>
                     <button type="button" id="btn-add-division" class="button" style="font-weight: 700; font-size: 12px; color: #0f766e; border-color: #0f766e; border-radius: 6px;">
@@ -1066,17 +1227,43 @@ function wakalumi_render_tim_page() {
                     </button>
                 </div>
 
-                <div id="divisions-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 15px;">
+                <div id="divisions-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 12px; margin-top: 15px;">
                     <?php 
+                    $color_options = function_exists( 'wakalumi_get_division_color_options' ) ? wakalumi_get_division_color_options() : [];
+                    $default_color_map = [
+                        'dps'          => 'emerald',
+                        'komisaris'    => 'indigo',
+                        'manajemen'    => 'amber',
+                        'senior_staff' => 'purple',
+                        'sekretaris'   => 'rose',
+                        'skai'         => 'teal',
+                        'legal'        => 'blue',
+                        'bisnis'       => 'orange',
+                        'it'           => 'cyan',
+                        'operasional'  => 'teal',
+                        'personalia'   => 'fuchsia',
+                        'umum'         => 'slate',
+                        'keamanan'     => 'amber',
+                        'pramubakti'   => 'lime',
+                    ];
+
                     $d_idx = 0;
                     foreach ( $divisions as $slug => $d_item ) : 
                         $d_idx++;
-                        $d_name = esc_attr( $d_item['name'] ?? '' );
-                        $d_urut = intval( $d_item['urutan'] ?? $d_idx );
+                        $d_name  = esc_attr( $d_item['name'] ?? '' );
+                        $d_urut  = intval( $d_item['urutan'] ?? $d_idx );
+                        $d_color = esc_attr( $d_item['color'] ?? ( $default_color_map[$slug] ?? 'teal' ) );
                     ?>
                         <div class="division-item-box" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 8px;">
-                            <input type="text" name="div_slug[]" value="<?php echo esc_attr( $slug ); ?>" placeholder="slug" style="width: 85px; font-size: 11px; font-family: monospace; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; background: #fff;" title="Kode unik divisi (slug)">
-                            <input type="text" name="div_name[]" value="<?php echo $d_name; ?>" placeholder="Nama Divisi" style="flex: 1; font-size: 12px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; background: #fff;">
+                            <input type="text" name="div_slug[]" value="<?php echo esc_attr( $slug ); ?>" placeholder="slug" style="width: 80px; font-size: 11px; font-family: monospace; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; background: #fff;" title="Kode unik divisi (slug)">
+                            <input type="text" name="div_name[]" value="<?php echo $d_name; ?>" placeholder="Nama Divisi" style="flex: 1; min-width: 110px; font-size: 12px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; background: #fff;">
+                            <select name="div_color[]" style="font-size: 11px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; background: #fff;" title="Aksen Warna Divisi">
+                                <?php foreach ( $color_options as $c_key => $c_val ) : ?>
+                                    <option value="<?php echo esc_attr( $c_key ); ?>" <?php selected( $d_color, $c_key ); ?>>
+                                        <?php echo esc_html( $c_val['name'] ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                             <input type="number" name="div_urutan[]" value="<?php echo $d_urut; ?>" style="width: 45px; font-size: 11px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 2px; background: #fff;" title="Urutan tampil">
                             <button type="button" class="button-link btn-del-div" style="color: #ef4444; font-size: 13px; text-decoration: none; padding: 2px;" title="Hapus Divisi">✕</button>
                         </div>
@@ -1091,10 +1278,10 @@ function wakalumi_render_tim_page() {
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0;">
                     <div>
                         <h2 style="font-size: 16px; font-weight: 700; color: #0f766e; margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <span>👥</span> Daftar Anggota Karyawan &amp; File PNG ID Card (1 : 1.56)
+                            <span>Direktori</span> Daftar Anggota Karyawan &amp; File PNG ID Card (1 : 1.56)
                         </h2>
                         <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">
-                            Daftar <strong>32 Karyawan Resmi</strong> telah terisi lengkap dengan NIP baku. Anda dapat menandai <strong>⭐ Kepala Divisi</strong> dan mengunggah file PNG ID Card asli masing-masing personel.
+                            Daftar <strong>32 Karyawan Resmi</strong> telah terisi lengkap dengan NIP baku. Anda dapat menandai <strong>Kepala Divisi</strong> dan mengunggah file PNG ID Card asli masing-masing personel.
                         </p>
                     </div>
                     <button type="button" id="btn-add-employee" class="button button-primary" style="background: #0f766e; border-color: #0d9488; font-weight: 700; padding: 4px 16px; border-radius: 6px;">
@@ -1158,8 +1345,8 @@ function wakalumi_render_tim_page() {
                                             1 : 1.56 RATIO
                                         </div>
                                     </div>
-                                    <button type="button" class="button button-small btn-upload-idcard" style="width: 100%; font-weight: 600; text-align: center;">
-                                        📷 Unggah ID Card (WebP / PNG)
+                                    <button type="button" class="button button-small btn-upload-idcard" style="width: 100%; font-weight: 600; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                                        <span class="dashicons dashicons-upload" style="font-size: 14px; width: 14px; height: 14px; line-height: 1;"></span> Unggah ID Card (WebP / PNG)
                                     </button>
                                     <button type="button" class="button-link btn-remove-idcard" style="color: #ef4444; font-size: 11px; text-decoration: none; <?php echo empty( $emp_img ) ? 'display:none;' : ''; ?>">
                                         ✕ Hapus Foto
@@ -1176,11 +1363,11 @@ function wakalumi_render_tim_page() {
                                             </span>
                                             <?php if ( $emp_tingkat === 'eksekutif' ) : ?>
                                                 <span style="font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4;">
-                                                    👑 Pengurus / Eksekutif (<?php echo esc_html( $emp_short_tag ?: 'EKS' ); ?>)
+                                                    Pengurus / Eksekutif (<?php echo esc_html( $emp_short_tag ?: 'EKS' ); ?>)
                                                 </span>
                                             <?php elseif ( $emp_tingkat === 'pe' ) : ?>
                                                 <span style="font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">
-                                                    💼 Pejabat Eksekutif (PE)
+                                                    Pejabat Eksekutif (PE)
                                                 </span>
                                             <?php endif; ?>
                                         </div>
@@ -1230,9 +1417,9 @@ function wakalumi_render_tim_page() {
                                         <div>
                                             <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #0f766e;">Tingkat Jabatan</label>
                                             <select name="emp_tingkat[]" class="emp-tingkat-select" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 12px; font-weight: 700; background: #fff;">
-                                                <option value="eksekutif" <?php selected( $emp_tingkat, 'eksekutif' ); ?>>👑 Pengurus (DPS/Kom/Dir)</option>
-                                                <option value="pe" <?php selected( $emp_tingkat, 'pe' ); ?>>💼 Pejabat Eksekutif (PE)</option>
-                                                <option value="staff" <?php selected( $emp_tingkat, 'staff' ); ?>>👤 Staf Pelaksana</option>
+                                                <option value="eksekutif" <?php selected( $emp_tingkat, 'eksekutif' ); ?>>Pengurus (DPS/Kom/Dir)</option>
+                                                <option value="pe" <?php selected( $emp_tingkat, 'pe' ); ?>>Pejabat Eksekutif (PE)</option>
+                                                <option value="staff" <?php selected( $emp_tingkat, 'staff' ); ?>>Staf Pelaksana</option>
                                             </select>
                                         </div>
                                         <div>
@@ -1243,8 +1430,8 @@ function wakalumi_render_tim_page() {
                                             <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Status &amp; Urutan</label>
                                             <div style="display: flex; gap: 6px;">
                                                 <select name="emp_status[]" class="emp-status-select" style="width: 60%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 4px; font-size: 12px; background: #fff;">
-                                                    <option value="aktif" <?php selected( $emp_status, 'aktif' ); ?>>🟢 Aktif</option>
-                                                    <option value="nonaktif" <?php selected( $emp_status, 'nonaktif' ); ?>>🔴 Non-Aktif</option>
+                                                    <option value="aktif" <?php selected( $emp_status, 'aktif' ); ?>>Aktif</option>
+                                                    <option value="nonaktif" <?php selected( $emp_status, 'nonaktif' ); ?>>Non-Aktif</option>
                                                 </select>
                                                 <input type="number" name="emp_urutan[]" value="<?php echo $emp_urutan; ?>" min="1" class="emp-urutan-input" style="width: 40%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 4px; font-size: 12px; background: #fff;">
                                             </div>
@@ -1254,7 +1441,7 @@ function wakalumi_render_tim_page() {
                                     <!-- Quote Motivasi / Komitmen Pelayanan -->
                                     <div style="margin-top: 10px;">
                                         <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">
-                                            💬 Kutipan Motivasi / Komitmen Pelayanan <span style="font-weight: 400; color: #64748b;">(Tampil eksklusif saat nasabah klik detail kartu ID Card)</span>
+                                            Kutipan Motivasi / Komitmen Pelayanan <span style="font-weight: 400; color: #64748b;">(Tampil eksklusif saat nasabah klik detail kartu ID Card)</span>
                                         </label>
                                         <textarea name="emp_quote[]" rows="2" placeholder="Contoh: Menjaga kemurnian syariah adalah fondasi utama keberkahan dan kepercayaan nasabah..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-style: italic; background: #fff;"><?php echo esc_textarea( $emp_quote ); ?></textarea>
                                     </div>
@@ -1277,7 +1464,7 @@ function wakalumi_render_tim_page() {
                  ================================================================ -->
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <h2 style="font-size: 16px; font-weight: 700; color: #0f766e; margin-top: 0; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;">
-                    <span>🛡️</span> Pengaturan Header Halaman &amp; Pemberitahuan Verifikasi Anti-Fraud
+                    <span class="dashicons dashicons-shield" style="font-size: 18px; width: 18px; height: 18px;"></span> Pengaturan Header Halaman &amp; Pemberitahuan Verifikasi Anti-Fraud
                 </h2>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
@@ -1298,7 +1485,7 @@ function wakalumi_render_tim_page() {
 
                 <div style="margin-top: 20px; padding: 18px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;">
                     <div style="font-weight: 700; color: #166534; font-size: 13px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                        <span>🔒</span> Kotak Informasi Keabsahan Personel (Anti-Fraud Notice)
+                        <span class="dashicons dashicons-lock" style="font-size: 16px; width: 16px; height: 16px;"></span> Kotak Informasi Keabsahan Personel (Anti-Fraud Notice)
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
@@ -1327,7 +1514,7 @@ function wakalumi_render_tim_page() {
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
                 <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px;">
                     <h2 style="font-size: 16px; font-weight: 700; color: #0f766e; margin: 0; display: flex; align-items: center; gap: 8px;">
-                        <span>📢</span> Pengaturan Banner Call to Action (CTA) Bawah Halaman
+                        <span class="dashicons dashicons-megaphone" style="font-size: 18px; width: 18px; height: 18px;"></span> Pengaturan Banner Call to Action (CTA) Bawah Halaman
                     </h2>
                     <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #1e293b; cursor: pointer;">
                         <input type="checkbox" name="options_tim_cta_show" value="1" <?php checked( $cta['show'] ); ?>>
@@ -1355,7 +1542,7 @@ function wakalumi_render_tim_page() {
                     <!-- Tombol Utama (Button 1) -->
                     <div>
                         <div style="font-weight: 700; color: #0f766e; font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-                            <span>🔘</span> Tombol Utama (Button 1 - Karir / Informasi)
+                            <span class="dashicons dashicons-button" style="font-size: 16px; width: 16px; height: 16px;"></span> Tombol Utama (Button 1 - Karir / Informasi)
                         </div>
                         <div style="margin-bottom: 10px;">
                             <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Teks Tombol</label>
@@ -1370,7 +1557,7 @@ function wakalumi_render_tim_page() {
                     <!-- Tombol Sekunder (Button 2) -->
                     <div>
                         <div style="font-weight: 700; color: #166534; font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-                            <span>💬</span> Tombol Sekunder (Button 2 - WhatsApp / Kontak)
+                            <span class="dashicons dashicons-format-chat" style="font-size: 16px; width: 16px; height: 16px;"></span> Tombol Sekunder (Button 2 - WhatsApp / Kontak)
                         </div>
                         <div style="margin-bottom: 10px;">
                             <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Teks Tombol</label>
@@ -1424,8 +1611,22 @@ function wakalumi_render_tim_page() {
                 const count = divContainer.querySelectorAll('.division-item-box').length + 1;
                 const newDivHtml = `
                     <div class="division-item-box" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 8px;">
-                        <input type="text" name="div_slug[]" value="divisi_${count}" placeholder="slug" style="width: 85px; font-size: 11px; font-family: monospace; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; background: #fff;">
-                        <input type="text" name="div_name[]" value="" placeholder="Nama Divisi Baru" style="flex: 1; font-size: 12px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; background: #fff;" required>
+                        <input type="text" name="div_slug[]" value="divisi_${count}" placeholder="slug" style="width: 80px; font-size: 11px; font-family: monospace; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; background: #fff;">
+                        <input type="text" name="div_name[]" value="" placeholder="Nama Divisi Baru" style="flex: 1; min-width: 110px; font-size: 12px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; background: #fff;" required>
+                        <select name="div_color[]" style="font-size: 11px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; background: #fff;" title="Aksen Warna Divisi">
+                            <option value="emerald">Emerald (Hijau Syariah)</option>
+                            <option value="indigo">Indigo (Ungu Wibawa)</option>
+                            <option value="amber">Amber (Emas Eksekutif)</option>
+                            <option value="purple">Purple (Ungu Spesialis)</option>
+                            <option value="rose">Rose (Merah Muda Elegan)</option>
+                            <option value="teal" selected>Teal (Toska Wakalumi)</option>
+                            <option value="blue">Blue (Biru Korporat)</option>
+                            <option value="orange">Orange (Jingga Dinamis)</option>
+                            <option value="cyan">Cyan (Biru Digital)</option>
+                            <option value="fuchsia">Fuchsia (Pink Human Capital)</option>
+                            <option value="slate">Slate (Abu Metalik)</option>
+                            <option value="lime">Lime (Hijau Daun Segar)</option>
+                        </select>
                         <input type="number" name="div_urutan[]" value="${count}" style="width: 45px; font-size: 11px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 2px; background: #fff;">
                         <button type="button" class="button-link btn-del-div" style="color: #ef4444; font-size: 13px; text-decoration: none; padding: 2px;">✕</button>
                     </div>
@@ -1570,8 +1771,8 @@ function wakalumi_render_tim_page() {
                                     1 : 1.56 RATIO
                                 </div>
                             </div>
-                            <button type="button" class="button button-small btn-upload-idcard" style="width: 100%; font-weight: 600; text-align: center;">
-                                📷 Unggah ID Card (WebP / PNG)
+                            <button type="button" class="button button-small btn-upload-idcard" style="width: 100%; font-weight: 600; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                                <span class="dashicons dashicons-upload" style="font-size: 14px; width: 14px; height: 14px; line-height: 1;"></span> Unggah ID Card (WebP / PNG)
                             </button>
                             <button type="button" class="button-link btn-remove-idcard" style="color: #ef4444; font-size: 11px; text-decoration: none; display: none;">
                                 ✕ Hapus Foto
@@ -1628,9 +1829,9 @@ function wakalumi_render_tim_page() {
                                 <div>
                                     <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #0f766e;">Tingkat Jabatan</label>
                                     <select name="emp_tingkat[]" class="emp-tingkat-select" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 12px; font-weight: 700; background: #fff;">
-                                        <option value="staff">👤 Staf Pelaksana</option>
-                                        <option value="pe">💼 Pejabat Eksekutif (PE)</option>
-                                        <option value="eksekutif">👑 Pengurus (DPS/Kom/Dir)</option>
+                                        <option value="staff">Staf Pelaksana</option>
+                                        <option value="pe">Pejabat Eksekutif (PE)</option>
+                                        <option value="eksekutif">Pengurus (DPS/Kom/Dir)</option>
                                     </select>
                                 </div>
                                 <div>
@@ -1641,8 +1842,8 @@ function wakalumi_render_tim_page() {
                                     <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">Status &amp; Urutan</label>
                                     <div style="display: flex; gap: 6px;">
                                         <select name="emp_status[]" class="emp-status-select" style="width: 60%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 4px; font-size: 12px; background: #fff;">
-                                            <option value="aktif">🟢 Aktif</option>
-                                            <option value="nonaktif">🔴 Non-Aktif</option>
+                                            <option value="aktif">Aktif</option>
+                                            <option value="nonaktif">Non-Aktif</option>
                                         </select>
                                         <input type="number" name="emp_urutan[]" value="${newIndex}" min="1" class="emp-urutan-input" style="width: 40%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 4px; font-size: 12px; background: #fff;">
                                     </div>
@@ -1651,7 +1852,7 @@ function wakalumi_render_tim_page() {
 
                             <div style="margin-top: 10px;">
                                 <label style="display: block; font-weight: 600; font-size: 12px; margin-bottom: 4px; color: #334155;">
-                                    💬 Kutipan Motivasi / Komitmen Pelayanan <span style="font-weight: 400; color: #64748b;">(Tampil eksklusif di modal detail ID Card)</span>
+                                    Kutipan Motivasi / Komitmen Pelayanan <span style="font-weight: 400; color: #64748b;">(Tampil eksklusif di modal detail ID Card)</span>
                                 </label>
                                 <textarea name="emp_quote[]" rows="2" placeholder="Kutipan motivasi profesional atau komitmen amanah syariah karyawan..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-style: italic; background: #fff;"></textarea>
                             </div>

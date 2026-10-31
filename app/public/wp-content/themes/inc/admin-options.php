@@ -1815,6 +1815,40 @@ function wakalumi_render_media_page() {
         update_option( 'options_berita_sec_badge', sanitize_text_field( $_POST['options_berita_sec_badge'] ?? 'Berita Terbaru' ) );
         update_option( 'options_berita_sec_title', sanitize_text_field( $_POST['options_berita_sec_title'] ?? 'Berita dari *BSW*' ) );
 
+        // Penghargaan Kami (Section di Bawah Company Profile)
+        update_option( 'options_penghargaan_active', isset( $_POST['options_penghargaan_active'] ) ? '1' : '0' );
+        update_option( 'options_penghargaan_badge', sanitize_text_field( $_POST['options_penghargaan_badge'] ?? 'Prestasi & Pengakuan' ) );
+        update_option( 'options_penghargaan_title', sanitize_text_field( $_POST['options_penghargaan_title'] ?? 'Penghargaan & *Apresiasi*' ) );
+        update_option( 'options_penghargaan_subtitle', sanitize_text_field( $_POST['options_penghargaan_subtitle'] ?? 'Bukti nyata komitmen Bank Syariah Wakalumi dalam menghadirkan tata kelola profesional dan layanan perbankan syariah terbaik.' ) );
+
+        $award_images  = $_POST['options_penghargaan_image'] ?? [];
+        $award_titles  = $_POST['options_penghargaan_title_item'] ?? [];
+        $award_issuers = $_POST['options_penghargaan_issuer'] ?? [];
+        $award_years   = $_POST['options_penghargaan_year'] ?? [];
+        $award_urls    = $_POST['options_penghargaan_url'] ?? [];
+        $clean_awards  = [];
+
+        if ( is_array( $award_images ) ) {
+            for ( $a = 0; $a < count( $award_images ); $a++ ) {
+                $a_img   = esc_url_raw( trim( $award_images[$a] ?? '' ) );
+                $a_title = sanitize_text_field( $award_titles[$a] ?? '' );
+                $a_iss   = sanitize_text_field( $award_issuers[$a] ?? '' );
+                $a_year  = sanitize_text_field( $award_years[$a] ?? '' );
+                $a_url   = esc_url_raw( trim( $award_urls[$a] ?? '' ) );
+
+                if ( ! empty( $a_img ) || ! empty( $a_title ) ) {
+                    $clean_awards[] = [
+                        'image'  => $a_img,
+                        'title'  => $a_title,
+                        'issuer' => $a_iss,
+                        'year'   => $a_year,
+                        'url'    => $a_url,
+                    ];
+                }
+            }
+        }
+        update_option( 'options_penghargaan_items', $clean_awards );
+
         // Mitra Kami (Section di Bawah Berita)
         update_option( 'options_mitra_active', isset( $_POST['options_mitra_active'] ) ? '1' : '0' );
         update_option( 'options_mitra_badge', sanitize_text_field( $_POST['options_mitra_badge'] ?? 'Sinergi & Kerjasama' ) );
@@ -1925,6 +1959,24 @@ function wakalumi_render_media_page() {
             'https://www.instagram.com/p/DSW6wx4gWl5/',
             'https://www.instagram.com/p/DcLJupqTRoo/',
             'https://www.instagram.com/p/DSW6_3WgUo-/',
+        ];
+    }
+
+    // Penghargaan defaults (Default: nonaktif / '0' karena saat ini belum ada penghargaan)
+    $penghargaan_active   = get_option( 'options_penghargaan_active', '0' );
+    $penghargaan_badge    = get_option( 'options_penghargaan_badge', 'Prestasi & Pengakuan' );
+    $penghargaan_title    = get_option( 'options_penghargaan_title', 'Penghargaan & *Apresiasi*' );
+    $penghargaan_subtitle = get_option( 'options_penghargaan_subtitle', 'Bukti nyata komitmen Bank Syariah Wakalumi dalam menghadirkan tata kelola profesional dan layanan perbankan syariah terbaik.' );
+    $penghargaan_items    = get_option( 'options_penghargaan_items', [] );
+    if ( empty( $penghargaan_items ) ) {
+        $penghargaan_items = [
+            [
+                'image'  => '',
+                'title'  => 'Infobank Sharia Awards',
+                'issuer' => 'Majalah Infobank',
+                'year'   => '2024',
+                'url'    => '',
+            ],
         ];
     }
 
@@ -2065,6 +2117,101 @@ function wakalumi_render_media_page() {
                         </td>
                     </tr>
                 </table>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    🏆 Bagian "Penghargaan Kami" (Section di Bawah Company Profile)
+                </h2>
+                <p style="color: #64748b; font-size: 13px;">
+                    Menampilkan piagam atau trofi penghargaan perseroan dalam bentuk slider 1 baris berjalan (single continuous marquee). Bagian ini dapat diaktifkan atau dinonaktifkan sewaktu-waktu.
+                </p>
+                <table class="form-table" style="margin-bottom: 15px;">
+                    <tr>
+                        <th scope="row">Status Section Penghargaan:</th>
+                        <td>
+                            <label style="font-weight: bold; color: #0f172a; display: inline-flex; align-items: center; gap: 8px; font-size: 13px;">
+                                <input type="checkbox" name="options_penghargaan_active" value="1" <?php checked( $penghargaan_active, '1' ); ?>>
+                                Aktifkan Section "Penghargaan Kami" di Halaman Beranda
+                            </label>
+                            <p class="description" style="margin-top: 4px;">
+                                💡 <em>Default dinonaktifkan jika belum ada penghargaan. Centang opsi ini bila piagam atau dokumentasi penghargaan sudah siap ditampilkan ke publik di bawah Company Profile.</em>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_penghargaan_badge">Label Kecil Atas:</label></th>
+                        <td><input type="text" id="options_penghargaan_badge" name="options_penghargaan_badge" value="<?php echo esc_attr( $penghargaan_badge ); ?>" class="regular-text"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_penghargaan_title">Judul Bagian:</label></th>
+                        <td>
+                            <input type="text" id="options_penghargaan_title" name="options_penghargaan_title" value="<?php echo esc_attr( $penghargaan_title ); ?>" class="regular-text">
+                            <p class="description">💡 <strong>Dual-Tone:</strong> Gunakan tanda bintang <code>*kata*</code> untuk memberi warna aksen (Contoh: <code>Penghargaan &amp; *Apresiasi*</code>).</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_penghargaan_subtitle">Subjudul / Deskripsi Singkat:</label></th>
+                        <td><input type="text" id="options_penghargaan_subtitle" name="options_penghargaan_subtitle" value="<?php echo esc_attr( $penghargaan_subtitle ); ?>" class="large-text"></td>
+                    </tr>
+                </table>
+
+                <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 20px 0 6px 0;">
+                    Daftar Piagam Penghargaan:
+                </h3>
+                <p class="description" style="margin-bottom: 12px; color: #64748b; font-size: 12px;">
+                    💡 Unggah gambar piagam penghargaan / sertifikat beresolusi jelas. Pengunjung dapat mengklik kartu piagam untuk memperbesar (zoom preview lightbox) atau menuju ke tautan berita/dokumen resmi jika link diisi.
+                </p>
+                <table id="penghargaan-table" class="widefat striped" style="border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; margin-bottom: 15px;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="width: 45px; text-align: center; font-weight: 600;">#</th>
+                            <th style="width: 140px; text-align: center; font-weight: 600;">Gambar Piagam</th>
+                            <th style="font-weight: 600;">Judul Penghargaan</th>
+                            <th style="width: 180px; font-weight: 600;">Lembaga Pemberi</th>
+                            <th style="width: 90px; font-weight: 600;">Tahun</th>
+                            <th style="font-weight: 600;">Link Berita/Dokumen <span style="font-weight: normal; font-size: 11px; color: #64748b;">(Opsional)</span></th>
+                            <th style="width: 60px; text-align: center; font-weight: 600;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ( $penghargaan_items as $idx_p => $p_item ) : 
+                            $uid_p = 'penghargaan_' . $idx_p . '_' . time();
+                        ?>
+                            <tr style="background: #fff; border-bottom: 1px solid #e2e8f0;">
+                                <td style="text-align: center; font-weight: bold; color: #64748b;" class="penghargaan-row-num"><?php echo $idx_p + 1; ?></td>
+                                <td style="text-align: center;">
+                                    <div class="wkl-upload-wrap">
+                                        <img id="prev_<?php echo $uid_p; ?>" src="<?php echo esc_url( $p_item['image'] ?? '' ); ?>" style="max-width: 90px; max-height: 55px; border-radius: 4px; margin: 0 auto 4px auto; display: <?php echo ! empty( $p_item['image'] ) ? 'block' : 'none'; ?>;" />
+                                        <span class="wkl-placeholder" style="display: <?php echo empty( $p_item['image'] ) ? 'block' : 'none'; ?>; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">Belum ada</span>
+                                        <button type="button" class="button button-small wkl-upload-btn" data-target="inp_<?php echo $uid_p; ?>" data-preview="prev_<?php echo $uid_p; ?>" style="font-size: 11px;">Pilih Gambar</button>
+                                        <button type="button" class="button-link wkl-remove-btn" data-target="inp_<?php echo $uid_p; ?>" data-preview="prev_<?php echo $uid_p; ?>" style="display: <?php echo empty( $p_item['image'] ) ? 'none' : 'inline-block'; ?>; color: #ef4444; font-size: 11px; margin-left: 4px;">Hapus</button>
+                                        <input type="hidden" name="options_penghargaan_image[]" id="inp_<?php echo $uid_p; ?>" value="<?php echo esc_attr( $p_item['image'] ?? '' ); ?>" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" name="options_penghargaan_title_item[]" value="<?php echo esc_attr( $p_item['title'] ?? '' ); ?>" placeholder="Contoh: Top BPRS Syariah 2024" class="regular-text" style="width: 100%; border-radius: 6px;">
+                                </td>
+                                <td>
+                                    <input type="text" name="options_penghargaan_issuer[]" value="<?php echo esc_attr( $p_item['issuer'] ?? '' ); ?>" placeholder="Contoh: Majalah Infobank" class="regular-text" style="width: 100%; border-radius: 6px;">
+                                </td>
+                                <td>
+                                    <input type="text" name="options_penghargaan_year[]" value="<?php echo esc_attr( $p_item['year'] ?? '' ); ?>" placeholder="2024" class="small-text" style="width: 100%; text-align: center; border-radius: 6px;">
+                                </td>
+                                <td>
+                                    <input type="url" name="options_penghargaan_url[]" value="<?php echo esc_attr( $p_item['url'] ?? '' ); ?>" placeholder="https://..." class="regular-text" style="width: 100%; border-radius: 6px;">
+                                </td>
+                                <td style="text-align: center;">
+                                    <button type="button" class="button button-link-delete remove-penghargaan-row" style="color: #ef4444; font-weight: bold; font-size: 16px;" title="Hapus baris ini">&times;</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <div style="margin-bottom: 25px;">
+                    <button type="button" id="add-penghargaan-row" class="button" style="display: inline-flex; align-items: center; gap: 5px;">
+                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> Tambah Piagam Penghargaan
+                    </button>
+                </div>
 
                 <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
                     🛡️ Badge Regulasi di Banner Atas (Hero)
@@ -2398,6 +2545,9 @@ function wakalumi_render_media_page() {
                 <p style="color: #64748b; font-size: 13px;">
                     Menampilkan logo-logo mitra dalam bentuk sliding berputar terus-menerus (continuous ticker) dengan ukuran seragam dan tampilan profesional. Bagian ini dapat diaktifkan atau dinonaktifkan sewaktu-waktu.
                 </p>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #088395; border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; font-size: 12px; color: #334155;">
+                    💡 <strong>Maksimal 3 Baris Otomatis:</strong> Sistem secara otomatis mengatur tampilan: 1-12 mitra = 1 baris, 13-24 mitra = 2 baris berlawanan arah, dan &gt;24 mitra = <strong>maksimal 3 baris</strong>. Meskipun jumlah mitra ditambah lebih banyak (misal 30+ mitra), sistem akan tetap membatasi mentok di 3 baris secara proporsional agar estetika halaman beranda tetap rapi dan tidak terlalu panjang.
+                </div>
                 <table class="form-table" style="margin-bottom: 15px;">
                     <tr>
                         <th scope="row">Status Section Mitra:</th>
@@ -2520,6 +2670,68 @@ function wakalumi_render_media_page() {
                         renumber();
                     } else {
                         alert('Minimal harus ada 1 postingan Instagram.');
+                    }
+                }
+            });
+        }
+
+        // Penghargaan Table Scripts
+        const penghargaanBody = document.querySelector('#penghargaan-table tbody');
+        const addPenghargaanBtn = document.getElementById('add-penghargaan-row');
+
+        function renumberPenghargaan() {
+            if (!penghargaanBody) return;
+            const rows = penghargaanBody.querySelectorAll('tr');
+            rows.forEach((row, i) => {
+                const numCell = row.querySelector('.penghargaan-row-num');
+                if (numCell) numCell.textContent = i + 1;
+            });
+        }
+
+        if (addPenghargaanBtn && penghargaanBody) {
+            addPenghargaanBtn.addEventListener('click', function() {
+                const uid = 'penghargaan_' + Date.now();
+                const tr = document.createElement('tr');
+                tr.style.background = '#fff';
+                tr.style.borderBottom = '1px solid #e2e8f0';
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: bold; color: #64748b;" class="penghargaan-row-num"></td>
+                    <td style="text-align: center;">
+                        <div class="wkl-upload-wrap">
+                            <img id="prev_${uid}" src="" style="max-width: 90px; max-height: 55px; border-radius: 4px; margin: 0 auto 4px auto; display: none;" />
+                            <span class="wkl-placeholder" style="display: block; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">Belum ada</span>
+                            <button type="button" class="button button-small wkl-upload-btn" data-target="inp_${uid}" data-preview="prev_${uid}" style="font-size: 11px;">Pilih Gambar</button>
+                            <button type="button" class="button-link wkl-remove-btn" data-target="inp_${uid}" data-preview="prev_${uid}" style="display: none; color: #ef4444; font-size: 11px; margin-left: 4px;">Hapus</button>
+                            <input type="hidden" name="options_penghargaan_image[]" id="inp_${uid}" value="" />
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" name="options_penghargaan_title_item[]" value="" placeholder="Contoh: Top BPRS Syariah 2024" class="regular-text" style="width: 100%; border-radius: 6px;">
+                    </td>
+                    <td>
+                        <input type="text" name="options_penghargaan_issuer[]" value="" placeholder="Contoh: Majalah Infobank" class="regular-text" style="width: 100%; border-radius: 6px;">
+                    </td>
+                    <td>
+                        <input type="text" name="options_penghargaan_year[]" value="" placeholder="2024" class="small-text" style="width: 100%; text-align: center; border-radius: 6px;">
+                    </td>
+                    <td>
+                        <input type="url" name="options_penghargaan_url[]" value="" placeholder="https://..." class="regular-text" style="width: 100%; border-radius: 6px;">
+                    </td>
+                    <td style="text-align: center;">
+                        <button type="button" class="button button-link-delete remove-penghargaan-row" style="color: #ef4444; font-weight: bold; font-size: 16px;" title="Hapus baris ini">&times;</button>
+                    </td>
+                `;
+                penghargaanBody.appendChild(tr);
+                renumberPenghargaan();
+            });
+
+            penghargaanBody.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-penghargaan-row')) {
+                    if (penghargaanBody.querySelectorAll('tr').length > 1) {
+                        e.target.closest('tr').remove();
+                        renumberPenghargaan();
+                    } else {
+                        alert('Minimal harus ada 1 baris piagam penghargaan.');
                     }
                 }
             });
@@ -2784,6 +2996,9 @@ function wakalumi_render_footer_page() {
     
     if ( isset( $_POST['wakalumi_save_footer'] ) && check_admin_referer( 'wakalumi_footer_nonce' ) ) {
         update_option( 'options_footer_about', sanitize_textarea_field( $_POST['options_footer_about'] ?? '' ) );
+        update_option( 'options_footer_phone', sanitize_text_field( $_POST['options_footer_phone'] ?? '' ) );
+        update_option( 'options_footer_email', sanitize_email( $_POST['options_footer_email'] ?? '' ) );
+        update_option( 'options_footer_address', sanitize_textarea_field( $_POST['options_footer_address'] ?? '' ) );
         update_option( 'options_jam_operasional_weekday', sanitize_text_field( $_POST['options_jam_operasional_weekday'] ?? '' ) );
         update_option( 'options_jam_operasional_weekend', sanitize_text_field( $_POST['options_jam_operasional_weekend'] ?? '' ) );
         update_option( 'options_footer_copyright', sanitize_text_field( $_POST['options_footer_copyright'] ?? '' ) );
@@ -2835,7 +3050,12 @@ function wakalumi_render_footer_page() {
         echo '<div class="notice notice-success is-dismissible"><p><strong>Pengaturan Footer, Jam Kerja & Legalitas berhasil disimpan!</strong></p></div>';
     }
 
-    $f_about    = get_option( 'options_footer_about', 'Bank Syariah modern yang mengutamakan pelayanan prima dan prinsip keadilan untuk kesejahteraan bersama.' );
+    $f_about        = get_option( 'options_footer_about', 'Bank Syariah modern yang mengutamakan pelayanan prima dan prinsip keadilan untuk kesejahteraan bersama.' );
+    $footer_phone   = get_option( 'options_footer_phone', '' );
+    $footer_email   = get_option( 'options_footer_email', '' );
+    $footer_address = get_option( 'options_footer_address', '' );
+    $default_phone  = get_option( 'options_contact_phone', '(021) 5966 2196' );
+    $default_email  = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
     $jam_week   = get_option( 'options_jam_operasional_weekday', '08:00 - 15:00 WIB' );
     $jam_end    = get_option( 'options_jam_operasional_weekend', 'Tutup' );
     $copyright  = get_option( 'options_footer_copyright', 'Bank Syariah Wakalumi. All Rights Reserved.' );
@@ -2902,6 +3122,44 @@ function wakalumi_render_footer_page() {
                         <th scope="row"><label for="options_jam_operasional_weekend">Sabtu, Minggu & Libur:</label></th>
                         <td>
                             <input type="text" id="options_jam_operasional_weekend" name="options_jam_operasional_weekend" value="<?php echo esc_attr( $jam_end ); ?>" class="regular-text" placeholder="Tutup">
+                        </td>
+                    </tr>
+                </table>
+
+                <h2 style="font-size: 16px; margin-top: 30px; padding-bottom: 8px; border-bottom: 1px solid #eee; color: #088395;">
+                    📞 Kontak Footer (Nomor Telepon, Email & Alamat Khusus Footer)
+                </h2>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px 15px; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 13px; color: #166534; line-height: 1.5;">
+                        <strong>💡 Pengaturan Independen:</strong> Data kontak di bawah ini khusus ditampilkan pada kolom <strong>"Hubungi Kami"</strong> di footer website. Pengaturan ini berdiri sendiri (independen) dan tidak akan mengubah nomor telepon atau alamat pada halaman <em>Kontak Kami</em> maupun <em>Pengaduan Nasabah</em>.
+                    </p>
+                </div>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="options_footer_phone">Nomor Telepon Footer:</label></th>
+                        <td>
+                            <input type="text" id="options_footer_phone" name="options_footer_phone" value="<?php echo esc_attr( $footer_phone ); ?>" class="regular-text" placeholder="<?php echo esc_attr( $default_phone ); ?>">
+                            <p class="description">
+                                Nomor telepon mandiri khusus footer. Kosongkan jika ingin otomatis mengikuti nomor kontak utama (<code><?php echo esc_html( $default_phone ); ?></code>).
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_email">Email Footer (Opsional):</label></th>
+                        <td>
+                            <input type="email" id="options_footer_email" name="options_footer_email" value="<?php echo esc_attr( $footer_email ); ?>" class="regular-text" placeholder="<?php echo esc_attr( $default_email ); ?>">
+                            <p class="description">
+                                Email khusus footer. Kosongkan jika ingin otomatis mengikuti email utama (<code><?php echo esc_html( $default_email ); ?></code>).
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_footer_address">Alamat Kantor Footer (Opsional):</label></th>
+                        <td>
+                            <textarea id="options_footer_address" name="options_footer_address" rows="3" class="large-text" placeholder="Kosongkan jika ingin mengikuti alamat utama dari menu Kontak..."><?php echo esc_textarea( $footer_address ); ?></textarea>
+                            <p class="description">
+                                Alamat kantor khusus footer. Kosongkan jika ingin otomatis mengikuti alamat utama dari menu Kontak & Maps.
+                            </p>
                         </td>
                     </tr>
                 </table>

@@ -307,7 +307,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
                     $dok_url     = $item['dokumentasi_url'] ?? '';
                 ?>
                     <article id="<?php echo $row_id; ?>"
-                             class="kegiatan-card card group relative flex flex-col h-full bg-white dark:bg-dark-surface border <?php echo $is_upcoming ? 'border-emerald-200/90 dark:border-emerald-800/60 shadow-emerald-500/5 hover:border-emerald-400 dark:hover:border-emerald-500' : 'border-slate-200/80 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-600 shadow-teal-500/5'; ?> rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo $is_upcoming ? 'before:via-emerald-400' : 'before:via-teal-500'; ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 z-10"
+                             class="kegiatan-card card group relative flex flex-col h-full bg-white dark:bg-dark-surface border <?php echo $is_upcoming ? 'border-emerald-200/90 dark:border-emerald-800/60 shadow-emerald-500/5 hover:border-emerald-400 dark:hover:border-emerald-500' : 'border-slate-200/80 dark:border-dark-border hover:border-teal-400 dark:hover:border-teal-600 shadow-teal-500/5'; ?> rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo $is_upcoming ? 'before:via-emerald-400' : 'before:via-teal-500'; ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 z-10 cursor-pointer"
                              data-id="<?php echo $row_id; ?>"
                              data-status="<?php echo esc_attr( $tipe_waktu ); ?>"
                              data-category="<?php echo esc_attr( $kategori ); ?>"
@@ -950,106 +950,167 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
         if (!dataEl) return;
 
         // Populate Fields
-        document.getElementById('modal-keg-title').textContent = dataEl.querySelector('.data-title').textContent;
-        document.getElementById('modal-keg-date').textContent  = dataEl.querySelector('.data-date').textContent;
-        document.getElementById('modal-keg-body').innerHTML   = dataEl.querySelector('.data-content').innerHTML;
+        var titleEl = dataEl.querySelector('.data-title');
+        var dateEl = dataEl.querySelector('.data-date');
+        var contentEl = dataEl.querySelector('.data-content');
+        var catEl = dataEl.querySelector('.data-category');
+        var catBadgeEl = dataEl.querySelector('.data-category-badge');
+        var statusEl = dataEl.querySelector('.data-status');
+
+        if (titleEl) document.getElementById('modal-keg-title').textContent = titleEl.textContent;
+        if (dateEl) document.getElementById('modal-keg-date').textContent  = dateEl.textContent;
+        if (contentEl) document.getElementById('modal-keg-body').innerHTML   = contentEl.innerHTML;
 
         var catBadge = document.getElementById('modal-keg-category');
-        catBadge.textContent = dataEl.querySelector('.data-category').textContent;
-        catBadge.className   = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ' + (dataEl.querySelector('.data-category-badge').textContent || 'bg-teal-50 text-teal-700 border-teal-200');
+        if (catBadge && catEl) {
+            catBadge.textContent = catEl.textContent;
+            catBadge.className   = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ' + (catBadgeEl && catBadgeEl.textContent ? catBadgeEl.textContent : 'bg-teal-50 text-teal-700 border-teal-200');
+        }
 
-        var status = dataEl.querySelector('.data-status').textContent;
+        var status = statusEl ? statusEl.textContent.trim() : '';
         var statusBadge = document.getElementById('modal-keg-status-badge');
         var topAccent   = document.getElementById('modal-keg-top-accent');
-        if (status === 'mendatang') {
-            statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 text-[10px] font-black uppercase';
-            statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> AKAN DATANG';
-            topAccent.className   = 'h-2 w-full bg-gradient-to-r from-teal-500 via-emerald-400 to-teal-600 flex-shrink-0';
-        } else {
-            statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-dark-surface text-slate-600 dark:text-slate-300 border border-slate-300 text-[10px] font-bold uppercase';
-            statusBadge.innerHTML = 'TERLAKSANA';
-            topAccent.className   = 'h-2 w-full bg-gradient-to-r from-slate-400 via-teal-500 to-primary-600 flex-shrink-0';
+        if (statusBadge && topAccent) {
+            if (status === 'mendatang') {
+                statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 text-[10px] font-black uppercase';
+                statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> AKAN DATANG';
+                topAccent.className   = 'h-2 w-full bg-gradient-to-r from-teal-500 via-emerald-400 to-teal-600 flex-shrink-0';
+            } else {
+                statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-dark-surface text-slate-600 dark:text-slate-300 border border-slate-300 text-[10px] font-bold uppercase';
+                statusBadge.innerHTML = 'TERLAKSANA';
+                topAccent.className   = 'h-2 w-full bg-gradient-to-r from-slate-400 via-teal-500 to-primary-600 flex-shrink-0';
+            }
         }
 
         // Time
-        var time = dataEl.querySelector('.data-time').textContent.trim();
+        var timeEl = dataEl.querySelector('.data-time');
+        var time = timeEl ? timeEl.textContent.trim() : '';
         var timeWrap = document.getElementById('modal-keg-time-wrap');
-        if (time) {
-            document.getElementById('modal-keg-time').textContent = time;
+        var timeText = document.getElementById('modal-keg-time');
+        if (time && timeWrap && timeText) {
+            timeText.textContent = time;
             timeWrap.classList.remove('hidden');
-        } else {
+        } else if (timeWrap) {
             timeWrap.classList.add('hidden');
         }
 
         // Location & Maps
-        var loc = dataEl.querySelector('.data-location').textContent.trim();
-        var mapsUrl = dataEl.querySelector('.data-maps-url').textContent.trim();
+        var locEl = dataEl.querySelector('.data-location');
+        var mapsEl = dataEl.querySelector('.data-maps-url');
+        var loc = locEl ? locEl.textContent.trim() : '';
+        var mapsUrl = mapsEl ? mapsEl.textContent.trim() : '';
         var locWrap = document.getElementById('modal-keg-loc-wrap');
+        var locText = document.getElementById('modal-keg-loc');
         var mapsBtn = document.getElementById('modal-keg-maps-btn');
-        if (loc) {
-            document.getElementById('modal-keg-loc').textContent = loc;
+        if (loc && locWrap && locText) {
+            locText.textContent = loc;
             locWrap.classList.remove('hidden');
-            if (mapsUrl) {
+            if (mapsUrl && mapsBtn) {
                 mapsBtn.setAttribute('href', mapsUrl);
                 mapsBtn.classList.remove('hidden');
-            } else {
+            } else if (mapsBtn) {
                 mapsBtn.classList.add('hidden');
             }
-        } else {
+        } else if (locWrap) {
             locWrap.classList.add('hidden');
         }
 
         // Poster Image
-        var imgUrl = dataEl.querySelector('.data-image').textContent.trim();
+        var imgEl = dataEl.querySelector('.data-image');
+        var imgUrl = imgEl ? imgEl.textContent.trim() : '';
         var imgWrap = document.getElementById('modal-keg-image-wrap');
-        if (imgUrl) {
+        var imgTag = document.getElementById('modal-keg-image');
+        var imgFullLink = document.getElementById('modal-keg-image-full-link');
+        if (imgUrl && imgWrap && imgTag) {
             imgWrap.classList.remove('hidden');
-            document.getElementById('modal-keg-image').setAttribute('src', imgUrl);
-            document.getElementById('modal-keg-image-full-link').setAttribute('href', imgUrl);
-        } else {
+            imgTag.setAttribute('src', imgUrl);
+            if (imgFullLink) imgFullLink.setAttribute('href', imgUrl);
+        } else if (imgWrap) {
             imgWrap.classList.add('hidden');
         }
 
         // Registration Button
-        var regUrl = dataEl.querySelector('.data-reg-url').textContent.trim();
-        var regText = dataEl.querySelector('.data-reg-text').textContent.trim() || 'Daftar Sekarang';
+        var regUrlEl = dataEl.querySelector('.data-reg-url');
+        var regTextEl = dataEl.querySelector('.data-reg-text');
+        var regUrl = regUrlEl ? regUrlEl.textContent.trim() : '';
+        var regText = (regTextEl && regTextEl.textContent.trim()) ? regTextEl.textContent.trim() : 'Daftar Sekarang';
         var actionBox = document.getElementById('modal-keg-action-box');
-        if (regUrl) {
+        var actionBtn = document.getElementById('modal-keg-action-btn');
+        var actionLabel = document.getElementById('modal-keg-action-label');
+        if (regUrl && actionBox && actionBtn) {
             actionBox.classList.remove('hidden');
-            document.getElementById('modal-keg-action-btn').setAttribute('href', regUrl);
-            document.getElementById('modal-keg-action-label').textContent = regText;
-        } else {
+            actionBtn.setAttribute('href', regUrl);
+            if (actionLabel) actionLabel.textContent = regText;
+        } else if (actionBox) {
             actionBox.classList.add('hidden');
         }
 
+        // Reset scroll position of modal content
+        var scrollArea = document.getElementById('modal-keg-scroll-area');
+        if (scrollArea) scrollArea.scrollTop = 0;
+
         // Show Modal with Animation
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        requestAnimationFrame(function() {
-            modalBackdrop.classList.remove('opacity-0');
-            modalBackdrop.classList.add('opacity-100');
-            modalCard.classList.remove('scale-95', 'opacity-0');
-            modalCard.classList.add('scale-100', 'opacity-100');
-        });
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(function() {
+                if (modalBackdrop) {
+                    modalBackdrop.classList.remove('opacity-0');
+                    modalBackdrop.classList.add('opacity-100');
+                }
+                if (modalCard) {
+                    modalCard.classList.remove('scale-95', 'opacity-0');
+                    modalCard.classList.add('scale-100', 'opacity-100');
+                }
+            });
+        }
     }
 
     function closeModal() {
-        modalBackdrop.classList.remove('opacity-100');
-        modalBackdrop.classList.add('opacity-0');
-        modalCard.classList.remove('scale-100', 'opacity-100');
-        modalCard.classList.add('scale-95', 'opacity-0');
+        if (!modal) return;
+        if (modalBackdrop) {
+            modalBackdrop.classList.remove('opacity-100');
+            modalBackdrop.classList.add('opacity-0');
+        }
+        if (modalCard) {
+            modalCard.classList.remove('scale-100', 'opacity-100');
+            modalCard.classList.add('scale-95', 'opacity-0');
+        }
         setTimeout(function() {
             modal.classList.add('hidden');
             document.body.style.overflow = '';
         }, 250);
     }
 
-    // Bind triggers
+    // Grid Event Delegation: clicks on card or "Lihat Rincian" button open the modal
+    if (grid) {
+        grid.addEventListener('click', function(e) {
+            // Jika klik terjadi pada external anchor link (Daftar / Dok foto / Maps), biarkan navigasi eksternal
+            var extLink = e.target.closest('a');
+            if (extLink && !extLink.classList.contains('btn-open-keg-modal')) {
+                return;
+            }
+
+            var trigger = e.target.closest('.btn-open-keg-modal');
+            var card = e.target.closest('.kegiatan-card');
+
+            if (trigger || card) {
+                e.preventDefault();
+                var activeCard = card || (trigger ? trigger.closest('.kegiatan-card') : null);
+                var cardId = (trigger && trigger.getAttribute('data-id')) || (activeCard ? (activeCard.getAttribute('data-id') || activeCard.id) : null);
+                if (cardId) {
+                    openModal(cardId);
+                }
+            }
+        });
+    }
+
+    // Fallback direct bindings for any .btn-open-keg-modal
     document.querySelectorAll('.btn-open-keg-modal').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            var cardId = this.getAttribute('data-id') || this.closest('.kegiatan-card').getAttribute('id');
-            openModal(cardId);
+            var cardId = this.getAttribute('data-id') || (this.closest('.kegiatan-card') ? this.closest('.kegiatan-card').getAttribute('id') : '');
+            if (cardId) openModal(cardId);
         });
     });
 
@@ -1060,7 +1121,7 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
     });
 
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
             closeModal();
         }
     });
@@ -1080,12 +1141,13 @@ $wa_url    = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
             }, 300);
         }
     }
+} // End initKegiatanPage
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initKegiatanPage);
-    } else {
-        initKegiatanPage();
-    }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initKegiatanPage);
+} else {
+    initKegiatanPage();
+}
 })();
 </script>
 

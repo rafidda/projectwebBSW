@@ -138,6 +138,13 @@ $slide_duration = max( 4, (int)( $toast_settings['toast_duration'] ?? 7 ) ) * 10
                                 <span>📅 <?php echo esc_html( $p_date ); ?></span>
                                 <span>•</span>
                                 <span class="text-amber-400 font-bold">🏷️ <?php echo esc_html( $p_cat_info['label'] ?? 'Penting' ); ?></span>
+                                <?php 
+                                $sched_label = function_exists( 'wakalumi_get_pengumuman_schedule_label' ) ? wakalumi_get_pengumuman_schedule_label( $p_item ) : '';
+                                if ( ! empty( $sched_label ) && $sched_label !== 'Setiap Hari' ) : 
+                                ?>
+                                    <span>•</span>
+                                    <span class="text-emerald-400 font-bold">🕌 <?php echo esc_html( $sched_label ); ?></span>
+                                <?php endif; ?>
                                 <?php if ( ! empty( $p_nomor ) ) : ?>
                                     <span>•</span>
                                     <span class="font-mono text-slate-300"><?php echo esc_html( $p_nomor ); ?></span>

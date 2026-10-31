@@ -1,4 +1,4 @@
-<?php
+;<?php
 /**
  * Template Name: Halaman Karir & Rekrutmen
  * Description: Direktori Peluang Karir, Lowongan Kerja Aktif, Alur Rekrutmen 4 Tahap, dan Integrasi Tautan Pendaftaran Google Form Insan Bank Syariah Wakalumi (BSW).
@@ -9,12 +9,15 @@
 get_header();
 
 // ── DATA RETRIEVAL ──────────────────────────────────────────────────
-$header    = wakalumi_get_karir_header();
-$values    = wakalumi_get_karir_values();
-$stages    = wakalumi_get_karir_stages();
-$antifraud = wakalumi_get_karir_antifraud();
-$all_jobs  = wakalumi_get_karir_jobs();
-$cta       = wakalumi_get_karir_cta();
+$header      = wakalumi_get_karir_header();
+$values_hdr  = wakalumi_get_karir_values_header();
+$values      = wakalumi_get_karir_values();
+$stages_hdr  = wakalumi_get_karir_stages_header();
+$stages      = wakalumi_get_karir_stages();
+$empty_state = wakalumi_get_karir_empty_state();
+$antifraud   = wakalumi_get_karir_antifraud();
+$all_jobs    = wakalumi_get_karir_jobs();
+$cta         = wakalumi_get_karir_cta();
 
 $total_jobs = count( $all_jobs );
 $open_jobs  = count( array_filter( $all_jobs, fn( $x ) => ( $x['status'] ?? 'dibuka' ) === 'dibuka' ) );
@@ -85,7 +88,7 @@ foreach ( $all_jobs as $j ) {
                     </div>
                 </div>
 
-                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark -->
+                <!-- Right Column: Dual-Tone Executive Trust Card with Slide Watermark (Seragam dengan Hero Halaman Lain) -->
                 <div class="lg:col-span-5 xl:col-span-5" data-aos="fade-left" data-aos-delay="100">
                     <div class="spotlight-card relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] text-center group cursor-default">
                         <div class="wkl-glass-shine"></div>
@@ -100,7 +103,7 @@ foreach ( $all_jobs as $j ) {
                                 <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
 
-                            <!-- Soft Dual-Tone Ring Career Icon -->
+                            <!-- Soft Dual-Tone Ring Career Icon (Seragam dengan Hero Halaman Lain) -->
                             <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-teal-200/80 dark:border-teal-800/70 text-teal-600 dark:text-teal-300 flex items-center justify-center mx-auto mb-3.5 shadow-sm group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:scale-105 transition-all duration-500 z-10">
                                 <svg class="w-7 h-7 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
@@ -122,33 +125,33 @@ foreach ( $all_jobs as $j ) {
                                 Seluruh penerimaan karyawan dilaksanakan secara objektif melalui formulir daring resmi. Kami menyambut insan profesional yang berintegritas tinggi untuk memajukan ekonomi syariah.
                             </p>
 
-                            <!-- Mini Metrics Inside Card -->
+                            <!-- Mini Metrics Inside Card (Sederhana & Elegan) -->
                             <div class="grid grid-cols-2 gap-2.5 pt-1 text-left">
-                                <div class="p-3 rounded-xl bg-teal-50/70 dark:bg-teal-950/50 border border-teal-200/70 dark:border-teal-800/60 flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/80 text-teal-700 dark:text-teal-300 flex items-center justify-center shrink-0">
+                                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Status Formasi</span>
-                                        <span class="block text-xs font-black <?php echo $open_jobs > 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'; ?> truncate">
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">Status Formasi</span>
+                                        <span class="block text-xs font-black <?php echo $open_jobs > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'; ?> truncate">
                                             <?php echo $open_jobs > 0 ? $open_jobs . ' Posisi Dibuka' : 'Terisi Penuh'; ?>
                                         </span>
                                     </div>
                                 </div>
-                                <div class="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
                                     </div>
                                     <div class="min-w-0">
-                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">Biaya Seleksi</span>
-                                        <span class="block text-xs font-black text-emerald-700 dark:text-emerald-300 truncate">100% Bebas Biaya</span>
+                                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 truncate">Biaya Seleksi</span>
+                                        <span class="block text-xs font-black text-emerald-600 dark:text-emerald-400 truncate">100% Bebas Biaya</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="pt-1">
                                 <a href="#daftar-lowongan" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/karirbtn">
-                                    <span>Cek Formasi Lowongan Aktif</span>
+                                    <span><?php echo $open_jobs > 0 ? 'Cek Formasi Lowongan Aktif' : 'Cek Status Ketersediaan Formasi'; ?></span>
                                     <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/karirbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                                 </a>
                             </div>
@@ -166,60 +169,60 @@ foreach ( $all_jobs as $j ) {
         <div class="container-wide">
             <div class="max-w-3xl mx-auto text-center mb-12 sm:mb-16" data-aos="fade-up">
                 <span class="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-50 dark:bg-teal-950/70 text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-800 mb-3 shadow-2xs">
-                    Budaya Perusahaan
+                    <?php echo esc_html( $values_hdr['badge'] ); ?>
                 </span>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-                    Mengapa Membangun Karir Bersama Bank Syariah Wakalumi?
+                    <?php echo esc_html( $values_hdr['title'] ); ?>
                 </h2>
                 <p class="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Kami meyakini bahwa keberkahan dan keberlanjutan bank bermula dari lingkungan kerja yang sehat, saling menghargai, dan menjunjung tinggi amanah syariat Islam.
+                    <?php echo esc_html( $values_hdr['desc'] ); ?>
                 </p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <?php foreach ( $values as $idx => $val ) : ?>
-                    <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-b from-teal-500/25 via-slate-200/60 to-emerald-400/20 dark:from-teal-500/30 dark:via-dark-border dark:to-teal-950/30 hover:from-teal-500 hover:to-emerald-400 hover:shadow-xl hover:shadow-teal-500/15 transition-all duration-500 group"
+                <?php 
+                foreach ( $values as $idx => $val ) : 
+                    $color_key = $val['color'] ?? 'emerald';
+                    $ptheme    = wakalumi_get_karir_palette( $color_key );
+                    $icon_key  = $val['icon'] ?? 'shield';
+                ?>
+                    <div class="wkl-clay-card relative rounded-[28px] bg-white dark:bg-slate-900 <?php echo $ptheme['border']; ?> overflow-hidden group hover:-translate-y-2 transition-all duration-400 flex flex-col justify-between"
                          data-aos="fade-up" 
                          data-aos-delay="<?php echo $idx * 80; ?>">
                         
-                        <div class="relative rounded-[22px] p-6 sm:p-7 bg-white/95 dark:bg-dark-surface/90 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                            <!-- Glass Shine Glint -->
-                            <div class="wkl-glass-shine"></div>
+                        <!-- Top Accent Bevel Line -->
+                        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r <?php echo $ptheme['top_stripe']; ?> opacity-90 z-20"></div>
 
-                            <div>
-                                <!-- Top Row: Glowing Dual-Tone Icon Badge + Pilar Index -->
-                                <div class="flex items-center justify-between gap-3 mb-5">
-                                    <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100/90 dark:from-teal-950/80 dark:to-teal-900/40 text-teal-700 dark:text-teal-300 flex items-center justify-center border border-teal-200/80 dark:border-teal-700/60 shadow-xs group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                                        <?php if ( ( $val['icon'] ?? '' ) === 'shield' ) : ?>
-                                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                                        <?php elseif ( ( $val['icon'] ?? '' ) === 'trending-up' ) : ?>
-                                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
-                                        <?php elseif ( ( $val['icon'] ?? '' ) === 'users' ) : ?>
-                                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
-                                        <?php else : ?>
-                                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
-                                        <?php endif; ?>
-                                    </div>
-                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider font-mono bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/80">
-                                        Pilar 0<?php echo ( $idx + 1 ); ?>
-                                    </span>
+                        <!-- Glass Shine Glint -->
+                        <div class="wkl-glass-shine"></div>
+
+                        <!-- TOP ZONE: Dual-Tone Header & Icon -->
+                        <div class="relative p-6 sm:p-7 bg-gradient-to-b <?php echo $ptheme['header_grad']; ?> border-b border-slate-100 dark:border-slate-800/80 z-10">
+                            <!-- Top Row: Glowing 3D Clay Icon + Index Badge -->
+                            <div class="flex items-center justify-between gap-3 mb-5">
+                                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl <?php echo $ptheme['icon_box']; ?> flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                                    <?php echo wakalumi_render_karir_icon( $icon_key, 'w-6 h-6' ); ?>
                                 </div>
-
-                                <!-- Title -->
-                                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
-                                    <?php echo esc_html( $val['title'] ); ?>
-                                </h3>
-
-                                <!-- Description -->
-                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                    <?php echo esc_html( $val['desc'] ); ?>
-                                </p>
+                                <span class="wkl-clay-pill px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider font-mono <?php echo $ptheme['pill']; ?>">
+                                    0<?php echo ( $idx + 1 ); ?>
+                                </span>
                             </div>
 
-                            <div class="pt-4 mt-5 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-1.5 text-[11px] font-bold text-teal-700 dark:text-teal-400">
-                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                                <span>Standar Insan BSW</span>
-                            </div>
+                            <!-- Title -->
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white mb-2 leading-snug <?php echo $ptheme['hover_text']; ?> transition-colors">
+                                <?php echo esc_html( $val['title'] ); ?>
+                            </h3>
+
+                            <!-- Description -->
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                <?php echo esc_html( $val['desc'] ); ?>
+                            </p>
+                        </div>
+
+                        <!-- BOTTOM ZONE: Footer Badge -->
+                        <div class="px-6 py-4 bg-white dark:bg-slate-900/95 flex items-center gap-2 text-[11px] font-bold text-slate-600 dark:text-slate-400 z-10">
+                            <span class="w-2 h-2 rounded-full <?php echo $ptheme['dot_color']; ?>"></span>
+                            <span>Standar Budaya Insan BSW</span>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -234,67 +237,72 @@ foreach ( $all_jobs as $j ) {
         <div class="container-wide">
             <div class="max-w-3xl mx-auto text-center mb-12 sm:mb-16" data-aos="fade-up">
                 <span class="inline-block px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300 dark:border-teal-700 mb-3 shadow-2xs">
-                    Tahapan Seleksi Resmi
+                    <?php echo esc_html( $stages_hdr['badge'] ); ?>
                 </span>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-                    Alur Perekrutan Insan Bank Syariah Wakalumi
+                    <?php echo esc_html( $stages_hdr['title'] ); ?>
                 </h2>
                 <p class="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Proses seleksi penerimaan karyawan di Bank Syariah Wakalumi dilaksanakan secara terstruktur, objektif, dan transparan melalui 4 tahapan utama:
+                    <?php echo esc_html( $stages_hdr['desc'] ); ?>
                 </p>
             </div>
 
             <!-- 4 Stages Timeline Cards with Progress Badges & Watermark Numbers -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-                <?php foreach ( $stages as $idx => $stg ) : 
-                    $progress_pct = ( ( $idx + 1 ) * 25 );
+                <?php 
+                $total_stages = max( count( $stages ), 1 );
+                foreach ( $stages as $idx => $stg ) : 
+                    $progress_pct = round( ( ( $idx + 1 ) / $total_stages ) * 100 );
+                    $color_key    = $stg['color'] ?? 'cyan';
+                    $stheme       = wakalumi_get_karir_palette( $color_key );
                 ?>
-                    <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-b from-teal-400/25 via-slate-200/60 to-emerald-400/20 dark:from-teal-500/25 dark:via-dark-border dark:to-teal-950/30 hover:from-teal-500 hover:to-emerald-400 hover:shadow-xl hover:shadow-teal-500/15 transition-all duration-500 group"
+                    <div class="wkl-clay-card relative rounded-[28px] bg-white dark:bg-slate-900 <?php echo $stheme['border']; ?> overflow-hidden group hover:-translate-y-2 transition-all duration-400 flex flex-col justify-between"
                          data-aos="fade-up" 
                          data-aos-delay="<?php echo $idx * 100; ?>">
                         
-                        <div class="relative rounded-[22px] p-6 sm:p-7 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                            <!-- Glass Shine Glint -->
-                            <div class="wkl-glass-shine"></div>
+                        <!-- Top Accent Bevel Line -->
+                        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r <?php echo $stheme['top_stripe']; ?> opacity-90 z-20"></div>
 
-                            <!-- Big Stylized Watermark Number in Background -->
-                            <div class="text-7xl font-black text-slate-900/[0.04] dark:text-white/[0.04] absolute -bottom-3 -right-2 select-none pointer-events-none group-hover:text-teal-500/[0.08] group-hover:scale-110 transition-all duration-300 font-mono">
-                                <?php echo esc_html( $stg['step'] ); ?>
-                            </div>
+                        <!-- Glass Shine Glint -->
+                        <div class="wkl-glass-shine"></div>
 
-                            <div class="relative z-10">
-                                <!-- Step Header: Step Label & Sequential Icon -->
-                                <div class="flex items-center justify-between gap-3 mb-5">
-                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black tracking-wider bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300/70">
-                                        <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-                                        <span>Tahap <?php echo esc_html( $stg['step'] ); ?></span>
-                                    </div>
-                                    <span class="w-9 h-9 rounded-full bg-slate-100 dark:bg-dark-surface text-teal-700 dark:text-teal-300 flex items-center justify-center font-black text-xs border border-slate-200 dark:border-dark-border shadow-xs group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-colors">
-                                        <?php echo ( $idx + 1 ); ?>
-                                    </span>
-                                </div>
-
-                                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
-                                    <?php echo esc_html( $stg['title'] ); ?>
-                                </h3>
-
-                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                                    <?php echo esc_html( $stg['desc'] ); ?>
-                                </p>
-                            </div>
-
-                            <!-- Step Progress Indicator -->
-                            <div class="relative z-10 pt-4 mt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
-                                <div class="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                                    <span>Langkah <?php echo ( $idx + 1 ); ?> dari 4</span>
-                                    <span class="text-teal-600 dark:text-teal-400 font-mono"><?php echo $progress_pct; ?>%</span>
-                                </div>
-                                <div class="w-full h-1.5 rounded-full bg-slate-100 dark:bg-dark-surface overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full" style="width: <?php echo $progress_pct; ?>%;"></div>
-                                </div>
-                            </div>
-
+                        <!-- Big Stylized Watermark Number in Background -->
+                        <div class="text-8xl font-black text-slate-900/[0.04] dark:text-white/[0.04] absolute -bottom-3 -right-2 select-none pointer-events-none group-hover:scale-110 transition-all duration-300 font-mono z-0">
+                            <?php echo esc_html( $stg['step'] ); ?>
                         </div>
+
+                        <!-- TOP ZONE: Dual-Tone Header, Step Pill & 3D Step Circle -->
+                        <div class="relative p-6 sm:p-7 bg-gradient-to-b <?php echo $stheme['header_grad']; ?> border-b border-slate-100 dark:border-slate-800/80 z-10">
+                            <!-- Step Header: Step Label & 3D Step Circle -->
+                            <div class="flex items-center justify-between gap-3 mb-5">
+                                <span class="wkl-clay-pill px-3 py-1 rounded-full text-xs font-black tracking-wider <?php echo $stheme['pill']; ?>">
+                                    Tahap <?php echo esc_html( $stg['step'] ); ?>
+                                </span>
+                                <span class="w-10 h-10 rounded-2xl <?php echo $stheme['step_circle']; ?> flex items-center justify-center font-black text-sm group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                                    <?php echo ( $idx + 1 ); ?>
+                                </span>
+                            </div>
+
+                            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white mb-2 leading-snug <?php echo $stheme['hover_text']; ?> transition-colors">
+                                <?php echo esc_html( $stg['title'] ); ?>
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                <?php echo esc_html( $stg['desc'] ); ?>
+                            </p>
+                        </div>
+
+                        <!-- BOTTOM ZONE: Step Progress Indicator -->
+                        <div class="p-6 bg-white dark:bg-slate-900/95 space-y-2 z-10">
+                            <div class="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                                <span>Langkah <?php echo ( $idx + 1 ); ?> dari <?php echo $total_stages; ?></span>
+                                <span class="<?php echo $stheme['pct_text']; ?> font-mono font-black"><?php echo $progress_pct; ?>%</span>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-dark-surface overflow-hidden p-0.5 shadow-inner">
+                                <div class="h-full bg-gradient-to-r <?php echo $stheme['bar']; ?> rounded-full shadow-xs" style="width: <?php echo $progress_pct; ?>%;"></div>
+                            </div>
+                        </div>
+
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -313,59 +321,51 @@ foreach ( $all_jobs as $j ) {
                      (Dignified corporate vacancy status, reassuring, no broken placeholders)
                      ================================================================ -->
                 <div class="max-w-4xl mx-auto" data-aos="fade-up">
-                    <div class="relative p-[2px] rounded-3xl bg-gradient-to-br from-teal-400/40 via-emerald-400/30 to-teal-600/40 shadow-xl shadow-teal-500/10 group overflow-hidden">
-                        <div class="relative rounded-[22px] p-8 sm:p-12 md:p-14 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl overflow-hidden">
-                            <!-- Glass Shine Reflection -->
-                            <div class="wkl-glass-shine"></div>
+                    <div class="wkl-clay-card relative rounded-[32px] bg-white dark:bg-slate-900 border-2 border-teal-200/90 dark:border-teal-700/60 p-8 sm:p-12 md:p-14 overflow-hidden text-center group cursor-default">
+                        <!-- Top Accent Bevel Line -->
+                        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-500 opacity-90 z-20"></div>
 
-                            <!-- Ambient Watermark Emblem in Background -->
-                            <div class="absolute -right-12 -bottom-12 w-80 h-80 opacity-[0.035] pointer-events-none select-none">
-                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain">
+                        <!-- Glass Shine Reflection -->
+                        <div class="wkl-glass-shine"></div>
+
+                        <!-- Ambient Watermark Emblem in Background -->
+                        <div class="absolute -right-12 -bottom-12 w-80 h-80 opacity-[0.035] dark:opacity-[0.025] pointer-events-none select-none transition-all duration-700 group-hover:scale-110">
+                            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                        </div>
+
+                        <div class="relative z-10 max-w-3xl mx-auto space-y-6">
+                            <!-- Status Badge -->
+                            <div class="wkl-clay-pill inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-amber-50 dark:bg-amber-950/70 border border-amber-300/80 dark:border-amber-700/80 text-amber-900 dark:text-amber-300 text-xs font-black uppercase tracking-wider">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                <span><?php echo esc_html( $empty_state['badge'] ); ?></span>
                             </div>
 
-                            <div class="relative z-10 max-w-3xl mx-auto text-center space-y-6">
-                                <!-- Status Badge -->
-                                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-amber-50 dark:bg-amber-950/70 border border-amber-300/80 dark:border-amber-700/80 text-amber-900 dark:text-amber-300 text-xs font-black uppercase tracking-wider shadow-2xs">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-                                    <span>Status Formasi: Belum Ada Pembukaan Rekrutmen Aktif</span>
-                                </div>
+                            <!-- Main Headline -->
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+                                <?php echo esc_html( $empty_state['title'] ); ?>
+                            </h2>
 
-                                <!-- Main Headline -->
-                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                                    Terima Kasih Atas Ketertarikan Anda Berkarya Bersama Bank Syariah Wakalumi
-                                </h2>
+                            <!-- Narrative Explanation -->
+                            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
+                                <?php echo esc_html( $empty_state['desc'] ); ?>
+                            </p>
 
-                                <!-- Narrative Explanation -->
-                                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-                                    Saat ini seluruh formasi penempatan kerja insan perbankan syariah di lingkungan PT BPRS Wakalumi (Bank Syariah Wakalumi) telah terisi penuh. Pembukaan gelombang rekrutmen formasi baru berikutnya akan selalu diumumkan secara transparan melalui portal resmi ini dan saluran media sosial resmi bank.
-                                </p>
-
-                                <!-- 3 Key Principles / Reassurance Cards Inside Centerpiece -->
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left pt-6 pb-2">
-                                    <div class="p-5 rounded-2xl bg-slate-50/90 dark:bg-dark-surface/80 border border-slate-200/80 dark:border-dark-border shadow-2xs">
-                                        <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-3 border border-teal-200 dark:border-teal-800">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            <!-- Key Principles / Reassurance Subcards Inside Centerpiece -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left pt-6 pb-2">
+                                <?php 
+                                foreach ( $empty_state['subcards'] as $sidx => $sc ) : 
+                                    $sc_pal  = wakalumi_get_karir_palette( $sc['color'] ?? 'teal' );
+                                    $sc_icon = $sc['icon'] ?? 'shield';
+                                ?>
+                                    <div class="wkl-clay-subcard p-6 rounded-2xl <?php echo $sc_pal['subcard_bg']; ?>">
+                                        <div class="w-12 h-12 rounded-2xl <?php echo $sc_pal['icon_box']; ?> flex items-center justify-center mb-4 transition-transform group-hover:scale-105">
+                                            <?php echo wakalumi_render_karir_icon( $sc_icon, 'w-6 h-6' ); ?>
                                         </div>
-                                        <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mb-1">100% Bebas Biaya</h4>
-                                        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Seluruh proses seleksi dan pendaftaran tidak pernah dipungut biaya apapun.</p>
+                                        <h4 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mb-1.5"><?php echo esc_html( $sc['title'] ); ?></h4>
+                                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed"><?php echo esc_html( $sc['desc'] ); ?></p>
                                     </div>
-
-                                    <div class="p-5 rounded-2xl bg-slate-50/90 dark:bg-dark-surface/80 border border-slate-200/80 dark:border-dark-border shadow-2xs">
-                                        <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-3 border border-teal-200 dark:border-teal-800">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
-                                        </div>
-                                        <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mb-1">Kanal Resmi Daring</h4>
-                                        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Formulir pendaftaran resmi selalu menggunakan tautan Google Form BSW.</p>
-                                    </div>
-
-                                    <div class="p-5 rounded-2xl bg-slate-50/90 dark:bg-dark-surface/80 border border-slate-200/80 dark:border-dark-border shadow-2xs">
-                                        <div class="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-3 border border-teal-200 dark:border-teal-800">
-                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-                                        </div>
-                                        <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mb-1">Kenali Budaya BSW</h4>
-                                        <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Kenali profil kepengurusan dan jajaran karyawan bank syariah kami.</p>
-                                    </div>
-                                </div>
+                                <?php endforeach; ?>
+                            </div>
 
                                 <!-- Action Buttons -->
                                 <div class="pt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
@@ -374,11 +374,11 @@ foreach ( $all_jobs as $j ) {
                                     $wa_clean   = preg_replace( '/[^0-9]/', '', (string) $default_wa );
                                     $wa_url     = 'https://wa.me/' . ( $wa_clean ?: '6281517380388' );
                                     ?>
-                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-teal-600/25 hover:scale-105 transition-all">
+                                    <a href="<?php echo esc_url( $wa_url ); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs sm:text-sm shadow-[0_8px_18px_-4px_rgba(16,185,129,0.4),inset_0_2px_3px_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.2)] hover:scale-105 active:scale-95 transition-all">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                                         <span>Tanya Informasi SDM via WhatsApp</span>
                                     </a>
-                                    <a href="<?php echo esc_url( home_url( '/informasi/tim-kami/' ) ); ?>" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 transition-all hover:scale-105">
+                                    <a href="<?php echo esc_url( home_url( '/informasi/tim-kami/' ) ); ?>" class="wkl-clay-subbtn inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 transition-all hover:scale-105">
                                         <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
                                         <span>Lihat Tim &amp; Profil Karyawan BSW</span>
                                     </a>
@@ -448,6 +448,9 @@ foreach ( $all_jobs as $j ) {
                         $status       = esc_attr( $job['status'] ?? 'dibuka' );
                         $ringkasan    = esc_html( $job['ringkasan'] ?? '' );
                         $kualifikasi  = esc_attr( $job['kualifikasi'] ?? '' );
+                        $custom_color = esc_attr( $job['color'] ?? 'auto' );
+
+                        $theme        = wakalumi_get_karir_division_theme( $divisi, $posisi, $custom_color );
 
                         $search_keywords = strtolower( $posisi . ' ' . $divisi . ' ' . $divisi_lbl . ' ' . $tipe . ' ' . $lokasi );
 
@@ -461,63 +464,82 @@ foreach ( $all_jobs as $j ) {
                             $status_badge_cls  = 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-300/60';
                         }
                     ?>
-                        <div class="karir-job-card relative p-[1.5px] rounded-3xl bg-gradient-to-br from-teal-400/30 via-slate-200/70 to-emerald-400/25 dark:from-teal-500/30 dark:via-dark-border dark:to-teal-900/30 hover:from-teal-500 hover:to-emerald-400 hover:shadow-xl hover:shadow-teal-500/15 transition-all duration-300 group flex flex-col justify-between"
+                        <div class="karir-job-card wkl-clay-card relative rounded-[28px] bg-white dark:bg-slate-900 <?php echo $theme['card_border']; ?> overflow-hidden group hover:-translate-y-2 transition-all duration-400 flex flex-col justify-between"
                              data-division="<?php echo $divisi; ?>"
                              data-keywords="<?php echo esc_attr( $search_keywords ); ?>"
                              data-aos="fade-up" 
                              data-aos-delay="<?php echo min( ( $idx % 2 ) * 100, 200 ); ?>">
                             
-                            <div class="relative rounded-[22px] p-6 sm:p-8 bg-white/95 dark:bg-dark-surface/95 backdrop-blur-xl h-full flex flex-col justify-between overflow-hidden">
-                                <!-- Glass Shine Glint -->
-                                <div class="wkl-glass-shine"></div>
+                            <!-- Top Accent Bevel Line -->
+                            <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r <?php echo $theme['top_stripe']; ?> opacity-90 z-20"></div>
 
-                                <div>
-                                    <!-- Header of Job Card: Category + Status Badge -->
-                                    <div class="flex items-center justify-between gap-3 mb-4">
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100/90 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300/70 dark:border-teal-700/60 shadow-2xs">
+                            <!-- Glass Shine Glint -->
+                            <div class="wkl-glass-shine"></div>
+
+                            <!-- Interactive Slide Watermark Emblem in Background -->
+                            <div class="absolute -right-6 top-1/2 -translate-y-1/2 w-44 h-44 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-[0.06] select-none overflow-hidden z-0">
+                                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/untitled4.png' ); ?>" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+                            </div>
+
+                            <!-- TOP ZONE: Dual-Tone Header, 3D Icon, Division Pill & Meta Chips -->
+                            <div class="relative p-6 sm:p-7 bg-gradient-to-b <?php echo $theme['header_grad']; ?> border-b border-slate-100 dark:border-slate-800/80 z-10">
+                                <!-- Top Row: 3D Clay Icon + Division Pill + Status Badge -->
+                                <div class="flex items-center justify-between gap-3 mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-2xl <?php echo $theme['icon_box']; ?> flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                                            <?php echo $theme['icon_svg']; ?>
+                                        </div>
+                                        <span class="wkl-clay-pill px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider <?php echo $theme['pill_badge']; ?>">
                                             <?php echo esc_html( $divisi_lbl ); ?>
                                         </span>
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold border <?php echo $status_badge_cls; ?>">
-                                            <span class="w-1.5 h-1.5 rounded-full <?php echo $status === 'dibuka' ? 'bg-emerald-500 animate-pulse' : ( $status === 'segera' ? 'bg-amber-500' : 'bg-slate-400' ); ?>"></span>
-                                            <?php echo esc_html( $status_badge_text ); ?>
-                                        </span>
                                     </div>
-
-                                    <!-- Position Title -->
-                                    <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug mb-3 group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
-                                        <?php echo esc_html( $posisi ); ?>
-                                    </h3>
-
-                                    <!-- Meta Info Pills (Tipe Pekerjaan, Lokasi, Deadline) -->
-                                    <div class="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5">
-                                        <div class="flex items-center gap-1.5">
-                                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/></svg>
-                                            <span><?php echo esc_html( $tipe ); ?></span>
-                                        </div>
-                                        <div class="flex items-center gap-1.5">
-                                            <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-                                            <span><?php echo esc_html( $lokasi ); ?></span>
-                                        </div>
-                                        <?php if ( ! empty( $deadline ) ) : ?>
-                                            <div class="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-semibold">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                <span>Batas: <?php echo esc_html( $deadline ); ?></span>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-
-                                    <!-- Narrative Summary -->
-                                    <?php if ( ! empty( $ringkasan ) ) : ?>
-                                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6 line-clamp-3">
-                                            <?php echo $ringkasan; ?>
-                                        </p>
-                                    <?php endif; ?>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold border <?php echo $status_badge_cls; ?> shadow-2xs">
+                                        <span class="w-1.5 h-1.5 rounded-full <?php echo $status === 'dibuka' ? 'bg-emerald-500 animate-pulse' : ( $status === 'segera' ? 'bg-amber-500' : 'bg-slate-400' ); ?>"></span>
+                                        <?php echo esc_html( $status_badge_text ); ?>
+                                    </span>
                                 </div>
 
+                                <!-- Position Title -->
+                                <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-snug mb-3.5 group-hover:<?php echo $theme['accent_text']; ?> transition-colors">
+                                    <?php echo esc_html( $posisi ); ?>
+                                </h3>
+
+                                <!-- Meta Info Chips (Tipe Pekerjaan, Lokasi, Deadline) -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs sm:text-[13px] text-slate-700 dark:text-slate-300">
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
+                                        <svg class="w-3.5 h-3.5 <?php echo $theme['accent_text']; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/></svg>
+                                        <span class="font-medium"><?php echo esc_html( $tipe ); ?></span>
+                                    </div>
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
+                                        <svg class="w-3.5 h-3.5 <?php echo $theme['accent_text']; ?>" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                                        <span class="font-medium"><?php echo esc_html( $lokasi ); ?></span>
+                                    </div>
+                                    <?php if ( ! empty( $deadline ) ) : ?>
+                                        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50/90 dark:bg-amber-950/60 border border-amber-200/80 dark:border-amber-800/70 text-amber-800 dark:text-amber-300 font-semibold shadow-2xs">
+                                            <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <span>Batas: <?php echo esc_html( $deadline ); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM ZONE: Clean Description & Action Buttons -->
+                            <div class="p-6 sm:p-7 bg-white dark:bg-slate-900/95 flex-1 flex flex-col justify-between space-y-5 z-10">
+                                <!-- Narrative Summary -->
+                                <?php if ( ! empty( $ringkasan ) ) : ?>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
+                                        <?php echo $ringkasan; ?>
+                                    </p>
+                                <?php else : ?>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 italic">
+                                        Klik tombol di bawah untuk melihat rincian tanggung jawab dan kualifikasi lengkap posisi ini.
+                                    </p>
+                                <?php endif; ?>
+
                                 <!-- Card Action Buttons -->
-                                <div class="pt-5 border-t border-slate-200/80 dark:border-dark-border flex flex-wrap items-center justify-between gap-3">
+                                <div class="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
                                     <button type="button" 
-                                            class="btn-open-job-modal inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-300 hover:text-teal-800 dark:hover:text-teal-200 transition-colors"
+                                            class="btn-open-job-modal wkl-clay-subbtn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 border border-slate-200/90 dark:border-slate-700 hover:text-teal-700 dark:hover:text-teal-300 cursor-pointer"
                                             data-posisi="<?php echo $posisi; ?>"
                                             data-divisi="<?php echo $divisi_lbl; ?>"
                                             data-tipe="<?php echo $tipe; ?>"
@@ -530,27 +552,26 @@ foreach ( $all_jobs as $j ) {
                                             data-kualifikasi="<?php echo $kualifikasi; ?>"
                                             data-url="<?php echo $form_url; ?>">
                                         <span>Lihat Kualifikasi Lengkap</span>
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
                                     </button>
 
                                     <?php if ( $status === 'dibuka' && ! empty( $form_url ) ) : ?>
                                         <a href="<?php echo esc_url( $form_url ); ?>" 
                                            target="_blank" rel="noopener noreferrer" 
-                                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm shadow-sm hover:scale-105 transition-all">
+                                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl <?php echo $theme['btn_primary']; ?> font-extrabold text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95">
                                             <span>Lamar Posisi Ini</span>
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                                         </a>
                                     <?php elseif ( $status === 'segera' ) : ?>
-                                        <span class="inline-flex items-center px-4 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold text-xs border border-amber-200 dark:border-amber-800">
+                                        <span class="inline-flex items-center px-4 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold text-xs border border-amber-200 dark:border-amber-800 shadow-2xs">
                                             Pendaftaran Segera Dibuka
                                         </span>
                                     <?php else : ?>
-                                        <span class="inline-flex items-center px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 font-semibold text-xs border border-slate-200 dark:border-slate-700">
+                                        <span class="inline-flex items-center px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 font-semibold text-xs border border-slate-200 dark:border-slate-700 shadow-2xs">
                                             Pendaftaran Ditutup
                                         </span>
                                     <?php endif; ?>
                                 </div>
-
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -579,26 +600,27 @@ foreach ( $all_jobs as $j ) {
          ======================================================================== -->
     <section class="section py-12 sm:py-16 relative z-10 bg-slate-50/70 dark:bg-dark-surface/50 border-b border-slate-200/80 dark:border-dark-border/80">
         <div class="container-narrow mx-auto" data-aos="fade-up">
-            <div class="relative p-[1.5px] rounded-3xl bg-gradient-to-br from-amber-400/80 via-amber-300/50 to-yellow-500/70 dark:from-amber-400/25 dark:via-dark-border dark:to-amber-500/10 shadow-md shadow-amber-500/5 group">
-                <div class="relative rounded-[22px] p-6 sm:p-8 bg-amber-50/90 dark:bg-dark-card/90 dark:border dark:border-amber-500/20 backdrop-blur-xl flex flex-col md:flex-row items-start md:items-center gap-6 overflow-hidden">
-                    <!-- Glass Shine Glint -->
-                    <div class="wkl-glass-shine"></div>
+            <div class="wkl-clay-card relative rounded-[28px] bg-gradient-to-b from-amber-50/95 via-amber-50/70 to-white dark:from-amber-950/40 dark:via-dark-card dark:to-dark-card border border-amber-300/80 dark:border-amber-700/60 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 overflow-hidden group cursor-default">
+                <!-- Top Accent Bevel Line -->
+                <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 opacity-90 z-20"></div>
 
-                    <div class="w-14 h-14 rounded-2xl bg-amber-100/80 dark:bg-dark-surface text-amber-700 dark:text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-300/60 dark:border-amber-500/30 shadow-xs">
-                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286zm0 13.036h.008v.008H12v-.008z"/></svg>
-                    </div>
+                <!-- Glass Shine Glint -->
+                <div class="wkl-glass-shine"></div>
 
-                    <div class="space-y-2 flex-1 relative z-10">
-                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border border-amber-300/70 dark:border-amber-600/40">
-                            <?php echo esc_html( $antifraud['badge'] ); ?>
-                        </div>
-                        <h3 class="text-base sm:text-lg font-bold text-amber-950 dark:text-white">
-                            <?php echo esc_html( $antifraud['title'] ); ?>
-                        </h3>
-                        <p class="text-xs sm:text-sm text-amber-900/90 dark:text-slate-300 leading-relaxed">
-                            <?php echo esc_html( $antifraud['desc'] ); ?>
-                        </p>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 text-white flex items-center justify-center shrink-0 shadow-[0_8px_18px_-4px_rgba(245,158,11,0.45),inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px_rgba(0,0,0,0.15)] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 z-10">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286zm0 13.036h.008v.008H12v-.008z"/></svg>
+                </div>
+
+                <div class="space-y-2 flex-1 relative z-10">
+                    <div class="wkl-clay-pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100/90 dark:bg-amber-950/70 text-amber-900 dark:text-amber-200 border border-amber-300/80 dark:border-amber-700/80 mb-1">
+                        <?php echo esc_html( $antifraud['badge'] ); ?>
                     </div>
+                    <h3 class="text-base sm:text-lg font-black text-amber-950 dark:text-white">
+                        <?php echo esc_html( $antifraud['title'] ); ?>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-amber-900/90 dark:text-slate-300 leading-relaxed">
+                        <?php echo esc_html( $antifraud['desc'] ); ?>
+                    </p>
                 </div>
             </div>
         </div>
@@ -681,60 +703,66 @@ foreach ( $all_jobs as $j ) {
      (Teleported to document.body for Swup SPA safety)
      ======================================================================== -->
 <div id="job-detail-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md transition-all duration-300">
-    <div class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border shadow-2xl p-6 sm:p-8 space-y-6">
+    <div class="wkl-clay-card relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[32px] bg-white dark:bg-dark-card border-2 border-teal-200/90 dark:border-teal-700/70 p-6 sm:p-8 space-y-6 overflow-hidden">
         
+        <!-- Top Accent Bevel Line -->
+        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-500 opacity-90 z-20"></div>
+
+        <!-- Glass Shine Reflection -->
+        <div class="wkl-glass-shine"></div>
+
         <!-- Close Button -->
-        <button type="button" id="btn-close-job-modal" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center transition-colors">
+        <button type="button" id="btn-close-job-modal" class="wkl-clay-subbtn absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer z-20">
             ✕
         </button>
 
         <!-- Modal Header -->
-        <div class="space-y-3 pr-8">
+        <div class="space-y-3 pr-8 relative z-10">
             <div class="flex items-center gap-2">
-                <span id="modal-job-divisi" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300"></span>
-                <span id="modal-job-status" class="px-3 py-1 rounded-full text-xs font-extrabold border"></span>
+                <span id="modal-job-divisi" class="wkl-clay-pill px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-300"></span>
+                <span id="modal-job-status" class="wkl-clay-pill px-3 py-1 rounded-full text-xs font-extrabold border"></span>
             </div>
 
-            <h2 id="modal-job-posisi" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight"></h2>
+            <h2 id="modal-job-posisi" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight"></h2>
 
             <!-- Meta Row -->
-            <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                <div class="flex items-center gap-1.5">
+            <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                     <svg class="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/></svg>
                     <span id="modal-job-tipe"></span>
                 </div>
-                <div class="flex items-center gap-1.5">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                     <svg class="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
                     <span id="modal-job-lokasi"></span>
                 </div>
-                <div class="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-semibold" id="modal-job-deadline-wrap">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 font-semibold" id="modal-job-deadline-wrap">
+                    <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>Batas Akhir: <strong id="modal-job-deadline"></strong></span>
                 </div>
             </div>
         </div>
 
         <!-- Description Box -->
-        <div id="modal-job-ringkasan-wrap" class="space-y-2">
+        <div id="modal-job-ringkasan-wrap" class="wkl-clay-subcard p-5 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2 relative z-10">
             <h4 class="text-xs font-black uppercase tracking-wider text-teal-700 dark:text-teal-400">Deskripsi &amp; Tanggung Jawab</h4>
             <p id="modal-job-ringkasan" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed"></p>
         </div>
 
         <!-- Qualifications Box -->
-        <div id="modal-job-kualifikasi-wrap" class="space-y-2">
+        <div id="modal-job-kualifikasi-wrap" class="wkl-clay-subcard p-5 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2 relative z-10">
             <h4 class="text-xs font-black uppercase tracking-wider text-teal-700 dark:text-teal-400">Kualifikasi &amp; Persyaratan</h4>
             <ul id="modal-job-kualifikasi-list" class="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300"></ul>
         </div>
 
         <!-- Modal Actions Footer -->
-        <div class="pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div class="pt-5 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 relative z-10">
             <span class="text-xs text-slate-500 dark:text-slate-400">
                 Pendaftaran melalui formulir daring resmi.
             </span>
             <a id="modal-job-apply-btn" 
                href="#" 
                target="_blank" rel="noopener noreferrer" 
-               class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow-lg shadow-teal-600/25 transition-all hover:scale-105">
+               class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm shadow-[0_8px_18px_-4px_rgba(16,185,129,0.4),inset_0_2px_3px_rgba(255,255,255,0.4),inset_0_-2px_3px_rgba(0,0,0,0.2)] transition-all hover:scale-105 active:scale-95">
                 <span>Lamar via Google Form Resmi</span>
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
             </a>

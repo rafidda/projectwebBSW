@@ -64,13 +64,30 @@ $vision_desc    = get_option( 'options_about_page_vision_desc', '“Menjadikan B
 $missions       = get_option( 'options_about_page_missions', [] );
 if ( empty( $missions ) ) {
     $missions = [
-        'Memberdayakan ekonomi umat dengan fokus usaha mikro, kecil dan menengah.',
-        'Memberikan layanan prima dan amanah bagi nasabah.',
-        'Menjalankan fungsi inklusi dan literasi ekonomi syariah bagi masyarakat.',
-        'Memberikan manfaat optimal bagi para stakeholder.',
-        'Membangun sistem dan tata kerja yang unggul dengan sumber daya insani yang professional, kompeten, handal dan menjunjung tinggi ukhuwah islamiyah.',
+        [
+            'title' => 'Meningkatkan Kepercayaan dan Amanah',
+            'desc'  => 'Menjalankan seluruh aktivitas perbankan sesuai prinsip syariah dengan transparansi, akuntabilitas, dan integritas, sehingga menjadi lembaga yang dipercaya oleh masyarakat.',
+        ],
+        [
+            'title' => 'Menjaga Kesehatan Keuangan dan Tata Kelola',
+            'desc'  => 'Menerapkan manajemen risiko yang ketat, pengelolaan aset yang bijak, serta tata kelola perusahaan yang profesional untuk memastikan keberlanjutan dan stabilitas bank.',
+        ],
+        [
+            'title' => 'Mendorong Inovasi Layanan',
+            'desc'  => 'Mengembangkan produk dan layanan berbasis teknologi yang sesuai regulasi, sehingga memudahkan akses nasabah dan mendukung transformasi menuju bank syariah digital.',
+        ],
+        [
+            'title' => 'Memberdayakan UMKM dan Komunitas Umat',
+            'desc'  => 'Menyediakan pembiayaan yang adil, inklusif, dan berorientasi pada pemberdayaan ekonomi umat, khususnya sektor UMKM dan usaha mikro di daerah.',
+        ],
+        [
+            'title' => 'Membangun Kedekatan dengan Nasabah',
+            'desc'  => 'Menjalin hubungan yang hangat dan solutif dengan nasabah melalui pelayanan personal, penggunaan teknologi, edukasi keuangan syariah, serta program sosial yang relevan dengan kebutuhan masyarakat.',
+        ],
     ];
 }
+
+$show_identity_belief = get_option( 'options_about_page_show_identity_belief', '0' );
 
 $identity_badge = get_option( 'options_about_page_identity_badge', 'Jati Diri Lembaga' );
 $identity_tag   = get_option( 'options_about_page_identity_tag', 'Fokus Syariah' );
@@ -398,46 +415,87 @@ if ( empty( $cta_btn1_url ) ) {
         <?php if ( $show_stats ) : 
             $stat_meta = [
                 1 => [
-                    'tag'        => '01 / Dedikasi',
-                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
-                    'bar_border' => 'border-slate-100 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-teal-500/10 text-teal-700 dark:bg-teal-400/15 dark:text-teal-300 border-teal-200/50 dark:border-teal-700/40 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600',
-                    'tag_cls'    => 'text-teal-700 dark:text-teal-300 bg-teal-50/80 dark:bg-teal-950/60 border-teal-200/50 dark:border-teal-800/40',
-                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', // Jam/Tahun Pengalaman
+                    'tag'           => '01 / Dedikasi',
+                    'top_stripe'    => 'from-teal-600 via-teal-500 to-emerald-400',
+                    'bar_bg'        => 'bg-gradient-to-r from-teal-500/12 via-teal-500/5 to-emerald-500/10 dark:from-teal-950/50 dark:via-slate-900 dark:to-slate-900',
+                    'bar_border'    => 'border-teal-100/90 dark:border-teal-900/50',
+                    'icon_box'      => 'bg-gradient-to-br from-teal-400 via-teal-500 to-teal-700 text-white shadow-[0_6px_14px_-3px_rgba(13,148,136,0.45),inset_0_2px_3px_rgba(255,255,255,0.7),inset_0_-2px_3px_rgba(0,0,0,0.18)] border border-teal-300/60',
+                    'tag_cls'       => 'text-teal-800 dark:text-teal-200 bg-white/90 dark:bg-teal-950/80 border-teal-200/90 dark:border-teal-800/80',
+                    'hover_text'    => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                    'hover_border'  => 'hover:border-teal-500/70 dark:hover:border-teal-400/60',
+                    'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(13,148,136,0.22),0_6px_16px_-3px_rgba(15,23,42,0.1)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.85),0_0_24px_rgba(20,184,166,0.22)]',
+                    'icon'          => '<svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', // Jam/Tahun Pengalaman
                 ],
                 2 => [
-                    'tag'        => '02 / Amanah',
-                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
-                    'bar_border' => 'border-slate-100 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300 border-emerald-200/50 dark:border-emerald-700/40 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600',
-                    'tag_cls'    => 'text-emerald-700 dark:text-emerald-300 bg-emerald-50/80 dark:bg-emerald-950/60 border-emerald-200/50 dark:border-emerald-800/40',
-                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>', // Nasabah Setia
+                    'tag'           => '02 / Amanah',
+                    'top_stripe'    => 'from-emerald-600 via-teal-500 to-teal-400',
+                    'bar_bg'        => 'bg-gradient-to-r from-emerald-500/12 via-emerald-500/5 to-teal-500/10 dark:from-emerald-950/50 dark:via-slate-900 dark:to-slate-900',
+                    'bar_border'    => 'border-emerald-100/90 dark:border-emerald-900/50',
+                    'icon_box'      => 'bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-700 text-white shadow-[0_6px_14px_-3px_rgba(16,185,129,0.45),inset_0_2px_3px_rgba(255,255,255,0.7),inset_0_-2px_3px_rgba(0,0,0,0.18)] border border-emerald-300/60',
+                    'tag_cls'       => 'text-emerald-800 dark:text-emerald-200 bg-white/90 dark:bg-emerald-950/80 border-emerald-200/90 dark:border-emerald-800/80',
+                    'hover_text'    => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+                    'hover_border'  => 'hover:border-emerald-500/70 dark:hover:border-emerald-400/60',
+                    'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(16,185,129,0.22),0_6px_16px_-3px_rgba(15,23,42,0.1)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.85),0_0_24px_rgba(16,185,129,0.22)]',
+                    'icon'          => '<svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>', // Nasabah Setia
                 ],
                 3 => [
-                    'tag'        => '03 / Syariah',
-                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
-                    'bar_border' => 'border-slate-100 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-cyan-500/10 text-cyan-700 dark:bg-cyan-400/15 dark:text-cyan-300 border-cyan-200/50 dark:border-cyan-700/40 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600',
-                    'tag_cls'    => 'text-cyan-700 dark:text-cyan-300 bg-cyan-50/80 dark:bg-cyan-950/60 border-cyan-200/50 dark:border-cyan-800/40',
-                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', // Prinsip Murni Syariah
+                    'tag'           => '03 / Syariah',
+                    'top_stripe'    => 'from-cyan-600 via-sky-500 to-blue-500',
+                    'bar_bg'        => 'bg-gradient-to-r from-cyan-500/12 via-sky-500/5 to-blue-500/10 dark:from-cyan-950/50 dark:via-slate-900 dark:to-slate-900',
+                    'bar_border'    => 'border-cyan-100/90 dark:border-cyan-900/50',
+                    'icon_box'      => 'bg-gradient-to-br from-cyan-400 via-sky-500 to-blue-600 text-white shadow-[0_6px_14px_-3px_rgba(6,182,212,0.45),inset_0_2px_3px_rgba(255,255,255,0.7),inset_0_-2px_3px_rgba(0,0,0,0.18)] border border-cyan-300/60',
+                    'tag_cls'       => 'text-cyan-800 dark:text-cyan-200 bg-white/90 dark:bg-cyan-950/80 border-cyan-200/90 dark:border-cyan-800/80',
+                    'hover_text'    => 'group-hover:text-cyan-600 dark:group-hover:text-cyan-400',
+                    'hover_border'  => 'hover:border-cyan-500/70 dark:hover:border-cyan-400/60',
+                    'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(6,182,212,0.22),0_6px_16px_-3px_rgba(15,23,42,0.1)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.85),0_0_24px_rgba(6,182,212,0.22)]',
+                    'icon'          => '<svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>', // Prinsip Murni Syariah
                 ],
                 4 => [
-                    'tag'        => '04 / Regulasi',
-                    'bar_bg'     => 'bg-slate-50/80 dark:bg-slate-800/50',
-                    'bar_border' => 'border-slate-100 dark:border-slate-800',
-                    'icon_wrap'  => 'bg-amber-500/10 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300 border-amber-200/50 dark:border-amber-700/40 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600',
-                    'tag_cls'    => 'text-amber-700 dark:text-amber-300 bg-amber-50/80 dark:bg-amber-950/60 border-amber-200/50 dark:border-amber-800/50',
-                    'icon'       => '<svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>', // Dijamin LPS
+                    'tag'           => '04 / Regulasi',
+                    'top_stripe'    => 'from-amber-500 via-orange-400 to-yellow-300',
+                    'bar_bg'        => 'bg-gradient-to-r from-amber-500/12 via-orange-500/5 to-yellow-500/10 dark:from-amber-950/50 dark:via-slate-900 dark:to-slate-900',
+                    'bar_border'    => 'border-amber-100/90 dark:border-amber-900/50',
+                    'icon_box'      => 'bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 text-white shadow-[0_6px_14px_-3px_rgba(245,158,11,0.45),inset_0_2px_3px_rgba(255,255,255,0.7),inset_0_-2px_3px_rgba(0,0,0,0.18)] border border-amber-300/60',
+                    'tag_cls'       => 'text-amber-800 dark:text-amber-200 bg-white/90 dark:bg-amber-950/80 border-amber-200/90 dark:border-amber-800/80',
+                    'hover_text'    => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+                    'hover_border'  => 'hover:border-amber-500/70 dark:hover:border-amber-400/60',
+                    'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(245,158,11,0.22),0_6px_16px_-3px_rgba(15,23,42,0.1)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.85),0_0_24px_rgba(245,158,11,0.22)]',
+                    'icon'          => '<svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>', // Dijamin LPS
                 ],
             ];
         ?>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-20">
-            <?php for ( $s = 1; $s <= 4; $s++ ) : 
-                $val = ${"stat_{$s}_val"};
-                $lbl = ${"stat_{$s}_lbl"};
-                if ( empty( $val ) ) continue;
+        <?php
+        $valid_stats = [];
+        for ( $s = 1; $s <= 4; $s++ ) {
+            $val = ${"stat_{$s}_val"};
+            $lbl = ${"stat_{$s}_lbl"};
+            if ( ! empty( $val ) ) {
+                $valid_stats[] = [
+                    'slot' => $s,
+                    'val'  => $val,
+                    'lbl'  => $lbl,
+                    'meta' => $stat_meta[ $s ] ?? $stat_meta[ 1 ],
+                ];
+            }
+        }
+        $stat_count = count( $valid_stats );
 
-                $meta = $stat_meta[ $s ] ?? $stat_meta[ 1 ];
+        // Grid dinamis: selalu rata tengah (center) jika 3 atau < 4 statistik, fleksibel 4 cols jika 4 statistik
+        $stats_grid_class = 'grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-20';
+        if ( $stat_count === 3 ) {
+            $stats_grid_class = 'grid grid-cols-1 sm:grid-cols-3 max-w-5xl mx-auto gap-4 sm:gap-6 mt-16 sm:mt-20';
+        } elseif ( $stat_count === 2 ) {
+            $stats_grid_class = 'grid grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto gap-4 sm:gap-6 mt-16 sm:mt-20';
+        } elseif ( $stat_count === 1 ) {
+            $stats_grid_class = 'grid grid-cols-1 max-w-md mx-auto gap-4 sm:gap-6 mt-16 sm:mt-20';
+        }
+        ?>
+        <div class="<?php echo esc_attr( $stats_grid_class ); ?>">
+            <?php foreach ( $valid_stats as $st_idx => $st_item ) : 
+                $s    = $st_item['slot'];
+                $val  = $st_item['val'];
+                $lbl  = $st_item['lbl'];
+                $meta = $st_item['meta'];
 
                 // Parse counter values for interactive animation:
                 $prefix = '';
@@ -457,26 +515,32 @@ if ( empty( $cta_btn1_url ) ) {
                 // Skala ukuran proporsional jika teks panjang (mis. "Rp 2 Miliar") agar seragam dan rapi
                 $font_size = ( $val_len > 7 ) ? 'text-2xl sm:text-3xl xl:text-4xl' : 'text-3xl sm:text-4xl md:text-5xl';
             ?>
-                <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_16px_32px_-6px_rgba(15,23,42,0.14),0_6px_12px_-3px_rgba(8,131,149,0.12)] dark:hover:shadow-[0_16px_32px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.18)] hover:-translate-y-2 hover:border-teal-500/60 dark:hover:border-teal-400/60 transition-all duration-300 ease-out cursor-default flex flex-col justify-between" data-aos="fade-up" data-aos-delay="<?php echo $s * 80; ?>">
-                    <!-- Top Accent Line -->
-                    <div class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
+                <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm <?php echo esc_attr( $meta['hover_shadow'] ); ?> hover:-translate-y-2 <?php echo esc_attr( $meta['hover_border'] ); ?> transition-all duration-300 ease-out cursor-default flex flex-col justify-between" data-aos="fade-up" data-aos-delay="<?php echo ( $st_idx + 1 ) * 80; ?>">
+                    <!-- Top Accent Line (Dual Tone Gradient h-1.5) -->
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r <?php echo esc_attr( $meta['top_stripe'] ); ?>"></div>
 
-                    <!-- Upper Zone (Header Bar): Dual Tone Sleek Minimalist Strip with Centered Icon -->
-                    <div class="px-4 py-2 sm:py-2.5 <?php echo esc_attr( $meta['bar_bg'] ); ?> border-b <?php echo esc_attr( $meta['bar_border'] ); ?> flex items-center justify-center transition-colors">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg <?php echo esc_attr( $meta['icon_wrap'] ); ?> border flex items-center justify-center transition-all duration-300 shrink-0">
+                    <!-- Glass Shine Effect -->
+                    <div class="wkl-glass-shine"></div>
+
+                    <!-- Upper Zone (Header Bar): Dual Tone Strip with 3D Clay Icon Box + Pill Badge -->
+                    <div class="px-4 sm:px-5 py-3 sm:py-3.5 <?php echo esc_attr( $meta['bar_bg'] ); ?> border-b <?php echo esc_attr( $meta['bar_border'] ); ?> flex items-center justify-between transition-colors relative z-10">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl <?php echo esc_attr( $meta['icon_box'] ); ?> flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                             <?php echo $meta['icon']; ?>
                         </div>
+                        <span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full <?php echo esc_attr( $meta['tag_cls'] ); ?> border shadow-2xs">
+                            <?php echo esc_html( $meta['tag'] ); ?>
+                        </span>
                     </div>
 
                     <!-- Lower Zone (Body / Stat Metric Area): Crisp Solid High-Contrast Foundation -->
-                    <div class="p-5 sm:p-6 bg-white dark:bg-slate-900 flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                    <div class="p-5 sm:p-6 bg-white dark:bg-slate-900 flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden z-10">
                         <!-- Decorative Watermark Logo (Tenang di pojok kanan bawah) -->
                         <div class="absolute -right-3 -bottom-3 w-24 h-24 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
 
                         <!-- Number Counter -->
-                        <span class="block <?php echo $font_size; ?> font-rubik font-black text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors tracking-tight mb-1.5 counter-number relative z-10"
+                        <span class="block <?php echo $font_size; ?> font-rubik font-black text-slate-900 dark:text-white <?php echo esc_attr( $meta['hover_text'] ); ?> transition-colors tracking-tight mb-1.5 counter-number relative z-10"
                               <?php if ( $is_num ) : ?>
                                   data-counter="<?php echo esc_attr( $num ); ?>"
                                   data-counter-prefix="<?php echo esc_attr( $prefix ); ?>"
@@ -491,7 +555,7 @@ if ( empty( $cta_btn1_url ) ) {
                         </span>
                     </div>
                 </div>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </div>
         <?php endif; ?>
     </div>
@@ -516,8 +580,16 @@ if ( empty( $cta_btn1_url ) ) {
                 <?php echo esc_html( $vm_title ); ?>
             </h2>
             <?php endif; ?>
+
+            <!-- Hiasan Garis Minimalis Syariah Modern di bawah Judul Visi & Misi -->
+            <div class="flex items-center justify-center gap-2 mt-4 select-none" aria-hidden="true">
+                <span class="w-8 sm:w-12 h-0.5 rounded-full bg-gradient-to-r from-transparent to-teal-500"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-500 shadow-sm shadow-teal-500/50"></span>
+                <span class="w-8 sm:w-12 h-0.5 rounded-full bg-gradient-to-l from-transparent to-teal-500"></span>
+            </div>
+
             <?php if ( ! empty( $vm_subtitle ) ) : ?>
-            <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-3">
+            <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mt-4">
                 <?php echo nl2br( esc_html( $vm_subtitle ) ); ?>
             </p>
             <?php endif; ?>
@@ -557,40 +629,65 @@ if ( empty( $cta_btn1_url ) ) {
                 <?php echo esc_html( $missions_heading ); ?>
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                <?php foreach ( $missions as $idx => $mission_text ) : ?>
-                    <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(15,23,42,0.12),0_4px_10px_-2px_rgba(8,131,149,0.12)] dark:hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.75),0_0_18px_rgba(20,184,166,0.15)] hover:border-teal-500/60 dark:hover:border-teal-400/50 hover:-translate-y-1.5 transition-all duration-300 ease-out flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $idx % 3 ) * 100; ?>">
-                        <!-- Subtle Top Accent Line -->
-                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
+                <?php foreach ( $missions as $idx => $mission_item ) : 
+                    $m_title = is_array( $mission_item ) ? ( $mission_item['title'] ?? '' ) : (string) $mission_item;
+                    $m_desc  = is_array( $mission_item ) ? ( $mission_item['desc'] ?? '' ) : '';
+                    $m_color = is_array( $mission_item ) ? ( $mission_item['color'] ?? 'auto' ) : 'auto';
+                    if ( empty( trim( $m_title ) ) ) {
+                        continue;
+                    }
+                    if ( empty( trim( $m_desc ) ) ) {
+                        $m_desc = $m_title;
+                    }
+                    $palette = wakalumi_get_about_palette( $m_color, $idx );
+                ?>
+                    <div class="wkl-mission-card spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm <?php echo esc_attr( $palette['hover_shadow'] ); ?> <?php echo esc_attr( $palette['hover_border'] ); ?> hover:-translate-y-2 transition-all duration-300 ease-out flex flex-col justify-between cursor-pointer select-none"
+                         role="button"
+                         tabindex="0"
+                         data-mission-num="<?php echo sprintf( '%02d', $idx + 1 ); ?>"
+                         data-mission-title="<?php echo esc_attr( $m_title ); ?>"
+                         data-mission-desc="<?php echo esc_attr( $m_desc ); ?>"
+                         data-aos="fade-up" 
+                         data-aos-delay="<?php echo ( $idx % 3 ) * 100; ?>">
+                        
+                        <!-- Top Accent Line (Dual Tone Gradient h-1.5) -->
+                        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r <?php echo esc_attr( $palette['top_stripe'] ); ?>"></div>
 
-                        <!-- Solid Elegant Header Bar -->
-                        <div class="px-6 py-4 bg-gradient-to-r from-slate-50/95 via-teal-50/30 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-black text-xs flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300">
+                        <!-- Glass Shine Effect -->
+                        <div class="wkl-glass-shine"></div>
+
+                        <!-- Solid Dual-Tone Header Bar -->
+                        <div class="px-5 sm:px-6 py-3.5 sm:py-4 <?php echo esc_attr( $palette['header_bg'] ); ?> border-b <?php echo esc_attr( $palette['header_border'] ); ?> flex items-center justify-between relative z-10 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl <?php echo esc_attr( $palette['num_box'] ); ?> shrink-0">
                                     <?php echo sprintf( '%02d', $idx + 1 ); ?>
                                 </div>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Misi Perusahaan</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                    Misi Perusahaan
+                                </span>
                             </div>
-                            <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-teal-500 transition-colors"></span>
+                            <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 <?php echo esc_attr( $palette['dot_hover'] ); ?> transition-colors"></span>
                         </div>
 
                         <!-- Card Body -->
-                        <div class="p-6 relative flex-grow flex flex-col justify-between overflow-hidden">
+                        <div class="p-6 relative flex-grow flex flex-col justify-between overflow-hidden z-10">
                             <!-- Decorative Quiet Watermark Logo -->
                             <div class="absolute -right-4 -bottom-4 w-32 h-32 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
                                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                             </div>
 
-                            <p class="text-slate-800 dark:text-slate-100 text-sm sm:text-[15px] leading-relaxed relative z-10 font-medium">
-                                <?php echo esc_html( $mission_text ); ?>
+                            <p class="text-slate-900 dark:text-slate-100 text-sm sm:text-[15px] leading-relaxed relative z-10 font-bold <?php echo esc_attr( $palette['hover_text'] ); ?> transition-colors">
+                                <?php echo esc_html( $m_title ); ?>
                             </p>
 
-                            <div class="mt-6 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 relative z-10">
-                                <span class="group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors flex items-center gap-1.5">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                                    Pilar Pelayanan
+                            <!-- Easter-Egg Subtle Action Hint (Panah beraksen selaras warna) -->
+                            <div class="mt-6 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between relative z-10">
+                                <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $palette['dot_color'] ); ?>"></span>
+                                    Prinsip BSW #<?php echo sprintf( '%02d', $idx + 1 ); ?>
                                 </span>
-                                <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-teal-50 dark:group-hover:bg-teal-950/60 text-slate-400 group-hover:text-teal-600 dark:group-hover:text-teal-400 flex items-center justify-center transition-colors shadow-2xs">
-                                    <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                <div class="wkl-mission-arrow w-8 h-8 rounded-xl bg-slate-100/90 dark:bg-slate-800/80 text-slate-400 dark:text-slate-400 <?php echo esc_attr( $palette['arrow_box'] ); ?> flex items-center justify-center transition-all duration-300 shadow-2xs group-hover:scale-110 active:scale-95" aria-hidden="true">
+                                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </div>
                             </div>
                         </div>
@@ -600,7 +697,8 @@ if ( empty( $cta_btn1_url ) ) {
         </div>
         <?php endif; ?>
 
-        <!-- Jati Diri & Keyakinan Inti (Core Beliefs) -->
+        <!-- Jati Diri & Keyakinan Inti (Core Beliefs - Opsional / Disembunyikan Sesuai Arahan Direksi) -->
+        <?php if ( ! empty( $show_identity_belief ) && $show_identity_belief === '1' ) : ?>
         <div class="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-6" data-aos="fade-up">
             <!-- Jati Diri -->
             <div class="spotlight-card group relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_18px_36px_-6px_rgba(15,23,42,0.14),0_8px_16px_-4px_rgba(8,131,149,0.14)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.18)] hover:border-teal-500/70 dark:hover:border-teal-400/60 hover:-translate-y-2 transition-all duration-300 ease-out cursor-default">
@@ -678,6 +776,7 @@ if ( empty( $cta_btn1_url ) ) {
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
     </div>
 </section>
@@ -712,41 +811,61 @@ if ( empty( $cta_btn1_url ) ) {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php foreach ( $values as $v_idx => $val_item ) : 
-                $acronym = $val_item['acronym'] ?? '';
+                $acronym = strtoupper( trim( $val_item['acronym'] ?? '' ) );
                 $v_title = $val_item['title'] ?? '';
                 $v_desc  = $val_item['desc'] ?? '';
-            ?>
-                <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-[0_18px_36px_-6px_rgba(8,131,149,0.22),0_8px_16px_-4px_rgba(15,23,42,0.1)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.85),0_0_24px_rgba(20,184,166,0.22)] hover:border-teal-500 dark:hover:border-teal-400 hover:-translate-y-2.5 transition-all duration-300 ease-out flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $v_idx % 4 ) * 80; ?>">
-                    <!-- Subtle Top Accent Line -->
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400"></div>
+                $v_color = $val_item['color'] ?? '';
 
-                    <!-- Solid Elegant Header Bar -->
-                    <div class="px-6 py-4 bg-gradient-to-r from-slate-50/95 via-teal-50/30 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                // Default dual-tone mapping untuk 4 pilar #WAQF jika warna belum di-set
+                if ( empty( $v_color ) || $v_color === 'auto' ) {
+                    if ( $acronym === 'W' ) {
+                        $v_color = 'emerald';
+                    } elseif ( $acronym === 'A' ) {
+                        $v_color = 'blue';
+                    } elseif ( $acronym === 'Q' ) {
+                        $v_color = 'cyan';
+                    } elseif ( $acronym === 'F' ) {
+                        $v_color = 'amber';
+                    } else {
+                        $v_color = 'auto';
+                    }
+                }
+                $palette = wakalumi_get_about_palette( $v_color, $v_idx );
+            ?>
+                <div class="spotlight-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-b from-white via-white to-slate-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900/90 border border-slate-200/90 dark:border-slate-800 shadow-sm <?php echo esc_attr( $palette['hover_shadow'] ); ?> <?php echo esc_attr( $palette['hover_border'] ); ?> hover:-translate-y-2.5 transition-all duration-300 ease-out flex flex-col justify-between cursor-default" data-aos="fade-up" data-aos-delay="<?php echo ( $v_idx % 4 ) * 80; ?>">
+                    <!-- Top Accent Line (Dual Tone Gradient h-1.5) -->
+                    <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r <?php echo esc_attr( $palette['top_stripe'] ); ?>"></div>
+
+                    <!-- Glass Shine Effect -->
+                    <div class="wkl-glass-shine"></div>
+
+                    <!-- Solid Dual-Tone Header Bar -->
+                    <div class="px-5 sm:px-6 py-4 <?php echo esc_attr( $palette['header_bg'] ); ?> border-b <?php echo esc_attr( $palette['header_border'] ); ?> flex items-center justify-between relative z-10 transition-colors">
                         <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-2xl bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-teal-600 group-hover:to-teal-700 group-hover:text-white group-hover:border-teal-600 group-hover:shadow-lg group-hover:shadow-teal-600/30 transition-all duration-300">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl <?php echo esc_attr( $palette['acronym_box'] ); ?> shrink-0">
                                 <?php echo esc_html( $acronym ); ?>
                             </div>
                             <div>
-                                <span class="text-[10px] uppercase tracking-widest font-extrabold text-teal-800 dark:text-teal-300 block">Karakter</span>
-                                <h3 class="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
+                                <span class="text-[10px] uppercase tracking-widest font-black text-slate-500 dark:text-slate-400 block">Karakter #WAQF</span>
+                                <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white <?php echo esc_attr( $palette['hover_text'] ); ?> transition-colors leading-tight">
                                     <?php echo esc_html( $v_title ); ?>
                                 </h3>
                             </div>
                         </div>
-                        <span class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-teal-500 group-hover:scale-125 transition-all"></span>
+                        <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 <?php echo esc_attr( $palette['dot_hover'] ); ?> transition-colors"></span>
                     </div>
 
                     <!-- Card Body -->
-                    <div class="p-6 relative flex-grow flex flex-col justify-between overflow-hidden">
+                    <div class="p-6 relative flex-grow flex flex-col justify-between overflow-hidden z-10">
                         <!-- Decorative Quiet Watermark Logo -->
                         <div class="absolute -right-4 -bottom-4 w-32 h-32 opacity-[0.035] dark:opacity-[0.025] pointer-events-none transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-[0.06] select-none overflow-hidden">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
                         </div>
 
-                        <!-- Solid Statement Box (Eliminates the 'kopong' empty feel) -->
-                        <div class="p-4 rounded-2xl bg-slate-50/90 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700/60 relative z-10 shadow-2xs group-hover:bg-teal-50/60 dark:group-hover:bg-teal-950/40 group-hover:border-teal-200 dark:group-hover:border-teal-800 transition-all duration-300">
+                        <!-- Solid Statement Box (Dual Tone Tinted) -->
+                        <div class="p-4 rounded-2xl <?php echo esc_attr( $palette['statement_box'] ); ?> border relative z-10 shadow-2xs transition-all duration-300">
                             <div class="flex items-start gap-2.5">
-                                <svg class="w-4 h-4 text-teal-500 dark:text-teal-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 <?php echo esc_attr( $palette['quote_icon'] ); ?> shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                                 </svg>
                                 <p class="text-xs sm:text-sm text-slate-800 dark:text-slate-100 font-semibold leading-relaxed italic flex-1">
@@ -757,12 +876,12 @@ if ( empty( $cta_btn1_url ) ) {
 
                         <?php if ( ! empty( $values_tag ) ) : ?>
                         <div class="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 relative z-10">
-                            <span class="group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                            <span class="<?php echo esc_attr( $palette['hover_text'] ); ?> transition-colors flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full <?php echo esc_attr( $palette['dot_color'] ); ?>"></span>
                                 <?php echo esc_html( $values_tag ); ?>
                             </span>
-                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-teal-50 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-800/60 shadow-2xs">
-                                Pilar #WAQF
+                            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md <?php echo esc_attr( $palette['tag_badge'] ); ?> shadow-2xs">
+                                Pilar <?php echo esc_html( $acronym ); ?>
                             </span>
                         </div>
                         <?php endif; ?>
@@ -1161,6 +1280,222 @@ if ( empty( $cta_btn1_url ) ) {
 </section>
 <?php endif; ?>
 
+<!-- ========================================================================
+     MODAL LIGHTBOX: PENJELASAN BUTIR MISI STRATEGIS (INTERAKTIF & SMOOTH)
+     ======================================================================== -->
+<style>
+.wkl-mission-card {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+}
+.wkl-mission-card:active {
+    transform: scale(0.97) !important;
+}
+.wkl-mission-card.wkl-card-clicked .wkl-mission-arrow {
+    transform: scale(1.3) rotate(45deg);
+    background-color: rgb(13 148 136) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+</style>
+
+<div id="wkl-mission-modal" 
+     class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 ease-out"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="wkl-modal-mission-title">
+    
+    <div id="wkl-modal-mission-card" 
+         class="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl p-6 sm:p-8 space-y-6 transform scale-95 translate-y-3 opacity-0 transition-all duration-300 ease-out">
+        
+        <!-- Top Ambient Accent Line -->
+        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-500 via-primary-500 to-emerald-400 rounded-t-3xl"></div>
+
+        <!-- Close Button -->
+        <button type="button" 
+                id="btn-close-mission-modal" 
+                class="absolute top-5 right-5 w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer hover:rotate-90"
+                aria-label="Tutup Modal">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        <!-- Modal Header -->
+        <div class="space-y-3 pr-8">
+            <div class="flex items-center gap-2.5">
+                <span id="wkl-modal-mission-num" class="w-8 h-8 rounded-xl bg-teal-50 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 font-black text-xs flex items-center justify-center border border-teal-200 dark:border-teal-800 shadow-2xs">
+                    01
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-teal-50/80 text-teal-700 dark:bg-teal-950/70 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/80">
+                    <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+                    Misi Strategis &bull; Uraian Lengkap
+                </span>
+            </div>
+
+            <h3 id="wkl-modal-mission-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-snug">
+            </h3>
+        </div>
+
+        <!-- Explanation Section -->
+        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-slate-50/90 to-teal-50/20 dark:from-slate-800/60 dark:to-teal-950/20 border border-slate-100 dark:border-slate-800 relative overflow-hidden">
+            <!-- Decorative Subtle Watermark -->
+            <div class="absolute -right-3 -bottom-3 w-28 h-28 opacity-[0.04] dark:opacity-[0.03] pointer-events-none select-none">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/untitled4.png" alt="" class="w-full h-full object-contain brightness-0 dark:brightness-100">
+            </div>
+
+            <p id="wkl-modal-mission-desc" class="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-normal relative z-10">
+            </p>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs text-slate-400 dark:text-slate-500 font-medium">
+                Bank Syariah Wakalumi
+            </span>
+            <button type="button" 
+                    id="btn-footer-close-mission-modal" 
+                    class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-teal-600 text-slate-700 hover:text-white dark:bg-slate-800 dark:hover:bg-teal-600 dark:text-slate-200 dark:hover:text-white font-bold text-xs transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95">
+                Tutup Penjelasan
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================================================
+     CLIENT-SIDE SCRIPT: INTERAKTIF POPUP MODAL MISI STRATEGIS
+     ======================================================================== -->
+<script>
+(function() {
+    function cleanupStaleMissionModal() {
+        const stale = document.getElementById('wkl-mission-modal');
+        if (stale) {
+            stale.classList.remove('flex', 'opacity-100', 'pointer-events-auto');
+            stale.classList.add('hidden', 'opacity-0', 'pointer-events-none');
+            if (stale.parentElement === document.body) {
+                stale.remove();
+            }
+        }
+        document.body.style.overflow = '';
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    // Clean up immediately if any stray modal is already in body
+    cleanupStaleMissionModal();
+
+    function initAboutPageMissions() {
+        const modal        = document.getElementById('wkl-mission-modal');
+        const modalCard    = document.getElementById('wkl-modal-mission-card');
+        const btnClose     = document.getElementById('btn-close-mission-modal');
+        const btnFooter    = document.getElementById('btn-footer-close-mission-modal');
+        const modalNum     = document.getElementById('wkl-modal-mission-num');
+        const modalTitle   = document.getElementById('wkl-modal-mission-title');
+        const modalDesc    = document.getElementById('wkl-modal-mission-desc');
+        const missionCards = document.querySelectorAll('.wkl-mission-card');
+
+        if (!modal || missionCards.length === 0) {
+            cleanupStaleMissionModal();
+            return;
+        }
+
+        // Teleport modal to document.body for Swup SPA safety
+        if (modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+
+        function openModal(card) {
+            const num   = card.getAttribute('data-mission-num') || '01';
+            const title = card.getAttribute('data-mission-title') || '';
+            const desc  = card.getAttribute('data-mission-desc') || title;
+
+            // Efek klik visual interaktif pada card & icon panah
+            card.classList.add('wkl-card-clicked');
+            setTimeout(() => {
+                card.classList.remove('wkl-card-clicked');
+            }, 400);
+
+            if (modalNum) modalNum.textContent = num;
+            if (modalTitle) modalTitle.textContent = title;
+            if (modalDesc) modalDesc.textContent = desc;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100', 'pointer-events-auto');
+                if (modalCard) {
+                    modalCard.classList.remove('scale-95', 'translate-y-3', 'opacity-0');
+                    modalCard.classList.add('scale-100', 'translate-y-0', 'opacity-100');
+                }
+            });
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            if (!modal) return;
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            if (modalCard) {
+                modalCard.classList.remove('scale-100', 'translate-y-0', 'opacity-100');
+                modalCard.classList.add('scale-95', 'translate-y-3', 'opacity-0');
+            }
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                if (modal && modal.classList.contains('opacity-0')) {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }
+            }, 300);
+        }
+
+        missionCards.forEach(card => {
+            card.onclick = function(e) {
+                e.preventDefault();
+                openModal(this);
+            };
+            card.onkeydown = function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModal(this);
+                }
+            };
+        });
+
+        if (btnClose) btnClose.onclick = closeModal;
+        if (btnFooter) btnFooter.onclick = closeModal;
+
+        modal.onclick = function(e) {
+            if (e.target === modal) closeModal();
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
+        // Register cleanup on Swup visit:start
+        if (window.swup && window.swup.hooks && !window._wklMissionCleanBound) {
+            window._wklMissionCleanBound = true;
+            window.swup.hooks.on('visit:start', () => {
+                cleanupStaleMissionModal();
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAboutPageMissions);
+    } else {
+        initAboutPageMissions();
+    }
+
+    if (window.swup && window.swup.hooks) {
+        window.swup.hooks.on('page:view', initAboutPageMissions);
+    }
+
+    window.addEventListener('pagehide', cleanupStaleMissionModal);
+})();
+</script>
 
 <?php
 get_footer();

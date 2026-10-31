@@ -572,10 +572,12 @@ if ( empty( $deposito_nisbah ) ) {
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
                         <?php foreach ( $deposito_nisbah as $r_idx => $row ) : 
-                            $p_name    = $row['nisbah_produk'] ?? 'Deposito';
-                            $nasabah_p = floatval( $row['nisbah_nasabah'] ?? '40' );
-                            $bank_p    = floatval( $row['nisbah_bank'] ?? '60' );
-                            $equiv_raw = $row['nisbah_equiv'] ?? '-';
+                            $p_name      = $row['nisbah_produk'] ?? 'Deposito';
+                            $nasabah_p   = floatval( $row['nisbah_nasabah'] ?? '40' );
+                            $bank_p      = floatval( $row['nisbah_bank'] ?? '60' );
+                            $nasabah_dec = ( floor( $nasabah_p ) != $nasabah_p ) ? 1 : 0;
+                            $bank_dec    = ( floor( $bank_p ) != $bank_p ) ? 1 : 0;
+                            $equiv_raw   = $row['nisbah_equiv'] ?? '-';
                             // Ekstrak float value untuk animasi counter
                             $equiv_clean = preg_replace( '/[^0-9.]/', '', $equiv_raw );
                             $equiv_val   = floatval( $equiv_clean );
@@ -609,13 +611,13 @@ if ( empty( $deposito_nisbah ) ) {
                                 <td class="p-4 sm:p-5">
                                     <div class="space-y-1.5 max-w-[210px]">
                                         <div class="flex justify-between items-center text-xs font-bold">
-                                            <span class="text-teal-700 dark:text-teal-300">Nasabah: <span class="wkl-counter" data-target="<?php echo esc_attr( $nasabah_p ); ?>" data-suffix="%">0%</span></span>
-                                            <span class="text-slate-500 dark:text-slate-400">Bank: <span class="wkl-counter" data-target="<?php echo esc_attr( $bank_p ); ?>" data-suffix="%">0%</span></span>
+                                            <span class="text-teal-700 dark:text-teal-300">Nasabah: <span class="wkl-counter" data-target="<?php echo esc_attr( $nasabah_p ); ?>" data-decimals="<?php echo esc_attr( $nasabah_dec ); ?>" data-suffix="%"><?php echo esc_html( $nasabah_p ); ?>%</span></span>
+                                            <span class="text-blue-600 dark:text-blue-400">Bank: <span class="wkl-counter" data-target="<?php echo esc_attr( $bank_p ); ?>" data-decimals="<?php echo esc_attr( $bank_dec ); ?>" data-suffix="%"><?php echo esc_html( $bank_p ); ?>%</span></span>
                                         </div>
                                         <!-- Visual Segmented Bar (Animated Width on Scroll) -->
                                         <div class="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex p-0.5 gap-0.5">
-                                            <div class="wkl-ratio-bar h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-l-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="<?php echo esc_attr( $nasabah_p ); ?>%"></div>
-                                            <div class="wkl-ratio-bar-bank h-full bg-slate-300 dark:bg-slate-600 rounded-r-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="<?php echo esc_attr( $bank_p ); ?>%"></div>
+                                            <div class="wkl-ratio-bar h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-l-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="<?php echo esc_attr( $nasabah_p ); ?>%"></div>
+                                            <div class="wkl-ratio-bar-bank h-full bg-gradient-to-r from-blue-600 to-sky-500 dark:from-blue-500 dark:to-sky-400 rounded-r-full transition-all duration-1000 ease-out" style="width: 0%;" data-width="<?php echo esc_attr( $bank_p ); ?>%"></div>
                                         </div>
                                     </div>
                                 </td>

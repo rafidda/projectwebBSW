@@ -51,6 +51,7 @@ function wakalumi_render_legalitas_admin_page() {
         update_option( 'options_legal_hero_card_tag2', sanitize_text_field( $_POST['options_legal_hero_card_tag2'] ?? '' ) );
 
         // 2. Seksi 1: Header & Repeater Kartu Registrasi Fiskal
+        update_option( 'options_legal_show_reg_section', isset( $_POST['options_legal_show_reg_section'] ) ? '1' : '0' );
         update_option( 'options_legal_sec1_badge', sanitize_text_field( $_POST['options_legal_sec1_badge'] ?? '' ) );
         update_option( 'options_legal_sec1_title', sanitize_text_field( $_POST['options_legal_sec1_title'] ?? '' ) );
         update_option( 'options_legal_sec1_subtitle', sanitize_textarea_field( $_POST['options_legal_sec1_subtitle'] ?? '' ) );
@@ -130,7 +131,32 @@ function wakalumi_render_legalitas_admin_page() {
         }
         update_option( 'options_legal_regulators', $clean_regulators );
 
-        // 4. Seksi 3: Linimasa Akta Notaris & Info Kantor
+        // 4. Seksi Sejarah Perusahaan (Linimasa Kronologi)
+        update_option( 'options_legal_show_sejarah', isset( $_POST['options_legal_show_sejarah'] ) ? '1' : '0' );
+        update_option( 'options_legal_sejarah_badge', sanitize_text_field( $_POST['options_legal_sejarah_badge'] ?? '' ) );
+        update_option( 'options_legal_sejarah_title', sanitize_text_field( $_POST['options_legal_sejarah_title'] ?? '' ) );
+        update_option( 'options_legal_sejarah_subtitle', sanitize_textarea_field( $_POST['options_legal_sejarah_subtitle'] ?? '' ) );
+
+        $raw_sej_years  = $_POST['sejarah_year'] ?? [];
+        $raw_sej_titles = $_POST['sejarah_title'] ?? [];
+        $raw_sej_tags   = $_POST['sejarah_tag'] ?? [];
+        $raw_sej_descs  = $_POST['sejarah_desc'] ?? [];
+        $clean_sejarah  = [];
+
+        for ( $i = 0; $i < count( $raw_sej_titles ); $i++ ) {
+            $title = sanitize_text_field( $raw_sej_titles[$i] ?? '' );
+            if ( ! empty( $title ) ) {
+                $clean_sejarah[] = [
+                    'year'  => sanitize_text_field( $raw_sej_years[$i] ?? '' ),
+                    'title' => $title,
+                    'tag'   => sanitize_text_field( $raw_sej_tags[$i] ?? '' ),
+                    'desc'  => wp_kses_post( $raw_sej_descs[$i] ?? '' ),
+                ];
+            }
+        }
+        update_option( 'options_legal_sejarah_items', $clean_sejarah );
+
+        // 5. Seksi Linimasa Akta Notaris & Info Kantor
         update_option( 'options_legal_sec3_badge', sanitize_text_field( $_POST['options_legal_sec3_badge'] ?? '' ) );
         update_option( 'options_legal_sec3_title', sanitize_text_field( $_POST['options_legal_sec3_title'] ?? '' ) );
         update_option( 'options_legal_sec3_subtitle', sanitize_textarea_field( $_POST['options_legal_sec3_subtitle'] ?? '' ) );
@@ -192,6 +218,7 @@ function wakalumi_render_legalitas_admin_page() {
     $hero_card_tag2  = get_option( 'options_legal_hero_card_tag2', 'Fatwa DSN-MUI' );
 
     // Seksi 2: Registrasi Fiskal
+    $show_reg_section = get_option( 'options_legal_show_reg_section', '0' );
     $sec1_badge    = get_option( 'options_legal_sec1_badge', 'Nomor Registrasi Resmi' );
     $sec1_title    = get_option( 'options_legal_sec1_title', 'Identitas Registrasi & Fiskal Perusahaan' );
     $sec1_subtitle = get_option( 'options_legal_sec1_subtitle', 'Legalitas kepatuhan terhadap perizinan berusaha nasional, perpajakan negara, dan pengelolaan zakat syariah.' );
@@ -281,6 +308,48 @@ function wakalumi_render_legalitas_admin_page() {
         ];
     }
 
+    // Seksi Sejarah Perusahaan (Linimasa Kronologi)
+    $show_sejarah_section = get_option( 'options_legal_show_sejarah', '1' );
+    $sejarah_badge        = get_option( 'options_legal_sejarah_badge', 'Sejarah Perusahaan' );
+    $sejarah_title        = get_option( 'options_legal_sejarah_title', 'Tonggak Sejarah Perjalanan Bank Syariah Wakalumi' );
+    $sejarah_subtitle     = get_option( 'options_legal_sejarah_subtitle', 'Rekam jejak dedikasi dari inisiasi pendirian, transformasi berlandaskan syariah Islam, hingga penguatan permodalan berkelanjutan.' );
+
+    $sejarah_items = get_option( 'options_legal_sejarah_items', [] );
+    if ( empty( $sejarah_items ) ) {
+        $sejarah_items = [
+            [
+                'year'  => '1989',
+                'title' => 'Inisiasi Pendirian',
+                'desc'  => 'BPRS Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan Alumni Muslim Citibank).',
+                'tag'   => 'Inisiasi Awal',
+            ],
+            [
+                'year'  => '1989',
+                'title' => 'Surat Pengesahan',
+                'desc'  => 'PT Bank Perekonomian Rakyat Syariah (BPRS) Wakalumi didirikan oleh Yayasan Wakalumi (Wakaf Karyawan dan Alumni Muslim Citibank) berdasarkan Surat Menteri Keuangan Republik Indonesia Nomor S-637/MK.13/1989 tanggal 18 Mei 1989 tentang Persetujuan Prinsip Pendirian Bank Perkreditan Rakyat.',
+                'tag'   => 'Izin Prinsip Menkeu',
+            ],
+            [
+                'year'  => '1995',
+                'title' => 'Transisi ke Syariah',
+                'desc'  => 'BPRS Wakalumi ini semula beroperasi secara konvensional, namun pada tahun 1995 di konversi menjadi BPR yang beroperasi berlandaskan Syariah Islam. Hal ini terkait dengan lahirnya UU Nomor 7 Tahun 1992 dimana Bank baik Bank Umum maupun BPR dapat beroperasi berdasarkan Syariah Islam.',
+                'tag'   => 'Konversi Syariah',
+            ],
+            [
+                'year'  => '1994 - 2008',
+                'title' => 'Kepemilikan Saham',
+                'desc'  => 'Tahun 1994 Bank Muamalat Indonesia memberikan bantuan tehnis dan manajemen kepada BPRS Wakalumi setelah Bank Muamalat Indonesia menguasai 49% saham. Sejak tahun 2008 Bank Muamalat Indonesia tidak menjadi Pemegang Saham BPRS Wakalumi karena Bank Muamalat Indonesia menjadi perusahaan penanaman modal asing.',
+                'tag'   => 'Kemitraan BMI',
+            ],
+            [
+                'year'  => '2016 - Sekarang',
+                'title' => 'Penguatan Modal & Kepemilikan',
+                'desc'  => 'Terjadi Penguatan modal Bank dengan Masuknya Bapak <strong class="whitespace-nowrap">Ir.&nbsp;H.&nbsp;Saat&nbsp;Suharto</strong>, dan hingga kini beliau menjadi Pemegang Saham Pengendali (PSP) sekaligus Pemegang saham Mayoritas.',
+                'tag'   => 'Pemegang Saham Pengendali',
+            ],
+        ];
+    }
+
     // Seksi 4: Akta Notaris & Kantor
     $sec3_badge    = get_option( 'options_legal_sec3_badge', 'Kronologi Yuridis' );
     $sec3_title    = get_option( 'options_legal_sec3_title', 'Rekam Jejak Akta Notaris & Perubahan Anggaran Dasar' );
@@ -341,18 +410,18 @@ function wakalumi_render_legalitas_admin_page() {
     $office_btn_text   = get_option( 'options_legal_office_btn_text', 'Peta & Kontak Kantor' );
     $office_btn_url    = get_option( 'options_legal_office_btn_url', home_url( '/kontak' ) );
 
-    // Seksi 5: CTA Bawah
-    $cta_badge     = get_option( 'options_legal_cta_badge', 'Transparansi & Kemitraan' );
-    $cta_title     = get_option( 'options_legal_cta_title', 'Perlu Verifikasi Legalitas atau Salinan Dokumen Resmi?' );
-    $cta_desc      = get_option( 'options_legal_cta_desc', 'Tim kepatuhan dan sekretariat korporasi BPRS Wakalumi siap melayani kebutuhan verifikasi hukum, kemitraan institusi, dan kepatuhan syariah Anda.' );
-    $cta_btn1_text = get_option( 'options_legal_cta_btn1_text', 'Hubungi Sekretariat via WhatsApp' );
-    $cta_btn1_url  = get_option( 'options_legal_cta_btn1_url', '' );
-    $cta_btn2_text = get_option( 'options_legal_cta_btn2_text', 'Lihat Susunan Pengurus' );
-    $cta_btn2_url  = get_option( 'options_legal_cta_btn2_url', home_url( '/profil/susunan-pengurus' ) );
+    // Seksi 5: CTA Bawah (Ajakan Mengenal Susunan Pengurus & Kontak BSW)
+    $cta_badge     = get_option( 'options_legal_cta_badge', 'Struktur Kepemimpinan BSW' );
+    $cta_title     = get_option( 'options_legal_cta_title', 'Mengenal Lebih Dekat Susunan Pengurus BSW' );
+    $cta_desc      = get_option( 'options_legal_cta_desc', 'Tata kelola operasional dan kepatuhan syariah di BSW dijalankan secara profesional, amanah, dan transparan oleh jajaran Dewan Komisaris, Direksi, serta Dewan Pengawas Syariah.' );
+    $cta_btn1_text = get_option( 'options_legal_cta_btn1_text', 'Lihat Susunan Pengurus' );
+    $cta_btn1_url  = get_option( 'options_legal_cta_btn1_url', home_url( '/profil/susunan-pengurus/' ) );
+    $cta_btn2_text = get_option( 'options_legal_cta_btn2_text', 'Hubungi BSW via WhatsApp' );
+    $cta_btn2_url  = get_option( 'options_legal_cta_btn2_url', '' );
 
     $wa_number     = get_option( 'options_contact_wa', '6281517380388' );
-    if ( empty( $cta_btn1_url ) ) {
-        $cta_btn1_url = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
+    if ( empty( $cta_btn2_url ) ) {
+        $cta_btn2_url = 'https://wa.me/' . preg_replace( '/[^0-9]/', '', $wa_number );
     }
     ?>
     <div class="wrap" style="max-width: 1040px; margin-top: 20px;">
@@ -449,6 +518,24 @@ function wakalumi_render_legalitas_admin_page() {
                 <h2 style="font-size: 17px; margin: 0 0 18px 0; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9; color: #088395; display: flex; align-items: center; gap: 8px;">
                     <span class="dashicons dashicons-id"></span> Seksi 2: Identitas Registrasi & Fiskal (Kartu NIB, NPWP, NPWZ, dll)
                 </h2>
+
+                <!-- Status Visibilitas & Privasi Seksi -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #64748b; border-radius: 8px; padding: 14px 18px; margin-bottom: 22px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <strong style="color: #1e293b; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                                <span class="dashicons dashicons-privacy" style="color: #64748b;"></span> Status Visibilitas Halaman Publik
+                            </strong>
+                            <p style="color: #64748b; font-size: 12px; margin: 4px 0 0 0; line-height: 1.4;">
+                                Seksi Nomor Registrasi Resmi dinonaktifkan secara default dari halaman publik website demi keamanan & privasi data korporasi. Data tetap tersimpan aman sebagai arsip internal.
+                            </p>
+                        </div>
+                        <label style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: #0f172a; cursor: pointer; background: #fff; padding: 6px 14px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                            <input type="checkbox" name="options_legal_show_reg_section" value="1" <?php checked( $show_reg_section, '1' ); ?>>
+                            Tampilkan di Halaman Publik
+                        </label>
+                    </div>
+                </div>
 
                 <h3 style="font-size: 14px; font-weight: 700; color: #334155; margin: 15px 0 10px 0;">A. Judul & Header Seksi</h3>
                 <table class="form-table" role="presentation" style="margin-bottom: 20px;">
@@ -639,6 +726,80 @@ function wakalumi_render_legalitas_admin_page() {
                 </button>
             </div>
 
+            <!-- ── SEKSI SEJARAH: SEJARAH PERUSAHAAN (LINIMASA KRONOLOGIS) ───────────── -->
+            <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9; flex-wrap: wrap; gap: 10px;">
+                    <h2 style="font-size: 17px; margin: 0; color: #088395; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-backup"></span> Seksi 3: Sejarah Perusahaan (Linimasa Kronologis Sejarah)
+                    </h2>
+                    <label style="font-weight: 600; font-size: 13px; color: #334155; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" name="options_legal_show_sejarah" value="1" <?php checked( $show_sejarah_section, '1' ); ?>>
+                        Tampilkan Seksi Sejarah Perusahaan di Website
+                    </label>
+                </div>
+
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">
+                    Menampilkan garis kronologis sejarah perjalanan perusahaan berurutan ke bawah secara selang-seling (kiri-kanan) di atas seksi Akta Notaris. Anda dapat menambah, mengubah, atau menggeser urutan peristiwa kapan saja.
+                </p>
+
+                <h3 style="font-size: 14px; font-weight: 700; color: #334155; margin: 15px 0 10px 0;">A. Judul & Header Seksi Sejarah</h3>
+                <table class="form-table" role="presentation" style="margin-bottom: 20px;">
+                    <tr>
+                        <th scope="row"><label for="options_legal_sejarah_badge">Badge Seksi</label></th>
+                        <td><input type="text" id="options_legal_sejarah_badge" name="options_legal_sejarah_badge" value="<?php echo esc_attr( $sejarah_badge ); ?>" class="regular-text"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_legal_sejarah_title">Judul Seksi</label></th>
+                        <td><input type="text" id="options_legal_sejarah_title" name="options_legal_sejarah_title" value="<?php echo esc_attr( $sejarah_title ); ?>" class="large-text" style="font-weight: bold;"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="options_legal_sejarah_subtitle">Sub-Judul / Deskripsi</label></th>
+                        <td><textarea id="options_legal_sejarah_subtitle" name="options_legal_sejarah_subtitle" rows="2" class="large-text"><?php echo esc_textarea( $sejarah_subtitle ); ?></textarea></td>
+                    </tr>
+                </table>
+
+                <h3 style="font-size: 14px; font-weight: 700; color: #334155; margin: 20px 0 10px 0; padding-top: 15px; border-top: 1px dashed #e2e8f0;">B. Tabel Tonggak Sejarah Perusahaan (Urutan 🔼 / 🔽)</h3>
+                <table class="widefat fixed striped" style="border-radius: 8px; overflow: hidden; margin-bottom: 15px;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="width: 140px; font-weight: bold; text-align: center;">Tahun / Periode</th>
+                            <th style="width: 250px; font-weight: bold;">Judul Peristiwa</th>
+                            <th style="width: 180px; font-weight: bold;">Tag / Label</th>
+                            <th style="font-weight: bold;">Uraian Sejarah Lengkap</th>
+                            <th style="width: 100px; text-align: center; font-weight: bold;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="legal-sejarah-tbody">
+                        <?php foreach ( $sejarah_items as $s_idx => $s_item ) : ?>
+                            <tr class="wkl-sortable-row">
+                                <td style="vertical-align: top; padding-top: 10px; text-align: center;">
+                                    <input type="text" name="sejarah_year[]" value="<?php echo esc_attr( $s_item['year'] ?? '' ); ?>" class="large-text" style="text-align: center; font-weight: bold; color: #088395; font-family: monospace;" placeholder="misal: 1989">
+                                </td>
+                                <td style="vertical-align: top; padding-top: 10px;">
+                                    <input type="text" name="sejarah_title[]" value="<?php echo esc_attr( $s_item['title'] ?? '' ); ?>" class="large-text" style="font-weight: 600;" placeholder="Judul peristiwa...">
+                                </td>
+                                <td style="vertical-align: top; padding-top: 10px;">
+                                    <input type="text" name="sejarah_tag[]" value="<?php echo esc_attr( $s_item['tag'] ?? '' ); ?>" class="large-text" placeholder="misal: Inisiasi Awal">
+                                </td>
+                                <td style="vertical-align: top; padding-top: 10px;">
+                                    <textarea name="sejarah_desc[]" rows="3" class="large-text" placeholder="Uraian peristiwa sejarah lengkap..."><?php echo esc_textarea( $s_item['desc'] ?? '' ); ?></textarea>
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                    <div style="display: flex; gap: 4px; justify-content: center;">
+                                        <button type="button" class="button button-small wkl-btn-up" title="Geser ke Atas">🔼</button>
+                                        <button type="button" class="button button-small wkl-btn-down" title="Geser ke Bawah">🔽</button>
+                                        <button type="button" class="button button-small button-link-delete wkl-btn-delete" style="color: #ef4444;" title="Hapus">✕</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <button type="button" id="btn-add-sejarah" class="button button-secondary">
+                    <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> + Tambah Tonggak Sejarah
+                </button>
+            </div>
+
             <!-- ── SEKSI 4: REKAM JEJAK AKTA NOTARIS ───────────── -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 30px;">
                 <h2 style="font-size: 17px; margin: 0 0 18px 0; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9; color: #088395; display: flex; align-items: center; gap: 8px;">
@@ -740,7 +901,7 @@ function wakalumi_render_legalitas_admin_page() {
             <!-- ── SEKSI 5: CTA BANNER ────────────────────────── -->
             <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 30px;">
                 <h2 style="font-size: 17px; margin: 0 0 18px 0; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9; color: #088395; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-megaphone"></span> Seksi 5: Banner Hubungi & Verifikasi (CTA Bawah)
+                    <span class="dashicons dashicons-megaphone"></span> Seksi 5: Banner Ajakan Kepemimpinan & Kontak BSW (CTA Bawah)
                 </h2>
                 <table class="form-table" role="presentation">
                     <tr>
@@ -756,20 +917,20 @@ function wakalumi_render_legalitas_admin_page() {
                         <td><textarea id="options_legal_cta_desc" name="options_legal_cta_desc" rows="2" class="large-text"><?php echo esc_textarea( $cta_desc ); ?></textarea></td>
                     </tr>
                     <tr>
-                        <th scope="row">Tombol Utama (WhatsApp)</th>
+                        <th scope="row">Tombol Utama (Susunan Pengurus)</th>
                         <td>
                             <div style="display: flex; gap: 10px;">
-                                <input type="text" name="options_legal_cta_btn1_text" value="<?php echo esc_attr( $cta_btn1_text ); ?>" class="regular-text" placeholder="Teks Tombol">
-                                <input type="text" name="options_legal_cta_btn1_url" value="<?php echo esc_attr( $cta_btn1_url ); ?>" class="regular-text" placeholder="URL WhatsApp (kosongkan untuk default)">
+                                <input type="text" name="options_legal_cta_btn1_text" value="<?php echo esc_attr( $cta_btn1_text ); ?>" class="regular-text" placeholder="Teks Tombol (mis: Lihat Susunan Pengurus)">
+                                <input type="text" name="options_legal_cta_btn1_url" value="<?php echo esc_attr( $cta_btn1_url ); ?>" class="regular-text" placeholder="URL Tombol (mis: /profil/susunan-pengurus)">
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Tombol Sekunder</th>
+                        <th scope="row">Tombol Sekunder (WhatsApp)</th>
                         <td>
                             <div style="display: flex; gap: 10px;">
-                                <input type="text" name="options_legal_cta_btn2_text" value="<?php echo esc_attr( $cta_btn2_text ); ?>" class="regular-text" placeholder="Teks Tombol">
-                                <input type="text" name="options_legal_cta_btn2_url" value="<?php echo esc_attr( $cta_btn2_url ); ?>" class="regular-text" placeholder="URL Tombol (contoh: /profil/susunan-pengurus)">
+                                <input type="text" name="options_legal_cta_btn2_text" value="<?php echo esc_attr( $cta_btn2_text ); ?>" class="regular-text" placeholder="Teks Tombol (mis: Hubungi BSW via WhatsApp)">
+                                <input type="text" name="options_legal_cta_btn2_url" value="<?php echo esc_attr( $cta_btn2_url ); ?>" class="regular-text" placeholder="URL WhatsApp (kosongkan untuk default nomor WA)">
                             </div>
                         </td>
                     </tr>
@@ -1017,6 +1178,38 @@ function wakalumi_render_legalitas_admin_page() {
                     </td>
                 `;
                 tbodyAkta.appendChild(tr);
+            });
+        }
+
+        // ── 5. Add Sejarah Row ──
+        var btnAddSejarah = document.getElementById('btn-add-sejarah');
+        var tbodySejarah  = document.getElementById('legal-sejarah-tbody');
+        if (btnAddSejarah && tbodySejarah) {
+            btnAddSejarah.addEventListener('click', function() {
+                var tr = document.createElement('tr');
+                tr.className = 'wkl-sortable-row';
+                tr.innerHTML = `
+                    <td style="vertical-align: top; padding-top: 10px; text-align: center;">
+                        <input type="text" name="sejarah_year[]" value="<?php echo date('Y'); ?>" class="large-text" style="text-align: center; font-weight: bold; color: #088395; font-family: monospace;" placeholder="misal: 2026">
+                    </td>
+                    <td style="vertical-align: top; padding-top: 10px;">
+                        <input type="text" name="sejarah_title[]" value="" class="large-text" style="font-weight: 600;" placeholder="Judul peristiwa...">
+                    </td>
+                    <td style="vertical-align: top; padding-top: 10px;">
+                        <input type="text" name="sejarah_tag[]" value="" class="large-text" placeholder="misal: Tonggak Baru">
+                    </td>
+                    <td style="vertical-align: top; padding-top: 10px;">
+                        <textarea name="sejarah_desc[]" rows="3" class="large-text" placeholder="Uraian peristiwa sejarah lengkap..."></textarea>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <div style="display: flex; gap: 4px; justify-content: center;">
+                            <button type="button" class="button button-small wkl-btn-up" title="Geser ke Atas">🔼</button>
+                            <button type="button" class="button button-small wkl-btn-down" title="Geser ke Bawah">🔽</button>
+                            <button type="button" class="button button-small button-link-delete wkl-btn-delete" style="color: #ef4444;" title="Hapus">✕</button>
+                        </div>
+                    </td>
+                `;
+                tbodySejarah.appendChild(tr);
             });
         }
     });

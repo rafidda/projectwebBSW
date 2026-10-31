@@ -474,6 +474,8 @@ $slide_count    = $has_cpt_slides ? $slides_query->post_count : count( $fallback
      SECTION 2: LAYANAN CEPAT (Glassmorphism Cards)
      ======================================== -->
 <?php
+$calc_pem_enabled = get_option( 'options_pembiayaan_calc_enable', '1' );
+
 // Card configurations (Pintu Masuk Utama / Main Discovery Gateways)
 $quick_cards_config = [
     1 => [
@@ -581,9 +583,18 @@ if ( ! function_exists( 'wakalumi_render_card_icon' ) ) {
                 $c_icon     = get_option( "options_quick_card_{$i}_icon", $cfg['default_i'] );
                 $c_image    = get_option( "options_quick_card_{$i}_image", '' );
 
+                // Jika kalkulator pembiayaan dinonaktifkan, alihkan Card 4 fix ke Kalkulator Deposito Syariah
+                if ( $calc_pem_enabled === '0' && $i === 4 ) {
+                    $c_title = 'Simulasi Deposito';
+                    $c_desc  = 'Hitung estimasi bagi hasil investasi deposito syariah BSW secara transparan.';
+                    $c_url   = home_url( '/produk/deposito-syariah/#simulasi' );
+                }
+
                 // Intelligent dynamic micro-badge fallback
                 $c_badge = get_option( "options_quick_card_{$i}_badge", '' );
-                if ( empty( $c_badge ) ) {
+                if ( $calc_pem_enabled === '0' && $i === 4 ) {
+                    $c_badge = 'Kalkulator Deposito';
+                } elseif ( empty( $c_badge ) ) {
                     if ( stripos( $c_title, 'tabungan' ) !== false ) {
                         $c_badge = 'Bebas Biaya Adm';
                     } elseif ( stripos( $c_title, 'deposito' ) !== false ) {
@@ -711,12 +722,36 @@ if ( empty( $about_img_url ) ) {
 }
 
 // 4. Statistik Singkat Terpadu dari Halaman Tentang Kami
-$stat_1_val = get_option( 'options_about_page_stat_1_val', '35+' );
-$stat_1_lbl = get_option( 'options_about_page_stat_1_lbl', 'Tahun Pengalaman (1989)' );
-$stat_2_val = get_option( 'options_about_page_stat_2_val', '10.000+' );
-$stat_2_lbl = get_option( 'options_about_page_stat_2_lbl', 'Nasabah Setia' );
-$stat_3_val = get_option( 'options_about_page_stat_3_val', '100%' );
-$stat_3_lbl = get_option( 'options_about_page_stat_3_lbl', 'Prinsip Murni Syariah' );
+$stat_colors = [
+    1 => 'text-teal-600 dark:text-teal-400',
+    2 => 'text-primary-600 dark:text-teal-300',
+    3 => 'text-emerald-600 dark:text-emerald-400',
+    4 => 'text-amber-600 dark:text-amber-400',
+];
+
+$valid_stats = [];
+for ( $s = 1; $s <= 4; $s++ ) {
+    $val = trim( (string) get_option( "options_about_page_stat_{$s}_val", '' ) );
+    $lbl = trim( (string) get_option( "options_about_page_stat_{$s}_lbl", '' ) );
+    if ( ! empty( $val ) ) {
+        $valid_stats[] = [
+            'slot'  => $s,
+            'val'   => $val,
+            'lbl'   => $lbl,
+            'color' => $stat_colors[ $s ] ?? 'text-teal-600 dark:text-teal-400',
+        ];
+    }
+}
+
+// Fallback jika opsi belum pernah tersimpan di database
+if ( empty( $valid_stats ) && false === get_option( 'options_about_page_stat_1_val' ) ) {
+    $valid_stats = [
+        [ 'slot' => 1, 'val' => '35+', 'lbl' => 'Tahun Pengalaman (1989)', 'color' => 'text-teal-600 dark:text-teal-400' ],
+        [ 'slot' => 2, 'val' => '10.000+', 'lbl' => 'Nasabah Setia', 'color' => 'text-primary-600 dark:text-teal-300' ],
+        [ 'slot' => 3, 'val' => '100%', 'lbl' => 'Prinsip Murni Syariah', 'color' => 'text-emerald-600 dark:text-emerald-400' ],
+    ];
+}
+$stat_count = count( $valid_stats );
 
 // 5. Tombol Aksi CTA
 $about_cta_text = get_option( 'options_about_cta_text', 'Selengkapnya Tentang Kami' );
@@ -765,20 +800,32 @@ if ( $about_img_mob === 'hide' ) {
                 </div>
 
                 <!-- Highlights Stats Synchronized with Tentang Kami -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
-                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs">
-                        <div class="text-lg sm:text-xl font-extrabold text-teal-600 dark:text-teal-400"><?php echo esc_html( $stat_1_val ); ?></div>
-                        <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $stat_1_lbl ); ?></div>
+                <?php if ( ! empty( $valid_stats ) ) : 
+                    $grid_class = 'grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8';
+                    if ( $stat_count === 4 ) {
+                        $grid_class = 'grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-8';
+                    } elseif ( $stat_count === 3 ) {
+                        $grid_class = 'grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8';
+                    } elseif ( $stat_count === 2 ) {
+                        $grid_class = 'grid grid-cols-2 gap-3 mb-8';
+                    } elseif ( $stat_count === 1 ) {
+                        $grid_class = 'grid grid-cols-1 max-w-xs gap-3 mb-8';
+                    }
+                ?>
+                    <div class="<?php echo esc_attr( $grid_class ); ?>">
+                        <?php foreach ( $valid_stats as $idx => $st ) : 
+                            $span_class = '';
+                            if ( $stat_count === 3 && $idx === 2 ) {
+                                $span_class = 'col-span-2 sm:col-span-1';
+                            }
+                        ?>
+                            <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs hover:shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 <?php echo esc_attr( $span_class ); ?>">
+                                <div class="text-lg sm:text-xl font-extrabold <?php echo esc_attr( $st['color'] ); ?> leading-tight mb-0.5"><?php echo esc_html( $st['val'] ); ?></div>
+                                <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $st['lbl'] ); ?></div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs">
-                        <div class="text-lg sm:text-xl font-extrabold text-primary-600 dark:text-teal-300"><?php echo esc_html( $stat_2_val ); ?></div>
-                        <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $stat_2_lbl ); ?></div>
-                    </div>
-                    <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border shadow-xs col-span-2 sm:col-span-1">
-                        <div class="text-lg sm:text-xl font-extrabold text-emerald-600 dark:text-emerald-400"><?php echo esc_html( $stat_3_val ); ?></div>
-                        <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-snug"><?php echo esc_html( $stat_3_lbl ); ?></div>
-                    </div>
-                </div>
+                <?php endif; ?>
 
                 <div class="flex flex-wrap items-center gap-4">
                     <a href="<?php echo esc_url( $about_cta_url ); ?>" class="btn-primary text-sm inline-flex items-center gap-2">
@@ -806,8 +853,19 @@ if ( $about_img_mob === 'hide' ) {
 // Ambil produk tabungan dinamis dari Admin Panel
 $tabungan_preview_list = function_exists( 'wakalumi_get_tabungan_list' ) ? wakalumi_get_tabungan_list() : [];
 
-// Batasi hingga 4 produk pertama untuk layout grid rapi
+// Batasi hingga 4 produk pertama untuk layout grid beranda (default max 4)
 $tabungan_preview_list = array_slice( $tabungan_preview_list, 0, 4 );
+$tabungan_count        = count( $tabungan_preview_list );
+
+// Tentukan grid layout dinamis: jika produk < 4, dibuat rata tengah (center) secara proporsional
+$tabungan_grid_class = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
+if ( $tabungan_count === 3 ) {
+    $tabungan_grid_class = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto gap-6';
+} elseif ( $tabungan_count === 2 ) {
+    $tabungan_grid_class = 'grid grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto gap-6';
+} elseif ( $tabungan_count === 1 ) {
+    $tabungan_grid_class = 'grid grid-cols-1 max-w-md mx-auto gap-6';
+}
 
 $tabungan_sec_badge = get_option( 'options_tabungan_sec_badge', 'Produk Simpanan' );
 $tabungan_sec_title = get_option( 'options_tabungan_sec_title', 'Solusi Tabungan *Syariah Amanah*' );
@@ -825,8 +883,8 @@ if ( ! empty( $tabungan_preview_list ) ) :
             <p class="section-subtitle mx-auto"><?php echo esc_html( $tabungan_sec_desc ); ?></p>
         </div>
 
-        <!-- Products Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Products Grid (Centered for < 4, Flexible 4 Columns for 4+) -->
+        <div class="<?php echo esc_attr( $tabungan_grid_class ); ?>">
             <?php
             $delay = 100;
             $color_styles = [
@@ -912,15 +970,20 @@ if ( ! empty( $tabungan_preview_list ) ) :
                 ],
             ];
 
-            foreach ( $tabungan_preview_list as $prod ) :
+            foreach ( $tabungan_preview_list as $idx => $prod ) :
                 $p_slug     = ! empty( $prod['slug'] ) ? sanitize_title( $prod['slug'] ) : sanitize_title( $prod['nama'] );
                 $p_color    = $prod['color'] ?? 'teal';
                 $c_style    = $color_styles[ $p_color ] ?? $color_styles['teal'];
                 $p_badge    = ! empty( $prod['badge'] ) ? $prod['badge'] : 'Tabungan Syariah';
                 $p_tagline  = ! empty( $prod['tagline'] ) ? $prod['tagline'] : '';
                 $target_url = home_url( '/produk/tabungan-syariah#' . $p_slug );
+
+                // Card ke-3 otomatis rata tengah pada breakpoint tablet (sm/md) saat total produk = 3
+                $card_extra_class = ( $tabungan_count === 3 && $idx === 2 ) 
+                    ? 'sm:col-span-2 sm:max-w-md sm:mx-auto sm:w-full lg:col-span-1 lg:max-w-none' 
+                    : '';
             ?>
-                <div class="card group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_style['accent_bar'] ); ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 <?php echo esc_attr( $c_style['card_hover'] ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
+                <div class="card group relative flex flex-col h-full bg-white dark:bg-dark-surface border border-slate-200/80 dark:border-dark-border rounded-2xl md:rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-transparent <?php echo esc_attr( $c_style['accent_bar'] ); ?> before:to-transparent before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500 <?php echo esc_attr( $c_style['card_hover'] ); ?> <?php echo esc_attr( $card_extra_class ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
                     
                     <!-- Watermark Logo Background (Subtle & Consistent with untitled4.png) -->
                     <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.065] dark:opacity-[0.04] pointer-events-none select-none overflow-hidden transition-all duration-700 ease-out group-hover:scale-115 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:opacity-[0.11] dark:group-hover:opacity-[0.07] mix-blend-multiply dark:mix-blend-screen z-0">
@@ -1194,20 +1257,20 @@ if ( $nisbah_data ) :
                                     <span class="font-bold text-slate-800 dark:text-white"><?php echo esc_html( $row['nisbah_nasabah'] ); ?>%</span>
                                 </div>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="font-bold text-slate-700 dark:text-slate-300"><?php echo esc_html( $row['nisbah_bank'] ); ?>%</span>
+                                    <span class="font-bold text-slate-800 dark:text-white"><?php echo esc_html( $row['nisbah_bank'] ); ?>%</span>
                                     <span class="text-slate-500 dark:text-slate-400 font-medium">Bank</span>
-                                    <span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                                    <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400"></span>
                                 </div>
                             </div>
 
                             <!-- Single Segmented Bar (100% Split) -->
                             <div class="h-2.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center p-0.5 border border-slate-200/50 dark:border-slate-700/50">
-                                <!-- Segmen Kiri: Nasabah -->
-                                <div class="h-full rounded-l-full <?php echo $is_tabungan ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-gradient-to-r from-teal-500 to-cyan-400'; ?> transition-all duration-700 ease-out nisbah-bar-animated"
+                                <!-- Segmen Kiri: Nasabah (Hijau Tosca) -->
+                                <div class="h-full rounded-l-full <?php echo $is_tabungan ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-gradient-to-r from-teal-500 to-emerald-400'; ?> transition-all duration-700 ease-out nisbah-bar-animated"
                                      style="width: <?php echo esc_attr( $nasabah_val ); ?>%"
                                      title="Nasabah: <?php echo esc_attr( $nasabah_val ); ?>%"></div>
-                                <!-- Segmen Kanan: Bank -->
-                                <div class="h-full rounded-r-full bg-slate-300 dark:bg-slate-600 transition-all duration-700 ease-out"
+                                <!-- Segmen Kanan: Bank (Biru Murni) -->
+                                <div class="h-full rounded-r-full bg-gradient-to-r from-blue-600 to-sky-500 dark:from-blue-500 dark:to-sky-400 transition-all duration-700 ease-out"
                                      style="width: <?php echo esc_attr( $bank_val ); ?>%"
                                      title="Bank: <?php echo esc_attr( $bank_val ); ?>%"></div>
                             </div>
@@ -1234,6 +1297,17 @@ if ( $nisbah_data ) :
 <?php
 $pembiayaan_preview_list = function_exists( 'wakalumi_get_pembiayaan_list' ) ? wakalumi_get_pembiayaan_list() : [];
 $pembiayaan_preview_list = array_slice( $pembiayaan_preview_list, 0, 4 );
+$pembiayaan_count        = count( $pembiayaan_preview_list );
+
+// Tentukan grid layout dinamis: jika produk < 4, dibuat rata tengah (center) secara proporsional
+$pembiayaan_grid_class = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
+if ( $pembiayaan_count === 3 ) {
+    $pembiayaan_grid_class = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto gap-6';
+} elseif ( $pembiayaan_count === 2 ) {
+    $pembiayaan_grid_class = 'grid grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto gap-6';
+} elseif ( $pembiayaan_count === 1 ) {
+    $pembiayaan_grid_class = 'grid grid-cols-1 max-w-md mx-auto gap-6';
+}
 
 if ( ! empty( $pembiayaan_preview_list ) ) :
     $pemb_sec_badge = get_option( 'options_pembiayaan_page_badge', 'Penyaluran Dana Wakalumi' );
@@ -1253,11 +1327,11 @@ if ( ! empty( $pembiayaan_preview_list ) ) :
             <p class="section-subtitle mx-auto"><?php echo esc_html( $pemb_sec_desc ); ?></p>
         </div>
 
-        <!-- Financing Products Grid (4 Cards) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Financing Products Grid (Centered for < 4, Flexible 4 Columns for 4+) -->
+        <div class="<?php echo esc_attr( $pembiayaan_grid_class ); ?>">
             <?php
             $delay = 100;
-            foreach ( $pembiayaan_preview_list as $prod ) :
+            foreach ( $pembiayaan_preview_list as $idx => $prod ) :
                 $p_slug     = ! empty( $prod['slug'] ) ? sanitize_title( $prod['slug'] ) : sanitize_title( $prod['nama'] );
                 $p_color    = $prod['color'] ?? 'emerald';
                 $theme      = function_exists( 'wakalumi_get_pembiayaan_color_theme' ) ? wakalumi_get_pembiayaan_color_theme( $p_color ) : [];
@@ -1265,8 +1339,13 @@ if ( ! empty( $pembiayaan_preview_list ) ) :
                 $p_badge    = ! empty( $prod['badge'] ) ? $prod['badge'] : 'Pembiayaan Syariah';
                 $p_tagline  = ! empty( $prod['tagline'] ) ? $prod['tagline'] : '';
                 $p_image    = ! empty( $prod['image'] ) ? $prod['image'] : '';
+
+                // Card ke-3 otomatis rata tengah pada breakpoint tablet (sm/md) saat total produk = 3
+                $card_extra_class = ( $pembiayaan_count === 3 && $idx === 2 ) 
+                    ? 'sm:col-span-2 sm:max-w-md sm:mx-auto sm:w-full lg:col-span-1 lg:max-w-none' 
+                    : '';
             ?>
-                <div class="group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-dark border <?php echo esc_attr( $theme['border'] ?? 'border-slate-200/90 dark:border-slate-800/80' ); ?> transition-all duration-500 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-2xl overflow-hidden <?php echo esc_attr( $theme['hover'] ?? '' ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
+                <div class="group relative flex flex-col justify-between rounded-3xl bg-white dark:bg-dark border <?php echo esc_attr( $theme['border'] ?? 'border-slate-200/90 dark:border-slate-800/80' ); ?> transition-all duration-500 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-2xl overflow-hidden <?php echo esc_attr( $theme['hover'] ?? '' ); ?> <?php echo esc_attr( $card_extra_class ); ?>" data-aos="fade-up" data-aos-delay="<?php echo esc_attr( $delay ); ?>">
                     
                     <!-- Watermark Logo wm-wkl.png di pojok kanan bawah -->
                     <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-[0.035] dark:opacity-[0.05] pointer-events-none transition-all duration-700 ease-out group-hover:scale-115 group-hover:opacity-[0.07] dark:group-hover:opacity-[0.09] select-none overflow-hidden z-0">
@@ -1363,12 +1442,21 @@ if ( ! empty( $pembiayaan_preview_list ) ) :
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
             </a>
-            <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#kalkulator' ) ); ?>" class="btn-outline text-sm px-6 py-3.5 inline-flex items-center gap-2">
-                <span>Kalkulator Simulasi Angsuran</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-            </a>
+            <?php if ( $calc_pem_enabled !== '0' ) : ?>
+                <a href="<?php echo esc_url( home_url( '/produk/pembiayaan#kalkulator' ) ); ?>" class="btn-outline text-sm px-6 py-3.5 inline-flex items-center gap-2">
+                    <span>Kalkulator Simulasi Angsuran</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                </a>
+            <?php else : ?>
+                <a href="<?php echo esc_url( home_url( '/produk/deposito-syariah/#simulasi' ) ); ?>" class="btn-outline text-sm px-6 py-3.5 inline-flex items-center gap-2">
+                    <span>Kalkulator Deposito Syariah</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -1441,6 +1529,279 @@ if ( preg_match( '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)
     }
 })();
 </script>
+
+<!-- ========================================================================
+     SECTION 7B: PENGHARGAAN KAMI (AWARDS / CERTIFICATES TICKER)
+     Dapat diaktifkan/dinonaktifkan oleh Admin (Default: Nonaktif)
+     Tepat di bawah Video Profil (Company Profile)
+     1 Baris Berjalan Saja (Single Continuous Infinite Ticker)
+     ======================================================================== -->
+<?php
+$penghargaan_active   = get_option( 'options_penghargaan_active', '0' );
+$penghargaan_badge    = get_option( 'options_penghargaan_badge', 'Prestasi & Pengakuan' );
+$penghargaan_title    = get_option( 'options_penghargaan_title', 'Penghargaan & *Apresiasi*' );
+$penghargaan_subtitle = get_option( 'options_penghargaan_subtitle', 'Bukti nyata komitmen Bank Syariah Wakalumi dalam menghadirkan tata kelola profesional dan layanan perbankan syariah terbaik.' );
+$raw_award_items      = get_option( 'options_penghargaan_items', [] );
+
+// Saring item yang valid (memiliki gambar piagam atau judul penghargaan)
+$award_items = [];
+if ( is_array( $raw_award_items ) ) {
+    foreach ( $raw_award_items as $item ) {
+        if ( ! empty( $item['image'] ) || ! empty( $item['title'] ) ) {
+            $award_items[] = $item;
+        }
+    }
+}
+
+// Hanya render jika admin mengaktifkan ($penghargaan_active === '1') DAN memiliki daftar item penghargaan
+if ( $penghargaan_active === '1' && ! empty( $award_items ) ) :
+    // Normalisasi set: pastikan minimal 6 item per track agar lebar track selalu penuh tanpa jeda
+    $single_award_set = $award_items;
+    while ( count( $single_award_set ) < 6 ) {
+        $single_award_set = array_merge( $single_award_set, $award_items );
+    }
+?>
+<section id="section-penghargaan" class="py-16 sm:py-20 bg-slate-50/70 dark:bg-dark-surface/40 border-b border-slate-200/80 dark:border-dark-border/80 relative z-10 overflow-hidden">
+    <div class="container-wide mb-10 text-center" data-aos="fade-up">
+        <?php if ( ! empty( $penghargaan_badge ) ) : ?>
+            <span class="section-label mb-3 inline-block"><?php echo esc_html( $penghargaan_badge ); ?></span>
+        <?php endif; ?>
+        <?php if ( ! empty( $penghargaan_title ) ) : ?>
+            <h2 class="section-title mb-3"><?php echo wakalumi_dualtone_title( $penghargaan_title ); ?></h2>
+        <?php endif; ?>
+        <?php if ( ! empty( $penghargaan_subtitle ) ) : ?>
+            <p class="section-subtitle max-w-2xl mx-auto"><?php echo esc_html( $penghargaan_subtitle ); ?></p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Single Continuous Track Ticker (Hanya 1 Baris Berjalan Saja) -->
+    <div class="w-full" data-aos="fade-up" data-aos-delay="100">
+        <div class="award-ticker-container">
+            <!-- Track Group 1 -->
+            <div class="award-track-group">
+                <?php foreach ( $single_award_set as $award ) : 
+                    $a_img   = ! empty( $award['image'] ) ? $award['image'] : '';
+                    $a_title = ! empty( $award['title'] ) ? $award['title'] : 'Penghargaan Resmi Bank Syariah Wakalumi';
+                    $a_iss   = ! empty( $award['issuer'] ) ? $award['issuer'] : '';
+                    $a_year  = ! empty( $award['year'] ) ? $award['year'] : '';
+                    $a_url   = ! empty( $award['url'] ) ? $award['url'] : '';
+                ?>
+                    <?php if ( ! empty( $a_url ) ) : ?>
+                        <a href="<?php echo esc_url( $a_url ); ?>" target="_blank" rel="noopener noreferrer" 
+                           title="<?php echo esc_attr( $a_title ); ?>"
+                           class="award-glass-card group/award cursor-pointer">
+                    <?php else : ?>
+                        <div class="award-glass-card group/award cursor-pointer wkl-award-zoom-trigger" 
+                             data-img="<?php echo esc_url( $a_img ); ?>" 
+                             data-title="<?php echo esc_attr( $a_title ); ?>"
+                             data-issuer="<?php echo esc_attr( $a_iss . ( $a_year ? ' • ' . $a_year : '' ) ); ?>"
+                             title="Klik untuk memperbesar piagam">
+                    <?php endif; ?>
+
+                        <!-- Image Box Container -->
+                        <div class="w-full h-44 sm:h-52 bg-white/80 dark:bg-slate-800/80 rounded-xl overflow-hidden flex items-center justify-center p-3 relative border border-slate-100 dark:border-slate-700/60 shadow-inner group-hover/award:shadow-md transition-all duration-300">
+                            <?php if ( ! empty( $a_img ) ) : ?>
+                                <img src="<?php echo esc_url( $a_img ); ?>" alt="<?php echo esc_attr( $a_title ); ?>" class="max-h-full max-w-full object-contain filter drop-shadow-sm group-hover/award:scale-[1.03] transition-transform duration-300" loading="lazy">
+                            <?php else : ?>
+                                <div class="text-center p-4">
+                                    <svg class="w-12 h-12 mx-auto text-amber-500/80 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Piagam Penghargaan</span>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Subtle Zoom Pill on Hover -->
+                            <div class="absolute bottom-2.5 right-2.5 opacity-0 group-hover/award:opacity-100 transition-opacity duration-200 bg-slate-900/80 text-white rounded-md p-1.5 backdrop-blur-sm pointer-events-none">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Info Metadata Box -->
+                        <?php if ( ! empty( $a_title ) || ! empty( $a_iss ) || ! empty( $a_year ) ) : ?>
+                            <div class="mt-3.5 flex flex-col items-center text-center justify-between flex-grow w-full">
+                                <div class="flex items-center justify-center flex-wrap gap-1.5 mb-1.5 w-full">
+                                    <?php if ( ! empty( $a_iss ) ) : ?>
+                                        <span class="text-[11px] font-semibold text-teal-600 dark:text-teal-400 truncate max-w-[85%]"><?php echo esc_html( $a_iss ); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ( ! empty( $a_year ) ) : ?>
+                                        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 flex-shrink-0"><?php echo esc_html( $a_year ); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if ( ! empty( $a_title ) ) : ?>
+                                    <h4 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white line-clamp-2 leading-snug group-hover/award:text-teal-600 dark:group-hover/award:text-teal-400 transition-colors text-center w-full">
+                                        <?php echo esc_html( $a_title ); ?>
+                                    </h4>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
+                    <?php if ( ! empty( $a_url ) ) : ?>
+                        </a>
+                    <?php else : ?>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Track Group 2 (Identik persis untuk seamless loop) -->
+            <div class="award-track-group" aria-hidden="true">
+                <?php foreach ( $single_award_set as $award ) : 
+                    $a_img   = ! empty( $award['image'] ) ? $award['image'] : '';
+                    $a_title = ! empty( $award['title'] ) ? $award['title'] : 'Penghargaan Resmi Bank Syariah Wakalumi';
+                    $a_iss   = ! empty( $award['issuer'] ) ? $award['issuer'] : '';
+                    $a_year  = ! empty( $award['year'] ) ? $award['year'] : '';
+                    $a_url   = ! empty( $award['url'] ) ? $award['url'] : '';
+                ?>
+                    <?php if ( ! empty( $a_url ) ) : ?>
+                        <a href="<?php echo esc_url( $a_url ); ?>" target="_blank" rel="noopener noreferrer" 
+                           title="<?php echo esc_attr( $a_title ); ?>"
+                           tabindex="-1"
+                           class="award-glass-card group/award cursor-pointer">
+                    <?php else : ?>
+                        <div class="award-glass-card group/award cursor-pointer wkl-award-zoom-trigger" 
+                             data-img="<?php echo esc_url( $a_img ); ?>" 
+                             data-title="<?php echo esc_attr( $a_title ); ?>"
+                             data-issuer="<?php echo esc_attr( $a_iss . ( $a_year ? ' • ' . $a_year : '' ) ); ?>"
+                             title="Klik untuk memperbesar piagam"
+                             tabindex="-1">
+                    <?php endif; ?>
+
+                        <!-- Image Box Container -->
+                        <div class="w-full h-44 sm:h-52 bg-white/80 dark:bg-slate-800/80 rounded-xl overflow-hidden flex items-center justify-center p-3 relative border border-slate-100 dark:border-slate-700/60 shadow-inner group-hover/award:shadow-md transition-all duration-300">
+                            <?php if ( ! empty( $a_img ) ) : ?>
+                                <img src="<?php echo esc_url( $a_img ); ?>" alt="<?php echo esc_attr( $a_title ); ?>" class="max-h-full max-w-full object-contain filter drop-shadow-sm group-hover/award:scale-[1.03] transition-transform duration-300" loading="lazy">
+                            <?php else : ?>
+                                <div class="text-center p-4">
+                                    <svg class="w-12 h-12 mx-auto text-amber-500/80 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Piagam Penghargaan</span>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Subtle Zoom Pill on Hover -->
+                            <div class="absolute bottom-2.5 right-2.5 opacity-0 group-hover/award:opacity-100 transition-opacity duration-200 bg-slate-900/80 text-white rounded-md p-1.5 backdrop-blur-sm pointer-events-none">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Info Metadata Box -->
+                        <?php if ( ! empty( $a_title ) || ! empty( $a_iss ) || ! empty( $a_year ) ) : ?>
+                            <div class="mt-3.5 flex flex-col items-center text-center justify-between flex-grow w-full">
+                                <div class="flex items-center justify-center flex-wrap gap-1.5 mb-1.5 w-full">
+                                    <?php if ( ! empty( $a_iss ) ) : ?>
+                                        <span class="text-[11px] font-semibold text-teal-600 dark:text-teal-400 truncate max-w-[85%]"><?php echo esc_html( $a_iss ); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ( ! empty( $a_year ) ) : ?>
+                                        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 flex-shrink-0"><?php echo esc_html( $a_year ); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if ( ! empty( $a_title ) ) : ?>
+                                    <h4 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white line-clamp-2 leading-snug group-hover/award:text-teal-600 dark:group-hover/award:text-teal-400 transition-colors text-center w-full">
+                                        <?php echo esc_html( $a_title ); ?>
+                                    </h4>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
+                    <?php if ( ! empty( $a_url ) ) : ?>
+                        </a>
+                    <?php else : ?>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox Modal untuk Zoom Piagam Penghargaan -->
+<div id="wkl-award-modal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/85 p-4 backdrop-blur-md transition-opacity duration-300">
+    <div class="relative max-w-3xl max-h-[90vh] bg-slate-900 border border-white/20 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col items-center">
+        <button id="close-award-modal" class="absolute -top-3 -right-3 z-20 w-9 h-9 rounded-full bg-slate-800 text-white hover:bg-rose-600 flex items-center justify-center transition-colors text-lg font-bold border border-white/20 shadow-lg cursor-pointer" aria-label="Tutup Preview">
+            &times;
+        </button>
+        <div class="w-full flex items-center justify-center overflow-hidden rounded-xl bg-slate-950 p-2">
+            <img id="award-modal-img" src="" alt="Piagam Penghargaan" class="max-h-[70vh] max-w-full object-contain rounded-lg shadow-md">
+        </div>
+        <div class="mt-4 text-center">
+            <h4 id="award-modal-title" class="text-base sm:text-lg font-extrabold text-white"></h4>
+            <p id="award-modal-sub" class="text-xs sm:text-sm text-teal-300 font-medium mt-1"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    function initAwardModal() {
+        const modal = document.getElementById('wkl-award-modal');
+        if (!modal) return;
+
+        // Teleport to document.body to escape parent overflows
+        if (modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+
+        const modalImg = document.getElementById('award-modal-img');
+        const modalTitle = document.getElementById('award-modal-title');
+        const modalSub = document.getElementById('award-modal-sub');
+        const closeBtn = document.getElementById('close-award-modal');
+
+        function openModal(imgSrc, title, sub) {
+            if (modalImg) modalImg.src = imgSrc || '';
+            if (modalTitle) modalTitle.textContent = title || '';
+            if (modalSub) modalSub.textContent = sub || '';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+            if (modalImg) modalImg.src = '';
+        }
+
+        document.querySelectorAll('.wkl-award-zoom-trigger').forEach(trigger => {
+            trigger.onclick = function(e) {
+                e.preventDefault();
+                const img = this.getAttribute('data-img');
+                const title = this.getAttribute('data-title');
+                const issuer = this.getAttribute('data-issuer');
+                if (img) openModal(img, title, issuer);
+            };
+        });
+
+        if (closeBtn) closeBtn.onclick = closeModal;
+        modal.onclick = function(e) {
+            if (e.target === modal) closeModal();
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAwardModal);
+    } else {
+        initAwardModal();
+    }
+
+    if (window.swup && window.swup.hooks) {
+        window.swup.hooks.on('page:view', initAwardModal);
+    }
+})();
+</script>
+<?php endif; ?>
 
 <!-- ========================================
      SECTION 8: INSTAGRAM FEED
@@ -1638,9 +1999,11 @@ if ( $mitra_active === '1' && ! empty( $mitra_items ) ) :
     $total_mitra = count( $mitra_items );
 
     // Aturan kelipatan baris:
-    // > 24 mitra => 3 baris
+    // > 24 mitra => 3 baris (BATAS MAKSIMAL MUTLAK)
     // > 12 mitra => 2 baris
     // <= 12 mitra => 1 baris
+    // Catatan: Jika jumlah mitra bertambah melebihi 24 (misal 30, 40, atau 50+ mitra),
+    // sistem membatasi tampilan mentok maksimal 3 baris secara proporsional agar halaman tetap rapi.
     if ( $total_mitra > 24 ) {
         $num_rows = 3;
     } elseif ( $total_mitra > 12 ) {
@@ -1648,6 +2011,7 @@ if ( $mitra_active === '1' && ! empty( $mitra_items ) ) :
     } else {
         $num_rows = 1;
     }
+    $num_rows = min( 3, max( 1, $num_rows ) );
 
     // Distribusi mitra ke masing-masing baris secara proporsional
     $rows_data = [];

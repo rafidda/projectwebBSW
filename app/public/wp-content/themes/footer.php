@@ -7,9 +7,12 @@
 
 // Get options data with Fallbacks (Dummy data) if empty
 $footer_about   = get_option( 'options_footer_about', 'Bank Syariah modern yang mengutamakan pelayanan prima dan prinsip keadilan untuk kesejahteraan bersama.' );
-$phone          = get_option( 'options_contact_phone', '(021) 5966 2196' );
-$email          = get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
-$address        = get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3, Jl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
+$footer_phone   = get_option( 'options_footer_phone', '' );
+$phone          = ! empty( $footer_phone ) ? $footer_phone : get_option( 'options_contact_phone', '(021) 5966 2196' );
+$footer_email   = get_option( 'options_footer_email', '' );
+$email          = ! empty( $footer_email ) ? $footer_email : get_option( 'options_contact_email', 'info@bprswakalumi.co.id' );
+$footer_address = get_option( 'options_footer_address', '' );
+$address        = ! empty( $footer_address ) ? $footer_address : get_option( 'options_contact_address', "Ruko Ciputat Center Blok B-3, Jl. Ir. H. Juanda No. 21, Rempoa\nCiputat Timur, Tangerang Selatan 15412" );
 
 // Operational hours
 $jam_weekday    = get_option( 'options_jam_operasional_weekday', '08:00 - 15:00 WIB' );

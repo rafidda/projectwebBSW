@@ -444,6 +444,7 @@ function wakalumi_get_baitul_maal_settings() {
         'rekening_show'       => 0,
         'rekening_title'      => 'Rekening Dana Sosial & Kebajikan',
         'rekening_list'       => [],
+        'show_baitul_maal'    => 0,
         'items'               => wakalumi_get_default_baitul_maal_items(),
     ];
 
@@ -478,6 +479,7 @@ function wakalumi_get_baitul_maal_settings() {
         'help_btn_text'       => 'options_bm_help_btn_text',
         'rekening_show'       => 'options_bm_rekening_show',
         'rekening_title'      => 'options_bm_rekening_title',
+        'show_baitul_maal'    => 'options_show_baitul_maal',
     ];
 
     foreach ( $options_map as $key => $opt_name ) {
@@ -486,7 +488,7 @@ function wakalumi_get_baitul_maal_settings() {
             if ( in_array( $key, [ 'hero_card_badge', 'hero_card_title', 'hero_card_desc', 'hero_card_p1', 'hero_card_p2', 'hero_card_p3', 'hero_card_p4', 'hero_card_seal_left', 'hero_card_seal_right' ], true ) && empty( $val ) ) {
                 continue;
             }
-            if ( in_array( $key, [ 'hero_card_show', 'rekening_show' ], true ) ) {
+            if ( in_array( $key, [ 'hero_card_show', 'rekening_show', 'show_baitul_maal' ], true ) ) {
                 $settings[ $key ] = (bool) $val;
             } else {
                 $settings[ $key ] = $val;
@@ -595,12 +597,16 @@ function wakalumi_handle_baitul_maal_save() {
             'options_bm_rekening_title',
             'options_bm_rekening_list_json',
             'options_bm_items_json',
+            'options_show_baitul_maal',
         ];
         foreach ( $keys_to_delete as $k ) {
             delete_option( $k );
         }
         return 'reset';
     }
+
+    // Simpan Visibilitas Regulasi Baitul Maal di Navbar
+    update_option( 'options_show_baitul_maal', isset( $_POST['options_show_baitul_maal'] ) ? '1' : '0' );
 
     // Simpan Hero & Header
     update_option( 'options_bm_breadcrumb_label', sanitize_text_field( wp_unslash( $_POST['breadcrumb_label'] ?? 'Baitul Maal BSW' ) ) );
@@ -874,6 +880,50 @@ function wakalumi_render_baitul_maal_admin_page() {
             <?php wp_nonce_field( 'wakalumi_save_bm_action', 'wakalumi_bm_nonce' ); ?>
             <input type="hidden" name="bm_items_json" id="bm_items_json" value="<?php echo esc_attr( wp_json_encode( $cfg['items'] ) ); ?>" />
             <input type="hidden" name="bm_rekening_json" id="bm_rekening_json" value="<?php echo esc_attr( wp_json_encode( $cfg['rekening_list'] ) ); ?>" />
+
+            <!-- KARTU STATUS REGULASI & SAKLAR VISIBILITAS NAVBAR PUBLIK -->
+            <?php
+            $is_bm_active = ! empty( $cfg['show_baitul_maal'] );
+            ?>
+            <div style="background: <?php echo $is_bm_active ? '#f0fdf4' : '#fffbeb'; ?>; border: 1.5px solid <?php echo $is_bm_active ? '#86efac' : '#fde68a'; ?>; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 4px 15px -3px <?php echo $is_bm_active ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)'; ?>;">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+                    <div style="flex: 1; min-width: 280px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 12px; border-radius: 999px; background: <?php echo $is_bm_active ? '#dcfce7' : '#fef3c7'; ?>; color: <?php echo $is_bm_active ? '#166534' : '#92400e'; ?>; border: 1px solid <?php echo $is_bm_active ? '#bbf7d0' : '#fde68a'; ?>;">
+                                <?php echo $is_bm_active ? '● STATUS: AKTIF DI NAVBAR PUBLIK' : '🔒 STATUS: TERSEMBUNYI DARI PUBLIK'; ?>
+                            </span>
+                            <span style="font-size: 12px; color: #64748b; font-weight: 600;">Regulasi &amp; Perizinan Otoritas</span>
+                        </div>
+                        <h2 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 800; color: <?php echo $is_bm_active ? '#065f46' : '#92400e'; ?>;">
+                            Saklar Visibilitas Menu Baitul Maal di Navbar
+                        </h2>
+                        <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.6;">
+                            Sesuai arahan direksi terkait regulasi perbankan syariah, menu dan halaman publik Baitul Maal disembunyikan sementara waktu jika izin operasional belum diaktifkan:
+                        </p>
+                        <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 12.5px; color: #475569; line-height: 1.6; list-style-type: disc;">
+                            <li><strong>Jika Dicentang (Aktif):</strong> Menu di navbar otomatis berubah menjadi <strong>"Layanan dan Baitul Maal"</strong> lengkap dengan pilihan dropdown (Layanan Kami &amp; Baitul Maal BSW).</li>
+                            <li><strong>Jika Tidak Dicentang (Nonaktif / Tersembunyi - Default):</strong> Menu di navbar otomatis hanya menampilkan <strong>"Layanan"</strong> (link langsung ke <code>/layanan-kami/</code>). Pengunjung umum yang mengakses tautan <code>/baitul-maal/</code> otomatis dialihkan ke Layanan Kami, sedangkan Administrator tetap dapat mempratinjau halaman.</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: #ffffff; border: 1px solid <?php echo $is_bm_active ? '#bbf7d0' : '#e2e8f0'; ?>; border-radius: 12px; padding: 16px 20px; min-width: 310px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; font-weight: 700; color: #0f172a;">
+                            <input type="checkbox" name="options_show_baitul_maal" value="1" <?php checked( $is_bm_active ); ?> style="width: 18px; height: 18px; accent-color: #0d9488; cursor: pointer;" />
+                            <span>Tampilkan Menu Baitul Maal di Navbar</span>
+                        </label>
+                        <div style="font-size: 11.5px; color: #64748b; line-height: 1.4; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+                            <?php if ( $is_bm_active ) : ?>
+                                <span style="color: #059669; font-weight: 600;">✓ Tampil di Navbar sebagai "Layanan dan Baitul Maal"</span>
+                            <?php else : ?>
+                                <span style="color: #d97706; font-weight: 600;">🔒 Navbar hanya menampilkan single link "Layanan"</span>
+                            <?php endif; ?>
+                        </div>
+                        <button type="submit" class="button button-primary" style="background: #0f766e; border-color: #0f766e; font-weight: 700; padding: 7px 16px; border-radius: 8px; width: 100%;">
+                            Simpan Pengaturan Saklar
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <!-- TAB NAVIGASI ADMIN -->
             <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 2px;">

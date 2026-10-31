@@ -36,6 +36,7 @@ $komp_desc   = get_option( 'options_pembiayaan_komp_desc', 'Bandingkan skema aka
 $pembiayaan_list = function_exists( 'wakalumi_get_pembiayaan_list' ) ? wakalumi_get_pembiayaan_list() : [];
 
 // ── PENGATURAN KALKULATOR ANGSURAN ────────────────────────────────
+$calc_enable    = get_option( 'options_pembiayaan_calc_enable', '1' );
 $calc_badge     = get_option( 'options_pembiayaan_calc_badge', 'Simulasi Finansial Syariah' );
 $calc_title     = get_option( 'options_pembiayaan_calc_title', 'Kalkulator Simulasi Angsuran Pembiayaan' );
 $calc_sub       = get_option( 'options_pembiayaan_calc_sub', 'Hitung estimasi angsuran bulanan yang adil dan transparan tanpa ada biaya tersembunyi. Tentukan plafon dan tenor sesuai kenyamanan arus kas Anda.' );
@@ -394,12 +395,14 @@ $color_themes = [
                             <?php echo esc_html( $trust_desc ); ?>
                         </p>
 
+                        <?php if ( $calc_enable !== '0' ) : ?>
                         <div class="pt-1">
                             <a href="#kalkulator" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-teal-50/80 dark:bg-slate-800/80 dark:hover:bg-teal-950/50 border border-slate-200/80 hover:border-teal-300 dark:border-slate-700/80 dark:hover:border-teal-700 inline-flex items-center justify-center gap-2 text-xs font-bold text-teal-700 dark:text-teal-300 transition-all duration-300 group/lpsbtn">
                                 <span><?php echo esc_html( $trust_btn ); ?></span>
                                 <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/lpsbtn:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                             </a>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -420,9 +423,11 @@ $color_themes = [
                 <a href="#komparasi" class="px-3 py-1.5 rounded-lg bg-teal-50 dark:bg-teal-950/50 text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-bold flex-shrink-0 hover:bg-teal-100 transition-colors">
                     📊 Matriks Komparasi
                 </a>
+                <?php if ( $calc_enable !== '0' ) : ?>
                 <a href="#kalkulator" class="px-3 py-1.5 rounded-lg bg-teal-600 text-white font-bold flex-shrink-0 hover:bg-teal-700 transition-colors">
                     🧮 Simulasi Angsuran
                 </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -597,6 +602,7 @@ $color_themes = [
                             <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                             <span>Ajukan via WhatsApp</span>
                         </a>
+                        <?php if ( $calc_enable !== '0' && ( $prod['can_simulate'] ?? '1' ) !== '0' ) : ?>
                         <a 
                             href="#kalkulator" 
                             class="wkl-jump-calc-btn py-3 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs inline-flex items-center gap-1 transition-colors"
@@ -605,6 +611,7 @@ $color_themes = [
                             <span>Hitung Angsuran</span>
                             <span>&rarr;</span>
                         </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -701,6 +708,7 @@ $color_themes = [
 <!-- ========================================
      SECTION 3: KALKULATOR SIMULASI ANGSURAN PEMBIAYAAN
      ======================================== -->
+<?php if ( $calc_enable !== '0' ) : ?>
 <section id="kalkulator" class="scroll-mt-24 py-14 lg:py-20 bg-slate-50/80 dark:bg-dark-surface-alt relative overflow-hidden">
     <div class="container-wide">
         <div class="max-w-4xl mx-auto p-6 sm:p-10 lg:p-12 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 text-white shadow-2xl relative overflow-hidden group" data-aos="fade-up">
@@ -740,18 +748,33 @@ $color_themes = [
                                 1. Pilihan Produk Pembiayaan
                             </label>
                             <select id="pem-calc-prod" class="w-full py-3 px-4 rounded-xl bg-slate-800/90 border border-slate-700 text-white font-semibold text-sm focus:outline-none focus:border-teal-400 transition-colors">
-                                <?php foreach ( $pembiayaan_list as $prod_opt ) : ?>
-                                    <option value="<?php echo esc_attr( $prod_opt['nama'] ); ?>">
+                                <?php 
+                                foreach ( $pembiayaan_list as $prod_opt ) : 
+                                    if ( isset( $prod_opt['can_simulate'] ) && $prod_opt['can_simulate'] === '0' ) {
+                                        continue;
+                                    }
+                                    $p_dp_type    = $prod_opt['dp_type'] ?? 'none';
+                                    $p_dp_label   = ! empty( $prod_opt['dp_label'] ) ? $prod_opt['dp_label'] : 'Uang Muka (Urbun)';
+                                    $p_dp_min     = isset( $prod_opt['dp_min'] ) ? (float) $prod_opt['dp_min'] : 0;
+                                    $p_dp_default = isset( $prod_opt['dp_default'] ) ? (float) $prod_opt['dp_default'] : 0;
+                                ?>
+                                    <option 
+                                        value="<?php echo esc_attr( $prod_opt['nama'] ); ?>"
+                                        data-dp-type="<?php echo esc_attr( $p_dp_type ); ?>"
+                                        data-dp-label="<?php echo esc_attr( $p_dp_label ); ?>"
+                                        data-dp-min="<?php echo esc_attr( $p_dp_min ); ?>"
+                                        data-dp-default="<?php echo esc_attr( $p_dp_default ); ?>"
+                                    >
                                         <?php echo esc_html( $prod_opt['nama'] ); ?> (<?php echo esc_html( $prod_opt['akad'] ?? 'Syariah' ); ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
-                        <!-- Slider Plafon Pembiayaan -->
+                        <!-- Slider Plafon Pembiayaan / Total Kebutuhan -->
                         <div>
                             <div class="flex items-center justify-between mb-2">
-                                <label class="text-xs font-bold uppercase tracking-wider text-slate-300">
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-300" id="pem-calc-step2-title">
                                     2. Nominal Plafon Pembiayaan
                                 </label>
                                 <div class="flex items-center gap-1 text-sm font-bold text-teal-300">
@@ -795,6 +818,40 @@ $color_themes = [
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
+                        </div>
+
+                        <!-- Container Input Uang Muka / Modal Awal (DP / Porsi Nasabah) Dinamis -->
+                        <div id="pem-calc-dp-wrap" class="p-4 rounded-xl bg-slate-800/90 border border-teal-500/30 transition-all duration-300" style="display: none;">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span id="pem-calc-dp-label-title" class="text-xs font-bold uppercase tracking-wider text-teal-300">
+                                        Uang Muka (Urbun) / Modal Sendiri
+                                    </span>
+                                    <span id="pem-calc-dp-badge" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-teal-500/20 text-teal-200 border border-teal-500/30">
+                                        Wajib DP
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-1 text-sm font-bold text-teal-300">
+                                    <span id="pem-calc-dp-pct-display">20%</span>
+                                    <span class="text-xs text-slate-400 font-normal">(Rp <span id="pem-calc-dp-nom-display">5.000.000</span>)</span>
+                                </div>
+                            </div>
+                            <input 
+                                type="range" 
+                                id="pem-calc-dp-slider" 
+                                min="0" 
+                                max="80" 
+                                step="5" 
+                                value="20" 
+                                class="w-full h-2.5 bg-slate-700/90 rounded-lg appearance-none cursor-pointer accent-teal-400"
+                            >
+                            <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1.5">
+                                <span id="pem-calc-dp-min-hint">Min: 10%</span>
+                                <span class="text-teal-300 font-semibold text-xs">
+                                    Porsi Bank (Plafon Bersih): Rp <span id="pem-calc-plafon-bersih-text">20.000.000</span>
+                                </span>
+                                <span>Maks: 80%</span>
+                            </div>
                         </div>
 
                         <!-- Slider Tenor Jangka Waktu -->
@@ -846,6 +903,18 @@ $color_themes = [
                                 </span>
 
                                 <div class="space-y-2 py-3.5 border-y border-slate-700/70 text-xs text-left">
+                                    <div id="pem-calc-dp-result-row" class="flex justify-between items-center text-slate-300" style="display: none;">
+                                        <span class="font-normal text-slate-400">Total Kebutuhan:</span>
+                                        <strong class="text-white font-semibold">Rp <span id="pem-calc-res-total">0</span></strong>
+                                    </div>
+                                    <div id="pem-calc-dp-amount-row" class="flex justify-between items-center text-slate-300" style="display: none;">
+                                        <span class="font-normal text-slate-400" id="pem-calc-res-dp-label">Uang Muka (DP):</span>
+                                        <strong class="text-amber-300 font-semibold">Rp <span id="pem-calc-res-dp">0</span> (<span id="pem-calc-res-dp-pct">0</span>%)</strong>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-300">
+                                        <span class="font-normal text-slate-400" id="pem-calc-res-plafon-label">Plafon Pembiayaan:</span>
+                                        <strong class="text-teal-300 font-semibold">Rp <span id="pem-calc-res-plafon">0</span></strong>
+                                    </div>
                                     <div class="flex justify-between items-center text-slate-300">
                                         <span class="font-normal text-slate-400">Pokok Angsuran:</span>
                                         <strong class="text-white font-semibold">Rp <span id="pem-calc-pokok">0</span> / bln</strong>
@@ -882,6 +951,7 @@ $color_themes = [
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- ========================================
      SECTION 4: ALUR & PROSEDUR 4 LANGKAH
@@ -1216,18 +1286,40 @@ $color_themes = [
 (function() {
     function initFinancing() {
         // 1. Kalkulator Pembiayaan
-        var plafonSlider = document.getElementById('pem-calc-plafon-slider');
-        var plafonInput  = document.getElementById('pem-calc-plafon-text');
-        var tenorSlider  = document.getElementById('pem-calc-tenor-slider');
-        var tenorVal     = document.getElementById('pem-calc-tenor-val');
-        var tenorYear    = document.getElementById('pem-calc-tenor-year');
-        var prodSelect   = document.getElementById('pem-calc-prod');
-        var totalEl      = document.getElementById('pem-calc-total-angsuran');
-        var pokokEl      = document.getElementById('pem-calc-pokok');
-        var marginEl     = document.getElementById('pem-calc-margin');
-        var grandEl      = document.getElementById('pem-calc-grand-total');
-        var waBtn        = document.getElementById('pem-calc-wa-btn');
-        var rateDisplay  = document.getElementById('pem-calc-rate-display');
+        var plafonSlider     = document.getElementById('pem-calc-plafon-slider');
+        var plafonInput      = document.getElementById('pem-calc-plafon-text');
+        var tenorSlider      = document.getElementById('pem-calc-tenor-slider');
+        var tenorVal         = document.getElementById('pem-calc-tenor-val');
+        var tenorYear        = document.getElementById('pem-calc-tenor-year');
+        var prodSelect       = document.getElementById('pem-calc-prod');
+        var step2Title       = document.getElementById('pem-calc-step2-title');
+
+        var dpWrap           = document.getElementById('pem-calc-dp-wrap');
+        var dpSlider         = document.getElementById('pem-calc-dp-slider');
+        var dpPctDisplay     = document.getElementById('pem-calc-dp-pct-display');
+        var dpNomDisplay     = document.getElementById('pem-calc-dp-nom-display');
+        var dpLabelTitle     = document.getElementById('pem-calc-dp-label-title');
+        var dpBadge          = document.getElementById('pem-calc-dp-badge');
+        var dpMinHint        = document.getElementById('pem-calc-dp-min-hint');
+        var plafonBersihText = document.getElementById('pem-calc-plafon-bersih-text');
+
+        var dpResultRow      = document.getElementById('pem-calc-dp-result-row');
+        var dpAmountRow      = document.getElementById('pem-calc-dp-amount-row');
+        var resTotal         = document.getElementById('pem-calc-res-total');
+        var resDpLabel       = document.getElementById('pem-calc-res-dp-label');
+        var resDp            = document.getElementById('pem-calc-res-dp');
+        var resDpPct         = document.getElementById('pem-calc-res-dp-pct');
+        var resPlafon        = document.getElementById('pem-calc-res-plafon');
+        var resPlafonLabel   = document.getElementById('pem-calc-res-plafon-label');
+
+        var totalEl          = document.getElementById('pem-calc-total-angsuran');
+        var pokokEl          = document.getElementById('pem-calc-pokok');
+        var marginEl         = document.getElementById('pem-calc-margin');
+        var grandEl          = document.getElementById('pem-calc-grand-total');
+        var waBtn            = document.getElementById('pem-calc-wa-btn');
+        var rateDisplay      = document.getElementById('pem-calc-rate-display');
+
+        if (!plafonSlider || !tenorSlider) return;
 
         var rateVal      = parseFloat("<?php echo esc_js( $calc_rate ); ?>") || 1.0;
         var rateUnit     = "<?php echo esc_js( $calc_rate_unit ); ?>";
@@ -1241,23 +1333,95 @@ $color_themes = [
             return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0;
         }
 
+        function onProductChange() {
+            if (!prodSelect) return;
+            var opt = prodSelect.options[prodSelect.selectedIndex];
+            if (!opt) return;
+
+            var dpType   = opt.getAttribute('data-dp-type') || 'none';
+            var dpLabel  = opt.getAttribute('data-dp-label') || 'Uang Muka (Urbun)';
+            var dpMin    = parseInt(opt.getAttribute('data-dp-min'), 10) || 0;
+            var dpDef    = parseInt(opt.getAttribute('data-dp-default'), 10) || 0;
+
+            if (dpType === 'none') {
+                if (dpWrap) dpWrap.style.display = 'none';
+                if (dpResultRow) dpResultRow.style.display = 'none';
+                if (dpAmountRow) dpAmountRow.style.display = 'none';
+                if (step2Title) step2Title.textContent = '2. Nominal Plafon Pembiayaan';
+                if (resPlafonLabel) resPlafonLabel.textContent = 'Plafon Pembiayaan:';
+                if (dpSlider) dpSlider.value = 0;
+            } else {
+                if (dpWrap) dpWrap.style.display = 'block';
+                if (dpResultRow) dpResultRow.style.display = 'flex';
+                if (dpAmountRow) dpAmountRow.style.display = 'flex';
+                if (step2Title) step2Title.textContent = '2. Total Kebutuhan Finansial / Pengadaan';
+                if (resPlafonLabel) resPlafonLabel.textContent = 'Porsi Bank (Plafon Bersih):';
+                if (dpLabelTitle) dpLabelTitle.textContent = dpLabel;
+                if (resDpLabel) resDpLabel.textContent = dpLabel + ':';
+
+                if (dpSlider) {
+                    dpSlider.min = (dpType === 'required') ? Math.max(dpMin, 5) : 0;
+                    if (parseInt(dpSlider.value, 10) < parseInt(dpSlider.min, 10) || dpSlider.value == 0) {
+                        dpSlider.value = dpDef || dpSlider.min;
+                    }
+                }
+                if (dpBadge) {
+                    if (dpType === 'required') {
+                        dpBadge.textContent = 'Wajib ' + (dpLabel.indexOf('Modal') !== -1 ? 'Porsi Sendiri' : 'DP') + ' min ' + (dpMin || 10) + '%';
+                        dpBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-200 border border-amber-500/30';
+                    } else {
+                        dpBadge.textContent = 'Opsional / Fleksibel';
+                        dpBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-teal-500/20 text-teal-200 border border-teal-500/30';
+                    }
+                }
+                if (dpMinHint) {
+                    dpMinHint.textContent = (dpType === 'required') ? 'Min: ' + (dpMin || 10) + '%' : 'Bisa 0% (Tanpa DP)';
+                }
+            }
+            calculate();
+        }
+
         function calculate() {
             if (!plafonSlider || !tenorSlider) return;
 
-            var plafon = cleanNumber(plafonInput.value) || parseInt(plafonSlider.value, 10);
+            var opt = prodSelect ? prodSelect.options[prodSelect.selectedIndex] : null;
+            var dpType = opt ? (opt.getAttribute('data-dp-type') || 'none') : 'none';
+            var dpLabel = opt ? (opt.getAttribute('data-dp-label') || 'Uang Muka (Urbun)') : 'Uang Muka (Urbun)';
+
+            var totalNeeds = cleanNumber(plafonInput.value) || parseInt(plafonSlider.value, 10);
             var tenor  = parseInt(tenorSlider.value, 10);
             if (tenor <= 0) tenor = 12;
 
             if (tenorVal) tenorVal.textContent = tenor;
             if (tenorYear) tenorYear.textContent = (tenor / 12).toFixed(1);
 
-            // Pokok per bulan
-            var pokokBulan = plafon / tenor;
+            var dpPct = 0;
+            var dpNominal = 0;
+            var plafonBersih = totalNeeds;
 
-            // Margin bulanan: jika 'tahun' (% p.a.) maka dibagi 12, jika 'bulan' (% / bln) maka langsung dikali plafon
+            if (dpType !== 'none' && dpSlider) {
+                dpPct = parseInt(dpSlider.value, 10);
+                dpNominal = Math.round((totalNeeds * dpPct) / 100);
+                plafonBersih = Math.max(0, totalNeeds - dpNominal);
+
+                if (dpPctDisplay) dpPctDisplay.textContent = dpPct + '%';
+                if (dpNomDisplay) dpNomDisplay.textContent = formatRupiah(dpNominal);
+                if (plafonBersihText) plafonBersihText.textContent = formatRupiah(plafonBersih);
+
+                if (resTotal) resTotal.textContent = formatRupiah(totalNeeds);
+                if (resDp) resDp.textContent = formatRupiah(dpNominal);
+                if (resDpPct) resDpPct.textContent = dpPct;
+            }
+
+            if (resPlafon) resPlafon.textContent = formatRupiah(plafonBersih);
+
+            // Pokok per bulan (dihitung dari Plafon Bersih Bank)
+            var pokokBulan = (tenor > 0) ? (plafonBersih / tenor) : 0;
+
+            // Margin bulanan: jika 'tahun' (% p.a.) maka dibagi 12, jika 'bulan' (% / bln) maka langsung dikali plafon bersih
             var marginBulan = (rateUnit === 'tahun')
-                ? (plafon * (rateVal / 100)) / 12
-                : (plafon * (rateVal / 100));
+                ? (plafonBersih * (rateVal / 100)) / 12
+                : (plafonBersih * (rateVal / 100));
 
             var totalAngsuran = pokokBulan + marginBulan;
             var grandTotal = totalAngsuran * tenor;
@@ -1270,11 +1434,21 @@ $color_themes = [
             // Update WA Link
             if (waBtn) {
                 var selectedProd = prodSelect ? prodSelect.value : 'Pembiayaan Syariah';
-                var text = 'Halo BPRS Wakalumi, saya tertarik mengajukan ' + selectedProd +
-                           ' dengan estimasi plafon Rp ' + formatRupiah(plafon) +
-                           ' tenor ' + tenor + ' bulan (estimasi angsuran Rp ' + formatRupiah(totalAngsuran) + '/bulan).' +
-                           ' Mohon informasi syarat dan proses pengajuannya.';
-                waBtn.href = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent(text);
+                var waLines = [
+                    'Halo BPRS Wakalumi, saya tertarik berkonsultasi mengenai pengajuan *' + selectedProd + '*:'
+                ];
+                if (dpType !== 'none' && dpPct > 0) {
+                    waLines.push('• Total Kebutuhan: Rp ' + formatRupiah(totalNeeds));
+                    waLines.push('• ' + dpLabel + ' (' + dpPct + '%): Rp ' + formatRupiah(dpNominal));
+                    waLines.push('• Porsi Pembiayaan Bank: Rp ' + formatRupiah(plafonBersih));
+                } else {
+                    waLines.push('• Estimasi Plafon: Rp ' + formatRupiah(totalNeeds));
+                }
+                waLines.push('• Tenor: ' + tenor + ' bulan');
+                waLines.push('• Estimasi Angsuran: Rp ' + formatRupiah(totalAngsuran) + '/bulan');
+                waLines.push('Mohon informasi persyaratan dan prosedur pengajuannya. Terima kasih.');
+
+                waBtn.href = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent(waLines.join('\n'));
             }
         }
 
@@ -1294,12 +1468,16 @@ $color_themes = [
             });
         }
 
+        if (dpSlider) {
+            dpSlider.addEventListener('input', calculate);
+        }
+
         if (tenorSlider) {
             tenorSlider.addEventListener('input', calculate);
         }
 
         if (prodSelect) {
-            prodSelect.addEventListener('change', calculate);
+            prodSelect.addEventListener('change', onProductChange);
         }
 
         // Preset Shortcut Buttons
@@ -1325,8 +1503,10 @@ $color_themes = [
                             break;
                         }
                     }
+                    onProductChange();
+                } else {
+                    calculate();
                 }
-                calculate();
             });
         });
 
@@ -1341,12 +1521,12 @@ $color_themes = [
                             break;
                         }
                     }
-                    calculate();
+                    onProductChange();
                 }
             });
         });
 
-        calculate();
+        onProductChange();
     }
 
     if (document.readyState === 'loading') {

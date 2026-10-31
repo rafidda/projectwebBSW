@@ -460,6 +460,11 @@ function wakalumi_render_pembiayaan_admin_page() {
         $pem_svgs      = $_POST['pem_custom_svg'] ?? [];
         $pem_images    = $_POST['pem_image'] ?? [];
         $pem_urutans   = $_POST['pem_urutan'] ?? [];
+        $pem_can_sims  = $_POST['pem_can_simulate'] ?? [];
+        $pem_dp_types  = $_POST['pem_dp_type'] ?? [];
+        $pem_dp_labels = $_POST['pem_dp_label'] ?? [];
+        $pem_dp_mins   = $_POST['pem_dp_min'] ?? [];
+        $pem_dp_defs   = $_POST['pem_dp_default'] ?? [];
 
         $clean_pem_list = [];
         for ( $i = 0; $i < count( $pem_names ); $i++ ) {
@@ -467,6 +472,12 @@ function wakalumi_render_pembiayaan_admin_page() {
             if ( empty( $nama ) ) continue;
 
             $custom_svg_raw = isset( $pem_svgs[$i] ) ? trim( $pem_svgs[$i] ) : '';
+
+            $can_sim  = isset( $pem_can_sims[$i] ) ? sanitize_text_field( $pem_can_sims[$i] ) : '1';
+            $dp_type  = isset( $pem_dp_types[$i] ) && in_array( $pem_dp_types[$i], [ 'none', 'required', 'optional' ], true ) ? $pem_dp_types[$i] : 'none';
+            $dp_label = sanitize_text_field( $pem_dp_labels[$i] ?? 'Uang Muka (Urbun)' );
+            $dp_min   = floatval( $pem_dp_mins[$i] ?? 0 );
+            $dp_def   = floatval( $pem_dp_defs[$i] ?? 0 );
 
             $clean_pem_list[] = [
                 'nama'            => $nama,
@@ -488,6 +499,11 @@ function wakalumi_render_pembiayaan_admin_page() {
                     'path' => [ 'stroke-linecap' => true, 'stroke-linejoin' => true, 'd' => true, 'fill' => true ],
                 ] ) : '',
                 'urutan'          => intval( $pem_urutans[$i] ?? ($i + 1) ),
+                'can_simulate'    => $can_sim,
+                'dp_type'         => $dp_type,
+                'dp_label'        => $dp_label,
+                'dp_min'          => $dp_min,
+                'dp_default'      => $dp_def,
             ];
         }
 
@@ -499,6 +515,7 @@ function wakalumi_render_pembiayaan_admin_page() {
         update_option( 'options_pembiayaan_list', $clean_pem_list );
 
         // 3. Kalkulator Simulasi Pembiayaan
+        update_option( 'options_pembiayaan_calc_enable', sanitize_text_field( $_POST['options_pembiayaan_calc_enable'] ?? '1' ) );
         update_option( 'options_pembiayaan_calc_badge', sanitize_text_field( $_POST['options_pembiayaan_calc_badge'] ?? '' ) );
         update_option( 'options_pembiayaan_calc_title', sanitize_text_field( $_POST['options_pembiayaan_calc_title'] ?? '' ) );
         update_option( 'options_pembiayaan_calc_sub', sanitize_textarea_field( $_POST['options_pembiayaan_calc_sub'] ?? '' ) );
@@ -613,6 +630,7 @@ function wakalumi_render_pembiayaan_admin_page() {
     $komp_desc      = get_option( 'options_pembiayaan_komp_desc', 'Bandingkan skema akad, batas plafon, dan jangka waktu tenor untuk menemukan solusi pembiayaan yang paling tepat.' );
 
     // Kalkulator
+    $calc_enable    = get_option( 'options_pembiayaan_calc_enable', '1' );
     $calc_badge     = get_option( 'options_pembiayaan_calc_badge', 'Simulasi Finansial Syariah' );
     $calc_title     = get_option( 'options_pembiayaan_calc_title', 'Kalkulator Simulasi Angsuran Pembiayaan' );
     $calc_sub       = get_option( 'options_pembiayaan_calc_sub', 'Hitung estimasi angsuran bulanan yang adil dan transparan tanpa ada biaya tersembunyi. Tentukan plafon dan tenor sesuai kenyamanan arus kas Anda.' );
@@ -969,6 +987,53 @@ function wakalumi_render_pembiayaan_admin_page() {
                                 <textarea name="pem_desc[]" rows="2" class="large-text" style="width: 100%;"><?php echo esc_textarea( $prod['desc'] ?? '' ); ?></textarea>
                             </div>
 
+                            <!-- Konfigurasi Simulasi Kalkulator & Skema DP / Modal Awal (Syariah: Urbun / Modal Sendiri) -->
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                                    <strong style="font-size: 13px; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                                        <span class="dashicons dashicons-calculator" style="color: #088395; font-size: 18px; width: 18px; height: 18px;"></span>
+                                        Pengaturan Kalkulator Simulasi &amp; Uang Muka / Modal Awal (DP)
+                                    </strong>
+                                    <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+                                        Custom Akad &amp; Produk
+                                    </span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Izin Tampil di Kalkulator</label>
+                                        <select name="pem_can_simulate[]" style="width: 100%;">
+                                            <option value="1" <?php selected( $prod['can_simulate'] ?? '1', '1' ); ?>>✓ Tampilkan di Kalkulator (Bisa Disimulasikan)</option>
+                                            <option value="0" <?php selected( $prod['can_simulate'] ?? '1', '0' ); ?>>✕ Sembunyikan dari Kalkulator (Tanpa Simulasi)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Skema Uang Muka / DP</label>
+                                        <select name="pem_dp_type[]" style="width: 100%;">
+                                            <option value="none" <?php selected( $prod['dp_type'] ?? 'none', 'none' ); ?>>Tanpa Uang Muka (100% Porsi Bank)</option>
+                                            <option value="required" <?php selected( $prod['dp_type'] ?? 'none', 'required' ); ?>>Wajib Uang Muka / Modal Awal (Wajib DP)</option>
+                                            <option value="optional" <?php selected( $prod['dp_type'] ?? 'none', 'optional' ); ?>>Opsional (Nasabah Bebas Pilih Pakai DP / Tidak)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Istilah / Label Uang Muka</label>
+                                        <input type="text" name="pem_dp_label[]" value="<?php echo esc_attr( ! empty( $prod['dp_label'] ) ? $prod['dp_label'] : 'Uang Muka (Urbun)' ); ?>" class="regular-text" style="width: 100%;" placeholder="misal: Uang Muka (Urbun) / Modal Sendiri">
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <div style="flex: 1;">
+                                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Min DP (%)</label>
+                                            <input type="number" min="0" max="90" step="1" name="pem_dp_min[]" value="<?php echo esc_attr( isset( $prod['dp_min'] ) ? $prod['dp_min'] : 10 ); ?>" style="width: 100%;">
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Default DP (%)</label>
+                                            <input type="number" min="0" max="90" step="1" name="pem_dp_default[]" value="<?php echo esc_attr( isset( $prod['dp_default'] ) ? $prod['dp_default'] : 20 ); ?>" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="description" style="font-size: 11px; margin-top: 6px; color: #64748b; margin-bottom: 0;">
+                                    Jika produk memiliki DP (seperti Murabahah Urbun atau Musyarakah modal sendiri), kalkulator akan menghitung Plafon Bersih Bank = (Total Kebutuhan - DP) sebagai dasar perhitungan angsuran pokok dan margin.
+                                </p>
+                            </div>
+
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 15px;">
                                 <div>
                                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Keunggulan (1 baris per poin)</label>
@@ -1027,6 +1092,27 @@ function wakalumi_render_pembiayaan_admin_page() {
                     4. Kalkulator Simulasi Angsuran Pembiayaan
                 </h2>
                 <table class="form-table" style="margin: 0 0 20px 0;">
+                    <tr>
+                        <th style="width: 230px;"><label>Status Fitur Kalkulator</label></th>
+                        <td>
+                            <div style="display: flex; gap: 14px; flex-wrap: wrap; max-width: 650px;">
+                                <label style="flex: 1; min-width: 240px; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 2px solid <?php echo $calc_enable !== '0' ? '#10b981' : '#cbd5e1'; ?>; background: <?php echo $calc_enable !== '0' ? '#f0fdf4' : '#f8fafc'; ?>; cursor: pointer; transition: all 0.2s;" class="wkl-calc-enable-card">
+                                    <input type="radio" name="options_pembiayaan_calc_enable" value="1" <?php checked( $calc_enable !== '0', true ); ?> style="margin-top: 3px;">
+                                    <div>
+                                        <strong style="display: block; font-size: 13px; color: #065f46;">Aktif (Tampilkan Kalkulator)</strong>
+                                        <span style="font-size: 11px; color: #64748b; line-height: 1.4; display: block; margin-top: 2px;">Kalkulator simulasi pembiayaan aktif di halaman pembiayaan dan kartu cepat beranda aktif.</span>
+                                    </div>
+                                </label>
+                                <label style="flex: 1; min-width: 240px; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 2px solid <?php echo $calc_enable === '0' ? '#ef4444' : '#cbd5e1'; ?>; background: <?php echo $calc_enable === '0' ? '#fef2f2' : '#f8fafc'; ?>; cursor: pointer; transition: all 0.2s;" class="wkl-calc-enable-card">
+                                    <input type="radio" name="options_pembiayaan_calc_enable" value="0" <?php checked( $calc_enable === '0', true ); ?> style="margin-top: 3px;">
+                                    <div>
+                                        <strong style="display: block; font-size: 13px; color: #991b1b;">Non-Aktif (Sembunyikan)</strong>
+                                        <span style="font-size: 11px; color: #64748b; line-height: 1.4; display: block; margin-top: 2px;">Sembunyikan kalkulator di halaman pembiayaan. Kartu cepat simulasi di beranda dialihkan ke Kalkulator Deposito.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
                         <th style="width: 230px;"><label for="options_pembiayaan_calc_badge">Badge Kicker</label></th>
                         <td><input type="text" id="options_pembiayaan_calc_badge" name="options_pembiayaan_calc_badge" value="<?php echo esc_attr( $calc_badge ); ?>" class="regular-text" style="width: 100%; max-width: 400px;"></td>
@@ -1453,6 +1539,53 @@ function wakalumi_render_pembiayaan_admin_page() {
                 <textarea name="pem_desc[]" rows="2" class="large-text" style="width: 100%;"></textarea>
             </div>
 
+            <!-- Konfigurasi Simulasi Kalkulator & Skema DP / Modal Awal (Syariah: Urbun / Modal Sendiri) -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                    <strong style="font-size: 13px; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-calculator" style="color: #088395; font-size: 18px; width: 18px; height: 18px;"></span>
+                        Pengaturan Kalkulator Simulasi &amp; Uang Muka / Modal Awal (DP)
+                    </strong>
+                    <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 99px; font-weight: 600;">
+                        Custom Akad &amp; Produk
+                    </span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Izin Tampil di Kalkulator</label>
+                        <select name="pem_can_simulate[]" style="width: 100%;">
+                            <option value="1" selected>✓ Tampilkan di Kalkulator (Bisa Disimulasikan)</option>
+                            <option value="0">✕ Sembunyikan dari Kalkulator (Tanpa Simulasi)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Skema Uang Muka / DP</label>
+                        <select name="pem_dp_type[]" style="width: 100%;">
+                            <option value="none" selected>Tanpa Uang Muka (100% Porsi Bank)</option>
+                            <option value="required">Wajib Uang Muka / Modal Awal (Wajib DP)</option>
+                            <option value="optional">Opsional (Nasabah Bebas Pilih Pakai DP / Tidak)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Istilah / Label Uang Muka</label>
+                        <input type="text" name="pem_dp_label[]" value="Uang Muka (Urbun)" class="regular-text" style="width: 100%;" placeholder="misal: Uang Muka (Urbun) / Modal Sendiri">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <div style="flex: 1;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Min DP (%)</label>
+                            <input type="number" min="0" max="90" step="1" name="pem_dp_min[]" value="10" style="width: 100%;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Default DP (%)</label>
+                            <input type="number" min="0" max="90" step="1" name="pem_dp_default[]" value="20" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+                <p class="description" style="font-size: 11px; margin-top: 6px; color: #64748b; margin-bottom: 0;">
+                    Jika produk memiliki DP (seperti Murabahah Urbun atau Musyarakah modal sendiri), kalkulator akan menghitung Plafon Bersih Bank = (Total Kebutuhan - DP) sebagai dasar perhitungan angsuran pokok dan margin.
+                </p>
+            </div>
+
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #334155;">Keunggulan (1 baris per poin)</label>
@@ -1647,6 +1780,28 @@ function wakalumi_render_pembiayaan_admin_page() {
                         noteInput.value = noteInput.value.replace('per tahun', 'per bulan');
                     }
                 }
+            });
+        });
+
+        // 4b. Toggle Status Kalkulator Simulasi (Aktif / Non-Aktif)
+        var calcEnableRadios = document.querySelectorAll('input[name="options_pembiayaan_calc_enable"]');
+        calcEnableRadios.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.wkl-calc-enable-card').forEach(function(card) {
+                    var r = card.querySelector('input[type="radio"]');
+                    if (r && r.checked) {
+                        if (r.value === '1') {
+                            card.style.borderColor = '#10b981';
+                            card.style.background  = '#f0fdf4';
+                        } else {
+                            card.style.borderColor = '#ef4444';
+                            card.style.background  = '#fef2f2';
+                        }
+                    } else {
+                        card.style.borderColor = '#cbd5e1';
+                        card.style.background  = '#f8fafc';
+                    }
+                });
             });
         });
 

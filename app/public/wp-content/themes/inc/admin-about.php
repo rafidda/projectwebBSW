@@ -11,6 +11,217 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * ─────────────────────────────────────────────────────────────────────────────
+ * PALET WARNA DUAL-TONE & HELPER TENTANG KAMI
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+if ( ! function_exists( 'wakalumi_get_about_color_options' ) ) {
+    /**
+     * Opsi Palet Warna Dual-Tone untuk Halaman Profil: Tentang Kami (Misi Strategis & Budaya Kerja)
+     *
+     * @return array
+     */
+    function wakalumi_get_about_color_options() {
+        return [
+            'auto' => [
+                'name'          => 'Otomatis (Sesuai Urutan Baris)',
+                'dot'           => '#088395',
+                'top_stripe'    => 'from-teal-500 via-primary-500 to-emerald-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-teal-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:shadow-md group-hover:shadow-teal-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-teal-50 text-teal-800 dark:bg-teal-950/80 dark:text-teal-200 border border-teal-200/90 dark:border-teal-800/80',
+                'dot_color'     => 'bg-teal-500',
+                'dot_hover'     => 'group-hover:bg-teal-500',
+                'hover_text'    => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                'hover_border'  => 'hover:border-teal-500/70 dark:hover:border-teal-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(13,148,136,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.2)]',
+                'arrow_box'     => 'group-hover:bg-teal-500 group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-white group-hover:shadow-teal-500/30',
+                'modal_badge'   => 'bg-teal-100 text-teal-800 dark:bg-teal-950/80 dark:text-teal-200 border-teal-200 dark:border-teal-800',
+                'statement_box' => 'bg-teal-50/60 dark:bg-teal-950/30 border-teal-100/80 dark:border-teal-900/40 group-hover:bg-teal-50/90 dark:group-hover:bg-teal-950/60 group-hover:border-teal-300 dark:group-hover:border-teal-700',
+                'quote_icon'    => 'text-teal-500 dark:text-teal-400',
+            ],
+            'teal' => [
+                'name'          => 'Toska BSW (Signature Teal)',
+                'dot'           => '#088395',
+                'top_stripe'    => 'from-teal-600 via-teal-500 to-emerald-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-teal-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-teal-200/90 dark:border-teal-700/80 text-teal-700 dark:text-teal-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white group-hover:border-teal-600 group-hover:shadow-md group-hover:shadow-teal-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-teal-50 text-teal-800 dark:bg-teal-950/80 dark:text-teal-200 border border-teal-200/90 dark:border-teal-800/80',
+                'dot_color'     => 'bg-teal-500',
+                'dot_hover'     => 'group-hover:bg-teal-500',
+                'hover_text'    => 'group-hover:text-teal-600 dark:group-hover:text-teal-400',
+                'hover_border'  => 'hover:border-teal-500/70 dark:hover:border-teal-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(13,148,136,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(20,184,166,0.2)]',
+                'arrow_box'     => 'group-hover:bg-teal-500 group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-white group-hover:shadow-teal-500/30',
+                'modal_badge'   => 'bg-teal-100 text-teal-800 dark:bg-teal-950/80 dark:text-teal-200 border-teal-200 dark:border-teal-800',
+                'statement_box' => 'bg-teal-50/60 dark:bg-teal-950/30 border-teal-100/80 dark:border-teal-900/40 group-hover:bg-teal-50/90 dark:group-hover:bg-teal-950/60 group-hover:border-teal-300 dark:group-hover:border-teal-700',
+                'quote_icon'    => 'text-teal-500 dark:text-teal-400',
+            ],
+            'emerald' => [
+                'name'          => 'Hijau Zamrud (Emerald Syariah)',
+                'dot'           => '#059669',
+                'top_stripe'    => 'from-emerald-600 via-teal-500 to-teal-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-emerald-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-emerald-200/90 dark:border-emerald-700/80 text-emerald-700 dark:text-emerald-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-emerald-200/90 dark:border-emerald-700/80 text-emerald-700 dark:text-emerald-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:shadow-md group-hover:shadow-emerald-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-200 border border-emerald-200/90 dark:border-emerald-800/80',
+                'dot_color'     => 'bg-emerald-500',
+                'dot_hover'     => 'group-hover:bg-emerald-500',
+                'hover_text'    => 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400',
+                'hover_border'  => 'hover:border-emerald-500/70 dark:hover:border-emerald-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(16,185,129,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(16,185,129,0.2)]',
+                'arrow_box'     => 'group-hover:bg-emerald-500 group-hover:text-white dark:group-hover:bg-emerald-500 dark:group-hover:text-white group-hover:shadow-emerald-500/30',
+                'modal_badge'   => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800',
+                'statement_box' => 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-100/80 dark:border-emerald-900/40 group-hover:bg-emerald-50/90 dark:group-hover:bg-emerald-950/60 group-hover:border-emerald-300 dark:group-hover:border-emerald-700',
+                'quote_icon'    => 'text-emerald-500 dark:text-emerald-400',
+            ],
+            'cyan' => [
+                'name'          => 'Biru Cyan (Inovasi & Digital)',
+                'dot'           => '#0891b2',
+                'top_stripe'    => 'from-cyan-500 via-sky-500 to-blue-500',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-cyan-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-cyan-200/90 dark:border-cyan-700/80 text-cyan-700 dark:text-cyan-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-cyan-200/90 dark:border-cyan-700/80 text-cyan-700 dark:text-cyan-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-cyan-600 group-hover:shadow-md group-hover:shadow-cyan-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-cyan-50 text-cyan-800 dark:bg-cyan-950/80 dark:text-cyan-200 border border-cyan-200/90 dark:border-cyan-800/80',
+                'dot_color'     => 'bg-cyan-500',
+                'dot_hover'     => 'group-hover:bg-cyan-500',
+                'hover_text'    => 'group-hover:text-cyan-600 dark:group-hover:text-cyan-400',
+                'hover_border'  => 'hover:border-cyan-500/70 dark:hover:border-cyan-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(6,182,212,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(6,182,212,0.2)]',
+                'arrow_box'     => 'group-hover:bg-cyan-500 group-hover:text-white dark:group-hover:bg-cyan-500 dark:group-hover:text-white group-hover:shadow-cyan-500/30',
+                'modal_badge'   => 'bg-cyan-100 text-cyan-800 dark:bg-cyan-950/80 dark:text-cyan-200 border-cyan-200 dark:border-cyan-800',
+                'statement_box' => 'bg-cyan-50/60 dark:bg-cyan-950/30 border-cyan-100/80 dark:border-cyan-900/40 group-hover:bg-cyan-50/90 dark:group-hover:bg-cyan-950/60 group-hover:border-cyan-300 dark:group-hover:border-cyan-700',
+                'quote_icon'    => 'text-cyan-500 dark:text-cyan-400',
+            ],
+            'blue' => [
+                'name'          => 'Biru Safir (Kepercayaan & Stabilitas)',
+                'dot'           => '#2563eb',
+                'top_stripe'    => 'from-blue-600 via-indigo-500 to-sky-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-blue-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-blue-200/90 dark:border-blue-700/80 text-blue-700 dark:text-blue-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-blue-200/90 dark:border-blue-700/80 text-blue-700 dark:text-blue-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:shadow-md group-hover:shadow-blue-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-blue-50 text-blue-800 dark:bg-blue-950/80 dark:text-blue-200 border border-blue-200/90 dark:border-blue-800/80',
+                'dot_color'     => 'bg-blue-500',
+                'dot_hover'     => 'group-hover:bg-blue-500',
+                'hover_text'    => 'group-hover:text-blue-600 dark:group-hover:text-blue-400',
+                'hover_border'  => 'hover:border-blue-500/70 dark:hover:border-blue-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(37,99,235,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(37,99,235,0.2)]',
+                'arrow_box'     => 'group-hover:bg-blue-500 group-hover:text-white dark:group-hover:bg-blue-500 dark:group-hover:text-white group-hover:shadow-blue-500/30',
+                'modal_badge'   => 'bg-blue-100 text-blue-800 dark:bg-blue-950/80 dark:text-blue-200 border-blue-200 dark:border-blue-800',
+                'statement_box' => 'bg-blue-50/60 dark:bg-blue-950/30 border-blue-100/80 dark:border-blue-900/40 group-hover:bg-blue-50/90 dark:group-hover:bg-blue-950/60 group-hover:border-blue-300 dark:group-hover:border-blue-700',
+                'quote_icon'    => 'text-blue-500 dark:text-blue-400',
+            ],
+            'indigo' => [
+                'name'          => 'Ungu Indigo (Integritas & Wibawa)',
+                'dot'           => '#4f46e5',
+                'top_stripe'    => 'from-indigo-600 via-purple-500 to-blue-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-indigo-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-indigo-200/90 dark:border-indigo-700/80 text-indigo-700 dark:text-indigo-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-indigo-200/90 dark:border-indigo-700/80 text-indigo-700 dark:text-indigo-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 group-hover:shadow-md group-hover:shadow-indigo-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-200 border border-indigo-200/90 dark:border-indigo-800/80',
+                'dot_color'     => 'bg-indigo-500',
+                'dot_hover'     => 'group-hover:bg-indigo-500',
+                'hover_text'    => 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400',
+                'hover_border'  => 'hover:border-indigo-500/70 dark:hover:border-indigo-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(79,70,229,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(79,70,229,0.2)]',
+                'arrow_box'     => 'group-hover:bg-indigo-500 group-hover:text-white dark:group-hover:bg-indigo-500 dark:group-hover:text-white group-hover:shadow-indigo-500/30',
+                'modal_badge'   => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-200 border-indigo-200 dark:border-indigo-800',
+                'statement_box' => 'bg-indigo-50/60 dark:bg-indigo-950/30 border-indigo-100/80 dark:border-indigo-900/40 group-hover:bg-indigo-50/90 dark:group-hover:bg-indigo-950/60 group-hover:border-indigo-300 dark:group-hover:border-indigo-700',
+                'quote_icon'    => 'text-indigo-500 dark:text-indigo-400',
+            ],
+            'purple' => [
+                'name'          => 'Ungu Violet (Royal Violet)',
+                'dot'           => '#9333ea',
+                'top_stripe'    => 'from-purple-600 via-fuchsia-500 to-pink-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-purple-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-purple-200/90 dark:border-purple-700/80 text-purple-700 dark:text-purple-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-purple-200/90 dark:border-purple-700/80 text-purple-700 dark:text-purple-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:shadow-md group-hover:shadow-purple-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-purple-50 text-purple-800 dark:bg-purple-950/80 dark:text-purple-200 border border-purple-200/90 dark:border-purple-800/80',
+                'dot_color'     => 'bg-purple-500',
+                'dot_hover'     => 'group-hover:bg-purple-500',
+                'hover_text'    => 'group-hover:text-purple-600 dark:group-hover:text-purple-400',
+                'hover_border'  => 'hover:border-purple-500/70 dark:hover:border-purple-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(147,51,234,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(147,51,234,0.2)]',
+                'arrow_box'     => 'group-hover:bg-purple-500 group-hover:text-white dark:group-hover:bg-purple-500 dark:group-hover:text-white group-hover:shadow-purple-500/30',
+                'modal_badge'   => 'bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:text-purple-200 border-purple-200 dark:border-purple-800',
+                'statement_box' => 'bg-purple-50/60 dark:bg-purple-950/30 border-purple-100/80 dark:border-purple-900/40 group-hover:bg-purple-50/90 dark:group-hover:bg-purple-950/60 group-hover:border-purple-300 dark:group-hover:border-purple-700',
+                'quote_icon'    => 'text-purple-500 dark:text-purple-400',
+            ],
+            'amber' => [
+                'name'          => 'Kuning Amber (Kehangatan & Pertumbuhan)',
+                'dot'           => '#d97706',
+                'top_stripe'    => 'from-amber-500 via-orange-400 to-yellow-300',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-amber-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-amber-200/90 dark:border-amber-700/80 text-amber-700 dark:text-amber-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-amber-200/90 dark:border-amber-700/80 text-amber-700 dark:text-amber-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white group-hover:border-amber-600 group-hover:shadow-md group-hover:shadow-amber-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-amber-50 text-amber-800 dark:bg-amber-950/80 dark:text-amber-200 border border-amber-200/90 dark:border-amber-800/80',
+                'dot_color'     => 'bg-amber-500',
+                'dot_hover'     => 'group-hover:bg-amber-500',
+                'hover_text'    => 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+                'hover_border'  => 'hover:border-amber-500/70 dark:hover:border-amber-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(217,119,6,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(217,119,6,0.2)]',
+                'arrow_box'     => 'group-hover:bg-amber-500 group-hover:text-white dark:group-hover:bg-amber-500 dark:group-hover:text-white group-hover:shadow-amber-500/30',
+                'modal_badge'   => 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-200 border-amber-200 dark:border-amber-800',
+                'statement_box' => 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-100/80 dark:border-amber-900/40 group-hover:bg-amber-50/90 dark:group-hover:bg-amber-950/60 group-hover:border-amber-300 dark:group-hover:border-amber-700',
+                'quote_icon'    => 'text-amber-500 dark:text-amber-400',
+            ],
+            'rose' => [
+                'name'          => 'Merah Rose (Kepedulian & Layanan Umat)',
+                'dot'           => '#e11d48',
+                'top_stripe'    => 'from-rose-500 via-pink-500 to-rose-400',
+                'header_bg'     => 'bg-gradient-to-r from-slate-50/95 via-rose-50/35 to-slate-50/90 dark:from-slate-800/90 dark:via-slate-800/60 dark:to-slate-800/90',
+                'header_border' => 'border-slate-100 dark:border-slate-800/80',
+                'num_box'       => 'bg-white dark:bg-slate-900 border border-rose-200/90 dark:border-rose-700/80 text-rose-700 dark:text-rose-300 font-rubik font-black text-xs sm:text-[13px] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white group-hover:border-rose-600 transition-all duration-300',
+                'acronym_box'   => 'bg-white dark:bg-slate-900 border border-rose-200/90 dark:border-rose-700/80 text-rose-700 dark:text-rose-300 font-rubik font-black text-xl flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white group-hover:border-rose-600 group-hover:shadow-md group-hover:shadow-rose-600/25 transition-all duration-300',
+                'tag_badge'     => 'bg-rose-50 text-rose-800 dark:bg-rose-950/80 dark:text-rose-200 border border-rose-200/90 dark:border-rose-800/80',
+                'dot_color'     => 'bg-rose-500',
+                'dot_hover'     => 'group-hover:bg-rose-500',
+                'hover_text'    => 'group-hover:text-rose-600 dark:group-hover:text-rose-400',
+                'hover_border'  => 'hover:border-rose-500/70 dark:hover:border-rose-400/60',
+                'hover_shadow'  => 'hover:shadow-[0_18px_36px_-6px_rgba(225,29,72,0.18),0_6px_16px_-3px_rgba(15,23,42,0.08)] dark:hover:shadow-[0_18px_36px_-6px_rgba(0,0,0,0.8),0_0_24px_rgba(225,29,72,0.2)]',
+                'arrow_box'     => 'group-hover:bg-rose-500 group-hover:text-white dark:group-hover:bg-rose-500 dark:group-hover:text-white group-hover:shadow-rose-500/30',
+                'modal_badge'   => 'bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-200 border-rose-200 dark:border-rose-800',
+                'statement_box' => 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-100/80 dark:border-rose-900/40 group-hover:bg-rose-50/90 dark:group-hover:bg-rose-950/60 group-hover:border-rose-300 dark:group-hover:border-rose-700',
+                'quote_icon'    => 'text-rose-500 dark:text-rose-400',
+            ],
+        ];
+    }
+}
+
+if ( ! function_exists( 'wakalumi_get_about_palette' ) ) {
+    /**
+     * Dapatkan konfigurasi palet warna untuk kartu Tentang Kami
+     *
+     * @param string $color_key Kunci warna (teal, emerald, dll. atau 'auto')
+     * @param int    $idx       Indeks baris item
+     * @return array
+     */
+    function wakalumi_get_about_palette( $color_key = 'auto', $idx = 0 ) {
+        $options = wakalumi_get_about_color_options();
+        
+        // Jika 'auto', kosong, atau tidak valid, pilihkan bergantian secara harmonis
+        if ( empty( $color_key ) || $color_key === 'auto' || ! isset( $options[ $color_key ] ) ) {
+            $cycle = [ 'teal', 'emerald', 'cyan', 'blue', 'indigo', 'purple', 'amber', 'rose' ];
+            $chosen = $cycle[ $idx % count( $cycle ) ];
+            return $options[ $chosen ];
+        }
+        
+        return $options[ $color_key ];
+    }
+}
+
+/**
  * Registrasi Submenu di bawah "Pengaturan Website"
  */
 function wakalumi_register_about_admin_menu() {
@@ -81,20 +292,31 @@ function wakalumi_render_about_admin_page() {
         update_option( 'options_about_page_vision_title', sanitize_textarea_field( $_POST['options_about_page_vision_title'] ?? '' ) );
         update_option( 'options_about_page_vision_desc', sanitize_textarea_field( $_POST['options_about_page_vision_desc'] ?? '' ) );
 
-        // Misi Repeater
-        $raw_missions = $_POST['about_missions'] ?? [];
+        // Misi Repeater (Poin Misi, Keterangan Saat Kartu Diklik & Pilihan Warna Dual-Tone)
+        $raw_missions_titles = $_POST['about_missions_title'] ?? ( $_POST['about_missions'] ?? [] );
+        $raw_missions_descs  = $_POST['about_missions_desc'] ?? [];
+        $raw_missions_colors = $_POST['about_missions_color'] ?? [];
         $clean_missions = [];
-        if ( is_array( $raw_missions ) ) {
-            foreach ( $raw_missions as $m_text ) {
-                $trimmed = sanitize_textarea_field( $m_text );
-                if ( ! empty( $trimmed ) ) {
-                    $clean_missions[] = $trimmed;
+        if ( is_array( $raw_missions_titles ) ) {
+            foreach ( $raw_missions_titles as $i => $m_title ) {
+                $t_trimmed = sanitize_textarea_field( $m_title );
+                $d_trimmed = isset( $raw_missions_descs[$i] ) ? sanitize_textarea_field( $raw_missions_descs[$i] ) : '';
+                $c_trimmed = isset( $raw_missions_colors[$i] ) ? sanitize_key( $raw_missions_colors[$i] ) : 'auto';
+                if ( ! empty( $t_trimmed ) ) {
+                    $clean_missions[] = [
+                        'title' => $t_trimmed,
+                        'desc'  => $d_trimmed,
+                        'color' => $c_trimmed,
+                    ];
                 }
             }
         }
         update_option( 'options_about_page_missions', $clean_missions );
 
-        // Jati Diri & ISHLAH
+        // Jati Diri & ISHLAH Visibilitas Toggle
+        update_option( 'options_about_page_show_identity_belief', isset( $_POST['options_about_page_show_identity_belief'] ) ? '1' : '0' );
+
+        // Jati Diri & ISHLAH Konten
         update_option( 'options_about_page_identity_badge', sanitize_text_field( $_POST['options_about_page_identity_badge'] ?? '' ) );
         update_option( 'options_about_page_identity_tag', sanitize_text_field( $_POST['options_about_page_identity_tag'] ?? '' ) );
         update_option( 'options_about_page_identity_title', sanitize_text_field( $_POST['options_about_page_identity_title'] ?? '' ) );
@@ -122,13 +344,15 @@ function wakalumi_render_about_admin_page() {
         $raw_v_acronym = $_POST['about_val_acronym'] ?? [];
         $raw_v_title   = $_POST['about_val_title'] ?? [];
         $raw_v_desc    = $_POST['about_val_desc'] ?? [];
+        $raw_v_color   = $_POST['about_val_color'] ?? [];
         $clean_values  = [];
         for ( $v = 0; $v < count( $raw_v_title ); $v++ ) {
             $t = sanitize_text_field( $raw_v_title[$v] ?? '' );
             $a = sanitize_text_field( $raw_v_acronym[$v] ?? '' );
             $d = sanitize_textarea_field( $raw_v_desc[$v] ?? '' );
+            $c = sanitize_key( $raw_v_color[$v] ?? 'auto' );
             if ( ! empty( $t ) || ! empty( $a ) ) {
-                $clean_values[] = [ 'acronym' => $a, 'title' => $t, 'desc' => $d ];
+                $clean_values[] = [ 'acronym' => $a, 'title' => $t, 'desc' => $d, 'color' => $c ];
             }
         }
         update_option( 'options_about_page_values', $clean_values );
@@ -244,13 +468,30 @@ function wakalumi_render_about_admin_page() {
     $missions       = get_option( 'options_about_page_missions', [] );
     if ( empty( $missions ) ) {
         $missions = [
-            'Memberdayakan ekonomi umat dengan fokus usaha mikro, kecil dan menengah.',
-            'Memberikan layanan prima dan amanah bagi nasabah.',
-            'Menjalankan fungsi inklusi dan literasi ekonomi syariah bagi masyarakat.',
-            'Memberikan manfaat optimal bagi para stakeholder.',
-            'Membangun sistem dan tata kerja yang unggul dengan sumber daya insani yang professional, kompeten, handal dan menjunjung tinggi ukhuwah islamiyah.',
+            [
+                'title' => 'Meningkatkan Kepercayaan dan Amanah',
+                'desc'  => 'Menjalankan seluruh aktivitas perbankan sesuai prinsip syariah dengan transparansi, akuntabilitas, dan integritas, sehingga menjadi lembaga yang dipercaya oleh masyarakat.',
+            ],
+            [
+                'title' => 'Menjaga Kesehatan Keuangan dan Tata Kelola',
+                'desc'  => 'Menerapkan manajemen risiko yang ketat, pengelolaan aset yang bijak, serta tata kelola perusahaan yang profesional untuk memastikan keberlanjutan dan stabilitas bank.',
+            ],
+            [
+                'title' => 'Mendorong Inovasi Layanan',
+                'desc'  => 'Mengembangkan produk dan layanan berbasis teknologi yang sesuai regulasi, sehingga memudahkan akses nasabah dan mendukung transformasi menuju bank syariah digital.',
+            ],
+            [
+                'title' => 'Memberdayakan UMKM dan Komunitas Umat',
+                'desc'  => 'Menyediakan pembiayaan yang adil, inklusif, dan berorientasi pada pemberdayaan ekonomi umat, khususnya sektor UMKM dan usaha mikro di daerah.',
+            ],
+            [
+                'title' => 'Membangun Kedekatan dengan Nasabah',
+                'desc'  => 'Menjalin hubungan yang hangat dan solutif dengan nasabah melalui pelayanan personal, penggunaan teknologi, edukasi keuangan syariah, serta program sosial yang relevan dengan kebutuhan masyarakat.',
+            ],
         ];
     }
+
+    $show_identity_belief = get_option( 'options_about_page_show_identity_belief', '0' );
 
     $identity_badge = get_option( 'options_about_page_identity_badge', 'Jati Diri Lembaga' );
     $identity_tag   = get_option( 'options_about_page_identity_tag', 'Fokus Syariah' );
@@ -359,6 +600,12 @@ function wakalumi_render_about_admin_page() {
     $show_values    = get_option( 'options_about_page_show_values', '1' );
     $show_logo      = get_option( 'options_about_page_show_logo', '1' );
     $show_cta       = get_option( 'options_about_page_show_cta', '1' );
+
+    $about_color_options = wakalumi_get_about_color_options();
+    $color_options_html  = '';
+    foreach ( $about_color_options as $c_key => $c_opt ) {
+        $color_options_html .= '<option value="' . esc_attr( $c_key ) . '">' . esc_html( $c_opt['name'] ) . '</option>';
+    }
 
     $public_url     = home_url( '/profil/tentang-kami' );
     ?>
@@ -668,21 +915,46 @@ function wakalumi_render_about_admin_page() {
                 <table class="widefat fixed striped" style="border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
                     <thead>
                         <tr>
-                            <th style="width: 60px; text-align: center;">No.</th>
-                            <th>Uraian Misi Strategis</th>
-                            <th style="width: 80px; text-align: center;">Aksi</th>
+                            <th style="width: 50px; text-align: center;">No.</th>
+                            <th style="width: 175px;">Aksen Warna Dual Tone</th>
+                            <th>Butir &amp; Keterangan Misi Strategis</th>
+                            <th style="width: 75px; text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="missions-tbody">
-                        <?php foreach ( $missions as $m_idx => $m_item ) : ?>
+                        <?php foreach ( $missions as $m_idx => $m_item ) : 
+                            $m_title = is_array( $m_item ) ? ( $m_item['title'] ?? '' ) : $m_item;
+                            $m_desc  = is_array( $m_item ) ? ( $m_item['desc'] ?? '' ) : '';
+                            $m_color = is_array( $m_item ) ? ( $m_item['color'] ?? 'auto' ) : 'auto';
+                        ?>
                             <tr>
-                                <td style="text-align: center; vertical-align: middle; font-weight: bold; color: #088395;">
+                                <td style="text-align: center; vertical-align: top; font-weight: bold; color: #088395; padding-top: 15px;" class="m-num">
                                     <?php echo sprintf( '%02d', $m_idx + 1 ); ?>
                                 </td>
-                                <td>
-                                    <textarea name="about_missions[]" rows="2" class="large-text" style="width: 100%;"><?php echo esc_textarea( $m_item ); ?></textarea>
+                                <td style="padding: 10px; vertical-align: top;">
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tema Kartu:</label>
+                                    <select name="about_missions_color[]" style="width: 100%; font-weight: 600;">
+                                        <?php foreach ( $about_color_options as $c_key => $c_opt ) : ?>
+                                            <option value="<?php echo esc_attr( $c_key ); ?>" <?php selected( $m_color, $c_key ); ?>>
+                                                <?php echo esc_html( $c_opt['name'] ); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 5px; line-height: 1.3;">
+                                        Aksen dual-tone, 3D box &amp; gradien kartu.
+                                    </div>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td style="padding: 10px;">
+                                    <div style="margin-bottom: 8px;">
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Poin Misi Utama (Tampil di Kartu):</label>
+                                        <textarea name="about_missions_title[]" rows="2" class="large-text" style="width: 100%; font-weight: 600;" placeholder="Tulis butir misi di sini..."><?php echo esc_textarea( $m_title ); ?></textarea>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #088395; margin-bottom: 4px;">Keterangan / Penjelasan Detail (Tampil Saat Kartu Diklik):</label>
+                                        <textarea name="about_missions_desc[]" rows="3" class="large-text" style="width: 100%;" placeholder="Tulis uraian keterangan misi di sini..."><?php echo esc_textarea( $m_desc ); ?></textarea>
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align: top; padding-top: 15px;">
                                     <button type="button" class="button button-link-delete wkl-del-row" style="color: #ef4444;" title="Hapus baris misi ini">✕ Hapus</button>
                                 </td>
                             </tr>
@@ -696,7 +968,16 @@ function wakalumi_render_about_admin_page() {
                 <h3 style="font-size: 14px; margin: 25px 0 10px 0; color: #0f172a; font-weight: 700; border-top: 1px dashed #e2e8f0; padding-top: 15px;">
                     Jati Diri &amp; Keyakinan Inti (Core Beliefs)
                 </h3>
-                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">Kelola label, tag, judul utama, dan narasi untuk 2 kartu fondasi korporasi di bagian bawah seksi visi-misi.</p>
+                <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 15px;">Kelola visibilitas, label, tag, judul utama, dan narasi untuk 2 kartu fondasi korporasi di bagian bawah seksi visi-misi.</p>
+
+                <!-- Toggle Visibilitas Kartu -->
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 15px; margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #1e3a8a; cursor: pointer;">
+                        <input type="checkbox" name="options_about_page_show_identity_belief" value="1" <?php checked( $show_identity_belief, '1' ); ?>>
+                        <span>Tampilkan Kartu Jati Diri Lembaga &amp; Keyakinan Inti di Halaman Depan</span>
+                    </label>
+                    <p style="font-size: 12px; color: #475569; margin: 4px 0 0 24px;">Hapus centang untuk menyembunyikan kedua kartu ini dari tampilan publik (saat ini disembunyikan sesuai arahan Direksi).</p>
+                </div>
 
                 <!-- Jati Diri Card -->
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
@@ -792,17 +1073,32 @@ function wakalumi_render_about_admin_page() {
                 <table class="widefat fixed striped" style="border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
                     <thead>
                         <tr>
-                            <th style="width: 70px; text-align: center;">Huruf</th>
+                            <th style="width: 65px; text-align: center;">Huruf</th>
+                            <th style="width: 175px;">Aksen Warna Dual Tone</th>
                             <th style="width: 180px;">Nama Nilai</th>
                             <th>Uraian Makna Perilaku</th>
-                            <th style="width: 80px; text-align: center;">Aksi</th>
+                            <th style="width: 70px; text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="values-tbody">
-                        <?php foreach ( $values as $v_idx => $v_item ) : ?>
+                        <?php foreach ( $values as $v_idx => $v_item ) : 
+                            $v_color = $v_item['color'] ?? 'auto';
+                        ?>
                             <tr>
                                 <td style="text-align: center; vertical-align: top; padding-top: 10px;">
                                     <input type="text" name="about_val_acronym[]" value="<?php echo esc_attr( $v_item['acronym'] ?? '' ); ?>" maxlength="3" style="width: 50px; text-align: center; font-weight: bold; font-size: 16px; color: #088395;">
+                                </td>
+                                <td style="vertical-align: top; padding-top: 10px;">
+                                    <select name="about_val_color[]" style="width: 100%; font-weight: 600;">
+                                        <?php foreach ( $about_color_options as $c_key => $c_opt ) : ?>
+                                            <option value="<?php echo esc_attr( $c_key ); ?>" <?php selected( $v_color, $c_key ); ?>>
+                                                <?php echo esc_html( $c_opt['name'] ); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.2;">
+                                        Otomatis: W=Emerald, A=Blue, Q=Cyan, F=Amber
+                                    </div>
                                 </td>
                                 <td style="vertical-align: top; padding-top: 10px;">
                                     <input type="text" name="about_val_title[]" value="<?php echo esc_attr( $v_item['title'] ?? '' ); ?>" class="regular-text" style="width: 100%; font-weight: 600;">
@@ -1260,15 +1556,31 @@ function wakalumi_render_about_admin_page() {
             }
         });
 
+        var colorOptionsHtml = <?php echo json_encode( $color_options_html ); ?>;
+
         // Tambah Baris Misi
         $('#btn-add-mission').on('click', function(e) {
             e.preventDefault();
             var count = $('#missions-tbody tr').length + 1;
             var numStr = ('0' + count).slice(-2);
             var rowHtml = '<tr>' +
-                '<td style="text-align: center; vertical-align: middle; font-weight: bold; color: #088395;" class="m-num">' + numStr + '</td>' +
-                '<td><textarea name="about_missions[]" rows="2" class="large-text" style="width: 100%;" placeholder="Tulis uraian butir misi di sini..."></textarea></td>' +
-                '<td style="text-align: center; vertical-align: middle;"><button type="button" class="button button-link-delete wkl-del-row" style="color: #ef4444;">✕ Hapus</button></td>' +
+                '<td style="text-align: center; vertical-align: top; font-weight: bold; color: #088395; padding-top: 15px;" class="m-num">' + numStr + '</td>' +
+                '<td style="padding: 10px; vertical-align: top;">' +
+                    '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tema Kartu:</label>' +
+                    '<select name="about_missions_color[]" style="width: 100%; font-weight: 600;">' + colorOptionsHtml + '</select>' +
+                    '<div style="font-size: 11px; color: #64748b; margin-top: 5px; line-height: 1.3;">Aksen dual-tone, 3D box &amp; gradien kartu.</div>' +
+                '</td>' +
+                '<td style="padding: 10px;">' +
+                    '<div style="margin-bottom: 8px;">' +
+                        '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Poin Misi Utama (Tampil di Kartu):</label>' +
+                        '<textarea name="about_missions_title[]" rows="2" class="large-text" style="width: 100%; font-weight: 600;" placeholder="Tulis butir misi di sini..."></textarea>' +
+                    '</div>' +
+                    '<div>' +
+                        '<label style="display: block; font-size: 11px; font-weight: 700; color: #088395; margin-bottom: 4px;">Keterangan / Penjelasan Detail (Tampil Saat Kartu Diklik):</label>' +
+                        '<textarea name="about_missions_desc[]" rows="3" class="large-text" style="width: 100%;" placeholder="Tulis uraian keterangan misi di sini..."></textarea>' +
+                    '</div>' +
+                '</td>' +
+                '<td style="text-align: center; vertical-align: top; padding-top: 15px;"><button type="button" class="button button-link-delete wkl-del-row" style="color: #ef4444;">✕ Hapus</button></td>' +
                 '</tr>';
             $('#missions-tbody').append(rowHtml);
         });
@@ -1285,6 +1597,7 @@ function wakalumi_render_about_admin_page() {
             e.preventDefault();
             var rowHtml = '<tr>' +
                 '<td style="text-align: center; vertical-align: top; padding-top: 10px;"><input type="text" name="about_val_acronym[]" value="" maxlength="3" style="width: 50px; text-align: center; font-weight: bold; font-size: 16px; color: #088395;" placeholder="A"></td>' +
+                '<td style="vertical-align: top; padding-top: 10px;"><select name="about_val_color[]" style="width: 100%; font-weight: 600;">' + colorOptionsHtml + '</select><div style="font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.2;">Otomatis: W=Emerald, A=Blue, Q=Cyan, F=Amber</div></td>' +
                 '<td style="vertical-align: top; padding-top: 10px;"><input type="text" name="about_val_title[]" value="" class="regular-text" style="width: 100%; font-weight: 600;" placeholder="Nama Nilai"></td>' +
                 '<td><textarea name="about_val_desc[]" rows="2" class="large-text" style="width: 100%;" placeholder="Uraian makna perilaku..."></textarea></td>' +
                 '<td style="text-align: center; vertical-align: middle;"><button type="button" class="button button-link-delete wkl-del-row" style="color: #ef4444;">✕ Hapus</button></td>' +

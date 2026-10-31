@@ -43,6 +43,8 @@ module.exports = {
         rubik: ['"Rubik"', '"Nunito"', '"Quicksand"', ...defaultTheme.fontFamily.sans],
         body: ['"Comfortaa"', '"Nunito"', '"Quicksand"', '"Varela Round"', ...defaultTheme.fontFamily.sans],
         accent: ['"Quicksand"', '"Varela Round"', '"Nunito"', ...defaultTheme.fontFamily.sans],
+        della: ['"Della Respira"', 'Georgia', 'serif'],
+        quattrocento: ['"Quattrocento"', 'Georgia', 'serif'],
       },
       dropShadow: {
         'emblem-light': '0 10px 24px rgba(15, 23, 42, 0.08)',

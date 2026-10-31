@@ -11,6 +11,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Proteksi Regulasi Perbankan Syariah:
+// Jika fitur Baitul Maal disembunyikan dan pengunjung bukan administrator, arahkan ke /layanan-kami/
+$show_baitul_maal = ( '1' === (string) get_option( 'options_show_baitul_maal', '0' ) );
+if ( ! $show_baitul_maal && ! current_user_can( 'manage_options' ) ) {
+    wp_safe_redirect( home_url( '/layanan-kami/' ), 302 );
+    exit;
+}
+
 // SEO Custom Meta Title
 add_filter( 'document_title_parts', function( $title_parts ) {
     $title_parts['title'] = 'Baitul Maal BSW — Bank Syariah Wakalumi';
@@ -198,6 +206,24 @@ if ( ! function_exists( 'wakalumi_render_bm_icon' ) ) {
 ?>
 
 <main id="primary" class="site-main overflow-hidden bg-slate-50/50 dark:bg-dark-surface/20 min-h-screen">
+
+    <?php if ( ! $show_baitul_maal && current_user_can( 'manage_options' ) ) : ?>
+        <!-- Banner Mode Pratinjau Admin Saat Baitul Maal Dinonaktifkan Sesuai Regulasi -->
+        <div class="bg-amber-500/10 dark:bg-amber-500/15 border-b border-amber-500/30 text-amber-900 dark:text-amber-200 py-3 px-4 text-xs font-medium relative z-50">
+            <div class="container-wide flex items-center justify-between gap-3 flex-wrap">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black text-[11px] shrink-0">!</span>
+                    <span>
+                        <strong class="font-bold text-amber-800 dark:text-amber-300">Mode Pratinjau Administrator:</strong> Halaman Baitul Maal saat ini sedang <strong>disembunyikan dari publik</strong> sesuai arahan regulasi perbankan syariah. Pengunjung umum otomatis dialihkan ke <a href="<?php echo esc_url( home_url( '/layanan-kami/' ) ); ?>" class="underline font-bold">Layanan Kami</a>.
+                    </span>
+                </div>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wakalumi-baitul-maal' ) ); ?>" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition-colors shadow-2xs">
+                    <span>Pengaturan Visibilitas</span>
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                </a>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <!-- ========================================================================
          HERO SECTION: RESMI, SERAGAM & ELEGAN DENGAN 1 CARD RINGKASAN KANAN

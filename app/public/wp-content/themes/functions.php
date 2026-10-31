@@ -49,10 +49,10 @@ require_once WAKALUMI_DIR . '/inc/prayer-times.php';
 // ENQUEUE SCRIPTS & STYLES
 // ────────────────────────────────────────────────
 function wakalumi_enqueue_assets() {
-    // Google Fonts — Rubik (Headings/Display), Comfortaa (Paragraphs/Details), Nunito, Quicksand & Varela Round (UI/Badges)
+    // Google Fonts — Rubik (Headings/Display), Comfortaa (Paragraphs/Details), Nunito, Quicksand, Varela Round, Della Respira & Quattrocento (Classic History)
     wp_enqueue_style(
         'wakalumi-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Quicksand:wght@500;600;700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Varela+Round&display=swap',
+        'https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Della+Respira&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Quattrocento:wght@400;700&family=Quicksand:wght@500;600;700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Varela+Round&display=swap',
         [],
         null
     );

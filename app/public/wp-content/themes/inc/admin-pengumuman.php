@@ -241,16 +241,133 @@ if ( ! function_exists( 'wakalumi_get_active_toast_pengumuman' ) ) {
     }
 }
 
+if ( ! function_exists( 'wakalumi_get_pengumuman_schedule_label' ) ) {
+    /**
+     * Mengembalikan teks label representasi jadwal tayang pop-up yang informatif dan ramah pengguna.
+     *
+     * @param array $item Data pengumuman.
+     * @return string Label jadwal (misal 'Setiap Hari', 'Khusus Kamis', 'Khusus Jumat', 'Senin - Jumat', dll).
+     */
+    function wakalumi_get_pengumuman_schedule_label( $item ) {
+        if ( empty( $item['is_popup'] ) ) {
+            return '';
+        }
+
+        $mode = $item['popup_mode'] ?? 'everyday';
+        $days = array_values( array_unique( array_map( 'strval', (array)( $item['popup_days'] ?? [] ) ) ) );
+        sort( $days, SORT_NUMERIC );
+
+        $day_names = [
+            '1' => 'Senin',
+            '2' => 'Selasa',
+            '3' => 'Rabu',
+            '4' => 'Kamis',
+            '5' => 'Jumat',
+            '6' => 'Sabtu',
+            '7' => 'Minggu',
+        ];
+
+        if ( $mode === 'everyday' || count( $days ) === 7 ) {
+            return 'Setiap Hari';
+        }
+
+        if ( $mode === 'thursday' || ( count( $days ) === 1 && $days[0] === '4' ) ) {
+            return 'Khusus Kamis';
+        }
+
+        if ( $mode === 'friday' || ( count( $days ) === 1 && $days[0] === '5' ) ) {
+            return 'Khusus Jumat';
+        }
+
+        if ( $mode === 'weekdays' || $days === [ '1', '2', '3', '4', '5' ] ) {
+            return 'Senin - Jumat';
+        }
+
+        if ( $mode === 'weekend' || $days === [ '6', '7' ] ) {
+            return 'Sabtu & Minggu';
+        }
+
+        if ( count( $days ) === 1 && isset( $day_names[$days[0]] ) ) {
+            return 'Khusus ' . $day_names[$days[0]];
+        }
+
+        if ( empty( $days ) ) {
+            return 'Belum Pilih Hari (Nonaktif)';
+        }
+
+        if ( count( $days ) <= 3 ) {
+            $names = array_map( fn( $d ) => $day_names[$d] ?? $d, $days );
+            return implode( ' & ', $names );
+        }
+
+        return count( $days ) . ' Hari Terpilih';
+    }
+}
+
+if ( ! function_exists( 'wakalumi_is_pengumuman_popup_active_today' ) ) {
+    /**
+     * Memeriksa apakah suatu pengumuman pop-up dijadwalkan tayang pada hari ini.
+     * Menggunakan zona waktu resmi WordPress (WIB / UTC+7).
+     *
+     * @param array $item Data pengumuman.
+     * @return bool True jika aktif tayang hari ini, false jika tidak.
+     */
+    function wakalumi_is_pengumuman_popup_active_today( $item ) {
+        if ( empty( $item['is_popup'] ) ) {
+            return false;
+        }
+
+        $mode = $item['popup_mode'] ?? 'everyday';
+        if ( $mode === 'everyday' ) {
+            return true;
+        }
+
+        // 1 = Senin, 2 = Selasa, 3 = Rabu, 4 = Kamis, 5 = Jumat, 6 = Sabtu, 7 = Minggu
+        $today_num = (string) wp_date( 'N' );
+
+        if ( $mode === 'thursday' ) {
+            return ( $today_num === '4' );
+        }
+
+        if ( $mode === 'friday' ) {
+            return ( $today_num === '5' );
+        }
+
+        if ( $mode === 'weekdays' ) {
+            return in_array( $today_num, [ '1', '2', '3', '4', '5' ], true );
+        }
+
+        if ( $mode === 'weekend' ) {
+            return in_array( $today_num, [ '6', '7' ], true );
+        }
+
+        // Custom mode
+        $days = (array)( $item['popup_days'] ?? [] );
+        if ( empty( $days ) ) {
+            return false; // Fail-safe: jika mode kustom tapi tidak ada hari yang dicentang, jangan tayang
+        }
+
+        return in_array( $today_num, array_map( 'strval', $days ), true );
+    }
+}
+
 if ( ! function_exists( 'wakalumi_get_active_popup_pengumuman_list' ) ) {
     /**
-     * Mengambil seluruh pengumuman darurat aktif yang diatur sebagai Pop-Up Beranda.
+     * Mengambil seluruh pengumuman darurat aktif yang diatur sebagai Pop-Up Beranda dan dijadwalkan tayang hari ini.
      *
+     * @param bool $ignore_day_filter Jika true, kembalikan semua pop-up aktif tanpa filter hari.
      * @return array Daftar pengumuman pop-up aktif.
      */
-    function wakalumi_get_active_popup_pengumuman_list() {
+    function wakalumi_get_active_popup_pengumuman_list( $ignore_day_filter = false ) {
         $all = wakalumi_get_pengumuman_list();
-        $filtered = array_filter( $all, function( $item ) {
-            return ( ( $item['status'] ?? 'aktif' ) === 'aktif' ) && ( ! empty( $item['is_popup'] ) );
+        $filtered = array_filter( $all, function( $item ) use ( $ignore_day_filter ) {
+            if ( ( $item['status'] ?? 'aktif' ) !== 'aktif' || empty( $item['is_popup'] ) ) {
+                return false;
+            }
+            if ( $ignore_day_filter ) {
+                return true;
+            }
+            return wakalumi_is_pengumuman_popup_active_today( $item );
         });
         return array_values( $filtered );
     }
@@ -350,6 +467,37 @@ function wakalumi_render_pengumuman_page() {
                 $id_val = 'ann_' . time() . '_' . $i;
             }
 
+            $is_item_popup = ( in_array( $id_val, (array) $is_popups, true ) || ( isset( $is_popups[$i] ) && $is_popups[$i] === '1' ) ) ? '1' : '0';
+
+            // Pop-up Day Scheduling (Preset & Custom Days)
+            $item_popup_mode = sanitize_key( $_POST['pengumuman_popup_mode_' . $id_val] ?? 'everyday' );
+            $raw_days = $_POST['pengumuman_popup_days_' . $id_val] ?? [];
+            $item_popup_days = [];
+            if ( is_array( $raw_days ) ) {
+                foreach ( $raw_days as $d ) {
+                    $d_int = (int) $d;
+                    if ( $d_int >= 1 && $d_int <= 7 ) {
+                        $item_popup_days[] = (string) $d_int;
+                    }
+                }
+            }
+
+            // Sync presets with days array
+            if ( $item_popup_mode === 'thursday' ) {
+                $item_popup_days = [ '4' ];
+            } elseif ( $item_popup_mode === 'friday' ) {
+                $item_popup_days = [ '5' ];
+            } elseif ( $item_popup_mode === 'weekdays' ) {
+                $item_popup_days = [ '1', '2', '3', '4', '5' ];
+            } elseif ( $item_popup_mode === 'weekend' ) {
+                $item_popup_days = [ '6', '7' ];
+            } elseif ( $item_popup_mode === 'everyday' ) {
+                $item_popup_days = [ '1', '2', '3', '4', '5', '6', '7' ];
+            } elseif ( $item_popup_mode === 'custom' ) {
+                // If custom was selected, keep selected days (e.g. ['4'] for Kamis)
+                // If empty, keep empty array so fail-safe prevents accidental popup
+            }
+
             $saved_list[] = [
                 'id'          => $id_val,
                 'judul'       => $judul,
@@ -367,7 +515,9 @@ function wakalumi_render_pengumuman_page() {
                 'link_url'    => esc_url_raw( $link_urls[$i] ?? '' ),
                 'link_target' => ( ( $link_targets[$i] ?? '_blank' ) === '_self' ) ? '_self' : '_blank',
                 'is_toast'    => ( in_array( $id_val, (array) $is_toasts, true ) || ( isset( $is_toasts[$i] ) && $is_toasts[$i] === '1' ) ) ? '1' : '0',
-                'is_popup'    => ( in_array( $id_val, (array) $is_popups, true ) || ( isset( $is_popups[$i] ) && $is_popups[$i] === '1' ) ) ? '1' : '0',
+                'is_popup'    => $is_item_popup,
+                'popup_mode'  => $item_popup_mode,
+                'popup_days'  => $item_popup_days,
                 'status'      => sanitize_key( $statuses[$i] ?? 'aktif' ),
                 'urutan'      => (int)( $urutans[$i] ?? ( $i + 1 ) ),
             ];
@@ -384,8 +534,9 @@ function wakalumi_render_pengumuman_page() {
     $categories     = wakalumi_get_pengumuman_categories();
     $pengumuman_list= wakalumi_get_pengumuman_list();
 
-    $active_count = count( array_filter( $pengumuman_list, fn($x) => ( $x['status'] ?? '' ) === 'aktif' ) );
-    $popup_count  = count( array_filter( $pengumuman_list, fn($x) => ! empty( $x['is_popup'] ) && ( $x['status'] ?? '' ) === 'aktif' ) );
+    $active_count      = count( array_filter( $pengumuman_list, fn($x) => ( $x['status'] ?? '' ) === 'aktif' ) );
+    $popup_count_all   = count( array_filter( $pengumuman_list, fn($x) => ! empty( $x['is_popup'] ) && ( $x['status'] ?? '' ) === 'aktif' ) );
+    $popup_count_today = count( wakalumi_get_active_popup_pengumuman_list() );
     ?>
     <div class="wrap" style="max-width: 1060px; margin-top: 20px;">
 
@@ -422,7 +573,15 @@ function wakalumi_render_pengumuman_page() {
                 </div>
                 <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #cbd5e1; border-left: 5px solid #f59e0b; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                     <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em;">Pop-Up Modal Beranda</div>
-                    <div style="font-size: 26px; font-weight: 800; color: #b45309; margin-top: 4px;"><?php echo $popup_count > 0 ? 'AKTIF (' . $popup_count . ')' : 'NON-AKTIF'; ?></div>
+                    <div style="font-size: 24px; font-weight: 800; color: #b45309; margin-top: 4px;">
+                        <?php 
+                        if ( $popup_count_all > 0 ) {
+                            echo $popup_count_today . ' <span style="font-size: 13px; font-weight: 700; color: #047857;">AKTIF HARI INI</span> <span style="font-size: 12px; font-weight: 500; color: #64748b;">(' . $popup_count_all . ' terjadwal)</span>';
+                        } else {
+                            echo 'NON-AKTIF';
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
 
@@ -606,9 +765,13 @@ function wakalumi_render_pengumuman_page() {
                                                 <?php if ( $urgensi === 'penting' ) : ?>
                                                     <span style="background: #fef3c7; color: #b45309; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">⚡ PENTING</span>
                                                 <?php endif; ?>
-                                                <?php if ( $is_popup ) : ?>
-                                                    <span style="background: #fef3c7; color: #92400e; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">⚡ POP-UP</span>
-                                                <?php endif; ?>
+                                                <?php 
+                                                $sched_lbl = wakalumi_get_pengumuman_schedule_label( $item );
+                                                $is_active_today = wakalumi_is_pengumuman_popup_active_today( $item );
+                                                ?>
+                                                <span class="pengumuman-popup-badge-pill" style="<?php echo $is_popup ? '' : 'display: none;'; ?> background: <?php echo $is_active_today ? '#fef3c7' : '#f1f5f9'; ?>; color: <?php echo $is_active_today ? '#92400e' : '#64748b'; ?>; border: 1px solid <?php echo $is_active_today ? '#fde68a' : '#cbd5e1'; ?>; font-weight: 700; padding: 1px 7px; border-radius: 4px; font-size: 10px;">
+                                                    ⭐ POP-UP: <span class="badge-sched-text"><?php echo esc_html( strtoupper( $sched_lbl ? $sched_lbl : 'SETIAP HARI' ) ); ?></span> • <span class="badge-status-text"><?php echo $is_active_today ? 'AKTIF HARI INI' : 'TIDAK TAYANG HARI INI'; ?></span>
+                                                </span>
                                                 <?php if ( $is_toast ) : ?>
                                                     <span style="background: #ccfbf1; color: #0f766e; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">🔔 TOAST</span>
                                                 <?php endif; ?>
@@ -759,16 +922,70 @@ function wakalumi_render_pengumuman_page() {
                                         </div>
                                     </div>
 
-                                    <!-- Row 6: Tampilan di Beranda (Checkboxes) -->
-                                    <div style="display: flex; gap: 24px; padding-top: 6px; border-top: 1px dashed #e2e8f0;">
+                                    <!-- Row 6: Tampilan di Beranda (Checkboxes & Jadwal Hari) -->
+                                    <div style="display: flex; gap: 24px; padding-top: 6px; border-top: 1px dashed #e2e8f0; align-items: center; flex-wrap: wrap;">
                                         <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #0f766e; cursor: pointer;">
                                             <input type="checkbox" name="pengumuman_is_toast[]" value="<?php echo esc_attr( $row_id ); ?>" <?php checked( $is_toast ); ?>>
                                             🔔 Tampilkan di Floating Toast Beranda
                                         </label>
                                         <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #b45309; cursor: pointer;">
-                                            <input type="checkbox" name="pengumuman_is_popup[]" value="<?php echo esc_attr( $row_id ); ?>" <?php checked( $is_popup ); ?>>
+                                            <input type="checkbox" name="pengumuman_is_popup[]" value="<?php echo esc_attr( $row_id ); ?>" <?php checked( $is_popup ); ?> class="pengumuman-is-popup-toggle">
                                             ⭐ Tampilkan sebagai Pop-Up Modal di Beranda
                                         </label>
+                                    </div>
+
+                                    <?php
+                                    $popup_mode = $item['popup_mode'] ?? 'everyday';
+                                    $popup_days = (array)( $item['popup_days'] ?? [ '1', '2', '3', '4', '5', '6', '7' ] );
+                                    $is_active_today = wakalumi_is_pengumuman_popup_active_today( $item );
+                                    ?>
+                                    <!-- Pop-up Day Customizer Box -->
+                                    <div class="popup-schedule-box" style="margin-top: 12px; padding: 14px 16px; background: #fffdf5; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; <?php echo $is_popup ? '' : 'display: none;'; ?>">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                                            <label style="font-size: 12px; font-weight: 700; color: #92400e; display: inline-flex; align-items: center; gap: 6px;">
+                                                <span class="dashicons dashicons-calendar-alt" style="font-size: 16px; width: 16px; height: 16px; color: #d97706;"></span>
+                                                Jadwal Hari Tayang Pop-Up di Beranda:
+                                            </label>
+                                            <div>
+                                                <select name="pengumuman_popup_mode_<?php echo esc_attr( $row_id ); ?>" class="popup-mode-select" style="font-size: 12px; font-weight: 600; border-radius: 6px; border-color: #fcd34d; background: #fff; color: #78350f;">
+                                                    <option value="everyday" <?php selected( $popup_mode, 'everyday' ); ?>>Setiap Hari (Senin - Minggu)</option>
+                                                    <option value="thursday" <?php selected( $popup_mode, 'thursday' ); ?>>Khusus Hari Kamis</option>
+                                                    <option value="friday" <?php selected( $popup_mode, 'friday' ); ?>>Khusus Hari Jumat</option>
+                                                    <option value="weekdays" <?php selected( $popup_mode, 'weekdays' ); ?>>Hari Kerja (Senin - Jumat)</option>
+                                                    <option value="weekend" <?php selected( $popup_mode, 'weekend' ); ?>>Akhir Pekan (Sabtu &amp; Minggu)</option>
+                                                    <option value="custom" <?php selected( $popup_mode, 'custom' ); ?>>Pilih Hari Manual (Kustom)...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Day Checkbox Pills -->
+                                        <div class="popup-days-pills" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+                                            <?php
+                                            $days_map = [
+                                                '1' => 'Senin',
+                                                '2' => 'Selasa',
+                                                '3' => 'Rabu',
+                                                '4' => 'Kamis',
+                                                '5' => 'Jumat',
+                                                '6' => 'Sabtu',
+                                                '7' => 'Minggu',
+                                            ];
+                                            foreach ( $days_map as $d_num => $d_name ) :
+                                                $is_day_checked = in_array( (string)$d_num, (array)$popup_days, true );
+                                            ?>
+                                                <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: <?php echo $is_day_checked ? '#fef3c7' : '#ffffff'; ?>; padding: 4px 10px; border-radius: 6px; border: 1px solid <?php echo $is_day_checked ? '#f59e0b' : '#e2e8f0'; ?>; cursor: pointer; color: <?php echo $is_day_checked ? '#92400e' : '#64748b'; ?>; user-select: none;">
+                                                    <input type="checkbox" name="pengumuman_popup_days_<?php echo esc_attr( $row_id ); ?>[]" value="<?php echo $d_num; ?>" <?php checked( $is_day_checked ); ?> class="popup-day-checkbox" data-day="<?php echo $d_num; ?>">
+                                                    <span><?php echo esc_html( $d_name ); ?></span>
+                                                </label>
+                                            <?php endforeach; ?>
+                                        </div>
+
+                                        <div class="popup-schedule-footer" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #b45309; padding-top: 8px; border-top: 1px dashed #fde68a;">
+                                            <span class="schedule-tip-text">💡 <em>Pop-up hanya akan muncul di layar beranda pada hari yang dicentang. Di luar hari tersebut, pop-up otomatis disembunyikan.</em></span>
+                                            <span class="schedule-live-status" style="font-weight: 700; color: <?php echo $is_active_today ? '#047857' : '#b45309'; ?>;">
+                                                Status Hari Ini (<?php echo wp_date('l'); ?>): <?php echo $is_active_today ? '✅ Aktif Tayang' : '⏸️ Tidak Tayang (' . esc_html( $sched_lbl ) . ')'; ?>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -805,11 +1022,14 @@ function wakalumi_render_pengumuman_page() {
                         <div class="pengumuman-preview-title" style="font-weight: 700; font-size: 14px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             (Pengumuman Baru — Belum Disimpan)
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748b; margin-top: 3px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748b; margin-top: 3px; flex-wrap: wrap;">
                             <span>📅 <?php echo date( 'Y-m-d' ); ?></span>
                             <span>•</span>
                             <span>🏷️ Umum & Pengumuman</span>
                             <span style="background: #dbeafe; color: #1e40af; font-weight: 700; padding: 1px 6px; border-radius: 4px; font-size: 10px;">BARU</span>
+                            <span class="pengumuman-popup-badge-pill" style="display: none; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-weight: 700; padding: 1px 7px; border-radius: 4px; font-size: 10px;">
+                                ⭐ POP-UP: <span class="badge-sched-text">SETIAP HARI</span> • <span class="badge-status-text">AKTIF HARI INI</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -951,15 +1171,75 @@ function wakalumi_render_pengumuman_page() {
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 24px; padding-top: 6px; border-top: 1px dashed #e2e8f0;">
+                <!-- Row 6: Tampilan di Beranda (Checkboxes & Jadwal Hari) -->
+                <div style="display: flex; gap: 24px; padding-top: 6px; border-top: 1px dashed #e2e8f0; align-items: center; flex-wrap: wrap;">
                     <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #0f766e; cursor: pointer;">
                         <input type="checkbox" name="pengumuman_is_toast[]" value="{{row_id}}" checked>
                         🔔 Tampilkan di Floating Toast Beranda
                     </label>
                     <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #b45309; cursor: pointer;">
-                        <input type="checkbox" name="pengumuman_is_popup[]" value="{{row_id}}">
+                        <input type="checkbox" name="pengumuman_is_popup[]" value="{{row_id}}" class="pengumuman-is-popup-toggle">
                         ⭐ Tampilkan sebagai Pop-Up Modal di Beranda
                     </label>
+                </div>
+
+                <!-- Pop-up Day Customizer Box -->
+                <div class="popup-schedule-box" style="margin-top: 12px; padding: 14px 16px; background: #fffdf5; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; display: none;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #92400e; display: inline-flex; align-items: center; gap: 6px;">
+                            <span class="dashicons dashicons-calendar-alt" style="font-size: 16px; width: 16px; height: 16px; color: #d97706;"></span>
+                            Jadwal Hari Tayang Pop-Up di Beranda:
+                        </label>
+                        <div>
+                            <select name="pengumuman_popup_mode_{{row_id}}" class="popup-mode-select" style="font-size: 12px; font-weight: 600; border-radius: 6px; border-color: #fcd34d; background: #fff; color: #78350f;">
+                                <option value="everyday" selected>Setiap Hari (Senin - Minggu)</option>
+                                <option value="thursday">Khusus Hari Kamis</option>
+                                <option value="friday">Khusus Hari Jumat</option>
+                                <option value="weekdays">Hari Kerja (Senin - Jumat)</option>
+                                <option value="weekend">Akhir Pekan (Sabtu &amp; Minggu)</option>
+                                <option value="custom">Pilih Hari Manual (Kustom)...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Day Checkbox Pills -->
+                    <div class="popup-days-pills" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="1" checked class="popup-day-checkbox" data-day="1">
+                            <span>Senin</span>
+                        </label>
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="2" checked class="popup-day-checkbox" data-day="2">
+                            <span>Selasa</span>
+                        </label>
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="3" checked class="popup-day-checkbox" data-day="3">
+                            <span>Rabu</span>
+                        </label>
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="4" checked class="popup-day-checkbox" data-day="4">
+                            <span>Kamis</span>
+                        </label>
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="5" checked class="popup-day-checkbox" data-day="5">
+                            <span>Jumat</span>
+                        </label>
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="6" checked class="popup-day-checkbox" data-day="6">
+                            <span>Sabtu</span>
+                        </label>
+                        <label class="popup-day-pill" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; background: #fef3c7; padding: 4px 10px; border-radius: 6px; border: 1px solid #f59e0b; cursor: pointer; color: #92400e; user-select: none;">
+                            <input type="checkbox" name="pengumuman_popup_days_{{row_id}}[]" value="7" checked class="popup-day-checkbox" data-day="7">
+                            <span>Minggu</span>
+                        </label>
+                    </div>
+
+                    <div class="popup-schedule-footer" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #b45309; padding-top: 8px; border-top: 1px dashed #fde68a;">
+                        <span class="schedule-tip-text">💡 <em>Pop-up hanya akan muncul di layar beranda pada hari yang dicentang. Di luar hari tersebut, pop-up otomatis disembunyikan.</em></span>
+                        <span class="schedule-live-status" style="font-weight: 700; color: #047857;">
+                            Status Hari Ini (<?php echo wp_date('l'); ?>): ✅ Aktif Tayang
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -967,6 +1247,9 @@ function wakalumi_render_pengumuman_page() {
 
     <!-- ADMIN JS JQUERY SCRIPT -->
     <script>
+    window.WAKALUMI_TODAY_NUM = <?php echo (int) wp_date( 'N' ); ?>;
+    window.WAKALUMI_TODAY_NAME = '<?php echo esc_js( wp_date( 'l' ) ); ?>';
+
     jQuery(document).ready(function($) {
         // Toggle Collapse Card
         $(document).on('click', '.pengumuman-card-header', function(e) {
@@ -1043,6 +1326,179 @@ function wakalumi_render_pengumuman_page() {
                 $(this).find('.card-urutan-input').val(i + 1);
             });
         }
+
+        // Pop-up Day Customizer Scripts
+        function updatePillStyles(box) {
+            box.find('.popup-day-pill').each(function() {
+                var cb = $(this).find('.popup-day-checkbox');
+                if (cb.is(':checked')) {
+                    $(this).css({
+                        'background': '#fef3c7',
+                        'border-color': '#f59e0b',
+                        'color': '#92400e'
+                    });
+                } else {
+                    $(this).css({
+                        'background': '#ffffff',
+                        'border-color': '#e2e8f0',
+                        'color': '#64748b'
+                    });
+                }
+            });
+        }
+
+        // Realtime Schedule & Status Updater
+        function updateScheduleLiveStatus(box) {
+            var card = box.closest('.pengumuman-card');
+            var isPopup = card.find('.pengumuman-is-popup-toggle').is(':checked');
+            var badgePill = card.find('.pengumuman-popup-badge-pill');
+
+            if (!isPopup) {
+                badgePill.hide();
+                return;
+            }
+            badgePill.show();
+
+            var checkedDays = box.find('.popup-day-checkbox:checked').map(function() {
+                return parseInt($(this).data('day'), 10);
+            }).get().sort(function(a, b) { return a - b; });
+
+            var todayNum = window.WAKALUMI_TODAY_NUM || 5;
+            var todayName = window.WAKALUMI_TODAY_NAME || 'Hari Ini';
+            var dayNames = {
+                1: 'Senin', 2: 'Selasa', 3: 'Rabu', 4: 'Kamis', 5: 'Jumat', 6: 'Sabtu', 7: 'Minggu'
+            };
+
+            var schedLabel = 'Setiap Hari';
+            var isActiveToday = false;
+            var tipText = '💡 <em>Pop-up hanya akan muncul di layar beranda pada hari yang dicentang. Di luar hari tersebut, pop-up otomatis disembunyikan.</em>';
+
+            if (checkedDays.length === 0) {
+                schedLabel = 'Belum Pilih Hari (Nonaktif)';
+                isActiveToday = false;
+                tipText = '<span style="color: #dc2626; font-weight: 700;">⚠️ Perhatian: Tidak ada hari yang dipilih! Pop-up tidak akan pernah tayang di beranda.</span>';
+            } else if (checkedDays.length === 7) {
+                schedLabel = 'Setiap Hari';
+                isActiveToday = true;
+            } else if (checkedDays.length === 1 && checkedDays[0] === 4) {
+                schedLabel = 'Khusus Kamis';
+                isActiveToday = (todayNum === 4);
+            } else if (checkedDays.length === 1 && checkedDays[0] === 5) {
+                schedLabel = 'Khusus Jumat';
+                isActiveToday = (todayNum === 5);
+            } else if (checkedDays.length === 1) {
+                schedLabel = 'Khusus ' + dayNames[checkedDays[0]];
+                isActiveToday = (todayNum === checkedDays[0]);
+            } else if (checkedDays.length === 5 && checkedDays.join(',') === '1,2,3,4,5') {
+                schedLabel = 'Senin - Jumat';
+                isActiveToday = (todayNum >= 1 && todayNum <= 5);
+            } else if (checkedDays.length === 2 && checkedDays.join(',') === '6,7') {
+                schedLabel = 'Sabtu & Minggu';
+                isActiveToday = (todayNum === 6 || todayNum === 7);
+            } else if (checkedDays.length <= 3) {
+                var names = checkedDays.map(function(d) { return dayNames[d]; });
+                schedLabel = names.join(' & ');
+                isActiveToday = checkedDays.indexOf(todayNum) !== -1;
+            } else {
+                schedLabel = checkedDays.length + ' Hari Terpilih';
+                isActiveToday = checkedDays.indexOf(todayNum) !== -1;
+            }
+
+            // Update live status inside box
+            box.find('.schedule-tip-text').html(tipText);
+            var statusElem = box.find('.schedule-live-status');
+            if (checkedDays.length === 0) {
+                statusElem.css('color', '#dc2626').html('Status Hari Ini (' + todayName + '): ⚠️ Nonaktif (0 Hari Dipilih)');
+            } else if (isActiveToday) {
+                statusElem.css('color', '#047857').html('Status Hari Ini (' + todayName + '): ✅ Aktif Tayang');
+            } else {
+                statusElem.css('color', '#b45309').html('Status Hari Ini (' + todayName + '): ⏸️ Tidak Tayang (' + schedLabel + ')');
+            }
+
+            // Update header badge
+            badgePill.find('.badge-sched-text').text(schedLabel.toUpperCase());
+            badgePill.find('.badge-status-text').text(isActiveToday ? 'AKTIF HARI INI' : 'TIDAK TAYANG HARI INI');
+            if (isActiveToday) {
+                badgePill.css({
+                    'background': '#fef3c7',
+                    'color': '#92400e',
+                    'border-color': '#fde68a'
+                });
+            } else {
+                badgePill.css({
+                    'background': '#f1f5f9',
+                    'color': '#64748b',
+                    'border-color': '#cbd5e1'
+                });
+            }
+        }
+
+        // Toggle visibility of schedule box when checkbox is toggled
+        $(document).on('change', '.pengumuman-is-popup-toggle', function() {
+            var box = $(this).closest('.pengumuman-card-body').find('.popup-schedule-box');
+            if ($(this).is(':checked')) {
+                box.slideDown(200);
+            } else {
+                box.slideUp(200);
+            }
+            updateScheduleLiveStatus(box);
+        });
+
+        // Mode select change (everyday, thursday, friday, weekdays, weekend, custom)
+        $(document).on('change', '.popup-mode-select', function() {
+            var mode = $(this).val();
+            var box = $(this).closest('.popup-schedule-box');
+            var checkboxes = box.find('.popup-day-checkbox');
+
+            if (mode === 'everyday') {
+                checkboxes.prop('checked', true);
+            } else if (mode === 'thursday') {
+                checkboxes.each(function() {
+                    $(this).prop('checked', $(this).data('day') == 4);
+                });
+            } else if (mode === 'friday') {
+                checkboxes.each(function() {
+                    $(this).prop('checked', $(this).data('day') == 5);
+                });
+            } else if (mode === 'weekdays') {
+                checkboxes.each(function() {
+                    var d = parseInt($(this).data('day'), 10);
+                    $(this).prop('checked', d >= 1 && d <= 5);
+                });
+            } else if (mode === 'weekend') {
+                checkboxes.each(function() {
+                    var d = parseInt($(this).data('day'), 10);
+                    $(this).prop('checked', d === 6 || d === 7);
+                });
+            }
+            updatePillStyles(box);
+            updateScheduleLiveStatus(box);
+        });
+
+        // Individual day checkbox change
+        $(document).on('change', '.popup-day-checkbox', function() {
+            var box = $(this).closest('.popup-schedule-box');
+            var select = box.find('.popup-mode-select');
+            var checked = box.find('.popup-day-checkbox:checked').map(function() {
+                return parseInt($(this).data('day'), 10);
+            }).get();
+
+            if (checked.length === 7) {
+                select.val('everyday');
+            } else if (checked.length === 1 && checked[0] === 4) {
+                select.val('thursday');
+            } else if (checked.length === 1 && checked[0] === 5) {
+                select.val('friday');
+            } else if (checked.length === 5 && checked.join(',') === '1,2,3,4,5') {
+                select.val('weekdays');
+            } else if (checked.length === 2 && checked.join(',') === '6,7') {
+                select.val('weekend');
+            } else {
+                select.val('custom');
+            }
+            updatePillStyles(box);
+            updateScheduleLiveStatus(box);
+        });
 
         // Media Uploader for Gambar Poster Visual
         $(document).on('click', '.wkl-upload-img-btn', function(e) {
